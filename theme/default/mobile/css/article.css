@@ -1,0 +1,18 @@
+.wrap {
+  padding: 15px;
+  font-size: 12px;
+  line-height: 2em;
+}
+.wrap div.info {
+  margin-bottom: 15px;
+  clear: both;
+}
+.wrap div.info .times {
+  color: #aaaaaa;
+}
+.wrap div.info .author {
+  color: #999999;
+}
+.wrap img {
+  max-width: 98%;
+}

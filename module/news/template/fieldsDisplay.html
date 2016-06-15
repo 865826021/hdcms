@@ -1,0 +1,317 @@
+<link rel="stylesheet" href="module/news/template/reply.css">
+<div class="panel panel-default">
+    <div class="panel-heading">
+        回复内容
+    </div>
+    <div class="panel-body">
+        <div class="row clearfix reply">
+            <div class="col-xs-6 col-xm-3 col-md-3 left-list">
+                <div class="panel-group item-group" ng-repeat="(key,items) in contents">
+                    <div style="position: relative">
+                        <div class="num">@{{$index+1}}</div>
+                        <div class="remove" ng-click="removeItem(key,false)"><i class="fa fa-times"></i></div>
+                    </div>
+                    <div class="panel panel-default item" id="news_@{{key}}">
+                        <div class="panel-body">
+                            <div class="img">
+                                <i class="default" ng-if="!items.thumb">封面图片</i>
+                                <img ng-src="@{{items.thumb}}" ng-if="items.thumb">
+                                <span class="text-left">@{{item.title}}</span>
+                                <div class="mask">
+                                    <a href="javascript:;" ng-click="editItem(key, false)"><i class="fa fa-edit"></i>编辑</a>
+                                    <a href="javascript:;" ng-click="removeItem(key, false)"><i class="fa fa-times"></i>删除</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default item child_news" id="news_@{{key}}_@{{n}}" ng-repeat="(n,item) in items.son_news">
+                        <div class="panel-body ">
+                            <h4 class="text-left">@{{item.description}}</h4>
+                            <div class="img">
+                                <i class="default" ng-if="!item.thumb">封面图片</i>
+                                <img ng-src="@{{item.thumb}}" ng-if="item.thumb">
+                            </div>
+                            <div class="mask">
+                                <a href="javascript:;" ng-click="editItem(key, n)"><i class="fa fa-edit"></i>编辑</a>
+                                <a href="javascript:;" ng-click="removeItem(key,n)"><i class="fa fa-times"></i>删除</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="add-item" ng-click="addItem(key)">
+                                <span><i class="fa fa-plus"></i> 添加</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <button class="btn btn-primary" type="button" ng-click="addGroup()">添加一组回复</button>
+            </div>
+            <div class="col-xs-6 col-xm-9 col-md-9">
+                <div id="content-area">
+                    <div class="arrow-left"></div>
+                    <div>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">标题</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="activeItem.title" placeholder="请添加图文消息的标题">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">作者</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="activeItem.author" placeholder="请添加图文消息的作者">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">排序</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" ng-model="activeItem.rank" placeholder="添加排序">
+                                          <span class="help-block">
+                                              排序只能在提交后显示。按照从大到小的顺序对图文排序
+                                          </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">封面图片</label>
+
+                                    <div class="col-sm-10">
+                                        <div class="col-xs-3 img" ng-click="uploadThumb()" ng-if="!activeItem.thumb">
+                                            <span class="thumb"><i class="fa fa-plus-circle green"></i>&nbsp;添加图片</span>
+                                        </div>
+                                        <div class="col-xs-3 img" ng-if="activeItem.thumb" ng-click="uploadThumb()">
+                                            <img ng-src="@{{activeItem.thumb}}">
+                                            <h3>重新上传</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                        <span class="help-block clearfix">封面（大图片建议尺寸：360像素 * 200像素）</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">描述</label>
+                                    <div class="col-sm-10">
+                                        <textarea class="form-control" rows="3" ng-model="activeItem.description" placeholder="请输入图文消息的简短描述"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-10">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" ng-model="showContent" value="1">
+                                                是否编辑图文消息
+                                            </label>
+                                        </div>
+                                          <span class="help-block">
+                                          编辑详情可以展示这条图文的详细内容, 可以选择不编辑详情, 那么这条图文将直接链接至下方的原文地址中.
+                                      </span>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-show="showContent||activeItem.content">
+                                    <label class="col-sm-2 control-label">详情</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="container" style="height:300px;width:100%;" ng-model="activeItem.content"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">链接</label>
+                                    <div class="col-sm-10">
+                                        <div class="input-group">
+                                            <input type="text" placeholder="图文消息页面地址" class="form-control ng-pristine ng-untouched ng-valid" ng-model="activeItem.url">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">选择链接 <span class="caret"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    <li><a href="javascript:;" ng-click="linkBrowsers()">系统菜单</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--序列化所有数据用于post提交-->
+<input type="hidden" name="content"/>
+<script>
+    //上传图片
+    function upImage(obj) {
+        require(['util'], function (util) {
+            util.image(function (images) {
+                //上传成功的图片，数组类型
+                if (images.length > 0) {
+                    $(obj).parent().prev().val(images[0]);
+                    $(obj).parent().parent().next().find('img').eq(0).attr('src', images[0]);
+                }
+            })
+        })
+    }
+    //模块控制器
+    function moduleController($scope, _, util) {
+        $scope.contents={{$contents}};
+        if ($scope.contents.length == 0) {
+            $scope.contents = [{son_news: [{}]}];
+        }
+        //当前操作的子新闻
+        $scope.activeItem = $scope.contents[0];
+
+        //显示隐藏左侧列表编辑菜单
+        $("body").delegate('.left-list .panel', 'mouseover', function () {
+            $(this).find('.mask').show();
+        }).delegate('.left-list .panel', 'mouseout', function () {
+            $(this).find('.mask').hide();
+        });
+
+        //根据id查找左侧图文元素的位置来设置右侧编辑区域位置
+        $scope.changeLeftDivPositon = function (pPos, cPos) {
+            //左侧图文元素
+            var id = 'news_' + pPos + (cPos === false ? '' : '_' + cPos );
+            $("#content-area").css({'marginTop': $('#' + id).position().top + 50});
+        }
+        //添加组即一级图文
+        $scope.addGroup = function () {
+            $scope.contents.push({son_news: [{}]});
+            $scope.activeItem = $scope.contents[$scope.contents.length-1];
+            //更改编辑区域位置
+            $scope.changeLeftDivPositon($scope.contents.length-1,false);
+        }
+        //添加二级图文
+        $scope.addItem = function (pos) {
+            $scope.contents[pos].son_news.push({});
+            var cPos = $scope.contents[pos].son_news.length - 1;
+            $scope.activeItem = $scope.contents[pos].son_news[cPos];
+            //更改编辑区域位置,待页面中创建了dom元素后执行
+            setTimeout(function () {
+                $scope.changeLeftDivPositon(pos, cPos);
+                $scope.$apply();
+            }, 50);
+        }
+        //编辑图文
+        $scope.editItem = function (pPos, cPos) {
+            if (cPos === false) {
+                //编辑的是一级图文
+                $scope.activeItem = $scope.contents[pPos];
+            } else {
+                $scope.activeItem = $scope.contents[pPos].son_news[cPos];
+            }
+            //更改编辑区域位置
+            $scope.changeLeftDivPositon(pPos, cPos);
+        }
+
+        //删除元素
+        $scope.removeItem = function (pPos, cPos) {
+            if (cPos === false) {
+                //删除一级图文
+                $scope.contents.splice(pPos, 1);
+                if ($scope.contents.length == 0) {
+                    //没有一级图文时,设置默认图文
+                    $scope.contents = [{son_news: [{}]}];
+                    $scope.activeItem = $scope.contents[0];
+                } else {
+                    $scope.activeItem = $scope.contents[0];
+                }
+                //更改编辑区域位置
+                $scope.changeLeftDivPositon(0, false);
+            } else {
+                //删除子图文
+                $scope.contents[pPos].son_news.splice(cPos, 1);
+                if ($scope.contents[pPos].son_news.length > 0) {
+                    $scope.activeItem = $scope.contents[pPos].son_news[0];
+                    $scope.changeLeftDivPositon(pPos, 0);
+                } else {
+                    $scope.activeItem = $scope.contents[pPos];
+                    //更改编辑区域位置
+                    $scope.changeLeftDivPositon(pPos, false);
+                }
+            }
+        }
+
+        //添加封面图片
+        $scope.uploadThumb = function () {
+            util.image(function (images) {
+                if (images.length > 0) {
+                    //上传成功的图片，数组类型
+                    $scope.activeItem.thumb = images[0];
+                    $scope.$digest();
+                }
+            })
+        }
+        //图文编辑器
+        util.ueditor('container', {}, function (editor) {
+            editor.addListener('contentChange', function () {
+                $scope.activeItem.content = editor.getContent();
+                $scope.$apply();
+            });
+            editor.addListener('ready', function () {
+                if (editor && editor.getContent() != $scope.activeItem.content) {
+                    editor.setContent($scope.activeItem.content);
+                }
+                $scope.$watch('activeItem.content', function (value) {
+                    if (editor && editor.getContent() != value) {
+                        editor.setContent(value ? value : '');
+                    }
+                });
+            });
+            editor.addListener('clearRange', function () {
+                $scope.activeItem.content = editor.getContent();
+                $scope.$apply();
+            });
+        });
+
+        //选择系统菜单
+        $scope.linkBrowsers = function () {
+            util.linkBrowser(function (link) {
+                $scope.activeItem.url = link;
+                $scope.$apply();
+            });
+        }
+    }
+
+    //验证表单
+    function validateForm(form, $, $scope, util, _) {
+        var val = [];
+        var msg = '';
+        angular.forEach($scope.contents, function (v, k) {
+            if ($.trim(v.title) == '') {
+                msg = "还有图文没有设置标题<br/>";
+            }
+            if ($.trim(v.thumb) == '') {
+                msg = "还有图文没有设置封面<br/>";
+            }
+            if ($.trim(v.description) == '') {
+                msg = "还有图文没有设置描述<br/>";
+            }
+            angular.forEach(v.son_news, function (b) {
+                if ($.trim(b.title) == '') {
+                    msg = "还有图文没有设置标题<br/>";
+                }
+                if ($.trim(b.thumb) == '') {
+                    msg = "还有图文没有设置封面<br/>";
+                }
+                if ($.trim(b.description) == '') {
+                    msg = "还有图文没有设置描述<br/>";
+                }
+            })
+        }, val);
+        if (msg.length > 0) {
+            util.message(msg, '', 'error');
+            return false;
+        }
+        val = angular.toJson($scope.contents);
+        $("[name='content']").val(val);
+
+        return true;
+    }
+</script>

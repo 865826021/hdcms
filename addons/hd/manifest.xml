@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest versionCode="2.0">
+  <application setting="true">
+    <name><![CDATA[hd]]></name>
+    <title><![CDATA[后盾]]></title>
+    <url><![CDATA[http://open.hdcms.com]]></url>
+    <version><![CDATA[1.0]]></version>
+    <industry><![CDATA[business]]></industry>
+    <resume><![CDATA[模块简述]]></resume>
+    <detail><![CDATA[模块介绍]]></detail>
+    <author><![CDATA[作者]]></author>
+    <rule embed="true"/>
+  </application>
+  <platform>
+    <subscribes>
+      <message type="text"/>
+      <message type="image"/>
+      <message type="voice"/>
+      <message type="video"/>
+      <message type="shortvideo"/>
+      <message type="location"/>
+      <message type="link"/>
+      <message type="subscribe"/>
+      <message type="unsubscribe"/>
+      <message type="scan"/>
+      <message type="track"/>
+      <message type="click"/>
+      <message type="view"/>
+    </subscribes>
+    <processors>
+      <message type="text"/>
+      <message type="image"/>
+      <message type="voice"/>
+      <message type="video"/>
+      <message type="shortvideo"/>
+      <message type="location"/>
+      <message type="link"/>
+      <message type="subscribe"/>
+      <message type="unsubscribe"/>
+      <message type="scan"/>
+      <message type="track"/>
+      <message type="click"/>
+      <message type="view"/>
+    </processors>
+  </platform>
+  <bindings>
+    <cover>
+      <entry title="功能封面1" do="gnfm1" data="d" directly="true"/>
+      <entry title="功能封面2" do="gnfm2" data="d" directly="true"/>
+    </cover>
+    <rule>
+      <entry title="规则列表1" do="gzlb1" data="d" directly="true"/>
+      <entry title="规则列表2" do="gzlb2" data="d" directly="true"/>
+    </rule>
+    <business>
+      <entry title="业务功能1" do="ywgn1" data="d" directly="true"/>
+      <entry title="业务功能2" do="ywgn2" data="d" directly="true"/>
+    </business>
+    <home>
+      <entry title="微站首页导航图标1" do="wzdhtb1" data="d" directly="true"/>
+      <entry title="微站首页导航图标2" do="wzdhtb2" data="d" directly="true"/>
+    </home>
+    <profile>
+      <entry title="微站个人中心导航1" do="gzzx1" data="d" directly="true"/>
+      <entry title="微站个人中心导航2" do="gzzx2" data="d" directly="true"/>
+    </profile>
+    <member>
+      <entry title="桌面个人中心导航1" do="grzx1" data="d" directly="true"/>
+      <entry title="桌面个人中心导航2" do="grzx2" data="d" directly="true"/>
+    </member>
+    <web>
+      <entry title="桌面入口导航" do="zmrk" data="d" directly="true"/>
+    </web>
+  </bindings>
+  <permission><![CDATA[添加商品:shop_add]]></permission>
+  <install><![CDATA[install.php]]></install>
+  <uninstall><![CDATA[uninstall.php]]></uninstall>
+  <upgrade><![CDATA[upgrade.php]]></upgrade>
+</manifest>

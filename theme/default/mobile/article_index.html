@@ -1,0 +1,59 @@
+<extend file="web/resource/view/mobile"/>
+<block name="content">
+    <!--头部导航条-->
+    <mobile_header/>
+    <slide color="#333" height="80" autoplay="2000"/>
+
+    <div class="category">
+        <ul>
+            <category cid="9,11,12,10">
+                <li>{{$field['icon']}} <p>
+                    <a href="{{$field['cat_url']}}">{{$field['cat_name']}}</a>
+                </p></li>
+            </category>
+        </ul>
+    </div>
+
+    <img src="{{__TEMPLATE__}}/images/img2016032812271504336.jpg" alt="">
+    <ul class="list-group">
+        <pagelist row="10">
+            <li class="list-group-item">
+                <a href="{{$field['url']}}">
+
+                    {{mb_substr($field['title'],0,20,'utf8')}}
+                </a>
+            </li>
+        </pagelist>
+    </ul>
+    <pagenum/>
+    <!--快捷导航-->
+    <mobile_quick_menu/>
+</block>
+
+<style>
+    .category {
+        padding: 10px;
+        background: #333;
+    }
+
+    .category ul {
+        padding: 0px;
+        margin: 0px;
+        display : flex;
+        justify-content: space-between;
+        list-style : none;
+    }
+
+    .category ul li {
+        flex-grow : 1;
+        text-align: center;
+        color:#fff !important;
+    }
+    .category ul li i{
+        font-size:25px !important;
+        color:#fff !important;
+    }
+    .category ul li p{
+        margin: 0px;
+    }
+</style>

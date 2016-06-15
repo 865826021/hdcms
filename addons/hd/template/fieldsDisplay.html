@@ -1,0 +1,9 @@
+<input type="text" name="content" value="{{$field['content']}}">
+
+<script>
+    //验证表单
+    function validateForm(form, $, $scope, util, _) {
+        util.message('请输入回复内容');
+        return false;
+    }
+</script>

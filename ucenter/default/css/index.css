@@ -1,0 +1,78 @@
+body {
+  background: #f9f9f9;
+}
+div.member-center .header {
+  height: 110px;
+  background: url('../images/mobild-center-bg.jpg');
+  background-size: 100%;
+  color: #fff;
+  overflow: hidden;
+}
+div.member-center .header div.ico img {
+  border-radius: 50%;
+  width: 68px;
+  height: 68px;
+  border: solid 2px #fff;
+  margin-top: 30px;
+}
+div.member-center .header div.user {
+  padding-top: 20px;
+  text-align: left;
+}
+div.member-center .header div.user h2 {
+  font-size: 20px;
+}
+div.member-center .header .setting {
+  color: #fff;
+  margin-top: 50px;
+  font-size: 22px;
+}
+div.member-center div.pay {
+  padding: 10px 0px;
+  background: #fff;
+  clear: both;
+  border-radius: 0px;
+  margin-bottom: 5px;
+}
+div.member-center div.pay div {
+  padding: 0px;
+  text-align: center;
+  font-size: 12px;
+}
+div.member-center div.pay div a {
+  color: #333;
+}
+div.member-center div.pay div i {
+  font-size: 22px;
+  display: block;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+div.member-center .list-group a {
+  padding: 12px 15px;
+}
+div.member-center div.bottom-menu {
+  position: fixed;
+  bottom: 0px;
+  height: 50px;
+  width: 100%;
+  background: #fff;
+  border-top: solid 1px #ddd;
+}
+div.member-center div.bottom-menu a {
+  color: #333;
+  font-size: 12px;
+  text-align: center;
+}
+div.member-center div.bottom-menu a i {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 2px;
+  color: #666;
+}
+div.member-center div.bottom-menu a.btn:active {
+  box-shadow: none;
+}
+div.member-center div.list-group {
+  margin-bottom: 5px;
+}

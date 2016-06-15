@@ -1,0 +1,19 @@
+<extend file="web/resource/view/mobile"/>
+<link rel="stylesheet" href="{{__TEMPLATE__}}/css/article.css">
+<block name="content">
+    <mobile_header>{{mb_substr($hdcms['title'],0,16,'utf8')}}</mobile_header>
+    <div class="wrap">
+        <h3>
+            {{$hdcms['title']}}
+        </h3>
+        <div class="info">
+            <span class="times">{{date('Y-m-d',$hdcms['createtime'])}}</span>
+            <span class="author">{{$hdcms['author']}}</span>
+        </div>
+        <div>
+            {{$hdcms['content']}}
+        </div>
+    </div>
+    <!--快捷导航-->
+    <mobile_quick_menu/>
+</block>

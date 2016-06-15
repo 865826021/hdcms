@@ -1,0 +1,49 @@
+<extend file='theme/default/mobile/ucenter/master.html'/>
+<block name="title">会员中心 - HDCMS开源免费三网系统</block>
+<block name="content">
+    <div class="header" style="background-image: url(web/resource/images/mobile-center-bg.jpg)">
+        <div class="col-xs-3 ico"><img src="{{$user['icon']?:'web/resource/images/user.jpg'}}" alt=""></div>
+        <div class="col-xs-9 user">
+            <a href="?s=uc/info/setting&i={{v('site.siteid')}}">
+                <h2 class="col-xs-10">{{!empty($user['nickname'])?$user['nickname']:'注册会员'}}
+                    <small style="color:#ffffff;">{{$group['title']}}</small>
+                </h2>
+                <h2 class="col-xs-2 text-right"><i class="fa fa-gear fa-spin"></i></h2>
+            </a>
+            <div class="col-xs-6">余额: {{$user['credit2']}} 元</div>
+            <div class="col-xs-6">积分: {{intval($user['credit1'])}}</div>
+        </div>
+        <div class="col-xs-1">
+            <a href="#" class="pull-right setting">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="well pay clearfix">
+        <div class="col-xs-3"><a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1"> <i class="fa fa-diamond"></i> <span>代金券</span> </a></div>
+        <div class="col-xs-3"><a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=2&status=1"> <i class="fa fa-credit-card"></i> <span>折扣券</span> </a></div>
+        <div class="col-xs-3"><a href=""> <i class="fa fa-flag-o"></i> <span>积分</span> </a></div>
+        <div class="col-xs-3"><a href=""> <i class="fa fa-money"></i> <span>余额</span> </a></div>
+    </div>
+    <div class="list-group">
+        <a href="?s=uc/account/balance&i={{$_GET['i']}}&m=balance" class="list-group-item"><i class="fa fa-suitcase"></i> 余额充值 <i class="fa fa-angle-right pull-right"></i></a>
+        <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1" class="list-group-item"><i class="fa fa-gift"></i> 我的代金券 <i class="fa fa-angle-right pull-right"></i></a>
+        <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=2&status=1" class="list-group-item"><i class="fa fa-pie-chart"></i> 我的折扣券 <i class="fa fa-angle-right pull-right"></i></a>
+    </div>
+    <!--菜单列表-->
+    <div class="list-group">
+        <foreach from="$menus" value="$m">
+            <a href="{{$m['url']}}" class="list-group-item"><i class="{{$m['icon']}}"></i> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i></a>
+        </foreach>
+    </div>
+    <!--自定义内容-->
+    {{$uc['html']}}
+    <!--菜单列表 end-->
+    <div class="list-group">
+        <a href="?s=uc/entry/changeMobile&i={{$_GET['i']}}" class="list-group-item"><i class="fa fa-mobile-phone"></i> 修改手机号 <i class="fa fa-angle-right pull-right"></i></a>
+        <a href="?s=uc/address/lists&i={{$_GET['i']}}" class="list-group-item"><i class="fa fa-film"></i> 地址管理 <i class="fa fa-angle-right pull-right"></i></a>
+        <a href="?s=uc/reg/out&i={{$_GET['i']}}" class="list-group-item"><i class="fa fa-external-link"></i> 退出系统 <i class="fa fa-angle-right pull-right"></i></a>
+    </div>
+    <!--快捷导航-->
+    <mobile_quick_menu/>
+</block>

@@ -1,0 +1,41 @@
+<extend file="resource/view/mobile"/>
+<block name="content">
+    <link rel="stylesheet" href="{{__TEMPLATE__}}/css/index.css"/>
+    <div class="menu">
+        <mobile_nav position="1">
+            <a href="{{$field['url']}}">
+                {{$field['icon']}}
+                {{$field['name']}}
+            </a>
+        </mobile_nav>
+    </div>
+    <!--快捷导航-->
+    <div class="quick-menu">
+        <mobile_quick_menu/>
+    </div>
+</block>
+
+<style>
+    .menu {
+        display : flex;
+    }
+
+    .menu a {
+        flex-grow       : 1;
+        background      : #2d64b3;
+        text-align      : center;
+        text-decoration : none;
+        color           : #fff;
+        margin          : 5px;
+        border-radius   : 5px;
+    }
+
+    .menu a i {
+        width     : 45px;
+        height    : 45px;
+        font-size : 35px;
+        display   : block;
+        color     : #fff !important;
+        margin    : 5px auto;
+    }
+</style>
