@@ -18,6 +18,7 @@ use hdphp\alipay\lib\AlipaySubmit;
  * 支付宝
  * Class Alipay
  * @package Hdphp\Alipay
+ * @author 向军
  */
 class Alipay {
 	public function pay( $data ) {

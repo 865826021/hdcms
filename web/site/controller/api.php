@@ -7,7 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace site\controller;
+namespace web\site\controller;
 
 /**
  * 微信请求接口
@@ -15,7 +15,7 @@ namespace site\controller;
  * @package module\controller
  * @author 向军
  */
-class api {
+class Api {
 	//系统模块
 	protected $systemModules = [ 'basic', 'news', 'image', 'cover' ];
 

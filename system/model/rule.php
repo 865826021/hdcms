@@ -7,9 +7,17 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace api;
-//微信回复规则
-class rule {
+namespace system\model;
+
+use hdphp\model\Model;
+
+/**
+ * 微信回复规则
+ * Class Rule
+ * @package system\model
+ * @author 向军
+ */
+class Rule  extends Model{
 	/**
 	 * 添加关键词
 	 *
@@ -32,7 +40,7 @@ class rule {
 	 * )
 	 * )
 	 */
-	public function save( $data ) {
+	public function store( $data ) {
 		//添加回复规则
 		if ( empty( $data['name'] ) || empty( $data['module'] ) ) {
 			return FALSE;
@@ -90,7 +98,7 @@ class rule {
 	 * );
 	 * 失败时返回 false
 	 */
-	public function get( $rid ) {
+	public function getRuleInfo( $rid ) {
 		$data = Db::table( 'rule' )->where( 'rid', $rid )->first();
 		if ( empty( $data ) ) {
 			return FALSE;

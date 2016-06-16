@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="340bb418-72f2-4799-93f4-80f01c2968b4" name="hdcms.jiunixing.com" url="http://dev.hdcms.com">
+        <fileTransfer host="dev.hdcms.com" port="21" rootFolder="/wwwroot" password="dfc2dfcedfdddf98df9adf9bdf9a" username="dev">
+          <advancedOptions>
+            <advancedOptions compatibilityMode="true" dataProtectionLevel="Private" passiveMode="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

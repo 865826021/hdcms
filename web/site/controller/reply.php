@@ -7,20 +7,34 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace site\controller;
+namespace web\site\controller;
 
-//关键词回复处理
-class reply {
+use system\model\Menu;
+use system\model\Rule;
+use system\model\SiteUser;
+
+/**
+ * 关键词回复处理
+ * Class reply
+ * @package site\controller
+ */
+class Reply {
+	protected $db;
 	//回复模块处理类
 	protected $moduleClass;
 
 	public function __construct() {
+		$this->db = new Rule();
 		//验证站点权限
-		if ( !api( 'site' )->siteVerify() ) {
-			message( '你没有操作模块的权限', 'back', 'error' );
+		if ( ( new SiteUser() )->verify() === FALSE ) {
+			message( '你没有管理站点的权限', 'back', 'warning' );
 		}
+		//验证站点权限
+		//todo 验证模块...
 		//分配菜单
-		api( 'menu' )->assignMenus();
+		//分配菜单
+		$_site_menu_ = ( new Menu() )->getMenus();
+		View::with( '_site_menu_', $_site_menu_ );
 		$module = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
 		v( 'module', $module );
 		if ( empty( $module ) ) {
@@ -80,7 +94,7 @@ class reply {
 			$module->fieldsSubmit( $rid );
 			message( '规则保存成功', u( 'post', [ 'rid' => $rid, 'm' => v( 'module.name' ) ] ) );
 		}
-		$rule = api( 'rule' )->get( q( 'get.rid' ) );
+		$rule = $this->db->getRuleInfo( q( 'get.rid' ) );
 		View::with( 'rule', $rule );
 		$module     = new $this->moduleClass();
 		$moduleForm = $module->fieldsDisplay( q( 'get.rid' ) );

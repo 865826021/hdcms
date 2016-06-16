@@ -46,4 +46,22 @@ class Menu extends Model {
 	public function getLevelMenuLists() {
 		return Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );
 	}
+
+	/**
+	 * 获取当前帐号后台访问菜单
+	 * @return mixed
+	 */
+	public function getMenus() {
+		$permission = Db::table( 'user_permission' )
+		                ->where( 'siteid', Session::get( 'siteid' ) )
+		                ->where( 'uid', Session::get( 'user.uid' ) )
+		                ->where( 'type', 'system' )
+		                ->pluck( 'permission' );
+		if ( $permission ) {
+			$this->whereIn( 'permission', explode( '|', $permission ) )->where( 'permission', '' );
+		}
+
+		return Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );;
+	}
+
 }

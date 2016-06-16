@@ -7,10 +7,14 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace site\controller;
+namespace web\site\controller;
 
-//导航菜单设置
-class nav {
+/**
+ * 导航菜单设置
+ * Class Nav
+ * @package site\controller
+ */
+class Nav {
 	protected $webid;
 
 	public function __construct() {

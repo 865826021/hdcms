@@ -12,7 +12,7 @@
                 <p>
                     <strong>{{v("wechat.wename")}}</strong>
                     <span class="label label-success">
-                        <?php echo api('wechat')->chatNameBylevel(v('wechat.level')) ?>
+                        <?php echo m('Wechat')->chatNameBylevel(v('wechat.level')) ?>
                     </span>
                     &nbsp;&nbsp;&nbsp;
                     <if value="v('wechat.is_connect')">

@@ -7,7 +7,8 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace system\controller;
+namespace web\system\controller;
+use system\model\User;
 
 /**
  * 菜单管理
@@ -16,10 +17,12 @@ namespace system\controller;
  * @author 向军
  */
 class Menu {
+	protected $user;
 
 	public function __construct() {
-		if ( m( "User" )->isLogin() ) {
-			message( '请登录后进行操作', 'back', 'error' );
+		$this->user = new User();
+		if ( ! $this->user->isSuperUser() ) {
+			message( '只有系统管理员可以操作', 'back', 'error' );
 		}
 	}
 

@@ -11,11 +11,11 @@ return [
 	//类型
 	'driver'   => 'mysql',
 	//帐号
-	'user'     => 'hdcms',
+	'user'     => 'dev',
 	//密码
 	'password' => 'hdw2010',
 	//数据库
-	'database' => 'hdcms',
+	'database' => 'dev',
 	//表前缀
 	'prefix'   => 'hd_'
 ];

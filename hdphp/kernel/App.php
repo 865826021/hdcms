@@ -47,6 +47,7 @@ class App extends Container {
 		$this->boot();
 		//应用目录
 		define( 'APP_PATH', ROOT_PATH . '/' . C( 'app.path' ) );
+		define( 'APP', basename( APP_PATH ) );
 		//时区设置
 		date_default_timezone_set( Config::get( 'app.timezone' ) );
 		//导入钓子

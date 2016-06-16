@@ -134,6 +134,7 @@ class Site extends Model {
 	 * @return array 站点列表
 	 */
 	public function getUserAllSite( $uid ) {
-		return $this->join('site_user','site.siteid','=','site_user.siteid')->where('site_user.uid',$uid)->get();
+		return $this->join( 'site_user', 'site.siteid', '=', 'site_user.siteid' )->where( 'site_user.uid', $uid )->get();
 	}
+
 }

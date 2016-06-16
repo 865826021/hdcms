@@ -23,7 +23,7 @@
 	<script>
 		window.sys = {
 			attachment: 'attachment',
-			uid: <?php echo $_SESSION['user']['uid'];?>,
+			uid: <?php echo Session::get( 'user.uid' );?>,
 			siteid: <?php echo Session::get( 'siteid' );?>,
 			root: "<?php echo __ROOT__;?>"
 		}
@@ -46,9 +46,11 @@
 					<li>
 						<a href="?s=system/site/lists"><i class="fa fa-reply-all"></i> 返回系统</a>
 					</li>
-					<foreach from="$menus['systemMenus']" value="$m">
+					<foreach from="$_site_menu_" value="$m">
 						<li class="top_menu" id="top_menu_{{$m['id']}}">
-							<a href="{{$m['url']}}"><i class="'fa-w {{$m['icon']}}"></i> {{$m['title']}}</a>
+							<a href="javascript:;" dataHref="{{$m['url']}}" menuid="{{$m['id']}}">
+								<i class="'fa-w {{$m['icon']}}"></i> {{$m['title']}}
+							</a>
 						</li>
 					</foreach>
 					<li>
@@ -75,7 +77,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
 							<i class="fa fa-w fa-user"></i>
-							{{Session::get('user.username')}}
+							<?php echo Session::get( 'user.username' ) ?>
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
@@ -101,19 +103,19 @@
 			</div>
 			<div class="panel panel-default">
 				<!--系统菜单-->
-				<foreach from="$menus['systemMenus']" value="$f">
-					<foreach from="$f['_data']" value="$d">
-						<div class="panel-heading hide" pid="{{$f['id']}}">
+				<foreach from="$_site_menu_" value="$m">
+					<foreach from="$m['_data']" value="$d">
+						<div class="panel-heading hide" menuid="{{$m['id']}}">
 							<h4 class="panel-title">{{$d['title']}}</h4>
 							<a class="panel-collapse" data-toggle="collapse" href="javascript:;" aria-expanded="true">
 								<i class="fa fa-chevron-circle-down"></i>
 							</a>
 						</div>
-						<ul class="list-group menus collapse in hide" pid="{{$f['id']}}">
+						<ul class="list-group menus collapse in hide" menuid="{{$m['id']}}">
 							<foreach from="$d['_data']" value="$g">
 								<li id="{{$g['id']}}" class="list-group-item" data-href="{{$g['url']}}">
 									<if value="$g['append_url']">
-										<a class="pull-right" href="{{$g['append_url']}}"><i class="fa fa-plus"></i></a>
+										<a class="pull-right" dataHref="{{$g['append_url']}}" menuid="{{$m['id']}}"><i class="fa fa-plus"></i></a>
 									</if>
 									{{$g['title']}}
 								</li>
@@ -286,28 +288,29 @@
 </div>
 
 <script>
+	//dataHref="{{$g['append_url']}}" menuid=
 	//链接跳转
-	$("li[data-href]").click(function () {
-		var url = $(this).attr('data-href');
-		location.href = url + '&menuid=' + sessionStorage.getItem('topMenuId');
+	$("[dataHref]").click(function () {
+		var url = $(this).attr('dataHref');
 		//记录当前点击的菜单
-		sessionStorage.setItem('data_href', url);
+		sessionStorage.setItem('dataHref', url);
+		sessionStorage.setItem('menuid', $(this).attr('menuid'));
+		location.href = url + '&menuid=' + sessionStorage.getItem('menuid');
 	});
 	//记录顶级菜单编号
-	if ("{{$menus['topMenuId']?1:0}}" == true) {
-		sessionStorage.setItem('topMenuId', "{{$menus['topMenuId']?$menus['topMenuId']:0}}");
+	if (!sessionStorage.getItem('menuid')) {
+		sessionStorage.setItem('menuid', "{{key($_site_menu_)}}");
 	}
 	//设置顶级菜单为选中样式
-	if (sessionStorage.getItem('topMenuId')) {
-		$("#top_menu_" + sessionStorage.getItem('topMenuId')).addClass('active');
+	if (sessionStorage.getItem('menuid')) {
+		$("#top_menu_" + sessionStorage.getItem('menuid')).addClass('active');
 	}
 	//设置左侧菜单点击样式
-	if (sessionStorage.getItem('data_href')) {
-		$("li[data-href='" + sessionStorage.getItem('data_href') + "']").addClass('active');
+	if (sessionStorage.getItem('dataHref')) {
+		$("li[data-href='" + sessionStorage.getItem('menuid') + "']").addClass('active');
 	}
-	//隐藏无用的左侧菜单
-	$("[pid='" + sessionStorage.getItem('topMenuId') + "']").removeClass('hide');
-	//    $("[pid][pid!='" + sessionStorage.getItem('topMenuId') + "']").remove();
+	//显示当前左侧菜单
+	$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
 </script>
 </body>
 </html>

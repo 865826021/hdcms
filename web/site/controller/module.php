@@ -7,9 +7,13 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace site\controller;
-//模块动作访问处理
-class module {
+namespace web\site\controller;
+/**
+ * 模块动作访问处理
+ * Class Module
+ * @package site\controller
+ */
+class Module {
 	protected $module;
 	protected $controller;
 	protected $action;

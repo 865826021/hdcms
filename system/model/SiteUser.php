@@ -84,4 +84,20 @@ class SiteUser extends Model {
 			return Db::table( 'user' )->find( $uid ) ?: [ ];
 		}
 	}
+
+	/**
+	 * 验证当前用户是否可以管理站点
+	 * 通过SESSION['uid']与SESSION['siteid']验证
+	 * 系统管理员直接进入
+	 * @return bool
+	 */
+	public function verify() {
+		//超级管理员直接进入
+		if ( ( new User() )->isSuperUser() ) {
+			return TRUE;
+		}
+
+		return $this->where( 'uid', Session::get( 'uid' ) )->where( 'siteid', Session::get( 'siteid' ) )->get() ? TRUE : FALSE;
+
+	}
 }

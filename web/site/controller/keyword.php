@@ -8,10 +8,14 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-namespace site\controller;
+namespace web\site\controller;
 
-//回复关键词处理
-class keyword {
+/**
+ * 回复关键词处理
+ * Class keyword
+ * @package site\controller
+ */
+class Keyword {
 	//检测微信关键词是否已经使用
 	public function checkWxKeyword() {
 		$db = Db::table( 'rule_keyword' )

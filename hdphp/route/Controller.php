@@ -47,7 +47,7 @@ class Controller {
 		if ( in_array( MODULE, C( 'http.deny_module' ) ) ) {
 			throw new Exception( MODULE . '模块禁止使用' );
 		}
-		$class = MODULE . '\\controller\\' . CONTROLLER;
+		$class = APP.'\\'.MODULE . '\\controller\\' . CONTROLLER;
 		//控制器不存在
 		if ( ! class_exists( $class ) ) {
 			if ( DEBUG ) {

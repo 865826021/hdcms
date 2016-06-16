@@ -7,21 +7,31 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace site\controller;
+namespace web\site\controller;
 
-//后台站点管理入口
-class entry {
+use system\model\Menu;
+use system\model\SiteUser;
+
+/**
+ * 后台站点管理入口
+ * Class entry
+ * @package site\controller
+ * @author 向军
+ */
+class Entry {
 	public function __construct() {
 		//验证站点权限
-		if ( api( 'site' )->siteVerify() === FALSE ) {
-			message( '你没有管理站点的权限', u( "system/site/lists" ), 'warning' );
+		if ( ( new SiteUser() )->verify() === FALSE ) {
+			message( '你没有管理站点的权限', 'back', 'warning' );
 		}
 	}
 
-	//进入站点管理入口
+	/**
+	 * 进入后台站点管理入口
+	 */
 	public function refer() {
 		//获取系统菜单
-		$menu = api( 'menu' )->getSystemMenus();
+		$menu = ( new Menu() )->getMenus();
 		if ( ! $menu ) {
 			message( '你没有管理站点的权限', u( "system/site/lists" ), 'warning' );
 		}
@@ -29,10 +39,13 @@ class entry {
 		go( __ROOT__ . $cur['url'] );
 	}
 
-	//后台顶级菜单入口
+	/**
+	 * 后台顶级菜单入口
+	 */
 	public function __empty() {
 		//分配菜单
-		api( 'menu' )->assignMenus();
+		$_site_menu_ = ( new Menu() )->getMenus();
+		View::with( '_site_menu_', $_site_menu_ );
 		View::make( VIEW_PATH . '/home/' . ACTION . '.php' );
 	}
 }

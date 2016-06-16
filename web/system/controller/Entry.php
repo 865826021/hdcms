@@ -7,7 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace system\controller;
+namespace web\system\controller;
 
 use system\model\Config;
 use system\model\User;
@@ -57,7 +57,7 @@ class Entry {
 				message( $this->db->getError(), 'back', 'error' );
 			}
 			//站点关闭检测/系统管理员忽略网站关闭检测
-			if ( Session::get( 'user.uid' ) != 0 ) {
+			if ( Session::get( 'user.uid' ) != 1 ) {
 				checkSiteClose();
 			}
 			message( '登录成功,系统准备跳转到后台', 'system/site/lists' );
