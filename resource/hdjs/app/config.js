@@ -2,6 +2,7 @@
  * 前端模块配置
  * @author 向军 <2300071698@qq.com>
  */
+
 require.config({
     baseUrl: '../resource/hdjs/app',
     paths: {
@@ -70,7 +71,7 @@ require.config({
             deps: ['angular.sanitize', 'underscore', 'json2', 'datetimepicker']
         },
         'jquery-ui': {
-            deps: ['jquery','css!../css/jquery-ui.min.css']
+            deps: ['jquery', 'css!../css/jquery-ui.min.css']
         },
         'ueditor': {
             deps: ['ueditor.config', 'ueditor.main', 'ZeroClipboard']

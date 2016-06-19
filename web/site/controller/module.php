@@ -105,8 +105,7 @@ class Module {
 			message( '你没有管理模块的权限', 'back', 'error' );
 		}
 		//分配菜单
-		$_site_menu_ = ( new Menu() )->getMenus();
-		View::with( '_site_menu_', $_site_menu_ );
+		( new Menu() )->getMenus( TRUE );
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
 		$action = 'doSite' . $this->action;

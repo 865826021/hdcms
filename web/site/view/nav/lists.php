@@ -4,7 +4,7 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="{{site_url('article/manage/site')}}">返回站点列表</a></li>
 		<li class="active"><a href="javascript:;">微站首页导航菜单</a></li>
-		<li><a href="{{u('site/nav/post')}}&entry={{$_GET['entry']}}">添加菜单</a></li>
+		<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
 		<div class="panel panel-info">
@@ -79,11 +79,10 @@
 							</select>
 						</td>
 						<td>
-							<input type="checkbox" ng-model="field.status" value="1" data="@{{key}}" class="bootstrap-switch"
-							       ng-checked="field.status==1">
+							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
 						</td>
 						<td>
-							<a href="?s=site/nav/post&entry=@{{field.entry}}&id=@{{field.id}}">编辑</a> -
+							<a href="?s=site/nav/post&webid={{$_GET['webid']}}&entry=@{{field.entry}}&id=@{{field.id}}">编辑</a> -
 							<a href="javascript:;" ng-click="del(field.id)">删除</a>
 						</td>
 					</tr>
@@ -101,7 +100,7 @@
 	}
 </style>
 <script>
-	require(['util', 'angular','underscore'], function (util, angular,_) {
+	require(['util', 'angular', 'underscore'], function (util, angular, _) {
 		angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
 			$scope.webid = <?php echo $webid;?>;
 			$scope.web = <?php echo json_encode( $web );?>;
@@ -150,10 +149,14 @@
 					if (!data)return;
 					data.status = state ? 1 : 0;
 					$.post("?s=site/nav/changeStatus", {data: data}, function (res) {
-						window.setTimeout(function () {
-							location.reload(true);
-						}, 300);
-					});
+						if (res.valid == 0) {
+							util.message(res.message, '', 'error');
+						} else {
+							window.setTimeout(function () {
+								location.reload(true);
+							}, 300);
+						}
+					}, 'json');
 				});
 			});
 		}]);

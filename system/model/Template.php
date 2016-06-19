@@ -69,4 +69,27 @@ class Template extends Model {
 		return $cache[ $siteid ] = $templates;
 	}
 
+	/**
+	 * 获取模板位置数据
+	 *
+	 * @param $tid 模板编号
+	 *
+	 * @return array
+	 * array(
+	 *  1=>'位置1',
+	 *  2=>'位置2',
+	 * )
+	 */
+	public function getPositionData( $tid ) {
+		$position = $this->where( 'tid', $tid )->pluck( 'position' );
+		$data     = [ ];
+		if ( $position ) {
+			for ( $i = 1;$i <= $position;$i ++ ) {
+				$data[ $i ] = '位置' . $i;
+			}
+		}
+
+		return $data;
+	}
+
 }

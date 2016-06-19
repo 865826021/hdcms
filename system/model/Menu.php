@@ -51,7 +51,7 @@ class Menu extends Model {
 	 * 获取当前帐号后台访问菜单
 	 * @return mixed
 	 */
-	public function getMenus() {
+	public function getMenus( $show = FALSE ) {
 		$permission = Db::table( 'user_permission' )
 		                ->where( 'siteid', Session::get( 'siteid' ) )
 		                ->where( 'uid', Session::get( 'user.uid' ) )
@@ -61,7 +61,12 @@ class Menu extends Model {
 			$this->whereIn( 'permission', explode( '|', $permission ) )->where( 'permission', '' );
 		}
 
-		return Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );;
+		$menus = Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );
+		if ( $show ) {
+			View::with( '_site_menu_', $menus );
+		}
+
+		return $menus;
 	}
 
 }

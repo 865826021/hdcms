@@ -9,6 +9,11 @@
  * '-------------------------------------------------------------------*/
 namespace web\site\controller;
 
+use system\model\Menu;
+use system\model\Template;
+use system\model\Web;
+use system\model\WebNav;
+
 /**
  * 导航菜单设置
  * Class Nav
@@ -17,14 +22,23 @@ namespace web\site\controller;
  */
 class Nav {
 	protected $webid;
+	protected $web;
+	protected $webNav;
+	protected $id;
 
 	public function __construct() {
 		//分配菜单
-		api( 'menu' )->assignMenus();
+		( new Menu() )->getMenus( TRUE );
 		//站点编号
-		$this->webid = q( 'get.webid', 0, 'intval' );
-		if ( $this->webid && ! Db::table( 'web' )->find( $this->webid ) ) {
+		$this->webid  = q( 'get.webid', 0, 'intval' );
+		$this->web    = new Web();
+		$this->webNav = new WebNav();
+		$this->id     = q( 'get.id', 0, 'intval' );
+		if ( $this->webid && ! Db::table( 'web' )->where( 'siteid', SITEID )->where( 'id', $this->webid )->get() ) {
 			message( '你访问的站点不存在', 'back', 'error' );
+		}
+		if ( $this->id && ! $this->webNav->where( 'siteid', SITEID )->where( 'id', $this->id )->get() ) {
+			message( '导航不存在或不属于这个站点', 'back', 'error' );
 		}
 	}
 
@@ -35,7 +49,7 @@ class Nav {
 			foreach ( (array) $data as $d ) {
 				$d['css']     = json_encode( $d['css'] );
 				$d['orderby'] = min( 255, intval( $d['orderby'] ) );
-				Db::table( 'web_nav' )->where( 'id', $d['id'] )->update( $d );
+				$this->webNav->where( 'id', $d['id'] )->update( $d );
 			}
 			message( '保存导航数据成功', 'refresh', 'success' );
 		}
@@ -45,20 +59,20 @@ class Nav {
 			$this->webid = $web['id'];
 		}
 		//当前站点模板数据
-		$template = api( 'web' )->getTemplateData( $this->webid );
+		$template = $this->web->getTemplateData( $this->webid );
 		//获取导航菜单,entry是导航类型 home 微站首页导航  profile 手机会员中心导航 member 桌面会员中心导航  profile本类不进行处理
-		$nav = Db::table( 'web_nav' )->where( 'web_id', $this->webid )->where( 'entry', q( 'get.entry' ) )->get();
+		$nav = $this->webNav->where( 'web_id', $this->webid )->where( 'entry', q( 'get.entry' ) )->get();
 		if ( $nav ) {
 			$nav = Arr::string_to_int( $nav );
 			foreach ( $nav as $k => $v ) {
 				$nav[ $k ]['css'] = ( json_decode( $v['css'], TRUE ) );
 			}
 		}
-		View::with( 'web', api( 'web' )->getSiteWebs() );
+		View::with( 'web', $this->web->getSiteWebs() );
 		View::with( 'webid', $this->webid );
 		View::with( 'nav', $nav );
 		View::with( 'template', $template );
-		View::with( 'template_position_data', api( 'template' )->getPositionData( $template['tid'] ) );
+		View::with( 'template_position_data', ( new Template() )->getPositionData( $template['tid'] ) );
 		View::make();
 	}
 
@@ -66,32 +80,30 @@ class Nav {
 	public function changeStatus() {
 		$data['id']     = $_POST['data']['id'];
 		$data['status'] = $_POST['data']['status'];
-		Db::table( 'web_nav' )->where( 'id', $data['id'] )->update( $data );
+		if ( ! $this->webNav->save( $data ) ) {
+			message( $this->webNav->getError(), 'back', 'error' );
+		}
+		message( '更改状态成功', 'back', 'success' );
 	}
 
 	//添加&修改
 	public function post() {
 		if ( IS_POST ) {
-			$data                 = json_decode( $_POST['data'], TRUE );
-			$data['position']     = intval( $data['position'] );
-			$data['orderby']      = min( intval( $data['orderby'] ), 256 );
-			$data['css']['size']  = min( intval( $data['css']['size'] ), 100 );
-			$data['css']          = json_encode( $data['css'] );
-			$data['entry']        = q( 'get.entry', 0, 'strtolower' );
-			$data['module']       = empty( $data['module'] ) ? '' : $data['module'];
-			$data['description']  = empty( $data['description'] ) ? '' : $data['description'];
-			$data['category_cid'] = empty( $data['category_cid'] ) ? 0 : $data['category_cid'];
-			$id                   = Db::table( 'web_nav' )->replaceGetId( $data );
-			$nav                  = Db::table( 'web_nav' )->find( $id );
+			$data                = json_decode( $_POST['data'], TRUE );
+			$data['css']['size'] = min( intval( $data['css']['size'] ), 100 );
+			$action              = $this->id ? 'save' : 'add';
+			$id                  = $this->webNav->$action( $data );
+			$id                  = $this->id ?: $id;
+			$nav                 = $this->webNav->find( $id );
 			message( '保存导航数据成功', u( 'lists', [ 'webid' => $nav['web_id'], 'entry' => $nav['entry'] ] ), 'success' );
 		}
 		//站点列表
 		$web          = Db::table( 'web' )
 		                  ->field( 'web.id,web.title,template.tid,template.position' )
 		                  ->join( 'template', 'template.tid', '=', 'web.template_tid' )
-		                  ->where( 'siteid', v( 'site.siteid' ) )
+		                  ->where( 'siteid', SITEID )
 		                  ->get();
-		$field        = Db::table( 'web_nav' )->where( 'id', q( 'get.id' ) )->first() ?: [ ];
+		$field        = $this->webNav->where( 'id', $this->id )->first();
 		$field['css'] = empty( $field['css'] ) ? [ ] : json_decode( $field['css'], TRUE );
 		//新增数据时初始化导航数据,只有通过官网添加导航链接才有效,模块的只有编辑操作,所以模块一定有数据
 		if ( empty( $field['id'] ) ) {
@@ -112,7 +124,7 @@ class Nav {
 
 	//删除菜单
 	public function del() {
-		Db::table( 'web_nav' )->where( 'id', '=', q( 'get.id' ) )->delete();
+		$this->webNav->delete( q( 'get.id' ) );
 		message( '菜单删除成功', 'back', 'success' );
 	}
 }

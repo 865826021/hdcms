@@ -5,9 +5,9 @@
  */
 //checkbox滑动插件
 $(function () {
-    require(['bootstrap.switch'], function ($) {
-        $(".bootstrap-switch").bootstrapSwitch();
-    })
+    //require(['bootstrap.switch'], function ($) {
+    //    $(".bootstrap-switch").bootstrapSwitch();
+    //});
 })
 require(['util'], function (util) {
     ////显示系统菜单

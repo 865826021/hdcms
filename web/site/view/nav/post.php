@@ -1,8 +1,8 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="?s=article/manage/site">返回站点列表</a></li>
-        <li><a href="?s=site/nav/lists&entry={{$_GET['entry']}}">导航菜单列表</a></li>
+        <li><a href="?a=article/manage/site&t=site">返回站点列表</a></li>
+        <li><a href="?s=site/nav/lists&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">导航菜单列表</a></li>
         <li class="active"><a href="javascript:;">添加导航菜单</a></li>
     </ul>
     <form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-controller="MyController" ng-cloak>

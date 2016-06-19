@@ -39,4 +39,18 @@ class SiteSetting extends Model {
 			[ 'register', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'register', 'serialize', 'function', self::EXIST_AUTO, self::MODEL_UPDATE ],
 		];
+
+	/**
+	 * 根据积分字段获取中文描述
+	 *
+	 * @param $name
+	 * <code>
+	 *  api('credit')->getTitle('credit1');
+	 * </code>
+	 *
+	 * @return string 积分中文描述
+	 */
+	public function getTitle( $name ) {
+		return v( 'setting.creditnames.' . $name . '.title' );
+	}
 }

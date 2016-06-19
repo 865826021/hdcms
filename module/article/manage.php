@@ -23,23 +23,28 @@ use system\model\Web;
  * @package module\article
  */
 class manage extends hdSite {
-	protected $db;
+	protected $web;
+	protected $webid;
 
 	public function __construct() {
 		parent::__construct();
-		$this->db = new Web();
+		$this->web   = new Web();
+		$this->webid = q( 'get.webid' );
+		if ( $this->webid && ! $this->web->where( 'siteid', SITEID )->where( 'id', $this->webid )->get() ) {
+			message( '站点不存在', 'back', 'error' );
+		}
 	}
 
 	//选择模板
 	public function doSiteTemplate() {
-		$data = ( new Template() )->getSiteAllTemplate( Session::get( 'siteid' ), q( 'get.type' ) );
+		$data = ( new Template() )->getSiteAllTemplate( SITEID, q( 'get.type' ) );
 		View::with( 'data', $data );
 		View::make( $this->template . '/manage/template.php' );
 	}
 
 	//站点管理
 	public function doSiteSite() {
-		$data = Db::table( 'web' )->where( 'siteid', '=', v( 'site.siteid' ) )->get();
+		$data = Db::table( 'web' )->where( 'siteid', '=', SITEID )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], TRUE );
 			$data[ $k ]['url']       = '?a=article/entry/home&webid=' . $v['id'];
@@ -54,14 +59,14 @@ class manage extends hdSite {
 		if ( IS_POST ) {
 			$data = json_decode( $_POST['data'], TRUE );
 			//添加微站
-			$web['id']           = empty( $data['web_id'] ) ? 0 : $data['web_id'];
+			$web                 = $data;
+			$web['id']           = empty( $web['web_id'] ) ? 0 : $web['web_id'];
 			$web['template_tid'] = $data['template_tid'];
 			$web['title']        = $data['name'];
 			$web['site_info']    = $_POST['data'];
-			$web['status']       = $data['status'];
-			$action              = empty( $web['id'] ) ? 'add' : 'save';
-			if ( ! $web_id = $this->db->$action( $web ) ) {
-				message( $this->db->getError(), 'back', 'error' );
+			$action              = $this->webid ? 'save' : 'add';
+			if ( ! $web_id = $this->web->$action( $web ) ) {
+				message( $this->web->getError(), 'back', 'error' );
 			}
 			//添加回复规则
 			$data['module'] = 'cover';
@@ -95,9 +100,9 @@ class manage extends hdSite {
 			}
 			message( '保存站点数据成功', site_url( 'site' ), 'success' );
 		}
-		if ( $webid = q( 'get.webid' ) ) {
+		if ( $this->webid ) {
 			//编辑数据时
-			$web                     = $this->db->find( $webid );
+			$web                     = $this->web->find( $this->webid );
 			$field                   = json_decode( $web['site_info'], TRUE );
 			$reply_cover             = $replyCover->where( 'web_id', $web['id'] )->first();
 			$field['rid']            = $reply_cover['rid'];
@@ -113,5 +118,9 @@ class manage extends hdSite {
 	public function doSiteLoadTpl() {
 		$data = ( new Template() )->getSiteAllTemplate();
 		View::with( 'data', $data )->make( $this->template . '/manage/loadTpl.php' );
+	}
+
+	public function del() {
+
 	}
 }
