@@ -43,6 +43,7 @@ class Site extends Model {
 			'site_setting',//站点设置
 			'member_group',//会员组
 			'member_fields',//会员字段
+			'core_attachment',//附件字段
 		];
 
 	//加载站点缓存
@@ -89,20 +90,38 @@ class Site extends Model {
 	 *
 	 * @return bool
 	 */
-	public function updateSiteCache( $siteid ) {
+	public function updateSiteCache( $siteid = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
 		//站点微信信息缓存
 		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid', '=', $siteid )->first();
 		//站点信息缓存
 		$data['site'] = Db::table( 'site' )->where( 'siteid', '=', $siteid )->first();
 		//站点设置缓存
-		$data['setting'] = Db::table( 'site_setting' )->where( 'siteid', '=', $siteid )->first();
+		$setting                     = Db::table( 'site_setting' )->where( 'siteid', '=', $siteid )->first() ?: [ ];
+		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
+		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
+		$setting ['register']        = unserialize( $setting['register'] );
+		$setting ['smtp']            = unserialize( $setting['smtp'] );
+		$setting ['pay']             = unserialize( $setting['pay'] );
+		$data['setting']             = $setting;
 		//站点模块
-		$data['modules'] = $this->modules( $siteid );
+		$data['modules'] = ( new Modules() )->getSiteAllModules( $siteid );
 		foreach ( $data as $key => $value ) {
 			d( "{$key}:{$siteid}", $value );
 		}
 
 		return TRUE;
+	}
+
+	/**
+	 * 站点是否存在
+	 *
+	 * @param $siteid
+	 *
+	 * @return bool
+	 */
+	public function isSite( $siteid ) {
+		return $this->where( 'siteid', $siteid )->get() ? TRUE : FALSE;
 	}
 
 	/**

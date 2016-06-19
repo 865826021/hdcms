@@ -65,10 +65,10 @@
                         <td>{{$t['credit']}}</td>
                         <td>{{$t['limit']}}</td>
                         <td>{{$t['amount']}}</td>
-                        <td>{{$t['usertotal']}}</td>
+                        <td>{{$t['usertotal']}} 张</td>
                         <td>{{date('Y-m-d',$t['starttime'])}} ~ {{date("Y-m-d",$t['endtime'])}}</td>
                         <td>
-                            <a href="?s=member/ticket/post&type={{$t['type']}}&tid={{$t['tid']}}">编辑</a> -
+                            <a href="?a=ticket/site/post&t=site&type={{$t['type']}}&tid={{$t['tid']}}">编辑</a> -
                             <a href="?s=member/ticket/del&&type={{$t['type']}}&tid={{$t['tid']}}">删除</a> -
                             <a href="">兑换</a>
                         </td>

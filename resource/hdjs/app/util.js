@@ -378,7 +378,7 @@
                                         for (i in imgs) {
                                             imglist.push({
                                                 'src': imgs[i],
-                                                //'width' : '100%',
+                                                'max-width': '100%',
                                             });
                                         }
                                         editor.execCommand('insertimage', imglist);
@@ -957,6 +957,9 @@
                         $(elem.day).append("<option value=''>日</option>");
                         for (var i = 1; i <= dayNum; i++) {
                             elem.day.options.add(new Option(i, i));
+                        }
+                        if (val.day > 0) {
+                            $(elem.day).val(val.day);
                         }
                     }
                 }

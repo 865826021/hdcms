@@ -16,6 +16,7 @@ use system\model\Package;
 use system\model\SiteModules;
 use system\model\SitePackage;
 use system\model\SiteSetting;
+use system\model\SiteTemplate;
 use system\model\SiteUser;
 use system\model\SiteWechat;
 use system\model\User;
@@ -108,9 +109,27 @@ class Site {
 					//添加站长数据,系统管理员不添加数据
 					( new SiteUser() )->setSiteOwner( $siteid, Session::get( 'user.uid' ) );
 					//初始站点配置
-					( new SiteSetting() )->add( [ 'siteid' => $siteid ] );
+					$setting = [
+						'siteid'          => $siteid,
+						'creditnames'     => [
+							'credit1' => [ 'title' => '积分', 'status' => 1 ],
+							'credit2' => [ 'title' => '余额', 'status' => 1 ],
+							'credit3' => [ 'title' => '', 'status' => 0 ],
+							'credit4' => [ 'title' => '', 'status' => 0 ],
+							'credit5' => [ 'title' => '', 'status' => 0 ],
+						],
+						'register'        => [
+							'focusreg' => 0,
+							'item'     => 2
+						],
+						'creditbehaviors' => [
+							'activity' => 'credit1',
+							'currency' => 'credit2'
+						]
+					];
+					( new SiteSetting() )->add( $setting );
 					//添加默认会员组
-					( new MemberGroup() )->add( [ 'siteid' => $siteid, 'isdefault' => 1, 'is_system' => 1 ] );
+					( new MemberGroup() )->add( [ 'siteid' => $siteid, 'title' => '会员', 'isdefault' => 1, 'is_system' => 1 ] );
 					//创建用户字段表数据
 					( new MemberFields() )->InitializationSiteTableData( $siteid );
 					//更新站点缓存
@@ -159,10 +178,17 @@ class Site {
 						}
 					}
 					//添加扩展模块
-					Db::table( 'site_modules' )->where( 'siteid', $siteid )->delete();
+					Db::table( 'site_modules' )->where( 'siteid', $this->siteid )->delete();
 					if ( $modules = q( 'post.modules', [ ] ) ) {
-						foreach ( $modules as $mid ) {
-							Db::table( 'site_modules' )->insert( [ 'siteid' => $this->siteid, 'module' => $mid, ] );
+						foreach ( $modules as $name ) {
+							Db::table( 'site_modules' )->insert( [ 'siteid' => $this->siteid, 'module' => $name, ] );
+						}
+					}
+					//添加扩展模板
+					Db::table( 'site_template' )->where( 'siteid', $this->siteid )->delete();
+					if ( $templates = q( 'post.templates', [ ] ) ) {
+						foreach ( $templates as $name ) {
+							Db::table( 'site_template' )->insert( [ 'siteid' => $this->siteid, 'template' => $name, ] );
 						}
 					}
 					//设置站长
@@ -181,7 +207,7 @@ class Site {
 						//有来源地址,比如从站点列表进入
 						message( '站点信息修改成功', $from_url, 'success' );
 					} else {
-						go( u( 'post', [ 'step' => 'explain', 'siteid' => $siteid ] ) );
+						go( u( 'post', [ 'step' => 'explain', 'siteid' => $this->siteid ] ) );
 					}
 				}
 				//获取站长信息
@@ -190,12 +216,14 @@ class Site {
 				//获取系统所有套餐
 				$systemAllPackages = $packageModel->getSystemAllPackageData();
 				//扩展模块
-				$extModule = ( new SiteModules() )->getSiteExtModules( $this->siteid );
+				$extModule   = ( new SiteModules() )->getSiteExtModules( $this->siteid );
+				$extTemplate = ( new SiteTemplate() )->getSiteExtTemplates( $this->siteid );
 				View::with( [
 					'systemAllPackages' => $systemAllPackages,
 					'extPackage'        => ( new SitePackage() )->getSiteExtPackageIds( $this->siteid ),
 					'defaultPackage'    => ( new Package() )->getSiteDefaultPackageIds( $this->siteid ),
 					'extModule'         => $extModule,
+					'extTemplate'       => $extTemplate,
 					'user'              => $user,
 					'site'              => $this->db->find( $this->siteid )
 				] );

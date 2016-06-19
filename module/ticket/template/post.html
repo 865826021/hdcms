@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="?s=member/ticket/lists&type={{$_GET['type']}}">管理{{$msg['module']['title']}}</a></li>
+        <li><a href="?a=ticket/site/lists&t=site&type={{$_GET['type']}}">管理{{$msg['module']['title']}}</a></li>
         <if value="$field">
             <li><a href="?a=ticket/site/post&t=site&type={{$_GET['type']}}"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
             <li class="active"><a href="#"><i class="fa fa-plus"></i> 编辑{{$msg['module']['title']}}</a></li>
@@ -11,12 +11,12 @@
     </ul>
     <form action="" method="post" role="form" class="form-horizontal" id="form">
         <input type="hidden" name="tid" value="{{$field['tid']}}">
+        <input type="hidden" name="type" value="{{q('get.type')}}">
         <div class="panel panel-default">
             <div class="panel-heading">
                 折扣券
             </div>
             <div class="panel-body">
-
                 <div class="form-group">
                     <label class="col-sm-2 control-label">可用模块</label>
                     <div class="col-sm-10">
@@ -26,7 +26,7 @@
                                 <tbody>
                                 <tr>
                                     <foreach from="$modules" value="$m">
-                                        <td>{{$m['title']}}</td>
+                                        <td>{{$m['title']}}<input type="hidden" name="module[]" value="{{$m['name']}}"></td>
                                     </foreach>
                                 </tr>
                                 </tbody>
@@ -128,9 +128,9 @@
                     <div class="col-sm-10">
                         <div class="input-group date-range">
                             <if value="$field['starttime']">
-                                <input type="text" id="dateinput"  readonly class="form-control" name="times" value="{{date('Y-m-d',$field['starttime'])}} 至 {{date('Y-m-d',$field['endtime'])}}">
+                                <input type="text" id="dateinput" readonly class="form-control" name="times" value="{{date('Y-m-d',$field['starttime'])}} 至 {{date('Y-m-d',$field['endtime'])}}">
                                 <else/>
-                                <input type="text" id="dateinput" readonly  class="form-control" name="times">
+                                <input type="text" id="dateinput" readonly class="form-control" name="times">
                             </if>
                             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -146,7 +146,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label star">折扣券总数量</label>
+                    <label class="col-sm-2 control-label star">{{$msg['module']['title']}}总数量</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" name="amount" value="{{$field['amount']}}">
                         <span class="help-block">
@@ -216,8 +216,8 @@
                             $.each(checkbox, function (i) {
                                 var module_name = $(this).attr('module_name');
                                 html += '<td>' + $(this).attr('title') +
-                                    '<input type="hidden" name="module[]" value="' + module_name + '"/>' +
-                                    '</td>';
+                                        '<input type="hidden" name="module[]" value="' + module_name + '"/>' +
+                                        '</td>';
                             });
                             html += '</tr></tbody></table>';
                         }
@@ -233,7 +233,7 @@
     $("#form").submit(function () {
         var msg = '';
         if ($.trim($("[name='title']").val()).length == 0) {
-            msg += '名称不能为空<br/>';
+            msg += "{{$msg['module']['title']}}名称不能为空<br/>";
         }
         if (msg) {
             util.message(msg, '', 'error');

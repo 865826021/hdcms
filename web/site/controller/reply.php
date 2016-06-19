@@ -80,7 +80,7 @@ class Reply {
 			$data           = json_decode( $_POST['keyword'], TRUE );
 			$data['module'] = v( 'module.name' );
 			$data['rank']   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
-			$rid            = api( 'rule' )->save( $data );
+			$rid            = $this->db->store( $data );
 			if ( $rid === FALSE ) {
 				message( '参数错误', 'back', 'error' );
 			}

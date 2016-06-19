@@ -70,7 +70,7 @@
 
                     <p>编辑公从号 <a href="">{{$wechat['wename']}}</a></p>
                     <button class="btn btn-success" onclick="checkConnect();">检测公众号是否接入成功</button>
-                    <a href="?s=system/manage/entry&siteid={{$_GET['siteid']}}" class="btn btn-primary">暂不接入,先去查看管理功能</a>
+                    <a href="?s=site/entry/refer&siteid={{$_GET['siteid']}}" class="btn btn-primary">暂不接入,先去查看管理功能</a>
                     <a href="?s=system/site/lists" class="btn btn-info">返回站点列表</a>
                 </li>
             </ul>

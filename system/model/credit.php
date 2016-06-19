@@ -1,5 +1,10 @@
-<?php namespace api;
-class credit {
+<?php namespace system\model;
+
+use hdphp\model\Model;
+
+class credit extends Model {
+	protected $table = '';
+
 	/**
 	 * 根据积分字段获取中文描述
 	 *

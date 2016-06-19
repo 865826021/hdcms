@@ -26,9 +26,23 @@ class Keyword {
 			//编辑时当前规则拥有的词不检测
 			$db->where( 'rule.rid', '<>', $rid );
 		}
-		$res = $db->field( 'rule.rid,rule.name,rule.module' )->first();
+		if ( $res = $db->field( 'rule.rid,rule.name,rule.module' )->first() ) {
+			switch ( $res['module'] ) {
+				case 'basic':
+					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=basic&rid=" . $res['rid'] . "&m=basic'>" . "文本消息 \"" . $res['name'] . "\"</a> 规则中";
+					break;
+				case 'news':
+					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . "图文消息 \"" . $res['name'] . "\"</a> 规则中";
+					break;
+				case 'cover':
+					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . "封面消息 \"" . $res['name'] . "\"</a> 规则中";
+					break;
+				default:
+					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . $res['name'] . "</a> 规则中";
+			}
+		}
 		if ( $res ) {
-			ajax( [ 'valid' => 0, 'message' => $res ] );
+			ajax( [ 'valid' => 0, 'message' => $message ] );
 		} else {
 			ajax( [ 'valid' => 1, 'message' => '关键词可以使用' ] );
 		}

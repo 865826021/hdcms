@@ -16,30 +16,51 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <foreach from="v('setting.creditnames')" key="$name" value="$c">
-                        <tr>
-                            <td width="150">
-                                <if value="in_array($name,array('credit1','credit2'))">
-                                    <input type="checkbox" checked disabled>
-                                    <input type="hidden" name="{{$name}}[status]" value="1">
-                                    <else/>
-                                    <if value="$c['status']==1">
-                                        <input type="checkbox" name="{{$name}}[status]" value="1" checked>
-                                        <else/>
-                                        <input type="checkbox" name="{{$name}}[status]" value="1">
-                                    </if>
-                                </if>
-                            </td>
-                            <td width="300">
-                                {{$name}}
-                            </td>
-                            <td>
-                                <div style="width:200px;">
-                                    <input type="text" name="{{$name}}[title]" value="{{$c['title']}}" class="form-control">
-                                </div>
-                            </td>
-                        </tr>
-                    </foreach>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="creditnames[credit1][status]" value="1" checked="checked" disabled="disabled">
+                        </td>
+                        <td>credit1</td>
+                        <td>
+                            <input type="text" name="creditnames[credit1][title]" value="{{$creditnames['credit1']['title']}}" class="form-control">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="creditnames[credit2][status]" value="1" checked="checked" disabled="disabled">
+                        </td>
+                        <td>credit2</td>
+                        <td>
+                            <input type="text" name="creditnames[credit2][title]" value="{{$creditnames['credit2']['title']}}" class="form-control">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="creditnames[credit3][status]" value="1" {{$creditnames['credit3']['status']?'checked="checked"':''}}>
+                        </td>
+                        <td>credit3</td>
+                        <td>
+                            <input type="text" name="creditnames[credit3][title]" value="{{$creditnames['credit3']['title']}}" class="form-control">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="creditnames[credit4][status]" value="1" {{$creditnames['credit4']['status']?'checked="checked"':''}}>
+                        </td>
+                        <td>credit4</td>
+                        <td>
+                            <input type="text" name="creditnames[credit4][title]" value="{{$creditnames['credit4']['title']}}" class="form-control">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="creditnames[credit5][status]" value="1" {{$creditnames['credit5']['status']?'checked="checked"':''}}>
+                        </td>
+                        <td>credit5</td>
+                        <td>
+                            <input type="text" name="creditnames[credit5][title]" value="{{$creditnames['credit5']['title']}}" class="form-control">
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

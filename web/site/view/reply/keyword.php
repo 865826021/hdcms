@@ -53,7 +53,7 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label">触发关键字</label>
 	<div class="col-sm-7 col-md-8" ng-repeat="key in rule.keyword" ng-if="key.type==1">
-		<input type="text" class="form-control" id="keywordInput" ng-model="key.content" onblur="util.checkWxKeyword(this)">
+		<input type="text" class="form-control" id="keywordInput" ng-model="key.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
 		<span class="help-block has_keyword"></span>
         <span class="help-block">
             当用户的对话内容符合以上的关键字定义时，会触发这个回复定义。多个关键字请使用逗号隔开。
@@ -66,12 +66,12 @@
 	<div class="col-sm-3 col-md-2">
 		<div class="checkbox">
 			<label>
-				<input type="checkbox" value="1" ng-model="keyAdvSetting">高级触发
+				<input type="checkbox" value="1" ng-model="advancedTriggering" ng-checked="advancedTriggering">高级触发
 			</label>
 		</div>
 	</div>
 </div>
-<div class="form-group" ng-show="keyAdvSetting">
+<div class="form-group" ng-show="advancedTriggering">
 	<label class="col-sm-2 control-label">高级触发列表</label>
 	<div class="col-sm-10">
 		<div class="panel panel-default tab-content">
@@ -85,7 +85,7 @@
 			<ul role="tabpanel" class="list-group tab-pane active" id="contain">
 				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==2">
 					<div class="col-xs-12 col-sm-8">
-						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this)">
+						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
 						<span class="help-block has_keyword"></span>
 						<p class="form-control-static" ng-hide="item.edited" ng-bind="item.content"></p>
 					</div>
@@ -102,7 +102,7 @@
 			<ul role="tabpanel" class="list-group tab-pane " id="regexp">
 				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==3">
 					<div class="col-xs-12 col-sm-8">
-						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this)">
+						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
 						<span class="help-block has_keyword"></span>
 						<p class="form-control-static" ng-hide="item.edited" ng-bind="item.content"></p>
 					</div>
@@ -145,9 +145,17 @@
 			};
 			$scope.footer.help = $sce.trustAsHtml($scope.footer.contain);
 			$scope.rule =<?php echo json_encode( $rule );?>;
+			//高级触发
+			$scope.advancedTriggering = false;
 			//添加时没有关键词信息,所以初始数据用于页面展示
 			if (!$scope.rule) {
 				$scope.rule = {name: '', rank: 0, status: 1, keyword: [{content: '', type: 1}]};
+			} else {
+				for (var i = 0; i < $scope.rule.keyword.length; i++) {
+					if ($scope.rule.keyword[i].type > 1) {
+						$scope.advancedTriggering = true;
+					}
+				}
 			}
 			//如果没有触发关键字时添加触发关键字用于显示 触发关键字input表单
 			var hasDefaultKeyword = false;
@@ -201,7 +209,7 @@
 							}
 						}
 						if (status == false) {
-							item = {content: '', type: 4, edited: true};
+							item = {content: '直接托管', type: 4, edited: true};
 						}
 						break;
 				}
@@ -219,7 +227,7 @@
 				var has_keyword = false;
 				$('.has_keyword').each(function () {
 					if ($.trim($(this).text())) {
-						util.message('触发关键字已经被其他规则使用了,请更换触发关键字','','warning');
+						util.message('触发关键字已经被其他规则使用了,请更换触发关键字', '', 'warning');
 						has_keyword = true;
 					}
 				});

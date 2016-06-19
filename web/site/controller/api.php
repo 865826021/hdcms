@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\site\controller;
+use system\model\Site;
 
 /**
  * 微信请求接口
@@ -22,14 +23,14 @@ class Api {
 	//构造函数
 	public function __construct() {
 		//加载站点缓存
-		api( 'site' )->loadSite();
+		( new Site() )->loadSite();p(v());
 		//与微信官网通信绑定验证
-		Weixin::valid();
+		\Weixin::valid();
 	}
 
 	//接口业务处理
 	public function deal() {
-		$instance = Weixin::instance( 'message' );
+		$instance = \Weixin::instance( 'message' );
 		$message  = $instance->getMessage();
 		//文本消息
 		if ( $instance->isTextMsg() ) {
@@ -49,7 +50,7 @@ class Api {
 
 	//消息处理
 	private function processor( $content ) {
-		$sql  = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 AND siteid=" . v( 'site.siteid' ) . " ORDER BY rank DESC,type DESC";
+		$sql  = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 AND content='{$content}' AND siteid=" . v( 'site.siteid' ) . " ORDER BY rank DESC,type DESC";
 		$keys = Db::query( $sql );
 		foreach ( $keys as $key ) {
 			$rid = '';
@@ -79,7 +80,6 @@ class Api {
 			}
 
 			if ( ! empty( $rid ) ) {
-
 				if ( in_array( $key['module'], $this->systemModules ) ) {
 					//系统模块
 					$class = '\module\\' . $key['module'] . '\processor';

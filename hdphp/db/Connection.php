@@ -149,7 +149,7 @@ abstract class Connection implements ArrayAccess, Iterator {
 		$sth = $this->getLink( TRUE )->prepare( $sql );
 		//绑定参数
 		foreach ( (array) $params as $key => $value ) {
-			$sth->bindParam( $key, $params[ $key ], is_numeric( $params[ $key ] ) ? PDO::PARAM_INT : PDO::PARAM_STR );
+			$sth->bindParam( $key, $params[ $key ], is_numeric( $value ) ? PDO::PARAM_INT : PDO::PARAM_STR );
 		}
 		try {
 			//执行查询

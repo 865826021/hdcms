@@ -11,8 +11,16 @@ namespace module\member;
 
 use module\hdSite;
 use system\model\Member;
+use system\model\MemberGroup;
 
 class site extends hdSite {
+	protected $db;
+
+	public function __construct() {
+		parent::__construct();
+		$this->db = new Member();
+	}
+
 	//会员列表
 	public function doSiteMemberLists() {
 		if ( IS_POST ) {
@@ -27,23 +35,23 @@ class site extends hdSite {
 	public function doSiteMemberEdit() {
 		$uid = q( 'get.uid' );
 		if ( IS_POST ) {
-			if ( ! Member::save() ) {
-				message( Member::getError(), 'back', 'error' );
+			if ( ! $this->db->save() ) {
+				message( $this->db->getError(), 'back', 'error' );
 			}
 			message( '编辑用户资料成功', 'back', 'success' );
 		}
-		if ( ! Member::hasUser( $uid ) ) {
+		if ( ! $this->db->hasUser( $uid ) ) {
 			message( '当前站点中不存在此用户' );
 		}
-		View::with( 'user', Member::find( $uid ) );
+		View::with( 'user', $this->db->find( $uid ) );
 		View::make( $this->template . '/member_edit.html' );
 	}
 
 	//添加会员
 	public function doSiteMemberPost() {
 		if ( IS_POST ) {
-			if ( ! $uid = Member::add( $_POST ) ) {
-				message( Member::getError(), 'back', 'error' );
+			if ( ! $uid = $this->db->add() ) {
+				message( $this->db->getError(), 'back', 'error' );
 			}
 			message( '添加会员成功', site_url( 'MemberEdit', [ 'uid' => $uid ] ), 'success' );
 		}
@@ -54,10 +62,10 @@ class site extends hdSite {
 
 	//修改密码
 	public function doSiteChangePassword() {
-		if ( Member::save() ) {
+		if ( $this->db->save() ) {
 			message( '密码更新成功', 'back', 'success' );
 		}
-		message( Member::getError(), 'back', 'error' );
+		message( $this->db->getError(), 'back', 'error' );
 
 	}
 
@@ -104,45 +112,61 @@ class site extends hdSite {
 
 	//会员组列表
 	public function doSiteGroupLists() {
+		$model = new MemberGroup();
 		if ( IS_POST ) {
 			if ( empty( $_POST['id'] ) ) {
-				message( '请选择会员组后进行操作', 'back', 'error' );
+				message( '没有可操作的会员组', 'back', 'error' );
 			}
-
 			foreach ( $_POST['id'] as $k => $id ) {
 				$data['id']     = $id;
 				$data['title']  = $_POST['title'][ $k ];
 				$data['credit'] = $_POST['credit'][ $k ];
 				$data['rank']   = min( 255, intval( $_POST['rank'][ $k ] ) );
-				Db::table( 'member_group' )->update( $data );
+				if ( ! $model->save( $data ) ) {
+					message( $model->getError(), 'back', 'error' );
+				}
 			}
 			//更改会员组变更设置
 			Db::table( 'site_setting' )->where( 'siteid', v( 'site.siteid' ) )->update( [
 				'grouplevel' => $_POST['grouplevel']
 			] );
+			m( 'Site' )->updateSiteCache();
 			message( '更改会组资料更新成功', 'refresh', 'success' );
 		}
 		$sql    = "SELECT count(*) as user_count,m.uid,g.* FROM " . tablename( 'member_group' ) . " g LEFT JOIN " . tablename( 'member' ) . " m ON g.id=m.group_id WHERE g.siteid=" . v( 'site.siteid' ) . " GROUP BY g.id ORDER BY g.rank DESC,g.id";
 		$groups = Db::query( $sql );
 		View::with( 'groups', $groups );
-		View::with( 'grouplevel', Db::table( 'site_setting' )->where( 'siteid', v( 'site.siteid' ) )->pluck( 'grouplevel' ) );
+		View::with( 'grouplevel', v( 'setting.grouplevel' ) );
 		View::make( $this->template . '/group_lists.html' );
+	}
+
+	//删除组
+	public function doSiteDelGroup() {
+		$id    = q( 'get.id' );
+		$model = new MemberGroup();
+		//默认组编号
+		$defaultId = $model->getDefaultGroup();
+		if ( $id == $defaultId ) {
+			message( '默认组不能删除', 'back', 'error' );
+		}
+		//更改用户默认组
+		$this->db->where( 'siteid', v( 'site.siteid' ) )->where( 'group_id', $id )->update( [ 'group_id' => $defaultId ] );
+		$model->where( 'id', $id )->delete();
+		message( '删除组成功', '', 'success' );
 	}
 
 	//添加会员组
 	public function doSiteGroupPost() {
+		$model = new MemberGroup();
 		if ( IS_POST ) {
 			if ( empty( $_POST['title'] ) ) {
 				message( '会员组名称不能为空', 'back', 'error' );
 			};
-			$data['title']     = $_POST['title'];
-			$data['credit']    = intval( $_POST['credit'] );
-			$data['siteid']    = Session::get( 'siteid' );
-			$data['is_system'] = 0;
-			$data['rank']      = q( 'post.rank', 0, 'intval' );
-			$data['isdefault'] = q( 'post.isdefault', 0, 'intval' );
-			$id                = Db::table( 'member_group' )->replaceGetId( $data );
-			message( '会员组资料保存成功', site_url( 'GroupPost', [ 'id' => $id ] ) );
+			$action = q( 'get.id' ) ? 'save' : 'add';
+			if ( ! $model->$action() ) {
+				message( $model->getError(), 'back', 'error' );
+			}
+			message( '会员组资料保存成功', site_url( 'GroupLists' ) );
 		}
 		$field = Db::table( 'member_group' )->where( 'id', q( 'get.id' ) )->first();
 		View::with( 'field', $field )->make( $this->template . '/group_post.html' );
@@ -150,7 +174,9 @@ class site extends hdSite {
 
 	//设置默认组
 	public function doSiteSetDefaultGroup() {
-		$group = Db::table( 'member_group' )->where( 'siteid', v( 'site.siteid' ) )->find( q( 'get.id' ) );
+		$model = new MemberGroup();
+		$id    = q( 'get.id' );
+		$group = $model->where( 'siteid', v( 'site.siteid' ) )->find( $id );
 		if ( empty( $group ) ) {
 			message( '会员组不存在', '', 'error' );
 		}
@@ -160,8 +186,10 @@ class site extends hdSite {
 		if ( $group['credit'] != 0 ) {
 			message( '默认会员组初始积分必须为0', '', 'error' );
 		}
-		Db::table( 'member_group' )->update( [ 'isdefault' => 0 ] );
-		Db::table( 'member_group' )->where( 'id', $group['id'] )->update( [ 'isdefault' => 1 ] );
+		$model->update( [ 'isdefault' => 0 ] );
+		if ( ! $model->save( [ 'id' => $id, 'isdefault' => 1 ] ) ) {
+			message( $model->getError(), 'back', 'error' );
+		}
 		message( '默认会员组设置成功', '', 'success' );
 	}
 }

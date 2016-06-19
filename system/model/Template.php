@@ -1,0 +1,72 @@
+<?php
+/** .-------------------------------------------------------------------
+ * |  Software: [HDCMS framework]
+ * |      Site: www.hdcms.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
+namespace system\model;
+
+use hdphp\model\Model;
+
+/**
+ * 模板
+ * Class Template
+ * @package system\model
+ * @author 向军
+ */
+class Template extends Model {
+	protected $table = 'template';
+
+	/**
+	 *
+	 *
+	 * @param int $siteid 站点编号
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	/**
+	 * 获取站点所有模板
+	 *
+	 * @param int $siteid 站点编号
+	 * @param string $type 模板类型
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function getSiteAllTemplate( $siteid = NULL, $type = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
+		if ( empty( $siteid ) ) {
+			throw new \Exception( '$siteid 参数错误' );
+		}
+		static $cache = [ ];
+		if ( isset( $cache[ $siteid ] ) ) {
+			return $cache[ $siteid ];
+		}
+		//获取站点可使用的所有套餐
+		$package   = ( new Package() )->getSiteAllPackageData( $siteid );
+		$templates = [ ];
+		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
+			//拥有[所有服务]套餐
+			$templates = $this->get();
+		} else {
+			$templateNames = [ ];
+			foreach ( $package as $p ) {
+				$templateNames = array_merge( $templateNames, $p['template'] );
+			}
+			$templateNames = array_merge( $templateNames, ( new SiteTemplate() )->getSiteExtTemplateName( $siteid ) );
+			if ( ! empty( $templateNames ) ) {
+				if ( $type ) {
+					$this->where( 'type', $type );
+				}
+				$templates = $this->whereIn( 'name', $templateNames )->get();
+			}
+		}
+
+		return $cache[ $siteid ] = $templates;
+	}
+
+}

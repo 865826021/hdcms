@@ -18,7 +18,7 @@ class site extends hdSite
             $data['welcome']         = $_POST['welcome'];
             $data['default_message'] = $_POST['default'];
             Db::table('site_setting')->where('siteid', v('site.siteid'))->update($data);
-            api('site')->updateSiteCache(v('site.siteid'));
+            (new \system\model\Site())->updateSiteCache(v('site.siteid'));
             message('系统回复消息设置成功', '', 'success');
         }
         View::make($this->template.'/post.html');

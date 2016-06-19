@@ -55,19 +55,7 @@ require(['util'], function (util) {
         var con = $(obj).val();
         $.post('?s=site/keyword/checkWxKeyword', {content: con, rid: rid ? rid : 0}, function (res) {
             if (res.valid == 0) {
-                var str = '';
-                switch (res.message.module) {
-                    case 'basic':
-                        //普通文本回复
-                        str = "该关键字已存在于 <a href='?s=site/reply/post&m=basic&rid=" + res.message.rid + "&m=basic'>" +
-                            "文本消息 \"" + res.message.name + "\"</a> 规则中";
-                        break;
-                    case 'news':
-                        //普通文本回复
-                        str = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" + res.message.rid + "&m=basic'>" +
-                            "图文消息 \"" + res.message.name + "\"</a> 规则中";
-                }
-                $(obj).next().html(str);
+                $(obj).next().html(res.message);
             } else {
                 $(obj).next().html('');
             }

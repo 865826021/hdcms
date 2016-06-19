@@ -381,7 +381,8 @@ class Model implements ArrayAccess, Iterator {
 			$status = FALSE;
 			$name   = C( 'app.token_name' );
 			$token  = Session::get( $name );
-			if ( empty( $token ) || q( 'post.' . $name ) == $token ) {
+			$post   = q( 'post' . $name );
+			if ( empty( $token ) || empty( $post ) || $post == $token ) {
 				$status = TRUE;
 			}
 			//令牌重置
@@ -444,8 +445,6 @@ class Model implements ArrayAccess, Iterator {
 		if ( $this->timestamps === TRUE ) {
 			$data['created_at'] = NOW;
 		}
-		//禁止添加字段处理
-		$data = $this->denyInsertFieldDispose( $data );
 		//添加前操作
 		if ( method_exists( $this, '_before_add' ) ) {
 			$this->_before_add( $data );
@@ -477,9 +476,18 @@ class Model implements ArrayAccess, Iterator {
 			//对象时获取对象属性
 			$data = get_object_vars( $data );
 		}
+		//令牌验证
+		if ( ! $this->checkToken( $data ) ) {
+			$this->error = '表单令牌错误';
+
+			return FALSE;
+		}
 		//动作类型  1 插入 2 更新
 		$type = $type ?: ( empty( $data[ $this->pk ] ) ? self::MODEL_INSERT : self::MODEL_UPDATE );
-
+		//禁止更新字段处理
+		$data = $type == 2 ? $this->denyUpdateFieldDispose( $data ) : $data;
+		//禁止添加字段处理
+		$data = $type == 1 ? $this->denyInsertFieldDispose( $data ) : $data;
 		if ( empty( $data ) ) {
 			$this->error = '数据为空无法进行模型操作';
 
@@ -493,12 +501,7 @@ class Model implements ArrayAccess, Iterator {
 		if ( ! $this->autoValidate( $data, $type ) ) {
 			return FALSE;
 		}
-		//令牌验证
-		if ( ! $this->checkToken( $data ) ) {
-			$this->error = '表单令牌错误';
 
-			return FALSE;
-		}
 		//字段映射
 		$data = $this->parseFieldsMap( $data, $type );
 
@@ -526,15 +529,14 @@ class Model implements ArrayAccess, Iterator {
 			$data['updated_at'] = NOW;
 		}
 		//更新条件检测
-		if ( ! empty( $data[ $this->pk ] ) ) {
-			$this->db->where( $this->pk, $data[ $this->pk ] );
-		} else {
-			$this->error = '模型的save方法的数据必须存在主键值';
+		if ( empty( $data[ $this->pk ] ) ) {
+			$this->error = '模型的save方法的数据必须设置条件';
 
 			return FALSE;
+		} else {
+			$this->db->where( $this->pk, $data[ $this->pk ] );
 		}
-		//禁止更新字段处理
-		$data = $this->denyUpdateFieldDispose( $data );
+
 		//更新前操作
 		if ( method_exists( $this, '_before_save' ) ) {
 			$this->_before_save( $data );
@@ -596,9 +598,6 @@ class Model implements ArrayAccess, Iterator {
 	 */
 	final public function firstOrCreate( $param, $data ) {
 		if ( $data = $this->create( $data ) ) {
-			//禁止添加字段处理
-			$data = $this->denyInsertFieldDispose( $data );
-
 			return $this->db->firstOrCreate( $param, $data );
 		}
 	}

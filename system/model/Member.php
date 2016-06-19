@@ -7,47 +7,46 @@ class Member extends Model {
 	protected $table = 'member';
 	protected $auto
 	                 = [
-			[ 'password', 'setPassword', 'method', 1, 3 ],
-			[ 'siteid', 'getSiteid', 'method', 3, 3 ],
-			[ 'credit1', 0, 'string', 5, 1 ],
-			[ 'credit2', 0, 'string', 5, 1 ],
-			[ 'credit3', 0, 'string', 5, 1 ],
-			[ 'credit4', 0, 'string', 5, 1 ],
-			[ 'credit5', 0, 'string', 5, 1 ],
-			[ 'credit6', 0, 'string', 5, 1 ],
-			[ 'credit1', 0, 'string', 5, 1 ],
-			[ 'createtime', 'time', 'function', 5, 1 ],
-			[ 'email', '', 'string', 5, 1 ],
-			[ 'mobile', '', 'string', 5, 1 ],
-			[ 'qq', '', 'string', 5, 1 ],
-			[ 'nickname', '', 'string', 5, 1 ],
-			[ 'realname', '', 'string', 5, 1 ],
-			[ 'telephone', '', 'string', 5, 1 ],
-			[ 'vip', '', 'string', 5, 1 ],
-			[ 'address', '', 'string', 5, 1 ],
-			[ 'zipcode', '', 'string', 5, 1 ],
-			[ 'alipay', '', 'string', 5, 1 ],
-			[ 'msn', '', 'string', 5, 1 ],
-			[ 'taobao', '', 'string', 5, 1 ],
-			[ 'site', '', 'string', 5, 1 ],
-			[ 'nationality', '', 'string', 5, 1 ],
-			[ 'introduce', '', 'string', 5, 1 ],
-			[ 'gender', '', 'string', 5, 1 ],
-			[ 'graduateschool', '', 'string', 5, 1 ],
-			[ 'height', '', 'string', 5, 1 ],
-			[ 'weight', '', 'string', 5, 1 ],
-			[ 'bloodtype', '', 'string', 5, 1 ],
-			[ 'birthyear', 0, 'string', 4, 1 ],
-			[ 'birthmonth', 0, 'string', 4, 1 ],
-			[ 'birthday', 0, 'string', 4, 1 ],
-			[ 'resideprovince', '', 'string', 4, 1 ],
-			[ 'residecity', '', 'string', 4, 1 ],
-			[ 'residedist', '', 'string', 4, 1 ],
+			[ 'password', 'setPassword', 'method', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
+			[ 'siteid', 'getSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'credit1', 0, 'intval', self::EXIST_AUTO, self::MODEL_BOTH ],
+			[ 'credit2', 0, 'intval', self::EXIST_AUTO, self::MODEL_BOTH ],
+			[ 'credit3', 0, 'intval', self::EXIST_AUTO, self::MODEL_BOTH ],
+			[ 'credit4', 0, 'intval', self::EXIST_AUTO, self::MODEL_BOTH ],
+			[ 'credit5', 0, 'intval', self::EXIST_AUTO, self::MODEL_BOTH ],
+			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'email', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'mobile', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'qq', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'nickname', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'realname', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'telephone', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'vip', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'address', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'zipcode', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'alipay', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'msn', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'taobao', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'site', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'nationality', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'introduce', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'gender', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'graduateschool', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'height', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'weight', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'bloodtype', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'birthyear', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'birthmonth', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'birthday', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'resideprovince', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'residecity', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'residedist', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 
 	//密码字段处理
 	public function setPassword( $password, &$data ) {
-		$data['security'] = substr( md5( time() ), 0, 10 );
+		$data['security']  = substr( md5( time() ), 0, 10 );
+		$data['password2'] = md5( $data['password2'] . $data['security'] );
 
 		return md5( $password . $data['security'] );
 	}
@@ -60,9 +59,11 @@ class Member extends Model {
 	protected $validate
 		= [
 			[ 'email', 'unique', '邮箱已经被使用', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'email', 'email', '邮箱格式错误', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'mobile', 'unique', '手机号已经被使用', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'mobile', 'phone', '手机号格式错误', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'uid', 'checkUid', '当前用户不属于当前站点', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'password2', 'confirm:password', '两次密码不一致', self::EXISTS_VALIDATE, self::MODEL_BOTH ]
+			[ 'password', 'confirm:password2', '两次密码不一致', self::EXIST_VALIDATE, self::MODEL_BOTH ]
 		];
 
 	public function checkUid( $field, $value, $params, $data ) {
@@ -76,8 +77,8 @@ class Member extends Model {
 	 *
 	 * @return bool
 	 */
-	protected function hasUser( $uid ) {
-		return Db::table( 'member' )->where( 'siteid', v( 'site.siteid' ) )->where( 'uid', $uid )->first() ? TRUE : FALSE;
+	public function hasUser( $uid ) {
+		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'uid', $uid )->get() ? TRUE : FALSE;
 	}
 
 }

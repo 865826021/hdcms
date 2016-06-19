@@ -34,6 +34,17 @@ class SiteModules extends Model {
 	public function getSiteExtModules( $siteid ) {
 		$module = $this->where( 'siteid', $siteid )->lists( 'module' );
 
-		return $module ? Db::table( 'modules' )->whereIn( 'mid', $module )->get() : [ ];
+		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
+	}
+
+	/**
+	 * 获取站点扩展模块名称列表
+	 *
+	 * @param int $siteid 站点编号
+	 *
+	 * @return array
+	 */
+	public function getSiteExtModulesName( $siteid ) {
+		return $this->where( 'siteid', $siteid )->lists( 'module' );
 	}
 }

@@ -193,7 +193,8 @@
 	//全选检测
 	function JudgeParentInput() {
 		$("tbody").each(function () {
-			if ($(this).find('input').length == $(this).find('input:checked').length) {
+			var inputLen = $(this).find('input').length;
+			if (inputLen > 0 && inputLen == $(this).find('input:checked').length) {
 				$(this).prev('thead').find('input').prop('checked', true);
 			} else {
 				$(this).prev('thead').find('input').prop('checked', false);

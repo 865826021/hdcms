@@ -35,17 +35,22 @@ class Component {
 		View::with( 'modules', $modules )->make();
 	}
 
-	//字体列表
+	/**
+	 * 字体列表
+	 */
 	public function font() {
 		View::make();
 	}
 
-	//上传图片webuploader
+	/**
+	 * 上传图片webuploader
+	 */
 	public function uploader() {
-		$file = Upload::path( Config::get( 'upload.path' ) . '/' . date( 'Y/m' ) )->make();
+		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m' ) )->make();
 		if ( $file ) {
 			$data = [
 				'uid'        => Session::get( 'user.uid' ) ?: Session::get( 'member.uid' ),
+				'siteid'     => q( 'session.siteid', 0 ),
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
 				'path'       => $file[0]['path'],
@@ -112,10 +117,12 @@ class Component {
 	}
 
 	//模块与模板列表,添加站点时选择扩展模块时使用
-	public function ajaxModules() {
-		$modules = Db::table( 'modules' )->where( 'is_system', 0 )->get();
+	public function ajaxModulesTemplate() {
+		$modules   = Db::table( 'modules' )->where( 'is_system', 0 )->get();
+		$templates = Db::table( 'template' )->get();
 		View::with( [
-			'modules' => $modules,
+			'modules'   => $modules,
+			'templates' => $templates
 		] )->make();
 	}
 
@@ -123,12 +130,10 @@ class Component {
 	public function ueditor() {
 		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( "config.json" ) ), TRUE );
 		$action = $_GET['action'];
-
 		switch ( $action ) {
 			case 'config':
 				$result = json_encode( $CONFIG );
 				break;
-
 			/* 上传图片 */
 			case 'uploadimage':
 				/* 上传涂鸦 */

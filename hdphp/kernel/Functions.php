@@ -226,10 +226,8 @@ if ( ! function_exists( 'd' ) ) {
 				//删除所有缓存
 				return $db->truncate();
 			default:
-				$data = [ '`key`' => $key, 'value' => serialize( $value ) ];
-
+				$data = [ 'key' => $key, 'value' => serialize( $value ) ];
 				return $db->replace( $data );
-
 		}
 	}
 }

@@ -98,10 +98,15 @@
 						<td id="extModule">
 							<foreach from="$extModule" value="$v">
 								<span class="label label-success">{{$v['title']}}</span>
-								<input name="modules[]" value="{{$v['mid']}}" type="hidden"/>
+								<input name="modules[]" value="{{$v['name']}}" type="hidden" />
 							</foreach>
 						</td>
-						<td></td>
+						<td id="extTemplate">
+							<foreach from="$extTemplate" value="$t">
+								<span class="label label-success">{{$t['title']}}</span>
+								<input name="templates[]" value="{{$t['name']}}" type="hidden"/>
+							</foreach>
+						</td>
 					</tr>
 					<tr>
 						<td></td>
@@ -158,22 +163,39 @@
 	//专属附加权限
 	function extModules() {
 		require(['util'], function (util) {
+			var module = [];var template = [];
+			$("#extModule input").each(function () {
+				module.push($(this).val());
+			});
+			$("#extTemplate input").each(function () {
+				template.push($(this).val());
+			});
+			url = '?s=system/component/ajaxModulesTemplate&module=' + module.join('|')+'&template='+template.join('|');
 			var modalobj = util.modal({
 				id: 'modalList',
-				content: ['?s=system/component/ajaxModules'],
+				content: [url],
 				footer: '<button class="btn btn-primary confirm">确定</button>',
 				events: {
 					confirm: function () {
 						//选取模块
 						var mH = '';
-						$(modalobj).find('#module .btn-primary').each(function (i) {
+						//模板
+						var tH = '';
+						$(modalobj).find('#ajaxModulesTemplate .btn-primary').each(function (i) {
 							var title = $(this).parent().prev().prev().text();
 							var name = $(this).parent().prev().text();
-							mH += '<span class="label label-success">' + title + '</span>&nbsp;' +
-								'<input name="modules[]" value="' + $(this).attr('mid') + '" type="hidden"/>';
+							if ($(this).attr('mid') > 0) {
+								//模块
+								mH += '<span class="label label-success">' + title + '</span>&nbsp;' +
+									'<input name="modules[]" value="' + $(this).attr('name') + '" type="hidden"/>';
+							} else {
+								//模板
+								tH += '<span class="label label-success">' + title + '</span>&nbsp;' +
+									'<input name="templates[]" value="' + $(this).attr('name') + '" type="hidden"/>';
+							}
 						});
-
 						$("#extModule").html(mH);
+						$("#extTemplate").html(tH);
 						modalobj.modal('hide');
 					}
 				},

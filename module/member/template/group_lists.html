@@ -70,10 +70,10 @@
                             </td>
                             <td>{{$g['uid']?$g['user_count']:0}}人</td>
                             <td class="text-right">
-                                <a href="">编辑</a>
+                                <a href="?a=member/site/GroupPost&t=site&id={{$g['id']}}">编辑</a>
                                 <if value="$g['is_system']==0">
                                     -
-                                    <a href="">删除</a>
+                                    <a href="javascript:;" onclick="del({{$g['id']}})">删除</a>
                                 </if>
                                 - <a href="javascript:;" onclick="setDefaut({{$g['id']}})">设为默认组</a>
                             </td>
@@ -88,6 +88,7 @@
 </block>
 
 <script>
+    //设置默认组
     function setDefaut(id) {
         $.get("{{site_url('setDefaultGroup')}}", {id: id}, function (res) {
             if (res.valid) {
@@ -96,5 +97,17 @@
                 util.message(res.message, '', 'error');
             }
         }, 'json');
+    }
+    //删除组
+    function del(id) {
+        util.confirm('确定删除组吗?', function () {
+            $.get("{{site_url('DelGroup')}}", {id: id}, function (res) {
+                if (res.valid) {
+                    util.message(res.message, 'refresh', 'success');
+                } else {
+                    util.message(res.message, '', 'error');
+                }
+            }, 'json');
+        });
     }
 </script>

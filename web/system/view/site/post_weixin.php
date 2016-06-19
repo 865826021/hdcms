@@ -156,9 +156,7 @@
 <style>
     .nav li.normal {
         background: #eee;
-
     }
-
     .nav li.normal a, .nav li.normal a:active, .nav li.normal a:focus {
         border: none;
     }

@@ -18,7 +18,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label star">站点名称</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.title" required="required">
+						<input type="text" class="form-control" ng-model="field.name" required="required">
 					</div>
 				</div>
 				<div class="form-group">

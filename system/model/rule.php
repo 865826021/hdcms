@@ -17,7 +17,40 @@ use hdphp\model\Model;
  * @package system\model
  * @author 向军
  */
-class Rule  extends Model{
+class Rule extends Model {
+	protected $table = 'rule';
+	protected $validate
+	                 = [
+			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'name', 'required', '规则名称不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'module', 'required', 'module字段不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'rid', 'validateRid', '回复规则不属于本网站', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		];
+
+	protected function validateRid( $field, $val ) {
+		return Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'rid', $val )->get() ? TRUE : FALSE;
+	}
+
+	protected $filter
+		= [
+			[ 'rid', self::EMPTY_FILTER, self::MODEL_BOTH ],
+		];
+	protected $auto
+		= [
+			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'siteid', 'autoSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'rank', 'autoRank', 'method', self::MUST_AUTO, self::MODEL_INSERT ]
+		];
+
+	protected function autoSiteid() {
+		return SITEID;
+	}
+
+	protected function autoRank( $field, $val ) {
+		return min( 255, intval( $val ) );
+	}
+
 	/**
 	 * 添加关键词
 	 *
@@ -40,35 +73,30 @@ class Rule  extends Model{
 	 * )
 	 * )
 	 */
-	public function store( $data ) {
-		//添加回复规则
-		if ( empty( $data['name'] ) || empty( $data['module'] ) ) {
-			return FALSE;
-		}
-		$data['siteid'] = isset( $data['siteid'] ) ? $data['siteid'] : v( 'site.siteid' );//站点编号
-		$data['rank']   = isset( $data['rank'] ) ? max( 255, intval( $data['rank'] ) ) : 0;//排序
-		$data['status'] = isset( $data['status'] ) ? $data['status'] : 1;//开启
-		$rid            = Db::table( 'rule' )->replaceGetId( $data );
-		//添加关键词,如果是编辑时删除原关键词
-		if ( ! empty( $data['rid'] ) && $data['rid'] > 0 ) {
-			Db::table( 'rule_keyword' )->where( 'rid', $data['rid'] )->delete();
-		}
-		foreach ( $data['keyword'] as $v ) {
-			if ( empty( $v['content'] ) ) {
-				//内容为空时忽略
-				continue;
-			}
-			$v['rid']    = $rid;
-			$v['siteid'] = v( 'site.siteid' );
-			$v['module'] = $data['module'];
-			$v['rank']   = isset( $v['rank'] ) ? min( 255, intval( $v['rank'] ) ) : 0;//排序
-			$v['type']   = isset( $v['type'] ) ? $v['type'] : 1;//开启
-			$v['status'] = isset( $v['status'] ) ? $v['status'] : 1;//开启
-			Db::table( 'rule_keyword' )->insert( $v );
-		}
-
-		return $rid;
-	}
+//	public function store( $ruleData, $keywordData ) {
+//		$action = empty( $ruleData[ $this->pk ] ) ? 'add' : 'save';
+//		if ( ! $rid = $this->$action( $ruleData ) ) {
+//			return FALSE;
+//		}
+//		$rid = q( 'get.rid', $rid );
+//		//添加关键词,如果是编辑时删除原关键词
+//		Db::table( 'rule_keyword' )->where( 'rid', $rid )->delete();
+//		foreach ( $keywordData as $v ) {
+//			if ( empty( $v['content'] ) ) {
+//				//内容为空时忽略
+//				continue;
+//			}
+//			$v['rid']    = $rid;
+//			$v['siteid'] = v( 'site.siteid' );
+//			$v['module'] = $data['module'];
+//			$v['rank']   = isset( $v['rank'] ) ? min( 255, intval( $v['rank'] ) ) : 0;//排序
+//			$v['type']   = isset( $v['type'] ) ? $v['type'] : 1;//开启
+//			$v['status'] = isset( $v['status'] ) ? $v['status'] : 1;//开启
+//			Db::table( 'rule_keyword' )->insert( $v );
+//		}
+//
+//		return $rid;
+//	}
 
 	/**
 	 * 获取关键词规则
@@ -127,17 +155,17 @@ class Rule  extends Model{
 	 *
 	 * @return bool
 	 */
-	public function saveReplyCover( $cover ) {
-		if ( empty( $cover['rid'] ) || empty( $cover['module'] ) || empty( $cover['title'] ) || empty( $cover['description'] )
-		     || empty( $cover['thumb'] )
-		     || empty( $cover['url'] )
-		) {
-			return FALSE;
-		}
-		$cover['siteid'] = v( "site.siteid" );
-		$cover['web_id'] = empty( $cover['web_id'] ) ? 0 : $cover['web_id'];
-		$cover['do']     = empty( $cover['do'] ) ? '' : $cover['do'];
-
-		return Db::table( 'reply_cover' )->replaceGetId( $cover );
-	}
+//	public function saveReplyCover( $cover ) {
+//		if ( empty( $cover['rid'] ) || empty( $cover['module'] ) || empty( $cover['title'] ) || empty( $cover['description'] )
+//		     || empty( $cover['thumb'] )
+//		     || empty( $cover['url'] )
+//		) {
+//			return FALSE;
+//		}
+//		$cover['siteid'] = v( "site.siteid" );
+//		$cover['web_id'] = empty( $cover['web_id'] ) ? 0 : $cover['web_id'];
+//		$cover['do']     = empty( $cover['do'] ) ? '' : $cover['do'];
+//
+//		return Db::table( 'reply_cover' )->replaceGetId( $cover );
+//	}
 }

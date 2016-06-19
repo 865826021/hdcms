@@ -174,7 +174,7 @@ abstract class Build {
 		if ( $expression = $this->getBindExpression( 'set' ) ) {
 			$set = '';
 			foreach ( $expression as $k => $v ) {
-				$set .= "{$v}=?,";
+				$set .= "`{$v}`=?,";
 			}
 
 			return $set ? 'SET ' . substr( $set, 0, - 1 ) : '';

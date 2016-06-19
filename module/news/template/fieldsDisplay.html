@@ -162,11 +162,10 @@
     function moduleController($scope, _, util) {
         $scope.contents={{$contents}};
         if ($scope.contents.length == 0) {
-            $scope.contents = [{son_news: [{}]}];
+            $scope.contents = [{content:'',son_news: [{content:''}]}];
         }
         //当前操作的子新闻
         $scope.activeItem = $scope.contents[0];
-
         //显示隐藏左侧列表编辑菜单
         $("body").delegate('.left-list .panel', 'mouseover', function () {
             $(this).find('.mask').show();
@@ -182,14 +181,14 @@
         }
         //添加组即一级图文
         $scope.addGroup = function () {
-            $scope.contents.push({son_news: [{}]});
+            $scope.contents.push({son_news: [{content:''}]});
             $scope.activeItem = $scope.contents[$scope.contents.length-1];
             //更改编辑区域位置
             $scope.changeLeftDivPositon($scope.contents.length-1,false);
         }
         //添加二级图文
         $scope.addItem = function (pos) {
-            $scope.contents[pos].son_news.push({});
+            $scope.contents[pos].son_news.push({content:''});
             var cPos = $scope.contents[pos].son_news.length - 1;
             $scope.activeItem = $scope.contents[pos].son_news[cPos];
             //更改编辑区域位置,待页面中创建了dom元素后执行
@@ -252,17 +251,16 @@
         util.ueditor('container', {}, function (editor) {
             editor.addListener('contentChange', function () {
                 $scope.activeItem.content = editor.getContent();
-                $scope.$apply();
             });
             editor.addListener('ready', function () {
                 if (editor && editor.getContent() != $scope.activeItem.content) {
                     editor.setContent($scope.activeItem.content);
                 }
-                $scope.$watch('activeItem.content', function (value) {
-                    if (editor && editor.getContent() != value) {
-                        editor.setContent(value ? value : '');
+                $scope.$watch('activeItem', function (item) {
+                    if (editor && editor.getContent() != item.content) {
+                        editor.setContent(item.content ? item.content : '');
                     }
-                });
+                },true);
             });
             editor.addListener('clearRange', function () {
                 $scope.activeItem.content = editor.getContent();
@@ -285,23 +283,23 @@
         var msg = '';
         angular.forEach($scope.contents, function (v, k) {
             if ($.trim(v.title) == '') {
-                msg = "还有图文没有设置标题<br/>";
+                msg += "还有图文没有设置标题<br/>";
             }
             if ($.trim(v.thumb) == '') {
-                msg = "还有图文没有设置封面<br/>";
+                msg += "还有图文没有设置封面<br/>";
             }
             if ($.trim(v.description) == '') {
-                msg = "还有图文没有设置描述<br/>";
+                msg += "还有图文没有设置描述<br/>";
             }
             angular.forEach(v.son_news, function (b) {
                 if ($.trim(b.title) == '') {
-                    msg = "还有图文没有设置标题<br/>";
+                    msg += "还有图文没有设置标题<br/>";
                 }
                 if ($.trim(b.thumb) == '') {
-                    msg = "还有图文没有设置封面<br/>";
+                    msg += "还有图文没有设置封面<br/>";
                 }
                 if ($.trim(b.description) == '') {
-                    msg = "还有图文没有设置描述<br/>";
+                    msg += "还有图文没有设置描述<br/>";
                 }
             })
         }, val);

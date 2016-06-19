@@ -113,7 +113,7 @@
 						</div>
 						<ul class="list-group menus collapse in hide" menuid="{{$m['id']}}">
 							<foreach from="$d['_data']" value="$g">
-								<li id="{{$g['id']}}" class="list-group-item" data-href="{{$g['url']}}">
+								<li menuid="{{$m['id']}}" class="list-group-item" dataHref="{{$g['url']}}">
 									<if value="$g['append_url']">
 										<a class="pull-right" dataHref="{{$g['append_url']}}" menuid="{{$m['id']}}"><i class="fa fa-plus"></i></a>
 									</if>
@@ -288,14 +288,15 @@
 </div>
 
 <script>
-	//dataHref="{{$g['append_url']}}" menuid=
 	//链接跳转
-	$("[dataHref]").click(function () {
+	$("[dataHref]").click(function (event) {
 		var url = $(this).attr('dataHref');
 		//记录当前点击的菜单
 		sessionStorage.setItem('dataHref', url);
 		sessionStorage.setItem('menuid', $(this).attr('menuid'));
 		location.href = url + '&menuid=' + sessionStorage.getItem('menuid');
+		//阻止冒泡
+		event.stopPropagation();
 	});
 	//记录顶级菜单编号
 	if (!sessionStorage.getItem('menuid')) {
@@ -307,7 +308,7 @@
 	}
 	//设置左侧菜单点击样式
 	if (sessionStorage.getItem('dataHref')) {
-		$("li[data-href='" + sessionStorage.getItem('menuid') + "']").addClass('active');
+		$("li[dataHref='" + sessionStorage.getItem('dataHref') + "']").addClass('active');
 	}
 	//显示当前左侧菜单
 	$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');

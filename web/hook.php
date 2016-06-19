@@ -23,21 +23,23 @@ class hook {
 		$this->siteInitialize();
 	}
 
-	//初始化站点
+	/**
+	 * 初始化站点
+	 */
 	protected function siteInitialize() {
 		$siteModel = new Site();
 		//缓存站点数据
 		$siteid = q( 'get.siteid', Session::get( 'siteid' ), 'intval' );
-		if ( empty( $siteid ) ) {
-			return;
-		}
-		Session::set( 'siteid', $siteid );
-		if ( $siteModel->find( $siteid ) ) {
-			//加载站点缓存
-			$siteModel->loadSite();
-		} else {
-			Session::del( 'siteid' );
-			message( '你访问的站点不存在', 'back', 'error' );
+		if ( $siteid ) {
+			Session::set( 'siteid', $siteid );
+			if ( $siteModel->find( $siteid ) ) {
+				define( 'SITEID', $siteid );
+				//加载站点缓存
+				$siteModel->loadSite();
+			} else {
+				Session::del( 'siteid' );
+				message( '你访问的站点不存在', 'back', 'error' );
+			}
 		}
 	}
 }

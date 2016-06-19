@@ -65,8 +65,13 @@ class Modules extends Model {
 	 * @param int $siteid 站点编号
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
-	public function getSiteAllModules( $siteid ) {
+	public function getSiteAllModules( $siteid = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
+		if ( empty( $siteid ) ) {
+			throw new \Exception( '$siteid 参数错误' );
+		}
 		static $cache = [ ];
 		if ( isset( $cache[ $siteid ] ) ) {
 			return $cache[ $siteid ];
@@ -82,6 +87,7 @@ class Modules extends Model {
 			foreach ( $package as $p ) {
 				$moduleNames = array_merge( $moduleNames, $p['modules'] );
 			}
+			$moduleNames = array_merge( $moduleNames, ( new SiteModules() )->getSiteExtModulesName( $siteid ) );
 			if ( ! empty( $moduleNames ) ) {
 				$modules = $this->whereIn( 'name', $moduleNames )->get();
 			}

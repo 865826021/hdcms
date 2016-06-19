@@ -20,7 +20,7 @@ class SiteSetting extends Model {
 	protected $table = 'site_setting';
 	protected $validate
 	                 = [
-			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		];
 	protected $auto
 	                 = [

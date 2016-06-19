@@ -20,9 +20,9 @@
         window.system = {
             attachment: "{{__ROOT__}}/attachment",
             user: <?php echo json_encode(Session::get('user'));?>,
-            site: <?php echo json_encode(Session::get('site'));?>,
+            site: <?php echo v('site')?json_encode(v('site')):'{}';?>,
             root: "{{__ROOT__}}",
-            url:"{{__URL__}}",
+            url:"{{__URL__}}"
         }
     </script>
     <script>

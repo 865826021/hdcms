@@ -27,10 +27,10 @@
                     <label class="col-sm-2 control-label">使用SSL加密</label>
                     <div class="col-sm-10">
                         <label class="radio-inline">
-                            <input type="radio" name="smtp[ssl]" value="1" hd_checked="v('setting.smtp.ssl')==1"> 是
+                            <input type="radio" name="smtp[ssl]" value="1" {{v('setting.smtp.ssl')==1?'checked="checked"':''}}> 是
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="smtp[ssl]" value="0" hd_checked="v('setting.smtp.ssl')==0"> 否
+                            <input type="radio" name="smtp[ssl]" value="0" {{v('setting.smtp.ssl')==0?'checked="checked"':''}}> 否
                         </label>
                         <span class="help-block">开启此项后，连接将用SSL的形式，此项需要SMTP服务器支持</span>
                     </div>
@@ -66,7 +66,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">测试接收人</label>
                     <div class="col-sm-10">
-                        <input type="checkbox" name="register[testing]" value="0" hd_checked="v('setting.smtp.testing')==0"> 保存后测试邮件
+                        <input type="checkbox" name="register[testing]" value="1" {{v('setting.smtp.testing')==1?'checked="checked"':''}}> 保存后测试邮件
                         <input type="text" class="form-control" name="smtp[testusername]" value="{{v('setting.smtp.testusername')}}">
                         <span class="help-block">你可以指定一个收件邮箱, 系统将在保存参数成功后尝试发送一条测试性的邮件, 来检测邮件通知是否正常工作</span>
                     </div>

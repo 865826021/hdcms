@@ -8,6 +8,10 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\site\controller;
+
+use system\model\Menu;
+use system\model\UserPermission;
+
 /**
  * 模块动作访问处理
  * Class Module
@@ -97,11 +101,12 @@ class Module {
 	//模块后台管理业务
 	public function site() {
 		//验证站点权限
-		if ( api( 'site' )->siteVerify() === FALSE ) {
-			message( '你没有管理模块的权限', u( 'site/entry/refer', [ 'siteid' => v( "site.siteid" ) ] ), 'error' );
+		if ( ( new UserPermission() )->isOperate() === FALSE ) {
+			message( '你没有管理模块的权限', 'back', 'error' );
 		}
 		//分配菜单
-		api( 'menu' )->assignMenus();
+		$_site_menu_ = ( new Menu() )->getMenus();
+		View::with( '_site_menu_', $_site_menu_ );
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
 		$action = 'doSite' . $this->action;

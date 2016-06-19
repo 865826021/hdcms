@@ -34,13 +34,17 @@ class UserPermission extends Model {
 	 * 是否为站长
 	 * 当前帐号是否拥有站长权限(网站所有者,系统管理员)
 	 *
-	 * @param $siteid 站点编号
-	 * @param $uid 用户编号 默认使用当前登录的帐号
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
 	 *
 	 * @return bool
 	 */
-	public function isOwner( $siteid, $uid = NULL ) {
-		$uid = $uid ?: Session::get( "user.uid" );
+	public function isOwner( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
 		if ( m( 'User' )->isSuperUser( $uid ) ) {
 			return TRUE;
 		}
@@ -52,13 +56,17 @@ class UserPermission extends Model {
 	 * 是否为管理员
 	 * 是否拥有管理员及以上权限(网站所有者,系统管理员)
 	 *
-	 * @param $siteid 站点编号
-	 * @param $uid 用户编号 默认使用当前登录的帐号
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
 	 *
 	 * @return bool|string
 	 */
-	public function isManage( $siteid, $uid = NULL ) {
-		$uid = $uid ?: Session::get( "user.uid" );
+	public function isManage( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
 		if ( m( 'User' )->isSuperUser( $uid ) ) {
 			return TRUE;
 		}
@@ -74,13 +82,17 @@ class UserPermission extends Model {
 	 * 是否为操作员
 	 * 是否拥有操作员及以上权限(网站所有者,系统管理员,操作员)
 	 *
-	 * @param $siteid 站点编号
-	 * @param $uid 用户编号 默认使用当前登录的帐号
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
 	 *
 	 * @return bool|string
 	 */
-	public function idOperate( $siteid, $uid = NULL ) {
-		$uid = $uid ?: Session::get( "user.uid" );
+	public function isOperate( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: Session::get( 'siteid' );
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
 		if ( m( 'User' )->isSuperUser( $uid ) ) {
 			return TRUE;
 		}
@@ -127,8 +139,18 @@ class UserPermission extends Model {
 		return FALSE;
 	}
 
-	public function getUserAtSiteAccess( $siteid, $uid ) {
-		$permission = $this->where( 'siteid', $siteid )->where( 'uid', $_GET['fromuid'] )->lists( 'type,permission' );
+	/**
+	 * 获取用户在站点的权限分配
+	 *
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号
+	 *
+	 * @return mixed
+	 */
+	public function getUserAtSiteAccess( $siteid = NULL, $uid = NULL ) {
+		$siteid     = $siteid ?: Session::get( 'siteid' );
+		$uid        = $uid ?: Session::get( "user.uid" );
+		$permission = $this->where( 'siteid', $siteid )->where( 'uid', $uid )->lists( 'type,permission' );
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}

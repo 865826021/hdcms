@@ -12,7 +12,8 @@ namespace web\site\controller;
 /**
  * 导航菜单设置
  * Class Nav
- * @package site\controller
+ * @package web\site\controller
+ * @author 向军
  */
 class Nav {
 	protected $webid;

@@ -50,7 +50,6 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                         modalobj.find('#imagelists').html(html);
                                     }, 'json');
                                 }
-
                                 getImageList('?s=system/component/imageLists&type=image');
                                 //分页处理
                                 modalobj.delegate('#imagelists .pagination a', 'click', function () {

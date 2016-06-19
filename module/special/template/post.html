@@ -62,7 +62,7 @@
             var ipt = $(btn).parents('div').eq(0).find('input');
             var val = ipt.val();
             var ul = $(btn).parents('div').eq(0).find('ul');
-            $.post('?s=platform/reply/getKeywords', {key: val}, function (data) {
+            $.post('?s=site/keyword/getKeywords', {key: val}, function (data) {
                 var html = '';
                 if (data.length == 0) {
                     html += "<li><a href='javascript:;'>没有匹配到你输入的关键词</a></li>";
