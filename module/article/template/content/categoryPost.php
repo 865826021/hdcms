@@ -4,7 +4,7 @@
 		<ul class="nav nav-tabs" role="tablist">
 			<li><a href="?a=article/content/category&t=site">栏目管理</a></li>
 			<li class="active" ng-if="field.cid>0"><a href="javascript:;">编辑栏目</a></li>
-			<li ng-class="{'active':!field.cid}"><a href="javascript:;">添加栏目</a></li>
+			<li ng-class="{'active':!field.cid}"><a href="?a=article/content/categoryPost&t=site">添加栏目</a></li>
 		</ul>
 		<input type="hidden" name="cid" ng-model="field.cid">
 		<div class="panel panel-default">

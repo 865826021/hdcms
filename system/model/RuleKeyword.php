@@ -17,9 +17,10 @@ use hdphp\model\Model;
  * @package system\model
  */
 class RuleKeyword extends Model {
-	protected $table = 'rule_keyword';
+	protected $table            = 'rule_keyword';
+	protected $denyInsertFields = [ 'id' ];
 	protected $validate
-	                 = [
+	                            = [
 			[ 'rid', 'required', 'rule_keyword表中的rid规则编号字段不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'module', 'required', '模块名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'content', 'required', '关键词内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
@@ -28,14 +29,10 @@ class RuleKeyword extends Model {
 			[ 'status', 'regexp:/^[0-1]$/', '状态只能为1或0', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		];
 	protected $auto
-	                 = [
+	                            = [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'type', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
-
-	protected function autoSiteid() {
-		return SITEID;
-	}
 }

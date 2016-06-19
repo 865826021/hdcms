@@ -160,7 +160,10 @@ class Query {
 		}
 	}
 
-	public function first() {
+	public function first( $id = NULL ) {
+		if ( $id ) {
+			$this->where( $this->connection->getPrimaryKey(), $id );
+		}
 		$data = $this->get();
 
 		return $data ? $data[0] : [ ];

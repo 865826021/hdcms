@@ -2,12 +2,12 @@
 <block name="content">
 	<form action="" method="post" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="MyController">
 		<ul class="nav nav-tabs" role="tablist">
-			<li><a href="?s=article/content/article">文章管理</a></li>
+			<li><a href="?a=article/content/article&t=site">文章管理</a></li>
 			<if value="q('get.aid')">
-				<li><a href="?s=article/content/articlePost">发表文章</a></li>
+				<li><a href="?a=article/content/articlePost&t=site&cid=0">发表文章</a></li>
 				<li class="active"><a href="javascript:;">编辑文章</a></li>
 				<else/>
-				<li class="active"><a href="javascript:;">发表文章</a></li>
+				<li class="active"><a href="?a=article/content/articlePost&t=site&cid=0">发表文章</a></li>
 			</if>
 		</ul>
 		<div class="panel panel-default">
@@ -87,8 +87,7 @@
 				<div class="form-group">
 					<label for="" class="col-sm-2 control-label">选择内容模板</label>
 					<div class="col-sm-9">
-						<select class="js-example-basic-single form-control" ng-model="field.template_tid"
-						        ng-options="a.tid as a.title for a in template">
+						<select class="js-example-basic-single form-control" ng-model="field.template_tid" ng-options="a.tid as a.title for a in template">
 							<option value="">选择模板风格</option>
 						</select>
 					</div>

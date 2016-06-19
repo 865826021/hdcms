@@ -18,9 +18,10 @@ use hdphp\model\Model;
  * @author 向军
  */
 class Rule extends Model {
-	protected $table = 'rule';
+	protected $table            = 'rule';
+	protected $denyInsertFields = [ 'rid' ];
 	protected $validate
-	                 = [
+	                            = [
 			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'name', 'required', '规则名称不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'module', 'required', 'module字段不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
@@ -40,10 +41,22 @@ class Rule extends Model {
 		= [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'rank', 'autoRank', 'method', self::MUST_AUTO, self::MODEL_INSERT ]
+			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ]
 		];
 
-	protected function autoRank( $field, $val ) {
-		return min( 255, intval( $val ) );
-	}
+	//	public function store( $rule, $keyword ) {
+	//		$action = isset( $rule['rid'] ) ? 'save' : 'add';
+	//		if ( ! $rid = $this->save( $rule ) ) {
+	//			return FALSE;
+	//		}
+	//		$rid = isset( $rule['rid'] ) ? $rule['rid'] : $rid;
+	//		if ( $keyword ) {
+	//			$keywordModel = new RuleKeyword();
+	//			foreach ( $keyword as $k ) {
+	//				if(!$keywordModel->add($k)){
+	//					return
+	//				}
+	//			}
+	//		}
+	//	}
 }

@@ -32,9 +32,7 @@ class Reply {
 		//验证站点权限
 		//todo 验证模块...
 		//分配菜单
-		//分配菜单
-		$_site_menu_ = ( new Menu() )->getMenus();
-		View::with( '_site_menu_', $_site_menu_ );
+		( new Menu() )->getMenus( TRUE );
 		$module = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
 		v( 'module', $module );
 		if ( empty( $module ) ) {

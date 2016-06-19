@@ -14,7 +14,8 @@
 				</div>
 				<div class="member-center">
 					<!--顶部会员信息-->
-					<div ng-repeat="m in modules.all" ng-if="m['id']=='UCheader'" ng-init="tpl='widget-'+(m.id.toLowerCase())+'-display.html'" ng-include="tpl">
+					<div ng-repeat="m in modules.all" ng-if="m['id']=='UCheader'" ng-init="tpl='widget-'+(m.id.toLowerCase())+'-display.html'"
+					     ng-include="tpl">
 					</div>
 					<ul class="list-group">
 						<a href="#" class="list-group-item"><i class="fa fa-suitcase"></i> 余额充值 <i class="fa fa-angle-right pull-right"></i></a>

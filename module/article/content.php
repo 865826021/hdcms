@@ -10,6 +10,14 @@
 namespace module\article;
 
 use module\hdSite;
+use system\model\ReplyNews;
+use system\model\Rule;
+use system\model\RuleKeyword;
+use system\model\Template;
+use system\model\Web;
+use system\model\WebArticle;
+use system\model\WebCategory;
+use system\model\WebNav;
 use web\site;
 
 /**
@@ -18,14 +26,29 @@ use web\site;
  * @package module\article
  */
 class content extends hdSite {
+	protected $cid;
+	protected $webCategory;
+	protected $webArticle;
+
+	public function __construct() {
+		parent::__construct();
+		$this->cid         = q( 'get.cid', 0, 'intval' );
+		$this->webCategory = new WebCategory();
+		$this->webArticle  = new WebArticle();
+		if ( $this->cid && ! $this->webCategory->where( 'siteid', SITEID )->where( 'cid', $this->cid )->get() ) {
+			message( '栏目不存在或不属于该站点', 'back', 'error' );
+		}
+	}
+
 	//添加栏目
 	public function doSiteCategory() {
-		$data = Db::table( 'web_category' )->where( 'siteid', '=', v( 'site.siteid' ) )->get();
+		$data = $this->webCategory->where( 'siteid', SITEID )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['url'] = __ROOT__ . '/index.php?s=content/home/category&siteid=' . v( 'site.siteid' ) . '&cid=' . $v['cid'];
 		}
 		$data = Data::tree( $data, 'title', 'cid', 'pid' );
-		View::with( 'data', $data )->make( $this->template . '/content/category.php' );
+		View::with( 'data', $data );
+		View::make( $this->template . '/content/category.php' );
 	}
 
 	//栏目修改
@@ -35,52 +58,52 @@ class content extends hdSite {
 			message( '栏目不存在', 'back', 'error' );
 		}
 		if ( IS_POST ) {
-			$data        = json_decode( $_POST['data'], TRUE );
-			$data['css'] = serialize( $data['css'] );
-			$data['pid'] = empty( $data['pid'] ) ? 0 : $data['pid'];
-			$cid         = Db::table( 'web_category' )->replaceGetId( $data );
+			$data   = json_decode( $_POST['data'], TRUE );
+			$action = $this->cid ? 'save' : 'add';
+			if ( ! $cid = $this->webCategory->$action( $data ) ) {
+				message( $this->webCategory->getError(), 'back', 'error' );
+			}
+			$cid = $this->cid ?: $cid;
 			//是添加微站首页导航
 			if ( $data['isnav'] ) {
-				$nav['siteid']       = v( 'site.siteid' );
 				$nav['name']         = $data['title'];
-				$nav['url']          = $data['linkurl'] ?: '?a=article/entry/category&t=web&siteid=' . v( 'site.siteid' ) . '&cid=' . $data['cid'];
+				$nav['url']          = $data['linkurl'] ?: '?a=article/entry/category&t=web&siteid=' . SITEID . '&cid=' . $data['cid'];
 				$nav['css']          = serialize( $data['css'] );
-				$nav['status']       = 1;
 				$nav['entry']        = 'home';
 				$nav['icontype']     = $data['icontype'];
 				$nav['category_cid'] = $cid;
 				$nav['web_id']       = $data['web_id'];
 				$nav['description']  = $data['description'];
-				if ( ! api( 'article' )->addNav( $nav ) ) {
+				if ( ! ( new WebNav() )->add( $nav ) ) {
 					message( '添加微站导航失败', 'back', 'error' );
 				}
 			} else {
-				Db::table( 'web_nav' )->where( 'category_cid', '=', $cid )->delete();
+				( new WebNav() )->where( 'category_cid', $cid )->delete();
 			}
 			message( '栏目保存成功', site_url( 'category' ), 'success' );
 		}
 		//所有栏目
-		$category = Db::table( 'web_category' )->where( 'siteid', '=', v( 'site.siteid' ) )->get();
+		$category = $this->webCategory->where( 'siteid', SITEID )->get();
 		$category = Data::tree( $category, 'title', 'cid', 'pid' );
-		if ( $cid ) {
+		if ( $this->cid ) {
 			//编辑时在栏目选择中不显示自身与子级栏目
 			foreach ( $category as $k => $v ) {
-				if ( $v['cid'] == $cid || Data::isChild( $category, $v['cid'], $cid ) ) {
+				if ( $v['cid'] == $this->cid || Data::isChild( $category, $v['cid'], $this->cid ) ) {
 					unset( $category[ $k ] );
 				}
 			}
 		}
 		//所有站点
-		$web = Db::table( 'web' )->where( 'siteid', '=', v( 'site.siteid' ) )->get();
+		$web = Db::table( 'web' )->where( 'siteid', SITEID )->get();
 		$web or message( '没有站点不能添加文章类别', 'manage/site', 'error' );
-		if ( $cid ) {
+		if ( $this->cid ) {
 			//编辑
-			$field        = Db::table( 'web_category' )->find( $cid );
+			$field        = $this->webCategory->where( 'cid', $cid )->first();
 			$field['css'] = unserialize( $field['css'] );
 			//栏目模板
 			$template = Db::table( 'template' )->find( $field['template_tid'] );
 		} else {
-			$defaultWeb = api( 'web' )->getDefaultWeb();
+			$defaultWeb = ( new Web() )->getDefaultWeb();
 			$field      = [
 				'isnav'        => 0,
 				'ishomepage'   => 0,
@@ -92,7 +115,7 @@ class content extends hdSite {
 				'template_tid' => 0,
 				'status'       => 1,
 				'linkurl'      => '',
-				'siteid'       => v( 'site.siteid' ),
+				'siteid'       => SITEID,
 				'web_id'       => $defaultWeb['id'],
 			];
 			$template   = [ ];
@@ -135,44 +158,72 @@ class content extends hdSite {
 			message( '文章不存在', 'back', 'error' );
 		}
 		if ( IS_POST ) {
-			$data = json_decode( $_POST['data'], TRUE );
-			//保存文章
-			$aid = api( 'article' )->saveArticle( $data );
-			//回复规则与回复关键词设置
-			if ( isset( $data['rid'] ) ) {
-				$rule['rid'] = $data['rid'];
+			$data   = json_decode( $_POST['data'], TRUE );
+			$action = $aid ? 'save' : 'add';
+			if ( ! $aid = $this->webArticle->$action( $data ) ) {
+				message( $this->webArticle->getError(), 'back', 'error' );
 			}
-			$rule['name']    = "article:{$aid}";
-			$rule['module']  = 'article';
-			$rule['keyword'] = [
-				[
-					'content' => $data['keyword'],
-					'type'    => 1
-				]
-			];
-			$rid             = api( 'rule' )->save( $rule );
+			$aid = q( 'get.aid', $aid );
+			//回复规则与回复关键词设置
+			if ( ! empty( $data['keyword'] ) && ! empty( $data['thumb'] ) ) {
+				if ( isset( $data['rid'] ) ) {
+					$rule['rid'] = $data['rid'];
+				}
+				$rule['rid']    = isset( $data['rid'] ) ? $data['rid'] : 0;
+				$rule['name']   = "article:{$aid}";
+				$rule['module'] = 'article';
+				$action         = empty( $rule['rid'] ) ? 'add' : 'save';
+				$rid            = ( new Rule() )->$action( $rule );
+				$rid            = empty( $rule['rid'] ) ? $rid : $rule['rid'];
+				//添加回复关键词
+				$keyword['rid']     = $rid;
+				$keyword['content'] = $data['keyword'];;
+				$keyword['module'] = 'news';
+				$ruleKeywordModel  = new RuleKeyword();
+				if ( $res = $ruleKeywordModel->where( 'rid', $rid )->first() ) {
+					$keyword['id'] = $res['id'];
+				}
+				$action = empty( $keyword['id'] ) ? 'add' : 'save';
+				if ( ! $ruleKeywordModel->$action( $keyword ) ) {
+					message( $ruleKeywordModel->getError(), 'back', 'error' );
+				}
+				//添加回复文章
+				$replyNews = new ReplyNews();
+				if ( $res = $replyNews->where( 'rid', $rid )->first() ) {
+					$data['id'] = $res['id'];
+					$action     = 'save';
+				} else {
+					$action = 'add';
+				}
+				$data['rid'] = $rid;
+				if ( ! $replyNews->$action( $data ) ) {
+					message( $replyNews->getError(), 'back', 'error' );
+				}
+			}
 			//修改文章回复规则编号
-			Db::table( 'web_article' )->update( [ 'aid' => $aid, 'rid' => $rid ] );
+			if ( ! $this->webArticle->save( [ 'aid' => $aid, 'rid' => $rid ] ) ) {
+				message( $this->webArticle->getError(), 'back', 'error' );
+			}
 			message( '保存文章成功', site_url( 'article', [ 'cid' => q( 'get.cid' ) ] ), 'success' );
 		}
 		//栏目列表
-		$category = Db::table( 'web_category' )->where( 'siteid', '=', v( 'site.siteid' ) )->get();
+		$category = $this->webCategory->where( 'siteid', SITEID )->get();
 		$category = Data::tree( $category, 'title', 'cid', 'pid' );
 		if ( empty( $category ) ) {
 			message( '请先添加文章类别', 'category', 'error' );
 		}
 		//所有模板数据
-		$template = api( 'template' )->get();
+		$template = ( new Template() )->getSiteAllTemplate();
 		//获取文章数据
 		if ( $aid ) {
-			$field = Db::table( 'web_article' )->find( $aid );
+			$field = $this->webArticle->first( $aid );
 			//关键词
-			$field['keyword'] = Db::table( 'rule_keyword' )->where( 'rid', $field['rid'] )->limit( 1 )->pluck( 'content' );
+			$field['keyword'] = ( new RuleKeyword() )->where( 'rid', $field['rid'] )->pluck( 'content' );
 		} else {
 			$field = [ 'keyword' => '' ];
 		}
 		View::with( 'field', Arr::string_to_int( $field ) );
-		View::with( 'template', $template );
+		View::with( 'template', Arr::string_to_int( $template ) );
 		View::with( 'category', Arr::string_to_int( $category ) );
 		View::make( $this->template . '/content/articlePost.php' );
 	}
