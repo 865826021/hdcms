@@ -1,0 +1,40 @@
+<?php
+/** .-------------------------------------------------------------------
+ * |  Software: [HDCMS framework]
+ * |      Site: www.hdcms.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
+namespace system\model;
+
+use hdphp\model\Model;
+
+class Module extends Model {
+	protected $table            = 'modules';
+	protected $denyInsertFields = [ 'mid' ];
+	protected $validate
+	                            = [
+			[ 'name', 'regexp:/^\w+$/', '模块标识符, 对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能由字母数字下划线组成', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'industry', 'required', '模块类型不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'title', 'maxlen:10', '模块名称不能超过10个字符', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'version', 'regexp:/^\d+\.?\d*$/', '版本只能为数字', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'resume', 'required', '模块简述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'detail', 'required', '详细介绍不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'url', 'required', '发布url不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'thumb', 'required', '模块缩略图不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'cover', 'required', '模块封面图片不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		];
+	protected $auto
+	                            = [
+			[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'subscribes', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'processors', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'setting', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'rule', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+		];
+}

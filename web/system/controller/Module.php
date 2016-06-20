@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\system\controller;
+use system\model\User;
 
 /**
  * 模块管理
@@ -16,18 +17,23 @@ namespace web\system\controller;
  * @author 向军
  */
 class Module {
+	protected $module;
+
 	public function __construct() {
-		api( "user" )->isLogin();
+		if ( ! ( new User() )->isSuperUser() ) {
+			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
+		}
+		$this->module = new \system\model\Module();
 	}
 
 	//已经安装模块
 	public function installed() {
-		$modules = Db::table( 'modules' )->get();
+		$modules = $this->module->get();
 		foreach ( $modules as $k => $m ) {
 			if ( $m['is_system'] ) {
 				//系统模块
 				$modules[ $k ]['type']  = 1;
-				$modules[ $k ]['cover'] = "web/module/{$m['name']}/cover.jpg";
+				$modules[ $k ]['cover'] = "module/{$m['name']}/cover.jpg";
 			} else {
 				//本地模块
 				$modules[ $k ]['type']  = 2;
@@ -75,6 +81,8 @@ class Module {
 				[ 'author', 'required', '作者不能为空' ],
 				[ 'url', 'required', '请输入发布url' ],
 				[ 'versionCode', 'required', '请选择兼容版本' ],
+				[ 'thumb', 'required', '模块缩略图不能为空' ],
+				[ 'cover', 'required', '模块封面图不能为空' ],
 			] );
 			//验证失败
 			if ( Validate::fail() ) {
@@ -87,9 +95,7 @@ class Module {
 			if ( $_FILES['cover_plan']['error'] != 0 || $_FILES['cover_plan']['type'] !== 'image/jpeg' ) {
 				message( '模块封面格式错误,图片文件过大或类型不是jpg格式', 'back', 'error' );
 			}
-			p( $_POST );
-			exit;
-			//模块名转小写
+			//模块标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
 			//检查插件是否存在
 			if ( is_dir( 'addons/' . $_POST['name'] ) || Db::table( 'modules' )->where( 'name', $_POST['name'] )->first() ) {
