@@ -1,13 +1,12 @@
 <?php namespace module\basic;
 
-/**
- * 测试模块模块定义
- *
- * @author 后盾网
- * @url http://open.hdcms.com
- */
 use module\hdModule;
 
+/**
+ * 文本消息处理
+ * Class Module
+ * @package module\basic
+ */
 class Module extends hdModule
 {
 

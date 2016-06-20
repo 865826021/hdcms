@@ -542,12 +542,12 @@
 
 				<div class="col-sm-10 col-xs-12">
 					<div class="well well-sm">
-						<a href="javascript:;" onclick="addFeature('home', '微站首页导航图标');">添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i></a>
+						<a href="javascript:;" onclick="addFeature('home', '微站首页导航');">添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i></a>
 					</div>
                     <span class="help-block">
                         在微站的首页上显示相关功能的链接入口(手机端操作), 一般用于通用功能的展示.
                     </span>
-					<span class="help-block"><strong>注意: 微站首页导航图标扩展功能定义于 site 类的实现中</strong></span>
+					<span class="help-block"><strong>注意: 微站首页导航扩展功能定义于 site 类的实现中</strong></span>
 				</div>
 			</div>
 			<!--微站个人中心导航-->

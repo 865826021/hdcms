@@ -41,26 +41,6 @@ class module extends site {
 		}
 	}
 
-	//    //模块主页
-	//    public function home()
-	//    {
-	//        $module = Db::table('modules')->where('name', q('get.m'))->first();
-	//        View::with('module', $module)->make();
-	//    }
-
-	//自定义模块业务
-	public function entry() {
-		$module     = q( 'get.m', '', 'htmlspecialchars' );
-		$controller = q( 'get.c', '', 'htmlspecialchars' );
-		$do         = q( 'get.do', '', 'htmlspecialchars' );
-		$do         = 'doSite' . $do;
-		$class      = '\addons\\' . $module . "\\{$controller}";
-		if ( class_exists( $class ) && method_exists( $class, $do ) ) {
-			$obj = new $class( $module );
-			$obj->$do();
-		}
-	}
-
 	//模块封面设置
 	public function cover() {
 		$bid    = q( 'get.bid', 0, 'intval' );

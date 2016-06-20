@@ -18,8 +18,9 @@ use hdphp\model\Model;
  */
 class Menu extends Model {
 	protected $table = 'menu';
+
 	protected $validate
-	                 = [
+		= [
 			[ 'title', 'required', '标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'permission', 'unique', '权限标识已经被使用', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'url', 'unique', '菜单链接已经被使用', self::EXIST_VALIDATE, self::MODEL_BOTH ],
@@ -28,7 +29,7 @@ class Menu extends Model {
 			[ 'is_display', 'num:0,1', '[显示]字段参数错误', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		];
 	protected $auto
-	                 = [
+		= [
 			[ 'is_display', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'mark', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
@@ -51,22 +52,25 @@ class Menu extends Model {
 	 * 获取当前帐号后台访问菜单
 	 * @return mixed
 	 */
-	public function getMenus( $show = FALSE ) {
+	public function getMenus( $show = TRUE ) {
 		$permission = Db::table( 'user_permission' )
-		                ->where( 'siteid', Session::get( 'siteid' ) )
+		                ->where( 'siteid', SITEID )
 		                ->where( 'uid', Session::get( 'user.uid' ) )
 		                ->where( 'type', 'system' )
 		                ->pluck( 'permission' );
 		if ( $permission ) {
 			$this->whereIn( 'permission', explode( '|', $permission ) )->where( 'permission', '' );
 		}
-
 		$menus = Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );
+		//获取模块按行业类型
+		$modules = ( new Module() )->getModulesByIndustry();
 		if ( $show ) {
 			View::with( '_site_menu_', $menus );
+			View::with( '_site_menu_modules_', $modules );
 		}
 
 		return $menus;
 	}
+
 
 }

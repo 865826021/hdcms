@@ -11,7 +11,7 @@
     <link href="resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
     <link href="resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
 </head>
-<body style="background: url('resource/images/message_bg.jpg');background-size: cover">
+<body style="background: url('resource/images/bg.jpg');background-size: cover">
 <!--导航-->
 <nav class="navbar navbar-inverse" style="border-radius: 0px;">
     <div class="container-fluid">

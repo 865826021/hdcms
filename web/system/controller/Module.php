@@ -8,6 +8,8 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\system\controller;
+
+use system\model\Site;
 use system\model\User;
 
 /**
@@ -33,11 +35,11 @@ class Module {
 			if ( $m['is_system'] ) {
 				//系统模块
 				$modules[ $k ]['type']  = 1;
-				$modules[ $k ]['cover'] = "module/{$m['name']}/cover.jpg";
+				$modules[ $k ]['cover'] = "module/{$m['name']}/{$m['cover']}";
 			} else {
 				//本地模块
 				$modules[ $k ]['type']  = 2;
-				$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/cover.jpg" ) ? "addons/{$m['name']}/cover.jpg" : "resource/images/nopic-small.jpg";
+				$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic-small.jpg";
 			}
 		}
 		View::with( 'modules', $modules )->make();
@@ -88,33 +90,32 @@ class Module {
 			if ( Validate::fail() ) {
 				message( Validate::getError(), 'back', 'error' );
 			};
-			//图片类型检测,只允许 jpg格式的图片
-			if ( $_FILES['thumbnail']['error'] != 0 || $_FILES['thumbnail']['type'] !== 'image/jpeg' ) {
-				message( '模块缩略图格式错误,图片文件过大或类型不是jpg格式', 'back', 'error' );
-			}
-			if ( $_FILES['cover_plan']['error'] != 0 || $_FILES['cover_plan']['type'] !== 'image/jpeg' ) {
-				message( '模块封面格式错误,图片文件过大或类型不是jpg格式', 'back', 'error' );
-			}
 			//模块标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
 			//检查插件是否存在
-			if ( is_dir( 'addons/' . $_POST['name'] ) || Db::table( 'modules' )->where( 'name', $_POST['name'] )->first() ) {
+			if ( is_dir( 'module/' . $_POST['name'] ) || is_dir( 'addons/' . $_POST['name'] )
+			     || $this->module->where( 'name', $_POST['name'] )->first()
+			) {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
 			if ( ! mkdir( 'addons/' . $_POST['name'], 0755, TRUE ) ) {
 				message( '模块目录创建失败,请修改addons目录的权限', 'back', 'error' );
 			}
 			mkdir( 'addons/' . $_POST['name'] . '/template', 0755, TRUE );
+
+			//模块缩略图
+			$info = pathinfo( $_POST['thumb'] );
+			copy( $_POST['thumb'], 'addons/' . $_POST['name'] . '/thumb.' . $info['extension'] );
+			$_POST['thumb'] = 'thumb.' . $info['extension'];
+			//封面图片
+			$info = pathinfo( $_POST['cover'] );
+			copy( $_POST['cover'], 'addons/' . $_POST['name'] . '/cover.' . $info['extension'] );
+			$_POST['cover'] = 'cover.' . $info['extension'];
+
 			$this->siteScript();
 			$this->moduleScript();
 			$this->createMessageScript();
 			$this->createManifestFile();
-			//模块缩略图
-			$file = 'addons/' . $_POST['name'] . '/thumb.jpg';
-			move_uploaded_file( $_FILES['thumbnail']['tmp_name'], $file );
-			//模块封面图
-			$file = 'addons/' . $_POST['name'] . '/cover.jpg';
-			move_uploaded_file( $_FILES['cover_plan']['tmp_name'], $file );
 			message( '模块创建成功', 'prepared', 'success' );
 		} else {
 			View::make();
@@ -291,7 +292,6 @@ str;
 				//php脚本
 				$moduleScript
 					.= <<<str
-
     public function settingsDisplay(\$settings) {
         //点击模块设置时将调用此方法呈现模块设置页面，\$settings 为模块设置参数, 结构为数组。这个参数系统针对不同公众账号独立保存。
         //在此呈现页面中自行处理post请求并保存设置参数（通过使用\$this->saveSettings()来实现）
@@ -315,8 +315,8 @@ str;
     }
 
     public function fieldsValidate(\$rid = 0) {
-        //规则编辑保存时，要进行的数据验证，返回空串表示验证无误，返回其他字符串将呈现为错误提示。这里 \$rid 为对应的规则编号，新增时为 0
-        return '';
+        //规则编辑保存时，要进行的数据验证，返回true表示验证无误，返回其他字符串将呈现为错误提示。这里 \$rid 为对应的规则编号，新增时为 0
+        return true;
     }
 
     public function fieldsSubmit(\$rid) {
@@ -348,7 +348,6 @@ str;
 		}
 	}
 
-
 	//创建消息脚本
 	private function createMessageScript() {
 		//定阅消息
@@ -362,12 +361,12 @@ str;
  * @author {$_POST['author']}
  * @url {$_POST['url']}
  */
-use module\\{$_POST['name']}Subscribe;
+use module\hdSubscribe;
 class Subscribe extends hdSubscribe
 {
 	public function handle()
 	{
-		p(\$this->message);
+		p(\$this->message());
 		//这里定义此模块进行消息订阅时的, 消息到达以后的具体处理过程, 请查看HDCMS文档来编写你的代码
 	}
 }
@@ -390,7 +389,7 @@ class Processor extends hdProcessor
 {
 	public function handle(\$rid)
 	{
-		p(\$this->message);
+		p(\$this->message());
 		//这里定义此模块进行消息处理的, 消息到达以后的具体处理过程, 请查看HDCMS文档来编写你的代码
 	}
 }
@@ -419,7 +418,6 @@ str;
 				}
 			}
 		}
-
 		//消息处理
 		$platformXml = [ 'subscribes' => [ ], 'processors' => [ ] ];
 		if ( isset( $_POST['subscribes'] ) ) {
@@ -450,6 +448,8 @@ str;
 				'detail'      => [ '@cdata' => $_POST['detail'] ],
 				'author'      => [ '@cdata' => $_POST['author'] ],
 				'industry'    => [ '@cdata' => $_POST['industry'] ],
+				'thumb'       => [ '@cdata' => $_POST['thumb'] ],
+				'cover'       => [ '@cdata' => $_POST['cover'] ],
 				'rule'        => [ '@attributes' => [ 'embed' => isset( $_POST['rule'] ) ? $_POST['rule'] : FALSE ] ]
 			],
 			'platform'    => $platformXml,
@@ -466,13 +466,12 @@ str;
 	//安装模块
 	public function install() {
 		//模块安装检测
-		if ( $m = Db::table( 'modules' )->where( 'name', $_GET['module'] )->first() ) {
-			message( $m['title'] . '模块已经安装, 你可以卸载后重新安装', 'back', 'error' );
+		if ( $m = $this->module->where( 'name', $_GET['module'] )->first() || is_dir( 'module/' . $_GET['module'] ) ) {
+			message( $m['title'] . '模块已经安装或已经存在系统模块, 你可以卸载后重新安装', 'back', 'error' );
 		}
 		if ( IS_POST ) {
 			//获取模块xml数据
 			$manifest = Xml::toArray( file_get_contents( 'addons/' . $_POST['module'] . '/manifest.xml' ) );
-
 			$platform = $manifest['manifest']['platform'];
 			//不需要对用户关键词进行响应的消息类型
 			$subscribes = [ ];
@@ -509,6 +508,8 @@ str;
 				'detail'      => $manifest['manifest']['application']['detail']['@cdata'],
 				'author'      => $manifest['manifest']['application']['author']['@cdata'],
 				'rule'        => $manifest['manifest']['application']['rule']['@attributes']['embed'] ? 1 : 0,
+				'thumb'       => $manifest['manifest']['application']['thumb']['@cdata'],
+				'cover'       => $manifest['manifest']['application']['cover']['@cdata'],
 				'is_system'   => 0,
 				'subscribes'  => serialize( $subscribes ),
 				'processors'  => serialize( $processors ),
@@ -562,10 +563,9 @@ str;
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
+			(new Site())->updateAllSiteCache();
 			message( "模块安装成功", u( 'installed' ) );
 		}
-
-
 		$manifest = Xml::toArray( file_get_contents( 'addons/' . $_GET['module'] . '/manifest.xml' ) );
 		$package  = Db::table( 'package' )->get();
 		View::with( 'module', $manifest['manifest'] )->with( 'package', $package )->make();
@@ -573,44 +573,14 @@ str;
 
 	//卸载模块
 	public function uninstall() {
-		$module = Db::table( 'modules' )->where( 'name', $_GET['module'] )->first();
-		if ( $module['rule'] && ! isset( $_GET['confirm'] ) ) {
+		if ( ! isset( $_GET['confirm'] ) ) {
 			confirm( '卸载模块时同时删除规则数据吗, 删除规则数据将同时删除相关规则的统计分析数据？', u( 'uninstall', [
 				'confirm' => 1,
 				'module'  => $_GET['module']
 			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $_GET['module'] ] ) );
 		}
-		//删除封面关键词数据
-		if ( q( 'get.confirm' ) == 1 ) {
-			//删除模块封面数据
-			if ( $coverRids = Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->lists( 'rid' ) ) {
-				Db::table( 'rule' )->whereIn( 'rid', $coverRids )->delete();
-				Db::table( 'rule_keyword' )->whereIn( 'rid', $coverRids )->delete();
-				Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->delete();
-			}
-			//删除模块回复规则列表
-			Db::table( 'rule' )->where( 'module', '=', $_GET['module'] )->delete();
-			Db::table( 'rule_keyword' )->where( 'module', '=', $_GET['module'] )->delete();
-		}
-		//删除模块数据
-		Db::table( 'modules' )->where( 'name', $_GET['module'] )->delete();
-		//删除模块动作数据
-		Db::table( 'modules_bindings' )->where( 'module', $_GET['module'] )->delete();
-		//更新套餐数据
-		$package = Db::table( 'package' )->get();
-		foreach ( $package as $p ) {
-			$p['modules'] = unserialize( $p['modules'] );
-			if ( $k = array_search( $_GET['module'], $p['modules'] ) ) {
-				unset( $p['modules'][ $k ] );
-			}
-			$p['modules'] = serialize( $p['modules'] );
-			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
-		}
-		//更新站点缓存
-		$siteids = Db::table( 'site' )->lists( 'siteid' );
-		foreach ( $siteids as $siteid ) {
-			System::updateSiteCache( $siteid );
-		}
+		$this->module->remove( $_GET['module'], $_GET['confirm'] );
+		(new Site())->updateAllSiteCache();
 		message( '模块卸载成功', u( 'installed' ) );
 	}
 

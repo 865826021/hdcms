@@ -7,28 +7,22 @@
  * @author 向军
  */
 abstract class hdProcessor {
-    //模块数据
-    protected $module
-        = [
-            //模块配置项
-            'config' => [ ]
-        ];
+	//模块数据
+	protected $module
+		= [
+			//模块配置项
+			'config' => [ ]
+		];
 
-    /**
-     * hdProcessor constructor.
-     *
-     * @param $module 模块名称
-     */
-    public function __construct( $module ) {
-    }
+	public function __construct() { }
 
-    //回复方法
-    abstract function handle( $rid );
+	//回复方法
+	abstract function handle( $rid );
 
-    public function __call( $name, $arguments ) {
-        $instance = Weixin::instance( 'message' );
-        if ( method_exists( $instance, $name ) ) {
-            call_user_func_array( [ $instance, $name ], $arguments );
-        }
-    }
+	public function __call( $name, $arguments ) {
+		$instance = \Weixin::instance( 'message' );
+		if ( method_exists( $instance, $name ) ) {
+			call_user_func_array( [ $instance, $name ], $arguments );
+		}
+	}
 }

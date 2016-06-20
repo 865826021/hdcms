@@ -1,7 +1,4 @@
-<?php namespace module\setting;
-
-use module\hdSite;
-use system\model\SiteSetting;
+<?php
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
@@ -11,6 +8,11 @@ use system\model\SiteSetting;
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace module\setting;
+
+use module\hdSite;
+use system\model\SiteSetting;
+
 class site extends hdSite {
 	protected $db;
 	//主键

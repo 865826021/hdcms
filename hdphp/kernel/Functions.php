@@ -227,6 +227,7 @@ if ( ! function_exists( 'd' ) ) {
 				return $db->truncate();
 			default:
 				$data = [ 'key' => $key, 'value' => serialize( $value ) ];
+
 				return $db->replace( $data );
 		}
 	}
@@ -357,9 +358,9 @@ if ( ! function_exists( 'confirm' ) ) {
 	/**
 	 * 有确定提示的提示页面
 	 *
-	 * @param $message 提示文字
-	 * @param $sUrl 确定按钮跳转的url
-	 * @param $eUrl 取消按钮跳转的url
+	 * @param string $message 提示文字
+	 * @param string $sUrl 确定按钮跳转的url
+	 * @param string $eUrl 取消按钮跳转的url
 	 */
 	function confirm( $message, $sUrl, $eUrl ) {
 		View::with( [ 'message' => $message, 'sUrl' => $sUrl, 'eUrl' => $eUrl ] );

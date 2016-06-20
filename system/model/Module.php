@@ -37,4 +37,81 @@ class Module extends Model {
 			[ 'rule', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		];
+	protected $industry
+	                            = [
+			'business'  => '主要业务',
+			'customer'  => '客户关系',
+			'marketing' => '营销与活动',
+			'tools'     => '常用服务与工具',
+			'industry'  => '行业解决方案',
+			'other'     => '其他'
+		];
+
+	/**
+	 * 删除模块
+	 *
+	 * @param string $module 模块名称
+	 * @param int $delRule
+	 *
+	 * @return bool
+	 */
+	public function remove( $module, $delRule = 0 ) {
+		//删除封面关键词数据
+		if ( $delRule ) {
+			//删除模块封面数据
+			if ( $coverRids = Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->lists( 'rid' ) ) {
+				Db::table( 'rule' )->whereIn( 'rid', $coverRids )->delete();
+				Db::table( 'rule_keyword' )->whereIn( 'rid', $coverRids )->delete();
+				Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->delete();
+			}
+			//删除模块回复规则列表
+			Db::table( 'rule' )->where( 'module', $module )->delete();
+			Db::table( 'rule_keyword' )->where( 'module', $module )->delete();
+		}
+		//删除模块数据
+		$this->where( 'name', $module )->delete();
+		//删除站点模块
+		Db::table( 'site_modules' )->where( 'module', $module )->delete();
+		//模块设置
+		Db::table( 'module_setting' )->where( 'module', $module )->delete();
+		//代金券使用的模块
+		Db::table( 'ticket_module' )->where( 'module', $module )->delete();
+		//删除模块动作数据
+		Db::table( 'modules_bindings' )->where( 'module', $module )->delete();
+		//更新套餐数据
+		$package = Db::table( 'package' )->get();
+		foreach ( $package as $p ) {
+			$p['modules'] = unserialize( $p['modules'] );
+			if ( $k = array_search( $_GET['module'], $p['modules'] ) ) {
+				unset( $p['modules'][ $k ] );
+			}
+			$p['modules'] = serialize( $p['modules'] );
+			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
+		}
+		//更新站点缓存
+		$siteids   = Db::table( 'site' )->lists( 'siteid' );
+		$siteModel = new Site();
+		foreach ( $siteids as $siteid ) {
+			$siteModel->updateSiteCache( $siteid );
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * 按行业获取模块列表
+	 * @return array
+	 */
+	public function getModulesByIndustry() {
+		$modules = $this->where( 'is_system', 0 )->get();
+		$data = [ ];
+		foreach ( $modules as $m ) {
+			$data[ $this->industry[ $m['industry'] ] ][] = [
+				'title'  => $m['title'],
+				'name'   => $m['name']
+			];
+		}
+
+		return $data;
+	}
 }

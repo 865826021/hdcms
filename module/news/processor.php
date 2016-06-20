@@ -1,13 +1,12 @@
 <?php namespace module\news;
 
-/**
- * 图文消息处理模块
- *
- * @author 后盾网
- * @url http://open.hdcms.com
- */
 use module\hdProcessor;
 
+/**
+ * 图文消息处理
+ * Class processor
+ * @package module\news
+ */
 class processor extends hdProcessor {
     public function handle( $rid ) {
         $parentNews = Db::table( 'reply_news' )->where( 'rid', $rid )->where( 'pid', 0 )->orderBy( 'rand()' )->first();

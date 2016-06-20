@@ -68,11 +68,11 @@ class Module {
 	//模块主页
 	public function home() {
 		//验证站点权限
-		if ( api( 'site' )->siteVerify() === FALSE ) {
-			message( '你没有模块的操作权限', u( 'site/entry/refer', [ 'siteid' => v( "site.siteid" ) ] ), 'error' );
+		if ( ( new UserPermission() )->isOperate() === FALSE ) {
+			message( '你没有管理模块的权限', 'back', 'error' );
 		}
 		//分配菜单
-		api( 'menu' )->assignMenus();
+		( new Menu() )->getMenus(  );
 		$module = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
 		View::with( 'module', $module )->make();
 	}
@@ -105,7 +105,7 @@ class Module {
 			message( '你没有管理模块的权限', 'back', 'error' );
 		}
 		//分配菜单
-		( new Menu() )->getMenus( TRUE );
+		( new Menu() )->getMenus(  );
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
 		$action = 'doSite' . $this->action;

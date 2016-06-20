@@ -44,8 +44,7 @@ class Entry {
 	 */
 	public function __empty() {
 		//分配菜单
-		$_site_menu_ = ( new Menu() )->getMenus();
-		View::with( '_site_menu_', $_site_menu_ );
+		( new Menu() )->getMenus();
 		View::make( VIEW_PATH . '/home/' . ACTION . '.php' );
 	}
 }

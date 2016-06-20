@@ -18,7 +18,7 @@ abstract class HdModule
     public function __construct()
     {
         $this->template = (v('module.is_system') ? "module/" : "addons/") . v('module.name') . '/template';
-        $setting        = Db::table('module_setting')->where('siteid', '=', v('site.siteid'))->where('module', '=', v('module.name'))->pluck('setting');
+        $setting        = Db::table('module_setting')->where('siteid', '=', SITEID)->where('module', '=', v('module.name'))->pluck('setting');
         $this->config   = unserialize($setting);
         define('__TEMPLATE__', $this->template);
     }

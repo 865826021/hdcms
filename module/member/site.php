@@ -13,6 +13,12 @@ use module\hdSite;
 use system\model\Member;
 use system\model\MemberGroup;
 
+/**
+ * 会员中心
+ * Class site
+ * @package module\member
+ * @author 向军
+ */
 class site extends hdSite {
 	protected $db;
 

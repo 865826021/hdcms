@@ -114,6 +114,15 @@ class Site extends Model {
 	}
 
 	/**
+	 * 更新所有站点缓存
+	 */
+	public function updateAllSiteCache() {
+		foreach ( $this->lists( 'siteid' ) as $siteid ) {
+			$this->updateSiteCache( $siteid );
+		}
+	}
+
+	/**
 	 * 站点是否存在
 	 *
 	 * @param $siteid

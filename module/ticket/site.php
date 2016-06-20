@@ -15,6 +15,11 @@ use system\model\Ticket;
 use system\model\TicketGroups;
 use system\model\TicketModule;
 
+/**
+ * 卡券管理
+ * Class site
+ * @package module\ticket
+ */
 class site extends hdSite {
 	protected $db;
 	protected $names = [ 1 => '折扣券', 2 => '代金券' ];
