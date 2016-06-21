@@ -11,7 +11,12 @@ namespace system\model;
 
 use hdphp\model\Model;
 
-//用户站点操作权限
+/**
+ * 用户站点操作权限
+ * Class UserPermission
+ * @package system\model
+ * @author 向军
+ */
 class UserPermission extends Model {
 	protected $table = 'user_permission';
 	protected $validate
@@ -100,8 +105,21 @@ class UserPermission extends Model {
 		return Db::table( 'site_user' )
 		         ->where( 'siteid', $siteid )
 		         ->where( 'uid', $uid )
-		         ->WhereIn( 'role', [ 'manage', 'owner' ] )
+		         ->WhereIn( 'role', [ 'owner', 'manage', 'operate' ] )
 		         ->get() ? TRUE : FALSE;
+	}
+
+	/**
+	 * 验证当前用户是否可以管理站点
+	 * 通过SESSION['uid']与SESSION['siteid']验证
+	 * 系统管理员直接进入
+	 * @return bool
+	 */
+	public function verify() {
+		//后台管理角色验证
+		if ( ! ( new UserPermission() )->isOperate() ) {
+			return FALSE;
+		}
 	}
 
 	/**

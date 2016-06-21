@@ -43,6 +43,7 @@ return [
 		'hdphp\form\FormProvider',
 		'hdphp\util\UtilProvider',
 	],
+
 	//服务外观
 	'facades'   => [
 		'App'        => 'hdphp\kernel\AppFacade',

@@ -57,9 +57,22 @@ class Mysql extends Connection {
 		}
 	}
 
+	/**
+	 * 获取表字段列表
+	 *
+	 * @param string $table 表名
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	public function getTableFieldLists( $table ) {
+		return $this->query( "DESC " . $this->getPrefix() . $table );
+	}
+
 	public function fieldExists( $field, $table ) {
-		$field = $this->query( "DESC " . $this->getPrefix() . $table );
-		foreach ( $field as $f ) {
+		$fieldLists = $this->query( "DESC " . $this->getPrefix() . $table );
+		p( $field );
+		foreach ( $fieldLists as $f ) {
 			if ( strtolower( $f['Field'] ) == strtolower( $field ) ) {
 				return TRUE;
 			}

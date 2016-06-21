@@ -26,29 +26,10 @@ class Site extends Model {
 			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'allfilesize', 200, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 		];
-	//站点关联表(删除站点时使用)
-	protected $tables
-		= [
-			'site',//站点表
-			'user_permission',//用户权限分配
-			'site_package',//站点套餐
-			'web_category',//栏目
-			'web_nav',//导航
-			'web_article',//文章
-			'web_page',//微官网页面(快捷导航/专题页面)
-			'web_slide',//站点幻灯图
-			'site_user',//站点操作员
-			'site_modules',//站点模块
-			'site_wechat',//微信
-			'site_setting',//站点设置
-			'member_group',//会员组
-			'member_fields',//会员字段
-			'core_attachment',//附件字段
-		];
 
 	//加载站点缓存
 	public function loadSite() {
-		$siteid = Session::get( 'siteid' );
+		$siteid = \Session::get( 'siteid' );
 		if ( empty( $siteid ) ) {
 			return FALSE;
 		}
@@ -134,6 +115,16 @@ class Site extends Model {
 	}
 
 	/**
+	 * 获取站点关联表
+	 *
+	 * @param int $siteid 站点编号
+	 */
+	public function getSiteRelationTables() {
+		$tables = Db::getAllTableInfo();
+		p( $tables );
+	}
+
+	/**
 	 * 删除(注销)站点
 	 *
 	 * @param int $siteid 站点编号
@@ -141,7 +132,42 @@ class Site extends Model {
 	 * @return bool
 	 */
 	public function remove( $siteid ) {
-		foreach ( $this->tables as $t ) {
+		//站点关联表(删除站点时使用)
+		$tables = [
+			'balance',//会员余额
+			'core_attachment',//附件字段
+			'credits_record',//积分变动记录
+			'member',//会员表
+			'member_address',
+			'member_fields',
+			'member_group',
+			'module_setting',
+			'pay',
+			'profile_fields',
+			'reply_cover',
+			'rule',
+			'rule_keyword',
+			'site',//站点表
+			'site_modules',//站点模块
+			'site_package',
+			'site_setting',//站点设置
+			'site_template',
+			'site_user',//站点操作员
+			'site_wechat',//微信
+			'ticket',
+			'ticket_groups',
+			'ticket_module',
+			'ticket_record',
+			'user_permission',
+			'web',
+			'web_article',//文章
+			'web_category',//栏目
+			'web_nav',//导航
+			'web_page',//微官网页面(快捷导航/专题页面)
+			'web_slide',//站点幻灯图
+			'user_permission',//用户权限分配
+		];
+		foreach ( $tables as $t ) {
 			Db::table( $t )->where( 'siteid', $siteid )->delete();
 		}
 		//删除缓存
@@ -149,7 +175,7 @@ class Site extends Model {
 		foreach ( $keys as $key ) {
 			d( "{$key}:{$siteid}", '[del]' );
 		}
-		Session::del( 'siteid' );
+		\Session::del( 'siteid' );
 
 		return TRUE;
 	}

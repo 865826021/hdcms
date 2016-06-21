@@ -43,20 +43,4 @@ class Rule extends Model {
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ]
 		];
-
-	//	public function store( $rule, $keyword ) {
-	//		$action = isset( $rule['rid'] ) ? 'save' : 'add';
-	//		if ( ! $rid = $this->save( $rule ) ) {
-	//			return FALSE;
-	//		}
-	//		$rid = isset( $rule['rid'] ) ? $rule['rid'] : $rid;
-	//		if ( $keyword ) {
-	//			$keywordModel = new RuleKeyword();
-	//			foreach ( $keyword as $k ) {
-	//				if(!$keywordModel->add($k)){
-	//					return
-	//				}
-	//			}
-	//		}
-	//	}
 }

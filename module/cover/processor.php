@@ -1,4 +1,4 @@
-<?php namespace module\basic;
+<?php namespace module\cover;
 
 use module\hdProcessor;
 
@@ -10,7 +10,7 @@ use module\hdProcessor;
 class processor extends hdProcessor {
 	//规则编号
 	public function handle( $rid ) {
-		$res = Db::table( 'reply_cover' )->where( 'rid', '=', $rid )->where( 'siteid', v( 'site.siteid' ) )->first();
+		$res = Db::table( 'reply_cover' )->where( 'rid', $rid )->where( 'siteid', SITEID )->first();
 		if ( $res ) {
 			$data[] = [
 				'title'       => $res['title'],

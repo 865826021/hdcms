@@ -11,7 +11,8 @@ namespace web\site\controller;
 
 use system\model\Menu;
 use system\model\Rule;
-use system\model\SiteUser;
+use system\model\RuleKeyword;
+use system\model\UserPermission;
 
 /**
  * 关键词回复处理
@@ -19,14 +20,14 @@ use system\model\SiteUser;
  * @package site\controller
  */
 class Reply {
-	protected $db;
+	protected $rule;
 	//回复模块处理类
 	protected $moduleClass;
 
 	public function __construct() {
-		$this->db = new Rule();
+		$this->rule = new Rule();
 		//验证站点权限
-		if ( ( new SiteUser() )->verify() === FALSE ) {
+		if ( ( new UserPermission() )->verify() === FALSE ) {
 			message( '你没有管理站点的权限', 'back', 'warning' );
 		}
 		//验证站点权限
@@ -78,9 +79,21 @@ class Reply {
 			$data           = json_decode( $_POST['keyword'], TRUE );
 			$data['module'] = v( 'module.name' );
 			$data['rank']   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
-			$rid            = $this->db->store( $data );
-			if ( $rid === FALSE ) {
-				message( '参数错误', 'back', 'error' );
+			//添加回复规则
+			$action = isset( $data['rid'] ) ? 'save' : 'add';
+			if ( ! $rid = $this->rule->$action( $data ) ) {
+				message( $this->rule->getError(), 'back', 'error' );
+			}
+			$rid = isset( $data['rid'] ) ? $data['rid'] : $rid;
+			//添加回复关键字
+			$keywordModel = new RuleKeyword();
+			$keywordModel->where('rid',$rid)->delete();
+			foreach ( $data['keyword'] as $keyword ) {
+				$keyword['module'] = v( 'module.name' );
+				$keyword['rid']    = $rid;
+				if ( ! $keywordModel->add( $keyword ) ) {
+					echo $keywordModel->getError();
+				}
 			}
 			//调用模块的执行方法
 			$module = new $this->moduleClass();
@@ -92,10 +105,17 @@ class Reply {
 			$module->fieldsSubmit( $rid );
 			message( '规则保存成功', u( 'post', [ 'rid' => $rid, 'm' => v( 'module.name' ) ] ) );
 		}
-		$rule = $this->db->getRuleInfo( q( 'get.rid' ) );
-		View::with( 'rule', $rule );
+		//获取关键词回复
+		if ( $rid = q( 'get.rid' ) ) {
+			$data = $this->rule->where( 'rid', $rid )->first();
+			if ( empty( $data ) ) {
+				message( '回复规则不存在', 'back', 'error' );
+			}
+			$data['keyword'] = $replyKeyword = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
+			View::with( 'rule', $data );
+		}
 		$module     = new $this->moduleClass();
-		$moduleForm = $module->fieldsDisplay( q( 'get.rid' ) );
+		$moduleForm = $module->fieldsDisplay( $rid );
 		View::with( 'moduleForm', $moduleForm )->make();
 	}
 

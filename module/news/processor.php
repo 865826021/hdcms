@@ -17,7 +17,7 @@ class processor extends hdProcessor {
                 $d['title']       = $f['title'];
                 $d['discription'] = $f['description'];
                 $d['picurl']      = __ROOT__ . '/' . $f['thumb'];
-                $d['url']         = $f['url'] ? __ROOT__ . "/index.php{$f['url']}" : __ROOT__ . "/index.php?s=article/entry/news&id={$f['id']}&siteid=" . v( 'site.siteid' );
+                $d['url']         = $f['url'] ?  : __ROOT__ . "/index.php?s=article/entry/news&id={$f['id']}&siteid=" . v( 'site.siteid' );
                 $data[]           = $d;
             }
             $this->news( $data );

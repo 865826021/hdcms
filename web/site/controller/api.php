@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\site\controller;
+
 use system\model\Site;
 
 /**
@@ -23,7 +24,7 @@ class Api {
 	//构造函数
 	public function __construct() {
 		//加载站点缓存
-		( new Site() )->loadSite();p(v());
+		( new Site() )->loadSite();
 		//与微信官网通信绑定验证
 		\Weixin::valid();
 	}
@@ -50,7 +51,8 @@ class Api {
 
 	//消息处理
 	private function processor( $content ) {
-		$sql  = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 AND content='{$content}' AND siteid=" . v( 'site.siteid' ) . " ORDER BY rank DESC,type DESC";
+		$sql = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 ";
+		$sql .= "AND siteid=" . SITEID . " ORDER BY rank DESC,type DESC";
 		$keys = Db::query( $sql );
 		foreach ( $keys as $key ) {
 			$rid = '';

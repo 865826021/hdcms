@@ -109,7 +109,7 @@
 					<div class="col-sm-4">
 						<div class="btn-group">
 							<button type="button" class="btn btn-default" ng-click="saveItem(item)">
-								@@{{item.saved?'编辑':'保存'}}
+								@@{{item.edited?'编辑':'保存'}}
 							</button>
 							<button type="button" class="btn btn-default" ng-click="removeItem(item)">删除</button>
 						</div>
@@ -163,6 +163,7 @@
 				if ($scope.rule.keyword[i].type == 1) {
 					hasDefaultKeyword = true;
 				}
+				$scope.rule.keyword[i].edited=true;
 			}
 			if (hasDefaultKeyword === false) {
 				$scope.rule.keyword.push({content: '', type: 1});
@@ -176,7 +177,7 @@
 			});
 			//修改关键词状态当edited为true时隐藏文本框
 			$scope.saveItem = function (item) {
-				item.edited = false;
+				item.edited = !item.edited;
 			}
 			//删除关键词
 			$scope.removeItem = function (item) {
