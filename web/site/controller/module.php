@@ -67,13 +67,23 @@ class Module {
 
 	//模块主页
 	public function home() {
+		//todo 验证模块权限
 		//验证站点权限
 		if ( ( new UserPermission() )->isOperate() === FALSE ) {
 			message( '你没有管理模块的权限', 'back', 'error' );
 		}
+		$name   = q( 'get.m' );
+		$module = Db::table( 'modules' )->where( 'name', $name )->first();
+		foreach ( v( 'modules' ) as $v ) {
+			if ( $v['name'] == q( 'get.m' ) ) {
+				$moduleLinks = $v;
+				break;
+			}
+		}
+		v( 'module', $module );
 		//分配菜单
-		( new Menu() )->getMenus(  );
-		$module = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
+		( new Menu() )->getMenus();
+		View::with( '_site_modules_menu_', $moduleLinks );
 		View::with( 'module', $module )->make();
 	}
 
@@ -105,7 +115,7 @@ class Module {
 			message( '你没有管理模块的权限', 'back', 'error' );
 		}
 		//分配菜单
-		( new Menu() )->getMenus(  );
+		( new Menu() )->getMenus();
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
 		$action = 'doSite' . $this->action;

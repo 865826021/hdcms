@@ -64,9 +64,17 @@ class Menu extends Model {
 		$menus = Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );
 		//获取模块按行业类型
 		$modules = ( new Module() )->getModulesByIndustry();
+		//模块菜单
+		foreach ( v( 'modules' ) as $v ) {
+			if ( $v['name'] == v( 'module.name' ) ) {
+				$moduleLinks = $v;
+				break;
+			}
+		}
 		if ( $show ) {
 			View::with( '_site_menu_', $menus );
 			View::with( '_site_menu_modules_', $modules );
+			View::with( '_site_modules_menu_', $moduleLinks );
 		}
 
 		return $menus;

@@ -25,7 +25,8 @@
 			attachment: 'attachment',
 			uid: <?php echo Session::get( 'user.uid' );?>,
 			siteid: <?php echo Session::get( 'siteid' );?>,
-			root: "<?php echo __ROOT__;?>"
+			root: "<?php echo __ROOT__;?>",
+			module: "<?php echo v( 'module.name' );?>"
 		}
 	</script>
 	<script>
@@ -101,6 +102,30 @@
 			<div id="search-menu">
 				<input class="form-control input-lg" type="text" placeholder="输入菜单名称可快速查找">
 			</div>
+			<!--扩展模块动作 start-->
+			<div class="btn-group hide menu_action_type">
+				<button type="button" class="btn btn-default" onclick="changeModuleActionType(1);">默认</button>
+				<button type="button" class="btn btn-default" onclick="changeModuleActionType(2);">系统</button>
+				<button type="button" class="btn btn-default" onclick="changeModuleActionType(3);">组合</button>
+			</div>
+
+			<style>
+				.menu_action_type { width : 100%; border-bottom : solid 1px #dddddd; }
+
+				.menu_action_type .btn {
+					border        : none;
+					border-radius : 0px;
+					width         : 33.6%;
+					height        : 35px;
+				}
+
+				.menu_action_type .btn{
+					border-width : 0px 1px 0px 1px !important;
+					border-style : solid;
+					border-color : #dddddd;
+				}
+			</style>
+			<!--扩展模块动作 end-->
 			<div class="panel panel-default">
 				<!--系统菜单-->
 				<foreach from="$_site_menu_" value="$m">
@@ -125,132 +150,104 @@
 				</foreach>
 				<!--系统菜单 end-->
 
-				<!--扩展模块动作-->
-				<div class="btn-group ext-menu">
-					<button type="button" class="btn {{$_COOKIE['ext_menu_type']==1?'btn-primary':'btn-default'}}" data-id="1">默认1</button>
-					<button type="button" class="btn {{$_COOKIE['ext_menu_type']==2?'btn-primary':'btn-default'}}" data-id="2">系统</button>
-					<button type="button" class="btn {{$_COOKIE['ext_menu_type']==3?'btn-primary':'btn-default'}}" data-id="3">组合</button>
+				<!----------返回模块列表 start------------>
+				<div class="panel-heading hide module_back">
+					<h4 class="panel-title">模块列表</h4>
+					<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
+						<i class="fa fa-chevron-circle-down"></i>
+					</a>
 				</div>
-				<style>
-					.ext-menu { width : 100%; border-bottom : solid 1px #dddddd; }
+				<ul class="list-group menus collapse in hide module_back" aria-expanded="true">
+					<li class="list-group-item" data-href="?s=package/home/welcome">
+						<i class="fa fa-reply-all"></i> 返回模块列表
+					</li>
+					<li class="list-group-item" href="?s=package/module/home&m={{$_SESSION['MODULE_ACTION']['name']}}">
+						<i class="fa fa-reply-all"></i> {{$module['title']}}
+					</li>
+				</ul>
+				<!----------返回模块列表 end------------>
 
-					.ext-menu .btn {
-						border        : none;
-						border-radius : 0px;
-						width         : 33.6%;
-						height        : 35px;
-					}
-
-					.ext-menu .btn:nth-child(2), .ext-menu .btn:nth-child(3) {
-						border-width : 0px 1px 0px 1px !important;
-						border-style : solid;
-						border-color : #dddddd;
-					}
-				</style>
-					<div class="panel-heading ">
-						<h4 class="panel-title">模块列表</h4>
-						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
+				<!------------------------模块菜单 start------------------------>
+				<div class="panel-heading hide module_active">
+					<h4 class="panel-title">{{$_site_modules_menu_['title']}}回复规则</h4>
+					<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
+						<i class="fa fa-chevron-circle-down"></i>
+					</a>
+				</div>
+				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+					<li class="list-group-item" data-href="?s=platform/reply/post&m={{$_SESSION['MODULE_ACTION']['name']}}">
+						<i class="fa fa-comments"></i> 回复规则列表
+					</li>
+					<li class="list-group-item" href="?s=site/module/setting&m={{$_SESSION['MODULE_ACTION']['name']}}">
+						<i class="fa fa-cog"></i> 参数设置
+					</li>
+				</ul>
+				<div class="panel-heading hide module_active">
+					<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
+					<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
+						<i class="fa fa-chevron-circle-down"></i>
+					</a>
+				</div>
+				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+					<if value="!empty($_site_modules_menu_['budings']['home'])">
+						<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=home">
+							<i class="fa fa-home"></i> 微站首页导航
+						</li>
+					</if>
+					<if value="!empty($_site_modules_menu_['budings']['profile'])">
+						<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=profile">
+							<i class="fa fa-user"></i> 手机个人中心导航
+						</li>
+					</if>
+					<if value="!empty($_site_modules_menu_['budings']['member'])">
+						<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=member">
+							<i class="fa fa-user"></i> 桌面个人中心导航
+						</li>
+					</if>
+				</ul>
+				<div class="panel-heading hide module_active">
+					<h4 class="panel-title">{{$_site_modules_menu_['title']}}封面入口</h4>
+					<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
+						<i class="fa fa-chevron-circle-down"></i>
+					</a>
+				</div>
+				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+					<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
+						<li class="list-group-item" data-href="?s=package/module/cover&bid={{$f['bid']}}">
+							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
+						</li>
+					</foreach>
+				</ul>
+				<div class="panel-heading hide module_active">
+					<h4 class="panel-title">{{$_site_modules_menu_['title']}}业务菜单</h4>
+					<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
+						<i class="fa fa-chevron-circle-down"></i>
+					</a>
+				</div>
+				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+					<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
+						<li class="list-group-item" data-href="?s=package/module/business&bid={{$f['bid']}}">
+							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
+						</li>
+					</foreach>
+				</ul>
+				<!------------------------模块菜单 end------------------------>
+				<!--模块列表-->
+				<foreach from="$_site_menu_modules_" key="$t" value="$d">
+					<div class="panel-heading hide module_lists">
+						<h4 class="panel-title">{{$t}}</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#moudus{{$d['mid']}}">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
-					<ul class="list-group menus collapse in " aria-expanded="true">
-						<li class="list-group-item" data-href="?s=package/home/welcome">
-							<i class="fa fa-reply-all"></i> 返回模块列表
-						</li>
-						<li class="list-group-item" href="?s=package/module/home&m={{$_SESSION['MODULE_ACTION']['name']}}">
-							<i class="fa fa-reply-all"></i> {{$_SESSION['MODULE_ACTION']['title']}}
-						</li>
+					<ul class="list-group menus collapse in hide module_lists">
+						<foreach from="$d" value="$g">
+							<li class="list-group-item" data-type="module_menu" menuid="21" dataHref="?s=site/module/home&m={{$g['name']}}">
+								{{$g['title']}}
+							</li>
+						</foreach>
 					</ul>
-				<if value="$_COOKIE['ext_menu_type']==1 || $_COOKIE['ext_menu_type']==3">
-					<if value="!empty($_SESSION['MODULE_ACTION']['budings']['rule'])">
-						<div class="panel-heading ">
-							<h4 class="panel-title">{{$moduleLinks['title']}}回复规则</h4>
-							<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
-								<i class="fa fa-chevron-circle-down"></i>
-							</a>
-						</div>
-						<ul class="list-group menus collapse in module_active" aria-expanded="true">
-							<li class="list-group-item" data-href="?s=platform/reply/post&m={{$_SESSION['MODULE_ACTION']['name']}}">
-								<i class="fa fa-comments"></i> 回复规则列表
-							</li>
-							<li class="list-group-item" data-href="?s=package/module/setting&m={{$_SESSION['MODULE_ACTION']['name']}}">
-								<i class="fa fa-cog"></i> 参数设置
-							</li>
-						</ul>
-					</if>
-					<if value="!empty($_SESSION['MODULE_ACTION']['budings']['home']) || !empty($_SESSION['MODULE_ACTION']['budings']['profile'])|| !empty($moduleLinks['budings']['quick']) || !empty($moduleLinks['budings']['member'])">
-						<div class="panel-heading ">
-							<h4 class="panel-title">{{$moduleLinks['title']}}导航菜单</h4>
-							<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
-								<i class="fa fa-chevron-circle-down"></i>
-							</a>
-						</div>
-						<ul class="list-group menus collapse in module_active" aria-expanded="true">
-							<if value="!empty($_SESSION['MODULE_ACTION']['budings']['home'])">
-								<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=home">
-									<i class="fa fa-home"></i> 微站首页导航
-								</li>
-							</if>
-							<if value="!empty($_SESSION['MODULE_ACTION']['budings']['profile'])">
-								<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=profile">
-									<i class="fa fa-user"></i> 手机个人中心导航
-								</li>
-							</if>
-							<if value="!empty($_SESSION['MODULE_ACTION']['budings']['member'])">
-								<li class="list-group-item" data-href="?s=article/nav/lists&m={{$_SESSION['MODULE_ACTION']['name']}}&t=member">
-									<i class="fa fa-user"></i> 桌面个人中心导航
-								</li>
-							</if>
-						</ul>
-					</if>
-					<if value="!empty($_SESSION['MODULE_ACTION']['budings']['cover'])">
-						<div class="panel-heading ">
-							<h4 class="panel-title">{{$moduleLinks['title']}}封面入口</h4>
-							<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
-								<i class="fa fa-chevron-circle-down"></i>
-							</a>
-						</div>
-						<ul class="list-group menus collapse in module_active" aria-expanded="true">
-							<foreach from="$_SESSION['MODULE_ACTION']['budings']['cover']" value="$f">
-								<li class="list-group-item" data-href="?s=package/module/cover&bid={{$f['bid']}}">
-									<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
-								</li>
-							</foreach>
-						</ul>
-					</if>
-					<if value="!empty($_SESSION['MODULE_ACTION']['budings']['business'])">
-						<div class="panel-heading ">
-							<h4 class="panel-title">{{$moduleLinks['title']}}业务菜单</h4>
-							<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
-								<i class="fa fa-chevron-circle-down"></i>
-							</a>
-						</div>
-						<ul class="list-group menus collapse in module_active" aria-expanded="true">
-							<foreach from="$_SESSION['MODULE_ACTION']['budings']['business']" value="$f">
-								<li class="list-group-item" data-href="?s=package/module/business&bid={{$f['bid']}}">
-									<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
-								</li>
-							</foreach>
-						</ul>
-					</if>
-				</if>
-				<!--扩展模块动作 end-->
-				<!--模块列表-->
-					<foreach from="$_site_menu_modules_" key="$t" value="$d">
-						<div class="panel-heading module_menu">
-							<h4 class="panel-title">{{$t}}</h4>
-							<a class="panel-collapse" data-toggle="collapse" href="#moudus{{$d['mid']}}">
-								<i class="fa fa-chevron-circle-down"></i>
-							</a>
-						</div>
-						<ul class="list-group menus collapse in module_menu">
-							<foreach from="$d" value="$g">
-								<li class="list-group-item" data-type="module_menu" menuid="33" dataHref="?s=site/module/home&m={{$g['name']}}">
-									{{$g['title']}}
-								</li>
-							</foreach>
-						</ul>
-					</foreach>
+				</foreach>
 				<!--模块列表 end-->
 			</div>
 		</div>
@@ -282,6 +279,7 @@
 </div>
 
 <script>
+
 	//链接跳转
 	$("[dataHref]").click(function (event) {
 		var url = $(this).attr('dataHref');
@@ -304,16 +302,40 @@
 	if (sessionStorage.getItem('dataHref')) {
 		$("li[dataHref='" + sessionStorage.getItem('dataHref') + "']").addClass('active');
 	}
-	//显示当前左侧菜单
-	$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
-</script>
 
-<!--<script>-->
-<!--	require(['angular', 'util'], function (angular, util) {-->
-<!--		angular.module('siteMenuApp', []).controller('_site_menus_', ['$scope', function ($scope) {-->
-<!--		}]);-->
-<!--		angular.bootstrap(document.getElementById('_site_menus_'), ['siteMenuApp'])-->
-<!--	});-->
-<!--</script>-->
+	function changeModuleActionType(type) {
+		sessionStorage.setItem('moduleActionType', type);
+		location.reload(true);
+	}
+	//模块动作类型 1 默认 2 系统 3 复合
+	moduleActionType = sessionStorage.getItem('moduleActionType');
+	if (!moduleActionType) {
+		moduleActionType = 1;
+	}
+
+	if (window.sys.module) {
+		$('.menu_action_type').removeClass('hide');
+		$('.menu_action_type button').eq(moduleActionType-1).addClass('btn-primary');
+		switch (moduleActionType) {
+			case '1':
+				$('.module_active').removeClass('hide');
+				$('.module_back').removeClass('hide');
+				break;
+			case '2':
+				$('.module_lists').removeClass('hide');
+				$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
+				break;
+			case '3':
+				$('.module_active').removeClass('hide');
+				$('.module_back').removeClass('hide');
+				$('.module_lists').removeClass('hide');
+				break;
+		}
+	} else {
+		//显示当前左侧菜单
+		$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
+		$('.module_lists').removeClass('hide');
+	}
+</script>
 </body>
 </html>
