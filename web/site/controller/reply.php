@@ -12,6 +12,7 @@ namespace web\site\controller;
 use system\model\Menu;
 use system\model\Rule;
 use system\model\RuleKeyword;
+use system\model\User;
 use system\model\UserPermission;
 
 /**
@@ -26,26 +27,14 @@ class Reply {
 
 	public function __construct() {
 		$this->rule = new Rule();
-		//验证站点权限
-		if ( ( new UserPermission() )->verify() === FALSE ) {
-			message( '你没有管理站点的权限', 'back', 'warning' );
-		}
-		//验证站点权限
-		//todo 验证模块...
-		//分配菜单
-		( new Menu() )->getMenus( TRUE );
-		$module = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
+		$module     = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
 		v( 'module', $module );
-		if ( empty( $module ) ) {
-			//系统模块
-			if ( is_dir( 'module/' . $module ) ) {
-				$module['name']      = $module;
-				$module['is_system'] = 1;
-			} else {
-				message( '您访问的模块不存在', u( "system/site/lists" ), 'error' );
-			}
+		if ( ! ( new User() )->verifyModuleAccess() ) {
+			message( '你没有操作权限', 'back', 'error' );
 		}
 		$this->moduleClass = ( $module['is_system'] ? '\module\\' : 'addons\\' ) . $module['name'] . '\module';
+		//分配菜单
+		( new Menu() )->getMenus();
 	}
 
 	//回复列表
@@ -87,7 +76,7 @@ class Reply {
 			$rid = isset( $data['rid'] ) ? $data['rid'] : $rid;
 			//添加回复关键字
 			$keywordModel = new RuleKeyword();
-			$keywordModel->where('rid',$rid)->delete();
+			$keywordModel->where( 'rid', $rid )->delete();
 			foreach ( $data['keyword'] as $keyword ) {
 				$keyword['module'] = v( 'module.name' );
 				$keyword['rid']    = $rid;

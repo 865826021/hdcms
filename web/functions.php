@@ -60,3 +60,12 @@ function checkSiteClose() {
 		View::make( 'resource/view/site_close.html' );
 	}
 }
+
+/**
+ * 根据标识验证访问权限
+ */
+function auth( $identify, $type ) {
+	if ( ( new \system\model\User() )->auth( $identify, $type ) === FALSE ) {
+		message( '你没有操作权限', u( 'site/entry/refer', [ 'siteid' => SITEID ] ), 'warning' );
+	}
+}

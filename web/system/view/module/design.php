@@ -484,8 +484,8 @@
 					<textarea name="permission" cols="30" rows="6" class="form-control" placeholder="添加商品: shop_add"></textarea>
                     <span class="help-block">
                         如果您设计的模块添加的自定义的控制器需要权限设置(后台管理使用)，您可以在这里输入权限标识，
-权限标识由：模块标识_控制器名_方法名组成。例如,商城模块(shop)的添加商品权限标识：shop_goods_add"。例如，模块为shop,控制器名称为：goods,方法为：add,则对应标识为：shop_goods_add
-,多个权限标识使用换行隔开。模块方法中使用m('module')->auth('shop_goods_add')进行权限验证
+权限标识由：控制器名_方法名组成。例如,商城模块的添加商品权限标识：goods_add",说明:控制器名称为：goods,方法为：add,则对应标识为：goods_add
+,多个权限标识使用换行隔开。模块方法中使用auth('goods_add')进行权限验证
                     </span>
 				</div>
 			</div>

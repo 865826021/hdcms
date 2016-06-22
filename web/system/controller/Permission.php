@@ -34,23 +34,23 @@ class Permission {
 
 	//站点管理员设置
 	public function users() {
-		if ( ! ( new UserPermission() )->isManage( v( 'site.siteid' ) ) ) {
+		if ( ! ( new User() )->isManage( v( 'site.siteid' ) ) ) {
 			message( '你没有站点的管理权限', 'back', 'error' );
 		}
 		//获取除站长外的站点操作员
-		$users    = Db::table( 'user' )
-		              ->join( 'site_user', 'user.uid', '=', 'site_user.uid' )
-		              ->where( 'role', '<>', 'owner' )
-		              ->andWhere( 'siteid', v( 'site.siteid' ) )
-		              ->get();
-		$owner = (new User())->getSiteOwner(v('site.siteid'));
+		$users = Db::table( 'user' )
+		           ->join( 'site_user', 'user.uid', '=', 'site_user.uid' )
+		           ->where( 'role', '<>', 'owner' )
+		           ->andWhere( 'siteid', v( 'site.siteid' ) )
+		           ->get();
+		$owner = ( new User() )->getSiteOwner( v( 'site.siteid' ) );
 		View::with( [ 'users' => $users, 'owner' => $owner ] )->make();
 	}
 
 	//添加操作员
 	public function addOperator() {
 		$siteid = v( 'site.siteid' );
-		if ( ( new UserPermission() )->isManage( $siteid ) ) {
+		if ( ( new User() )->isManage( $siteid ) ) {
 			foreach ( q( 'post.uid', [ ] ) as $uid ) {
 				if ( ! Db::table( "site_user" )->where( "uid", $uid )->where( "siteid", $siteid )->get() ) {
 					Db::table( 'site_user' )->insert( [
@@ -68,7 +68,7 @@ class Permission {
 	//更改会员的站点角色
 	public function changeRole() {
 		$siteid = v( 'site.siteid' );
-		if ( ( new UserPermission() )->isManage( $siteid ) ) {
+		if ( ( new User() )->isManage( $siteid ) ) {
 			Db::table( 'site_user' )->where( 'uid', $_POST['uid'] )->where( 'siteid', $siteid )->update( [ 'role' => $_POST['role'] ] );
 			message( '管理员角色更新成功', '', 'success' );
 		} else {
@@ -79,7 +79,7 @@ class Permission {
 	//删除站点用户
 	public function removeSiteUser() {
 		$siteid = v( 'site.siteid' );
-		if ( ( new UserPermission() )->isManage( $siteid ) ) {
+		if ( ( new User() )->isManage( $siteid ) ) {
 			Db::table( 'site_user' )->where( 'siteid', $siteid )->whereIn( 'uid', $_POST['uids'] )->delete();
 			message( '站点管理员删除成功', '', 'success' );
 		} else {
@@ -98,6 +98,11 @@ class Permission {
 		if ( IS_POST ) {
 			$permissionModel = new UserPermission();
 			$permissionModel->where( 'siteid', $siteid )->where( 'uid', $uid )->delete();
+			//如果选择了模块,将扩展模块菜单要选中
+			$_POST['system'] = empty( $_POST['system'] ) ? [ ] : $_POST['system'];
+			if ( ! empty( $_POST['modules'] ) && ! in_array( 'package_managa', $_POST['system'] ) ) {
+				$_POST['system'][] = 'package_managa';
+			}
 			//系统权限
 			if ( ! empty( $_POST['system'] ) ) {
 				$data = [
@@ -120,7 +125,7 @@ class Permission {
 					$permissionModel->add( $data );
 				}
 			}
-			message( '操作人员权限设置成功', 'back', 'success' );
+			message( '操作人员权限设置成功', 'refresh', 'success' );
 		}
 		//读取菜单表
 		$menuModel       = new Menu();

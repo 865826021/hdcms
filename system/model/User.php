@@ -119,19 +119,6 @@ class User extends Model {
 	}
 
 	/**
-	 * 当前登录用户是否为系统管理员
-	 * @return bool
-	 */
-	public function isSuperUser( $uid = NULL ) {
-		$uid = $uid ?: Session::get( 'user.uid' );
-		if ( empty( $uid ) ) {
-			return FALSE;
-		}
-
-		return Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ? TRUE : FALSE;
-	}
-
-	/**
 	 * 后台管理用户登录检测
 	 * @return bool
 	 */
@@ -209,5 +196,171 @@ class User extends Model {
 		$uid = Db::table( 'site_user' )->where( 'siteid', $siteid )->where( 'role', 'owner' )->pluck( 'uid' );
 
 		return Db::table( 'user' )->find( $uid );
+	}
+
+	/**
+	 * 当前登录用户是否为系统管理员
+	 * @return bool
+	 */
+	public function isSuperUser( $uid = NULL ) {
+		$uid = $uid ?: Session::get( 'user.uid' );
+		if ( empty( $uid ) ) {
+			return FALSE;
+		}
+
+		return Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ? TRUE : FALSE;
+	}
+
+	/**
+	 * 是否为站长
+	 * 当前帐号是否拥有站长权限(网站所有者,系统管理员)
+	 *
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
+	 *
+	 * @return bool
+	 */
+	public function isOwner( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: SITEID;
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
+		if ( $this->isSuperUser( $uid ) ) {
+			return TRUE;
+		}
+
+		return Db::table( 'site_user' )->where( 'siteid', $siteid )->where( 'uid', $uid )->where( 'role', 'owner' )->get() ? TRUE : FALSE;
+	}
+
+	/**
+	 * 是否为管理员
+	 * 是否拥有管理员及以上权限(网站所有者,系统管理员)
+	 *
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
+	 *
+	 * @return bool|string
+	 */
+	public function isManage( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: SITEID;
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
+		if ( $this->isSuperUser( $uid ) ) {
+			return TRUE;
+		}
+
+		return Db::table( 'site_user' )
+		         ->where( 'siteid', $siteid )
+		         ->where( 'uid', $uid )
+		         ->WhereIn( 'role', [ 'manage', 'owner' ] )
+		         ->get() ? TRUE : FALSE;
+	}
+
+	/**
+	 * 是否为操作员
+	 * 是否拥有操作员及以上权限(网站所有者,系统管理员,操作员)
+	 *
+	 * @param int $siteid 站点编号
+	 * @param int $uid 用户编号 默认使用当前登录的帐号
+	 *
+	 * @return bool|string
+	 */
+	public function isOperate( $siteid = NULL, $uid = NULL ) {
+		$siteid = $siteid ?: SITEID;
+		$uid    = $uid ?: Session::get( "user.uid" );
+		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
+			return FALSE;
+		}
+		if ( ( new User() )->isSuperUser( $uid ) ) {
+			return TRUE;
+		}
+
+		return Db::table( 'site_user' )
+		         ->where( 'siteid', $siteid )
+		         ->where( 'uid', $uid )
+		         ->WhereIn( 'role', [ 'owner', 'manage', 'operate' ] )
+		         ->get() ? TRUE : FALSE;
+	}
+
+	/**
+	 * 根据权限标识验证访问权限
+	 *
+	 * @param string $identify 验证标识
+	 * @param string $module 类型 system系统模块或模块英文标识
+	 *
+	 * @return bool
+	 */
+	public function verify( $identify, $module = NULL ) {
+		$module     = $module ?: 'system';
+		$permission = Db::table( 'user_permission' )
+		                ->where( 'uid', Session::get( 'user.uid' ) )
+		                ->where( 'siteid', SITEID )
+		                ->where( 'type', $module )
+		                ->pluck( 'permission' );
+		if ( empty( $permission ) || in_array( $identify, explode( '|', $permission ) ) ) {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * 验证当前用户在当前站点
+	 * 能否拥有当前模块
+	 * 不进行权限标识的验证
+	 * 系统模块不进行验证,直接通过
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function verifyModuleAccess() {
+		//操作员验证
+		if ( ! $this->isOperate() ) {
+			return FALSE;
+		}
+		if ( v( "module.is_system" ) == 1 ) {
+			return TRUE;
+		} else {
+			//站点是否含有模块
+			if ( ! ( new Site() )->hasModule( SITEID, v( 'module.name' ) ) ) {
+				return FALSE;
+			}
+			//插件模块
+			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
+			if ( ! empty( $allowModules ) ) {
+				return in_array( v( 'module.name' ), $allowModules );
+			}
+
+			return TRUE;
+		}
+	}
+
+	/**
+	 *
+	 *
+	 * @param string $identify 标识
+	 */
+	/**
+	 * 根据标识验证模块的访问权限
+	 *
+	 * @param string $identify 权限标识
+	 * @param string $type system 系统模块 / 插件模块的名称
+	 *
+	 * @return bool
+	 */
+	public function auth( $identify, $type ) {
+		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->get();
+		if ( empty( $permission ) ) {
+			return TRUE;
+		}
+		foreach ( $permission as $v ) {
+			if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 }

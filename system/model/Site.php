@@ -191,4 +191,26 @@ class Site extends Model {
 		return $this->join( 'site_user', 'site.siteid', '=', 'site_user.siteid' )->where( 'site_user.uid', $uid )->get();
 	}
 
+	/**
+	 * 验证站点是否拥有模块
+	 *
+	 * @param string $siteid 站点编号
+	 * @param string $module 模块名称
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function hasModule( $siteid = NULL, $module = NULL ) {
+		$siteid = $siteid ?: SITEID;
+		$module = $module ?: v( 'module.name' );
+		if ( empty( $siteid ) || empty( $module ) ) {
+			return FALSE;
+		}
+		$modules = ( new Modules() )->getSiteAllModules( $siteid );
+		foreach ( $modules as $m ) {
+			if ( strtolower( $module ) == strtolower( $m['name'] ) ) {
+				return TRUE;
+			}
+		}
+	}
 }

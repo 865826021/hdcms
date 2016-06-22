@@ -12,51 +12,41 @@ namespace system\model;
 use hdphp\model\Model;
 
 class Modules extends Model {
-	protected $table = 'modules';
+	protected $table            = 'modules';
+	protected $denyInsertFields = [ 'mid' ];
 	protected $validate
-	                 = [
-			[ 'name', 'required', '模块名称不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'name', 'regexp:/^[a-z]+$/', '模块名称只能为英文字母', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'industry', 'required', '模块名称不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'title', 'required', '请输入中文的模块标题', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'version', 'regexp:/^\d[\d\.]+$/', '版本号必须为数字', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'resume', 'required', '模块描述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'detail', 'required', '模块详细介绍不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'author', 'required', '模块作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-			[ 'url', 'http', '发布url链接错误', self::MUST_VALIDATE, self::MODEL_INSERT ],
+	                            = [
+			[ 'name', 'regexp:/^\w+$/', '模块标识符, 对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能由字母数字下划线组成', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'industry', 'required', '模块类型不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'title', 'maxlen:10', '模块名称不能超过10个字符', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'version', 'regexp:/^\d+\.?\d*$/', '版本只能为数字', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'resume', 'required', '模块简述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'detail', 'required', '详细介绍不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'url', 'required', '发布url不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'thumb', 'required', '模块缩略图不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'cover', 'required', '模块封面图片不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		];
 	protected $auto
-	                 = [
+	                            = [
 			[ 'name', 'strtolower', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'subscribes', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'processors', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'setting', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'rule', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
-			[ 'permissions', 'autoFilterPermission', 'method', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		];
-
-	/**
-	 * 模块权限数据处理,过滤掉不能模块名称开始的数据
-	 *
-	 * @param string $val
-	 *
-	 * @return array
-	 */
-	protected function autoFilterPermission( $val ) {
-		$data        = preg_split( '/\n/', $val );
-		$permissions = [ ];
-		foreach ( $data as $d ) {
-			$setting = explode( ':', $d );
-			if ( count( $setting ) == 2 && preg_match( "/^{$data['name']}_/", $setting[1] ) ) {
-				$setting[1] = strtolower( $setting[1] );
-				array_push( $permissions, $setting );
-			}
-		}
-
-		return $permissions;
-	}
+	protected $industry
+	                            = [
+			'business'  => '主要业务',
+			'customer'  => '客户关系',
+			'marketing' => '营销与活动',
+			'tools'     => '常用服务与工具',
+			'industry'  => '行业解决方案',
+			'other'     => '其他'
+		];
 
 	/**
 	 * 获取站点模块数据
@@ -68,7 +58,7 @@ class Modules extends Model {
 	 * @throws \Exception
 	 */
 	public function getSiteAllModules( $siteid = NULL ) {
-		$siteid = $siteid ?: Session::get( 'siteid' );
+		$siteid = $siteid ?: SITEID;
 		if ( empty( $siteid ) ) {
 			throw new \Exception( '$siteid 参数错误' );
 		}
@@ -92,6 +82,8 @@ class Modules extends Model {
 				$modules = $this->whereIn( 'name', $moduleNames )->get();
 			}
 		}
+		//加入系统模块
+		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = unserialize( $m['subscribes'] );
 			$m['processors']  = unserialize( $m['processors'] );
@@ -107,21 +99,75 @@ class Modules extends Model {
 	}
 
 	/**
-	 * 当前站点是否可以使用指定模块
+	 * 删除模块
 	 *
-	 * @param int $siteid 站点编号
 	 * @param string $module 模块名称
+	 * @param int $delRule
 	 *
 	 * @return bool
 	 */
-	public function siteHasModule( $siteid, $module ) {
-		$modules = $this->getSiteAllModules( $siteid );
-		foreach ( $modules as $m ) {
-			if ( strtolower( $module ) == strtolower( $m['name'] ) ) {
-				return TRUE;
+	public function remove( $module, $delRule = 0 ) {
+		//删除封面关键词数据
+		if ( $delRule ) {
+			//删除模块封面数据
+			if ( $coverRids = Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->lists( 'rid' ) ) {
+				Db::table( 'rule' )->whereIn( 'rid', $coverRids )->delete();
+				Db::table( 'rule_keyword' )->whereIn( 'rid', $coverRids )->delete();
+				Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->delete();
 			}
+			//删除模块回复规则列表
+			Db::table( 'rule' )->where( 'module', $module )->delete();
+			Db::table( 'rule_keyword' )->where( 'module', $module )->delete();
+		}
+		//删除模块数据
+		$this->where( 'name', $module )->delete();
+		//删除站点模块
+		Db::table( 'site_modules' )->where( 'module', $module )->delete();
+		//模块设置
+		Db::table( 'module_setting' )->where( 'module', $module )->delete();
+		//代金券使用的模块
+		Db::table( 'ticket_module' )->where( 'module', $module )->delete();
+		//删除模块动作数据
+		Db::table( 'modules_bindings' )->where( 'module', $module )->delete();
+		//更新套餐数据
+		$package = Db::table( 'package' )->get();
+		foreach ( $package as $p ) {
+			$p['modules'] = unserialize( $p['modules'] );
+			if ( $k = array_search( $_GET['module'], $p['modules'] ) ) {
+				unset( $p['modules'][ $k ] );
+			}
+			$p['modules'] = serialize( $p['modules'] );
+			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
+		}
+		//更新站点缓存
+		$siteids   = Db::table( 'site' )->lists( 'siteid' );
+		$siteModel = new Site();
+		foreach ( $siteids as $siteid ) {
+			$siteModel->updateSiteCache( $siteid );
 		}
 
-		return FALSE;
+		return TRUE;
+	}
+
+	/**
+	 * 按行业获取模块列表
+	 *
+	 * @param array $modules 限定模块(只有这些模块获取)
+	 *
+	 * @return array
+	 */
+	public function getModulesByIndustry( $modules = [ ] ) {
+		$data = [ ];
+		foreach ( v( 'modules' ) as $m ) {
+			if ( ! empty( $modules ) && ! in_array( $m['name'], $modules ) ) {
+				continue;
+			}
+			$data[ $this->industry[ $m['industry'] ] ][] = [
+				'title' => $m['title'],
+				'name'  => $m['name']
+			];
+		}
+
+		return $data;
 	}
 }

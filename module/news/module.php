@@ -10,8 +10,9 @@ use module\HdModule;
 
 class Module extends HdModule {
 
-	public function settingsDisplay( $settings ) {
-
+	public function __construct() {
+		parent::__construct();
+		auth( 'reply_news' , 'system' );
 	}
 
 	public function fieldsDisplay( $rid = 0 ) {

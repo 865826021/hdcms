@@ -52,7 +52,7 @@
                                 </span>
                             </div>
                             <span ng-if="!v.new_add && v._level!=1" ng-bind="v.permission"></span>
-                            <input type="text" ng-if="v.new_add&& v._level==3" ng-model="v.permission" class="form-control" placeholder="权限标识">
+                            <input type="text" ng-if="v.new_add && v._level==3" ng-model="v.permission" class="form-control" placeholder="权限标识">
                         </td>
                         <td>
                             <input type="text" ng-if="v.new_add && v._level==3" ng-model="v.url" class="form-control" placeholder="链接地址">
@@ -75,7 +75,7 @@
                     </tr>
                     <tr ng-if="(v._level==3 && menus[k+1]._level!=3) || (v._level==2 && v.id && menus[k+1]._level !=3)">
                         <td>&nbsp;</td>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div class="pill-bottom" style="margin-left:50px;cursor: pointer;" ng-click="addMenu(v,3)">
                                 &nbsp;&nbsp;<i class="fa fa-plus-circle"></i> 添加菜单
                             </div>
@@ -83,7 +83,7 @@
                     </tr>
                     <tr ng-if="(menus[k+1]._level ==1 || !menus[k+1]) && v.pid">
                         <td>&nbsp;</td>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div class="pill-bottom" style="cursor: pointer;" ng-click="addMenu(v,2)">
                                 &nbsp;&nbsp;<i class="fa fa-plus-circle"></i> 添加菜单组
                             </div>
@@ -93,7 +93,7 @@
                     <tbody>
                     <tr>
                         <td>&nbsp;</td>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div class="add add_level0" style="cursor: pointer;" ng-click="addMenu(v,1)"><i class="fa fa-plus-circle"></i> 添加顶级分类</div>
                         </td>
                     </tr>

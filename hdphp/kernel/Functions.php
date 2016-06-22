@@ -99,7 +99,7 @@ if ( ! function_exists( '_404' ) ) {
 if ( ! function_exists( 'm' ) ) {
 	function m( $model ) {
 		static $instance = [ ];
-		$class = strpos( $model, '\\' ) === FALSE ? '\system\model\\' . $model : $model;
+		$class = strpos( $model, '\\' ) === FALSE ? '\system\model\\' . ucfirst($model) : $model;
 		if ( isset( $instance[ $class ] ) ) {
 			return $instance[ $class ];
 		}

@@ -118,10 +118,10 @@
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( m( "UserPermission" )->isOwner( $s['siteid'] ) ) { ?>
+							<?php if ( m( "User" )->isOwner( $s['siteid'] ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( m( "UserPermission" )->isManage( $s['siteid'] ) ) { ?>
+							<?php if ( m( "User" )->isManage( $s['siteid'] ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>

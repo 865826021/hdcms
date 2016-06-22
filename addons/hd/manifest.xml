@@ -5,10 +5,12 @@
     <title><![CDATA[后盾]]></title>
     <url><![CDATA[http://open.hdcms.com]]></url>
     <version><![CDATA[1.0]]></version>
-    <industry><![CDATA[business]]></industry>
+    <industry><![CDATA[customer]]></industry>
     <resume><![CDATA[模块简述]]></resume>
     <detail><![CDATA[模块介绍]]></detail>
     <author><![CDATA[作者]]></author>
+    <thumb><![CDATA[thumb.png]]></thumb>
+    <cover><![CDATA[cover.jpg]]></cover>
     <rule embed="true"/>
   </application>
   <platform>

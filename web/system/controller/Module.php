@@ -283,7 +283,7 @@ str;
 				//创建模板文件
 				$tplScript
 					= <<<str
-<extend file="web/resource/view/site"/>
+<extend file="resource/view/site"/>
 <block name="content">
 这里定义页面内容
 </block>

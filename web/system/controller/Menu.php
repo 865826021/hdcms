@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace web\system\controller;
+
 use system\model\User;
 
 /**
@@ -18,9 +19,11 @@ use system\model\User;
  */
 class Menu {
 	protected $user;
+	protected $menu;
 
 	public function __construct() {
 		$this->user = new User();
+		$this->menu = new \system\model\Menu();
 		if ( ! $this->user->isSuperUser() ) {
 			message( '只有系统管理员可以操作', 'back', 'error' );
 		}
@@ -30,7 +33,7 @@ class Menu {
 	public function edit() {
 		if ( IS_POST ) {
 			$menu = json_decode( $_POST['menu'] );
-			Db::table( 'core_menu' )->delete();
+			$this->menu->delete();
 			foreach ( $menu as $m ) {
 				$d = [ ];
 				if ( ! empty( $m->id ) ) {
@@ -46,19 +49,19 @@ class Menu {
 				$d['is_display'] = $m->is_display;
 				$d['mark']       = $m->mark;
 				if ( $d['mark'] && $d['title'] ) {
-					Db::table( 'core_menu' )->insertGetId( $d );
+					$this->menu->insertGetId( $d );
 				}
 			}
 			message( '菜单更改成功' );
 		}
-		$data  = Db::table( 'core_menu' )->get();
+		$data  = $this->menu->get();
 		$menus = Data::tree( $data, 'title', 'id', 'pid' );
 		View::with( 'menus', json_encode( $menus ) )->make();
 	}
 
 	//更改显示状态
 	public function changeDisplayState() {
-		Db::table( 'menu' )->save( $_POST );
+		$this->menu->save( $_POST );
 		ajax( [ 'valid' => TRUE, 'message' => '菜单更改成功' ] );
 	}
 
@@ -68,7 +71,7 @@ class Menu {
 		$menu         = Data::channelList( $data, $_POST['id'], "&nbsp;", 'id', 'pid' );
 		$menu[]['id'] = $_POST['id'];
 		foreach ( $menu as $m ) {
-			Db::table( 'menu' )->where( 'id', $m['id'] )->delete();
+			$this->menu->where( 'id', $m['id'] )->delete();
 		}
 		ajax( [ 'valid' => TRUE, 'message' => '删除成功' ] );
 	}
