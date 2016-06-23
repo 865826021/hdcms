@@ -29,9 +29,7 @@ class Entry {
 		( new Menu() )->getMenus();
 	}
 
-	/**
-	 * 进入后台站点管理入口
-	 */
+	//进入后台站点管理入口
 	public function refer() {
 		//获取系统菜单
 		$menu = ( new Menu() )->getMenus( FALSE );
@@ -39,16 +37,12 @@ class Entry {
 		go( __ROOT__ . $cur['url'] );
 	}
 
-	/**
-	 * 顶级菜单主页
-	 */
+	//顶级菜单主页
 	public function home() {
 		View::make( VIEW_PATH . '/home/' . q( 'get.p' ) . '.php' );
 	}
 
-	/**
-	 * 前台返回模块列表功能
-	 */
+	//返回模块列表功能
 	public function package() {
 		//分配菜单
 		View::make();

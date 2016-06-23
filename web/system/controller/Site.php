@@ -30,10 +30,12 @@ use system\model\UserPermission;
 class Site {
 	protected $db;
 	protected $siteid;
+	protected $user;
 
 	public function __construct() {
 		//登录检测
-		if ( ! m( 'User' )->isLogin() ) {
+		$this->user = new User();
+		if ( ! $this->user->isLogin() ) {
 			message( '你还没有登录,无法进行操作', u( 'entry/login' ), 'warning' );
 		}
 		$this->siteid = Session::get( 'siteid' );
@@ -58,9 +60,8 @@ class Site {
 		if ( $domain = q( 'post.domain' ) ) {
 			$db->where( 'site.domain', 'like', "%{$domain}%" );
 		}
-		$userModel = new User();
 		//普通站长获取站点列表
-		if ( ! $userModel->isSuperUser() ) {
+		if ( ! $this->user->isSuperUser() ) {
 			$db->where( 'user.uid', '=', Session::get( 'user.uid' ) );
 		}
 		$sites        = $db->get();
@@ -141,7 +142,7 @@ class Site {
 			case 'wechat':
 				$UserPermissionModel = new UserPermission();
 				//验证当前用户站点权限
-				if ( ! $UserPermissionModel->isOwner( $this->siteid ) ) {
+				if ( ! $this->user->isOwner( $this->siteid ) ) {
 					message( '您不是网站管理员无法操作' );
 				}
 				//微信帐号管理
@@ -164,7 +165,7 @@ class Site {
 			//设置权限,只有系统管理员可以操作
 			case 'access_setting':
 				//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
-				if ( ! m( 'User' )->isSuperUser() ) {
+				if ( ! $this->user->isSuperUser() ) {
 					go( u( 'post', [ 'step' => 'explain', 'siteid' => $this->siteid ] ) );
 				}
 				if ( IS_POST ) {
@@ -230,8 +231,7 @@ class Site {
 				View::make( 'access_setting' );
 			case 'explain':
 				//验证当前用户站点权限
-				$model = new UserPermission();
-				if ( ! $model->isOwner( $this->siteid ) ) {
+				if ( ! $this->user->isOwner( $this->siteid ) ) {
 					message( '你没有管理该站点的权限' );
 				}
 				//更新站点缓存
@@ -244,8 +244,7 @@ class Site {
 
 	//删除站点
 	public function remove() {
-		$model = new UserPermission();
-		if ( $model->isOwner( $this->siteid ) ) {
+		if ( $this->user->isManage( $this->siteid ) ) {
 			$this->db->remove( $this->siteid );
 			message( '网站删除成功', 'back', 'success' );
 		}
@@ -254,8 +253,7 @@ class Site {
 
 	//编辑站点
 	public function edit() {
-		$UserPermissionModel = new UserPermission();
-		if ( ! $UserPermissionModel->isOwner( $this->siteid ) ) {
+		if ( ! $this->user->isManage( $this->siteid ) ) {
 			message( '你没有编辑站点的权限', 'back', 'success' );
 		}
 		if ( IS_POST ) {
