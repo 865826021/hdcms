@@ -1,4 +1,5 @@
 <?php namespace module;
+use system\model\ModuleSetting;
 
 /**
  * 模块业务基类
@@ -17,9 +18,8 @@ abstract class hdSite
     //构造函数
     public function __construct()
     {
-        $this->template = (v('module.is_system') ? "module/" : "addons/") . v('module.name') . '/template';
-        $setting        = Db::table('module_setting')->where('siteid', '=', v('site.siteid'))->where('module', '=', v('module.anme'))->pluck('setting');
-        $this->config   = unserialize($setting);
+        $this->template      = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
+        $this->config        = (new ModuleSetting())->getModuleConfig();
         define('__TEMPLATE__', $this->template);
     }
 

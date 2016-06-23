@@ -81,13 +81,13 @@ class Reply {
 				$keyword['module'] = v( 'module.name' );
 				$keyword['rid']    = $rid;
 				if ( ! $keywordModel->add( $keyword ) ) {
-					echo $keywordModel->getError();
+					message( $keywordModel->getError(), 'back', 'error' );
 				}
 			}
 			//调用模块的执行方法
 			$module = new $this->moduleClass();
 			//字段验证
-			if ( $msg = $module->fieldsValidate( $rid ) ) {
+			if ($msg = $module->fieldsValidate( $rid ) ) {
 				message( $msg, 'back', 'error' );
 			}
 			//使模块保存回复内容
@@ -100,7 +100,7 @@ class Reply {
 			if ( empty( $data ) ) {
 				message( '回复规则不存在', 'back', 'error' );
 			}
-			$data['keyword'] = $replyKeyword = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
+			$data['keyword'] = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
 			View::with( 'rule', $data );
 		}
 		$module     = new $this->moduleClass();

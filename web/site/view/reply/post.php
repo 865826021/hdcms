@@ -16,6 +16,22 @@
                 添加回复规则
             </div>
             <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">回复规则名称</label>
+                    <div class="col-sm-7 col-md-8">
+                        <input type="text" class="form-control" name="name" ng-model="rule.name">
+        <span class="help-block">
+            选择高级设置: 将会提供一系列的高级选项供专业用户使用.
+        </span>
+                    </div>
+                    <div class="col-sm-3 col-md-2">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="advSetting" value="1">高级设置
+                            </label>
+                        </div>
+                    </div>
+                </div>
                 <include file="web/site/view/reply/keyword.php"/>
             </div>
         </div>

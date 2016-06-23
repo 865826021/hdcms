@@ -82,7 +82,7 @@ class Api {
 			}
 
 			if ( ! empty( $rid ) ) {
-				if ( in_array( $key['module'], $this->systemModules ) ) {
+				if ( Db::table( 'modules' )->where( 'name', $key['module'] )->pluck( 'is_system' ) == 1 ) {
 					//系统模块
 					$class = '\module\\' . $key['module'] . '\processor';
 				} else {

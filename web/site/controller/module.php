@@ -12,6 +12,9 @@ namespace web\site\controller;
 use system\model\Menu;
 use system\model\Modules;
 use system\model\ModuleSetting;
+use system\model\ReplyCover;
+use system\model\Rule;
+use system\model\RuleKeyword;
 use system\model\User;
 use system\model\UserPermission;
 
@@ -88,6 +91,75 @@ class Module {
 		$setting = ( new ModuleSetting() )->getModuleConfig( $this->module );
 
 		return $obj->settingsDisplay( $setting );
+	}
+
+
+	//模块封面设置
+	public function cover() {
+		$bid        = q( 'get.bid', 0, 'intval' );
+		$replyCover = new ReplyCover();
+		$ruleModel  = new Rule();
+		if ( IS_POST ) {
+			if ( empty( $_POST['title'] ) || empty( $_POST['description'] ) || empty( $_POST['thumb'] ) ) {
+				message( '封面标题,描述,缩略图不能为空', 'back', 'error' );
+			}
+			$data           = json_decode( $_POST['keyword'], TRUE );
+			$data['module'] = 'cover';
+			$data['rank']   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+			//添加回复规则
+			$action = isset( $data['rid'] ) ? 'save' : 'add';
+			if ( ! $rid = $ruleModel->$action( $data ) ) {
+				message( $ruleModel->getError(), 'back', 'error' );
+			}
+			$rid = isset( $data['rid'] ) ? $data['rid'] : $rid;
+			//添加回复关键字
+			$keywordModel = new RuleKeyword();
+			$keywordModel->where( 'rid', $rid )->delete();
+			foreach ( $data['keyword'] as $keyword ) {
+				$keyword['module'] = 'cover';
+				$keyword['rid']    = $rid;
+				if ( ! $keywordModel->add( $keyword ) ) {
+					message( $keywordModel->getError(), 'back', 'error' );
+				}
+			}
+			$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
+			$cover          = $replyCover->where( 'siteid', SITEID )->where( 'module', $this->module )->where( 'do', $moduleBindings['do'] )->first();
+			//添加封面回复
+			$data                = [ ];
+			$data['rid']         = $rid;
+			$data['do']          = $moduleBindings['do'];
+			$data['siteid']      = SITEID;
+			$data['module']      = $this->module;
+			$data['title']       = $_POST['title'];
+			$data['description'] = $_POST['description'];
+			$data['thumb']       = $_POST['thumb'];
+			$data['url']         = $_POST['url'];
+			if ( $cover ) {
+				$data['id'] = $cover['id'];;
+			}
+			$action = $cover ? 'save' : 'add';
+			if ( ! $replyCover->$action( $data ) ) {
+				message( $replyCover->getError(), 'back', 'error' );
+			}
+			message( '功能封面更新成功', 'refresh', 'success' );
+		}
+		$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
+		$field          = $replyCover->where( 'siteid', SITEID )->where( 'module', $this->module )->where( 'do', $moduleBindings['do'] )->first();
+		//获取关键词回复
+		if ( $field ) {
+			$data = $ruleModel->where( 'rid', $field['rid'] )->first();
+			if ( empty( $data ) ) {
+				message( '回复规则不存在', 'back', 'error' );
+			}
+			$data['keyword'] = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get();
+			View::with( 'rule', $data );
+		}
+		$field['url']  = "?s=package/web/entry&i=" . SITEID . "&m={$this->module}&c=site&do={$moduleBindings['do']}";
+		$field['name'] = $moduleBindings['title'];
+		View::with( 'field', $field );
+		//分配菜单
+		( new Menu() )->getMenus();
+		View::make();
 	}
 
 	//请求入口

@@ -33,7 +33,6 @@ class ReplyCover extends Model {
 			[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'do', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'do', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 

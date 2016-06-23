@@ -215,7 +215,7 @@
 				</div>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 					<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
-						<li class="list-group-item" dataHref="?s=package/module/cover&bid={{$f['bid']}}">
+						<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
 							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 						</li>
 					</foreach>

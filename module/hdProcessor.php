@@ -1,4 +1,5 @@
 <?php namespace module;
+use system\model\ModuleSetting;
 
 /**
  * 模块处理消息
@@ -7,22 +8,20 @@
  * @author 向军
  */
 abstract class hdProcessor {
-	//模块数据
-	protected $module
-		= [
-			//模块配置项
-			'config' => [ ]
-		];
+	//配置项
+	protected $config;
 
-	public function __construct() { }
+	public function __construct() {
+		$this->config = ( new ModuleSetting() )->getModuleConfig();
+	}
 
 	//回复方法
 	abstract function handle( $rid );
 
-	public function __call( $name, $arguments ) {
+	public function __call( $method, $arguments ) {
 		$instance = \Weixin::instance( 'message' );
-		if ( method_exists( $instance, $name ) ) {
-			call_user_func_array( [ $instance, $name ], $arguments );
+		if ( method_exists( $instance, $method ) ) {
+			call_user_func_array( [ $instance, $method ], $arguments );
 		}
 	}
 }

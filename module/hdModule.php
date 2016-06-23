@@ -13,14 +13,11 @@ abstract class HdModule {
 	protected $template;
 	//配置项
 	protected $config;
-	//模型
-	protected $moduleSetting;
 
 	//构造函数
 	public function __construct() {
-		$this->moduleSetting = new ModuleSetting();
-		$this->template      = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
-		$this->config        = $this->moduleSetting->getModuleConfig();
+		$this->config   = ( new ModuleSetting() )->getModuleConfig();
+		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
 		define( '__TEMPLATE__', $this->template );
 	}
 

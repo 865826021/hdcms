@@ -1,4 +1,5 @@
 <?php namespace module;
+use system\model\ModuleSetting;
 
 /**
  * 模块订阅消息
@@ -6,10 +7,13 @@
  * @package system\core
  * @author 向军
  */
-abstract class hdSubscribe
-{
-    //变量包含了用户信息和关键字信息
-    protected $message;
+abstract class hdSubscribe {
+	//配置项
+	protected $config;
 
-    abstract function handle();
+	public function __construct() {
+		$this->config = ( new ModuleSetting() )->getModuleConfig();
+	}
+
+	abstract function handle();
 }
