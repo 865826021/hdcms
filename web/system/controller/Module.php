@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace web\system\controller;
 
+use system\model\Modules;
 use system\model\Site;
 use system\model\User;
 
@@ -25,7 +26,7 @@ class Module {
 		if ( ! ( new User() )->isSuperUser() ) {
 			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
 		}
-		$this->module = new \system\model\Module();
+		$this->module = new Modules();
 	}
 
 	//已经安装模块

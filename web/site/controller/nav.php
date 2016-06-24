@@ -47,27 +47,64 @@ class Nav {
 		if ( IS_POST ) {
 			$data = json_decode( $_POST['data'], TRUE );
 			foreach ( (array) $data as $d ) {
-				$d['css']     = json_encode( $d['css'] );
-				$d['orderby'] = min( 255, intval( $d['orderby'] ) );
-				$this->webNav->where( 'id', $d['id'] )->update( $d );
+				$action = empty( $d['id'] ) ? 'add' : 'save';
+				if ( ! $this->webNav->$action( $d ) ) {
+					message( $this->webNav->getError(), 'refresh', 'error' );
+				}
 			}
 			message( '保存导航数据成功', 'refresh', 'success' );
 		}
 		//当前显示导航的站点
 		if ( ! $this->webid ) {
-			$web         = api( 'web' )->getDefaultWeb();
-			$this->webid = $web['id'];
+			$web         = ( new Web() )->getDefaultWeb();
+			$this->webid = $_GET['webid'] = $web['id'];
 		}
 		//当前站点模板数据
 		$template = $this->web->getTemplateData( $this->webid );
 		//获取导航菜单,entry是导航类型 home 微站首页导航  profile 手机会员中心导航 member 桌面会员中心导航  profile本类不进行处理
-		$nav = $this->webNav->where( 'web_id', $this->webid )->where( 'entry', q( 'get.entry' ) )->get();
+		if ( v( 'module.name' ) ) {
+			//模块菜单
+			$nav = $this->webNav->where( 'web_id', $this->webid )->where( 'entry', q( 'get.entry' ) )->where( 'module', v( 'module.name' ) )->get();
+			//从模块动作中移除已经在菜单中有值的菜单
+			$modulesBindings = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', q( 'get.entry' ) )->get();
+			foreach ( $modulesBindings as $k => $v ) {
+				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&siteid=" . SITEID;
+				foreach ( $nav as $n ) {
+					if ( strstr( $n['url'], $modulesBindings[ $k ]['url'] ) ) {
+						unset( $modulesBindings[ $k ] );
+					}
+				}
+			}
+			foreach ( $modulesBindings as $v ) {
+				$nav[] = [
+					'web_id'   => $this->webid,
+					'module'   => $v['module'],
+					'url'      => $v['url'],
+					'position' => 0,
+					'name'     => $v['title'],
+					'css'      => json_encode( [
+						'icon'  => 'fa fa-external-link',
+						'image' => '',
+						'color' => '#333333',
+						'size'  => 35,
+					] ),
+					'orderby'  => 0,
+					'status'   => 0,
+					'icontype' => 1,
+					'entry'    => q( 'get.entry' ),
+				];
+			}
+		} else {
+			//系统菜单
+			$nav = $this->webNav->where( 'web_id', $this->webid )->where( 'entry', q( 'get.entry' ) )->get();
+		}
 		if ( $nav ) {
 			$nav = Arr::string_to_int( $nav );
 			foreach ( $nav as $k => $v ) {
-				$nav[ $k ]['css'] = ( json_decode( $v['css'], TRUE ) );
+				$nav[ $k ]['css'] = json_decode( $v['css'], TRUE );
 			}
 		}
+		//模块时将模块菜单添加进去
 		View::with( 'web', $this->web->getSiteWebs() );
 		View::with( 'webid', $this->webid );
 		View::with( 'nav', $nav );
@@ -78,9 +115,8 @@ class Nav {
 
 	//更改导航状态
 	public function changeStatus() {
-		$data['id']     = $_POST['data']['id'];
-		$data['status'] = $_POST['data']['status'];
-		if ( ! $this->webNav->save( $data ) ) {
+		$action = empty( $_POST['data']['id'] ) ? 'add' : 'save';
+		if ( ! $this->webNav->$action( $_POST['data'] ) ) {
 			message( $this->webNav->getError(), 'back', 'error' );
 		}
 		message( '更改状态成功', 'back', 'success' );
@@ -92,10 +128,10 @@ class Nav {
 			$data                = json_decode( $_POST['data'], TRUE );
 			$data['css']['size'] = min( intval( $data['css']['size'] ), 100 );
 			$action              = $this->id ? 'save' : 'add';
-			$id                  = $this->webNav->$action( $data );
-			$id                  = $this->id ?: $id;
-			$nav                 = $this->webNav->find( $id );
-			message( '保存导航数据成功', u( 'lists', [ 'webid' => $nav['web_id'], 'entry' => $nav['entry'] ] ), 'success' );
+			if ( ! $this->webNav->$action( $data ) ) {
+				message( $this->webNav->getError(), 'back', 'error' );
+			}
+			message( '保存导航数据成功', $_POST['__HISTORY__'], 'success' );
 		}
 		//站点列表
 		$web          = Db::table( 'web' )

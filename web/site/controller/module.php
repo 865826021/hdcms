@@ -10,13 +10,11 @@
 namespace web\site\controller;
 
 use system\model\Menu;
-use system\model\Modules;
 use system\model\ModuleSetting;
 use system\model\ReplyCover;
 use system\model\Rule;
 use system\model\RuleKeyword;
 use system\model\User;
-use system\model\UserPermission;
 
 /**
  * 模块动作访问处理
@@ -29,29 +27,20 @@ class Module {
 	protected $action;
 
 	public function __construct() {
+		//站点模块功能检测
+		if ( ! v( 'module' ) ) {
+			message( '站点不存在这个模块,请系统管理员添加', 'back', 'error' );
+		}
 		if ( $action = q( 'get.a' ) ) {
 			$info             = explode( '/', $action );
 			$this->module     = empty( $info[0] ) ? '' : $info[0];
 			$this->controller = empty( $info[1] ) ? '' : $info[1];
 			$this->action     = empty( $info[2] ) ? '' : $info[2];
-			$module           = Db::table( 'modules' )->where( 'name', $this->module )->first();
-			if ( empty( $module ) ) {
-				//系统模块
-				if ( is_dir( 'module/' . $this->module ) ) {
-					$module['name']      = $this->module;
-					$module['is_system'] = 1;
-				}
-			}
-			if ( ! empty( $module ) && is_array( $module ) ) {
-				v( 'module', $module );
-			}
 		} else {
-			$this->module = q( "get.m" );
-			v( 'module', Db::table( 'modules' )->where( 'name', $this->module )->first() );
+			$this->module = v( 'module.name' );
 		}
-		//站点模块功能检测
-		if ( empty( $this->module ) ) {
-			message( '站点不存在这个模块,请系统管理员添加', 'back', 'error' );
+		if ( ACTION !== 'web' ) {
+			( new Menu() )->getMenus();
 		}
 	}
 
@@ -60,19 +49,7 @@ class Module {
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		$name   = q( 'get.m' );
-		$module = Db::table( 'modules' )->where( 'name', $name )->first();
-		foreach ( v( 'modules' ) as $v ) {
-			if ( $v['name'] == q( 'get.m' ) ) {
-				$moduleLinks = $v;
-				break;
-			}
-		}
-		v( 'module', $module );
-		//分配菜单
-		( new Menu() )->getMenus();
-		View::with( '_site_modules_menu_', $moduleLinks );
-		View::with( 'module', $module )->make();
+		View::make();
 	}
 
 	//模块配置
@@ -80,8 +57,6 @@ class Module {
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		//分配菜单
-		( new Menu() )->getMenus();
 		$class = '\addons\\' . $this->module . '\module';
 		if ( ! class_exists( $class ) || ! method_exists( $class, 'settingsDisplay' ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
@@ -96,6 +71,9 @@ class Module {
 
 	//模块封面设置
 	public function cover() {
+		if ( ! ( new User() )->verifyModuleAccess() ) {
+			message( '你没有操作权限', 'back', 'error' );
+		}
 		$bid        = q( 'get.bid', 0, 'intval' );
 		$replyCover = new ReplyCover();
 		$ruleModel  = new Rule();
@@ -157,8 +135,6 @@ class Module {
 		$field['url']  = "?s=package/web/entry&i=" . SITEID . "&m={$this->module}&c=site&do={$moduleBindings['do']}";
 		$field['name'] = $moduleBindings['title'];
 		View::with( 'field', $field );
-		//分配菜单
-		( new Menu() )->getMenus();
 		View::make();
 	}
 
@@ -192,11 +168,25 @@ class Module {
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		//分配菜单
-		( new Menu() )->getMenus();
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
 		$action = 'doSite' . $this->action;
+		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
+			message( '访问的模块不存在', 'back', 'error' );
+		}
+		$obj = new $class();
+		$obj->$action();
+	}
+
+	//模块业务
+	public function business() {
+		$bid = q( 'get.bid', 0, 'intval' );
+		if ( ! ( new User() )->verifyModuleAccess() ) {
+			message( '你没有操作权限', 'back', 'error' );
+		}
+		$method = Db::table( 'modules_bindings' )->where( 'bid', $bid )->pluck( 'do' );
+		$class  = '\addons\\' . $this->module . '\site';
+		$action = "doSite{$method}";
 		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
 		}

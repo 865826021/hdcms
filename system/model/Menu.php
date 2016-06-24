@@ -53,6 +53,7 @@ class Menu extends Model {
 	 * @return mixed
 	 */
 	public function getMenus( $show = TRUE ) {
+		//移除用户没有使用权限的菜单
 		$permission = Db::table( 'user_permission' )
 		                ->where( 'siteid', SITEID )
 		                ->where( 'uid', Session::get( 'user.uid' ) )

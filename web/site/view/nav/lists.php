@@ -3,32 +3,37 @@
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="{{site_url('article/manage/site')}}">返回站点列表</a></li>
-		<li class="active"><a href="javascript:;">微站首页导航菜单</a></li>
-		<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
+		<li class="active">
+			<a href="javascript:;"><?php echo m( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
+		</li>
+		<if value="!isset($_GET['m'])">
+			<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
+		</if>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
-		<div class="panel panel-info">
-			<div class="panel-heading">
-				筛选
-			</div>
-			<div class="panel-body">
-				<div class="form-group">
-					<label class="col-sm-2 control-label">站点</label>
-					<div class="col-sm-8">
-						<select class="form-control" ng-change="changeWeb()" ng-model="webid" ng-options="a.id as a.title for a in web"></select>
+		<if value="q('get.entry')=='home'">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					筛选
+				</div>
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">站点</label>
+						<div class="col-sm-8">
+							<select class="form-control" ng-change="changeWeb()" ng-model="webid" ng-options="a.id as a.title for a in web"></select>
+						</div>
 					</div>
 				</div>
-
 			</div>
-		</div>
-		<div class="alert alert-info">
-			<div ng-show="template.position">
-				当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板提供 @{{template.position}} 个导航位置，您可以指定导航在特定的位置显示，未指位置的导航将无法显示
+			<div class="alert alert-info">
+				<div ng-show="template.position">
+					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板提供 @{{template.position}} 个导航位置，您可以指定导航在特定的位置显示，未指位置的导航将无法显示
+				</div>
+				<div ng-hide="template.position">
+					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板未提供导航位置
+				</div>
 			</div>
-			<div ng-hide="template.position">
-				当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板未提供导航位置
-			</div>
-		</div>
+		</if>
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				这里提供了能够显示的导航菜单, 你可以选择性的自定义或显示隐藏
@@ -81,10 +86,11 @@
 						<td>
 							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
 						</td>
-						<td>
-							<a href="?s=site/nav/post&webid={{$_GET['webid']}}&entry=@{{field.entry}}&id=@{{field.id}}">编辑</a> -
+						<td ng-if="field.id">
+							<a href="?s=site/nav/post&webid={{$_GET['webid']}}&entry=@{{field.entry}}&id=@{{field.id}}&m=@{{field.module}}">编辑</a> -
 							<a href="javascript:;" ng-click="del(field.id)">删除</a>
 						</td>
+						<td ng-if="!field.id"></td>
 					</tr>
 					</tbody>
 				</table>
@@ -118,7 +124,7 @@
 
 			//选择站点
 			$scope.changeWeb = function () {
-				location.replace("?s=site/nav/lists&entry={{$_GET['entry']}}&webid=" + $scope.webid);
+				location.replace("?s=site/nav/lists&entry={{$_GET['entry']}}&m={{$_GET['m']}}&webid=" + $scope.webid);
 			}
 			//选择链接
 			$scope.url = {
@@ -134,11 +140,12 @@
 				util.confirm('确定删除菜单吗?', function () {
 					var nav = $scope.nav;
 					$.get('?s=site/nav/del', {id: id}, function (res) {
-						$scope.nav = _.filter(nav, function (n) {
-							return n.id != id;
-						})
-						$scope.$apply();
-					})
+						if (res.valid) {
+							util.message(res.message, 'refresh', 'success')
+						} else {
+							util.message(res.message, '', 'error');
+						}
+					}, 'json');
 				})
 			}
 			//更改状态

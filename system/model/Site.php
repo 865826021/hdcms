@@ -86,7 +86,7 @@ class Site extends Model {
 		$setting ['pay']             = unserialize( $setting['pay'] );
 		$data['setting']             = $setting;
 		//站点模块
-		$data['modules'] = ( new Modules() )->getSiteAllModules( $siteid );
+		$data['modules'] = ( new Modules() )->getSiteAllModules( $siteid, FALSE );
 		foreach ( $data as $key => $value ) {
 			d( "{$key}:{$siteid}", $value );
 		}

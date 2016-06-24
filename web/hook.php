@@ -16,16 +16,23 @@ class hook {
 	public function app_begin() {
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', FALSE );
-		//扩展模块访问
-		if ( isset( $_GET['a'] ) ) {
-			$_GET['s'] = 'site/module/entry';
-		}
+		$this->moduleInitialize();
 		$this->siteInitialize();
 	}
 
-	/**
-	 * 初始化站点
-	 */
+	//模块初始化
+	protected function moduleInitialize() {
+		//扩展模块访问
+		if ( ! empty( $_GET['a'] ) ) {
+			$_GET['s'] = 'site/module/entry';
+			$name      = current( explode( '/', $_GET['a'] ) );
+			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+		} else if ( $name = q( 'get.m' ) ) {
+			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+		}
+	}
+
+	//站点初始化
 	protected function siteInitialize() {
 		$siteModel = new Site();
 		//缓存站点数据

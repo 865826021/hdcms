@@ -57,7 +57,7 @@ class Modules extends Model {
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function getSiteAllModules( $siteid = NULL ) {
+	public function getSiteAllModules( $siteid = NULL, $cache = TRUE ) {
 		$siteid = $siteid ?: SITEID;
 		if ( empty( $siteid ) ) {
 			throw new \Exception( '$siteid 参数错误' );
@@ -65,6 +65,12 @@ class Modules extends Model {
 		static $cache = [ ];
 		if ( isset( $cache[ $siteid ] ) ) {
 			return $cache[ $siteid ];
+		}
+		//读取缓存
+		if ( $cache ) {
+			if ( $data = d( "modules:{$siteid}" ) ) {
+				return $data;
+			}
 		}
 		//获取站点可使用的所有套餐
 		$package = ( new Package() )->getSiteAllPackageData( $siteid );
@@ -83,7 +89,7 @@ class Modules extends Model {
 			}
 		}
 		//加入系统模块
-//		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
+		//		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = unserialize( $m['subscribes'] );
 			$m['processors']  = unserialize( $m['processors'] );
@@ -94,6 +100,8 @@ class Modules extends Model {
 			}
 			$modules[ $k ] = $m;
 		}
+
+		d( "modules:{$siteid}", $modules );
 
 		return $cache[ $siteid ] = $modules;
 	}

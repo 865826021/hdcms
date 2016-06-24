@@ -23,9 +23,6 @@ class File implements InterfaceCache {
 	//缓存目录
 	private $dir = 'storage/cache';
 
-	//队列长度
-	private $length = 0;
-
 	public function __construct() {
 		$this->connect();
 	}

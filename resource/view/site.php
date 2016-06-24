@@ -159,7 +159,7 @@
 						</a>
 					</div>
 					<ul class="list-group menus collapse in hide module_back" aria-expanded="true">
-						<li class="list-group-item" dataHref="?s=package/home/welcome">
+						<li class="list-group-item" dataHref="?s=site/entry/home&p=package&menuid=21">
 							<i class="fa fa-reply-all"></i> 返回模块列表
 						</li>
 						<li class="list-group-item" dataHref="?s=site/module/home&m=hd&m={{$_site_modules_menu_['name']}}">
@@ -192,17 +192,17 @@
 				</div>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 					<if value="!empty($_site_modules_menu_['budings']['home'])">
-						<li class="list-group-item" dataHref="?s=article/nav/lists&m={{$_site_modules_menu_['name']}}&t=home">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=home&m={{$_site_modules_menu_['name']}}">
 							<i class="fa fa-home"></i> 微站首页导航
 						</li>
 					</if>
 					<if value="!empty($_site_modules_menu_['budings']['profile'])">
-						<li class="list-group-item" dataHref="?s=article/nav/lists&m={{$_site_modules_menu_['name']}}&t=profile">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=profile&m={{$_site_modules_menu_['name']}}">
 							<i class="fa fa-user"></i> 手机个人中心导航
 						</li>
 					</if>
 					<if value="!empty($_site_modules_menu_['budings']['member'])">
-						<li class="list-group-item" dataHref="?s=article/nav/lists&m={{$_site_modules_menu_['name']}}&t=member">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=member&m={{$_site_modules_menu_['name']}}">
 							<i class="fa fa-user"></i> 桌面个人中心导航
 						</li>
 					</if>
@@ -228,7 +228,7 @@
 				</div>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 					<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
-						<li class="list-group-item" dataHref="?s=package/module/business&bid={{$f['bid']}}">
+						<li class="list-group-item" dataHref="?s=site/module/business&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
 							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 						</li>
 					</foreach>
