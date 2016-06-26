@@ -14,6 +14,7 @@ require.config({
         'jquery-ui': '../js/jquery-ui.min',
         'css': '../js/css.min',
         'jquery': '../js/jquery.min',
+        'jquery.mobile': '../js/jquery.mobile-1.4.5.min',
         'angular': '../js/angular.min',
         'angular.sanitize': '../js/angular-sanitize.min',
         'ngSortable': '../js/ng-sortable',
@@ -65,6 +66,10 @@ require.config({
     shim: {
         'ngSortable': {
             deps: ['Sortable']
+        },
+        'jquery.mobile': {
+            exports: '$',
+            deps: ['jquery']
         },
         'wapeditor': {
             exports: 'angular',

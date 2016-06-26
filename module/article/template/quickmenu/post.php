@@ -1,6 +1,6 @@
 <extend file="resource/view/site"/>
 <link rel="stylesheet" href="module/article/template/quickmenu/css.css">
-<link rel="stylesheet" href="resource/css/quickmenu.css">
+<link rel="stylesheet" href="ucenter/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="?a=article/ucenter/post&t=site">微站会员中心</a></li>
@@ -101,6 +101,9 @@
 </block>
 <style>
 	/*菜单样式一的二级菜单默认显示*/
+	.quickmenu_normal{
+		position: absolute;
+	}
 	.quickmenu_normal .sub-menus {
 		display : block !important;
 	}

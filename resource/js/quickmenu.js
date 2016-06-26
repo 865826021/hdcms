@@ -94,13 +94,13 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
             </div>\
             <ul>\
             <li ng-repeat="v in menu.params.menus">\
-            <a ng-href="v.url" ng-if="v.submenus.length==0" ng-bind="v.title"></a>\
+            <a ng-href="{{v.url}}" ng-if="v.submenus.length==0" ng-bind="v.title"></a>\
             <a href="javascript:;" ng-if="v.submenus.length>0">\
             <i class="fa fa-bars" ng-if="v.submenus.length>0"></i> {{v.title}}\
         </a>\
         <div class="sub-menus" ng-if="v.submenus.length>0">\
-            <a ng-href="m.url" ng-repeat="m in v.submenus" ng-bind="m.title"></a>\
-            </div>\
+            <a ng-href="{{m.url}}" ng-repeat="m in v.submenus" ng-bind="m.title"></a>\
+        </div>\
             </li>\
             </ul>\
             </div>');

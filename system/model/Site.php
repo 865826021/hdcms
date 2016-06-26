@@ -51,13 +51,12 @@ class Site extends Model {
 			"encodingaeskey" => v( 'wechat.encodingaeskey' ),
 			"appid"          => v( 'wechat.appid' ),
 			"appsecret"      => v( 'wechat.appsecret' ),
-			"mch_id"         => v( 'setting.mch_id' ),
-			"key"            => v( 'setting.key' ),
-			"notify_url"     => __ROOT__ . '/index.php/wxnotifyurl',
+			"mch_id"         => v( 'setting.pay.weichat.mch_id' ),
+			"key"            => v( 'setting.pay.weichat.key' ),
+			"apiclient_cert" => v( 'setting.pay.weichat.apiclient_cert' ),
+			"apiclient_key"  => v( 'setting.pay.weichat.apiclient_key' ),
+			"rootca"         => v( 'setting.pay.weichat.rootca' ),
 			"back_url"       => '',
-			"apiclient_cert" => v( 'setting.apiclient_cert' ),
-			"apiclient_key"  => v( 'setting.apiclient_key' ),
-			"rootca"         => v( 'setting.rootca' ),
 		];
 		c( 'weixin', array_merge( c( 'weixin' ), $config ) );
 

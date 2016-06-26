@@ -1,4 +1,4 @@
-<extend file='theme/default/mobile/ucenter/master.html'/>
+<extend file='ucenter/master.html'/>
 <block name="title">会员充值</block>
 <block name="content">
     <parent name="header" title="订单信息"/>
@@ -26,7 +26,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <if value="v('setting.pay.weichat.open')==1">
-                            <a href="?s=uc/pay/wechat&i={{v('site.siteid')}}" class="btn btn-success btn-block btn-lg">微信支付,必须使用微信内置浏览器</a><br/>
+                            <a href="{{u('site/pay/wechat')}}" class="btn btn-success btn-block btn-lg">微信支付,必须使用微信内置浏览器</a><br/>
                         </if>
                     </div>
                 </div>
@@ -34,13 +34,3 @@
         </div>
     </div>
 </block>
-<script>
-    $("form").submit(function () {
-        if ($.trim($("[name='money']").val()) == '') {
-            util.message('请输入充值金额', '', 'error', {
-                width: '95%'
-            });
-            return false;
-        }
-    });
-</script>

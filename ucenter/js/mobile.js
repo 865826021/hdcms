@@ -1,16 +1,3 @@
-//快捷菜单1 弹出子菜单事件处理
-$(function () {
-    $('body').delegate('.quickmenu-style1 li','click',function(){
-        if ($(this).find('.sub-menus:hidden').length) {
-            $('.quickmenu-style1 li .sub-menus').hide();
-            $(this).find('.sub-menus:hidden').show();
-        } else {
-            $('.quickmenu-style1 li .sub-menus').hide();
-            $(this).find('.sub-menus:hidden').hide()
-        }
-    })
-});
-
 //顶部导航菜单显示子栏目
 $(function () {
     $(".cat_menu_list").click(function () {

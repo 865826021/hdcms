@@ -41,7 +41,7 @@ return [
 		'hdphp\middleware\MiddlewareProvider',
 		'hdphp\hook\HookProvider',
 		'hdphp\form\FormProvider',
-		'hdphp\util\UtilProvider',
+		'server\UtilProvider',
 	],
 
 	//服务外观
@@ -85,6 +85,6 @@ return [
 		'Middleware' => 'hdphp\middleware\MiddlewareFacade',
 		'Hook'       => 'hdphp\hook\HookFacade',
 		'Form'       => 'hdphp\form\FormFacade',
-		'Util'       => 'hdphp\util\UtilFacade',
+		'Util'       => 'server\UtilFacade',
 	],
 ];

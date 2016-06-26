@@ -41,20 +41,22 @@
 	<else/>
 	<body style="background: url('{{__ROOT__}}/resource/images/bg.jpg');background-size: cover">
 	<!--导航-->
-	<nav class="navbar navbar-inverse" style="border-radius: 0px;">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<ul class="nav navbar-nav">
-					<li>
-						<a href="http://bbs.houdunwang.com" target="_blank"><i class="fa fa-w fa-forumbee"></i> 后盾论坛</a>
-					</li>
-					<li>
-						<a href="http://www.houdunwang.com" target="_blank"><i class="fa fa-w fa-phone-square"></i> 联系后盾</a>
-					</li>
-				</ul>
+	<if value="!IS_MOBILE">
+		<nav class="navbar navbar-inverse" style="border-radius: 0px;">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="http://bbs.houdunwang.com" target="_blank"><i class="fa fa-w fa-forumbee"></i> 后盾论坛</a>
+						</li>
+						<li>
+							<a href="http://www.houdunwang.com" target="_blank"><i class="fa fa-w fa-phone-square"></i> 联系后盾</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
-	</nav>
+		</nav>
+	</if>
 	<!--导航end-->
 	<div class="container-fluid">
 

@@ -23,10 +23,11 @@ class WebPage extends Model {
 	                            = [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'params', 'json_encode', 'function', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'params', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'html', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'status', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'status', 'intval', 'intval', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'web_id', 0, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 		];
 }

@@ -339,7 +339,7 @@ img {
   line-height: 2.5em;
 }
 .quickmenu_normal {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   text-align: center;
   color: #333333;
@@ -393,6 +393,7 @@ img {
   border-bottom: solid 1px #dddddd;
   line-height: 2.5em;
   width: 100%;
+  background: #f5f5f5;
 }
 .quickmenu_normal ul li .sub-menus a:last-child {
   border: none;

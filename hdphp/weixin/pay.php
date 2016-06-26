@@ -27,12 +27,15 @@ class pay extends Weixin {
 		//支付完成时
 		if ( q( 'get.done' ) ) {
 			//支付成功后根据配置文件设置的链接地址跳转到成功页面
-			echo "<script>location.replace('" . c( 'weixin.back_url' ) . "')</script>";
+			echo "<script>location.replace('" . c( 'weixin.back_url' ) . "&code=SUCCESS')</script>";
 			exit;
 		} else {
 			$res = $this->unifiedorder( $order );
-			if ( $res['return_code'] != 'SUCCESS' || $res['result_code'] != 'SUCCESS' ) {
-				message( '支付失败', c( 'weixin.back_url' ), 'error' );
+			if ( $res['return_code'] != 'SUCCESS' ) {
+				message( $res['return_msg'], c( 'weixin.back_url' ) . '&code=fail', 'error' );
+			}
+			if ( ! isset( $res['result_code'] ) || $res['result_code'] != 'SUCCESS' ) {
+				message( $res['err_code_des'], c( 'weixin.back_url' ) . '&code=fail', 'error' );
 			}
 			$data['appId']     = c( 'weixin.appid' );
 			$data['timeStamp'] = time();

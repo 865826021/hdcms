@@ -1,4 +1,4 @@
-<extend file='theme/default/mobile/ucenter/master.html'/>
+<extend file='ucenter/master.html'/>
 <block name="title">会员充值</block>
 <block name="content">
     <parent name="header" title="会员卡充值"/>
@@ -26,8 +26,8 @@
 <script>
     $("form").submit(function () {
         if ($.trim($("[name='fee']").val()) == '') {
-            util.message('请输入充值金额', '', 'error',{
-                width:'95%'
+            util.message('请输入充值金额', '', 'error', {
+                width: '95%'
             });
             return false;
         }

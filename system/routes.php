@@ -7,5 +7,5 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-Route::any( 'wxnotifyurl/{i}', 'uc/pay/notify' );
+Route::any( 'wxnotifyurl/{siteid}', 'site/pay/weixinNotify' );
 Route::any( 'admin', 'system/entry/login' );

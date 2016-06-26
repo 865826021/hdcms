@@ -7,13 +7,19 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace uc\controller;
+namespace module\uc;
 
-use web\web;
+use module\hdSite;
 
-class account extends web {
+/**
+ * 帐户充值
+ * Class account
+ * @package module\uc
+ * @author 向军
+ */
+class account extends hdSite {
 	//帐户充值
-	public function balance() {
+	public function doWebBalance() {
 		if ( IS_POST ) {
 			//检测是否有相同金额的充值记录,如果有就使用它,避免重复金额定单产生
 			$pay                = Db::table( 'balance' )->where( 'fee', $_POST['fee'] )->where( 'status', 0 )->pluck( 'tid' );
@@ -21,12 +27,12 @@ class account extends web {
 			$data['goods_name'] = '会员充值';
 			$data['fee']        = $_POST['fee'];
 			$data['body']       = '会员余额充值';
-			$data['back_url']   = __ROOT__ . '/index.php?s=uc/entry/home';//支付回调地址
+			$data['back_url']   = web_url( 'uc/account/PaySuccess' );//支付回调地址
 			$data['attach']     = '';//附加数据
 			//在会员充值表中记录定单
 			if ( empty( $pay ) ) {
-				$balance['siteid']     = v( 'site.siteid' );
-				$balance['uid']        = Session::get( 'user.uid' );
+				$balance['siteid']     = SITEID;
+				$balance['uid']        = Session::get( 'member.uid' );
 				$balance['fee']        = $data['fee'];
 				$balance['stauts']     = 0;
 				$balance['createtime'] = time();
@@ -35,6 +41,8 @@ class account extends web {
 			}
 			Util::pay( $data );
 		}
-		View::make( $this->ucenter_template . '/balance.html' );
+		View::make( 'ucenter/balance.html' );
 	}
+
+
 }
