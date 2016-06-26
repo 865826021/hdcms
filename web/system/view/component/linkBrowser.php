@@ -23,7 +23,7 @@
                 <h4><i class="fa fa-folder-open-o"></i> 系统默认链接</h4>
             </div>
             <div class="btn btn-default" onclick="selectLink('?s=article/entry/home&i={{$_SESSION['siteid']}}')">微站首页</div>
-            <div class="btn btn-default" onclick="selectLink('?s=uc/entry/home&i={{$_SESSION['siteid']}}')">个人中心</div>
+            <div class="btn btn-default" onclick="selectLink('?a=uc/reg/login&t=web&siteid={{$_SESSION['siteid']}}')">个人中心</div>
             <div class="btn btn-default" onclick="loadModal('#tel-modal')">一键拨号</div>
         </div>
 

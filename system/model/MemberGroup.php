@@ -50,7 +50,7 @@ class MemberGroup extends Model {
 	 * @return array
 	 */
 	public function getSiteGroups( $siteid = NULL ) {
-		$siteid = $siteid ?: Session::get( 'siteid' );
+		$siteid = $siteid ?: SITEID;
 
 		return $this->where( 'siteid', $siteid )->get() ?: [ ];
 	}

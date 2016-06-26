@@ -2,27 +2,57 @@
 
 use Hdphp\View\TagBase;
 
-class tag extends TagBase
-{
-    /**
-     * 标签声明
-     * @var array
-     */
-    public $tags = array(
-        //导航菜单
-        'mobile_nav'        => [ 'block' => true, 'level' => 4 ],
-        'mobile_quick_menu' => [ 'block' => false, 'level' => 4 ],
-        'pagelist'          => [ 'block' => true, 'level' => 4 ],
-        'pagenum'           => [ 'block' => false, 'level' => 4 ],
-        'mobile_header'     => [ 'block' => true, 'level' => 4 ],
-        'slide'             => [ 'block' => false, 'level' => 4 ],
-        'category'          => [ 'block' => true, 'level' => 4 ],
-    );
+class tag extends TagBase {
+	/**
+	 * 标签声明
+	 * @var array
+	 */
+	public $tags
+		= [
+			//导航菜单
+			//			'mobile_nav'        => [ 'block' => TRUE, 'level' => 4 ],
+			//			'mobile_quick_menu' => [ 'block' => FALSE, 'level' => 4 ],
+			//			'pagelist'          => [ 'block' => TRUE, 'level' => 4 ],
+			//			'pagenum'           => [ 'block' => FALSE, 'level' => 4 ],
+			//			'mobile_header'     => [ 'block' => TRUE, 'level' => 4 ],
+			//			'slide'             => [ 'block' => FALSE, 'level' => 4 ],
+			//			'category'          => [ 'block' => TRUE, 'level' => 4 ],
+			'line' => [ 'block' => FALSE, 'level' => 4 ],
+			'tag'  => [ 'block' => TRUE, 'level' => 4 ],
+		];
 
-    //栏目列表
-    public function _category($attr, $content)
-    {
-        $php = <<<str
+	public function _line( $attr ) {
+		static $instance = [ ];
+		$info   = explode( '.', $attr['action'] );
+		$action = $info[1];
+		if ( $module = Db::table( 'modules' )->where( 'name', $info[0] )->first() ) {
+			$class = ( $module['is_system'] == 1 ? 'module' : 'addons' ) . '\\' . $info[0] . '\tag';
+			if ( ! isset( $instance[ $class ] ) ) {
+				$instance[ $class ] = new $class;
+			}
+
+			return $instance[ $class ]->$action( $attr );
+		}
+	}
+
+	public function _tag( $attr, $content ) {
+		static $instance = [ ];
+		$info   = explode( '.', $attr['action'] );
+		$action = $info[1];
+		if ( $module = Db::table( 'modules' )->where( 'name', $info[0] )->first() ) {
+			$class = ( $module['is_system'] == 1 ? 'module' : 'addons' ) . '\\' . $info[0] . '\tag';
+			if ( ! isset( $instance[ $class ] ) ) {
+				$instance[ $class ] = new $class;
+			}
+
+			return $instance[ $class ]->$action( $attr, $content );
+		}
+	}
+
+	//栏目列表
+	public function _category( $attr, $content ) {
+		$php
+			= <<<str
 <?php
 \$_category = Db::table('web_category')->field('title cat_name,description cat_description,cid,pid,icon,css,siteid')->whereIn('cid',explode(',',"{$attr['cid']}"))->get();
 foreach(\$_category as \$field){
@@ -39,17 +69,18 @@ foreach(\$_category as \$field){
 $content
 <?php }?>
 str;
-        return $php;
-    }
 
-    //幻灯图
-    public function _slide($attr, $content)
-    {
-        $color    = isset($attr['color']) ? $attr['color'] : '#FFFFFF';
-        $width    = isset($attr['width']) ? $attr['width'] : 'window.innerWidth';
-        $height   = isset($attr['height']) ? $attr['height'] : 200;
-        $autoplay = isset($attr['autoplay']) ? $attr['autoplay'] : 3000;
-        $php      = <<<str
+		return $php;
+	}
+
+	//幻灯图
+	public function _slide( $attr, $content ) {
+		$color    = isset( $attr['color'] ) ? $attr['color'] : '#FFFFFF';
+		$width    = isset( $attr['width'] ) ? $attr['width'] : 'window.innerWidth';
+		$height   = isset( $attr['height'] ) ? $attr['height'] : 200;
+		$autoplay = isset( $attr['autoplay'] ) ? $attr['autoplay'] : 3000;
+		$php
+		          = <<<str
         <?php \$slideData = Db::table('web_slide')->where('web_id','=',Session::get('webid'))->orderBy('id','DESC')->get();?>
         <?php if(!empty(\$slideData)){?>
 <div class="swiper-container">
@@ -103,15 +134,15 @@ str;
     </script>
     <?php }?>
 str;
-        return $php;
-    }
 
-    //头部导航条(手机)
-    public function _mobile_header($attr, $content)
-    {
-        if ($cid = q('get.cid', 0, 'intval'))
-        {
-            $php = <<<str
+		return $php;
+	}
+
+	//头部导航条(手机)
+	public function _mobile_header( $attr, $content ) {
+		if ( $cid = q( 'get.cid', 0, 'intval' ) ) {
+			$php
+				= <<<str
         <div class="mobile_header">
         <a class="back_url" href="<?php echo \$_SERVER['HTTP_REFERER'];?>">
             <i class="fa fa-chevron-left"></i>
@@ -143,16 +174,17 @@ str;
     </div>
     <div class="head-bg-gray"></div>
 str;
-            return $php;
-        }
 
-    }
+			return $php;
+		}
 
-    //微站导航菜单
-    public function _mobile_nav($attr, $content)
-    {
-        $position = isset($attr['position']) ? $attr['position'] : 1;
-        $php      = <<<str
+	}
+
+	//微站导航菜单
+	public function _mobile_nav( $attr, $content ) {
+		$position = isset( $attr['position'] ) ? $attr['position'] : 1;
+		$php
+		          = <<<str
         <?php
         \$sql  ="SELECT * FROM ".tablename('web_nav').' WHERE siteid=? AND web_id=? AND position=? AND status=1';
         \$nav = Db::select(\$sql,array(q('get.siteid',0,'intval'),q('get.webid',0,'intval'),$position));
@@ -168,14 +200,15 @@ str;
         $content
         <?php }?>
 str;
-        return $php;
 
-    }
+		return $php;
 
-    //快捷导航
-    public function _mobile_quick_menu($attr, $content)
-    {
-        $php = <<<str
+	}
+
+	//快捷导航
+	public function _mobile_quick_menu( $attr, $content ) {
+		$php
+			= <<<str
         <?php
             \$res = Db::table('web_page')->where(siteid,q('get.i',0,'intval'))->where('web_id',api('web')->getWebId())->first();
             if(\$res){
@@ -191,16 +224,17 @@ str;
             }
         ?>
 str;
-        return $php;
-    }
 
-    //栏目列表数据
-    public function _pagelist($attr, $content)
-    {
-        $row       = isset($attr['row']) ? $attr['row'] : 10;
-        $ishot     = isset($attr['ishot']) ? 1 : 0;
-        $iscommend = isset($attr['iscommend']) ? 1 : 0;
-        $php       = <<<str
+		return $php;
+	}
+
+	//栏目列表数据
+	public function _pagelist( $attr, $content ) {
+		$row       = isset( $attr['row'] ) ? $attr['row'] : 10;
+		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
+		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
+		$php
+		           = <<<str
         <?php
         \$db = Db::table('web_article')->where('category_cid','=',q('get.cid',0,'intval'))->where('siteid','=',q('get.siteid',0,'intval'));
         //头条
@@ -247,16 +281,18 @@ str;
         $content
         <?php }?>
 str;
-        return $php;
 
-    }
+		return $php;
 
-    //页码
-    public function _pagenum($attr, $content)
-    {
-        $php = <<<str
+	}
+
+	//页码
+	public function _pagenum( $attr, $content ) {
+		$php
+			= <<<str
         <?php echo \$page_show;?>
 str;
-        return $php;
-    }
+
+		return $php;
+	}
 }

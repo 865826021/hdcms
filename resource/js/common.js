@@ -3,14 +3,8 @@
  * @author 向军
  * <2300071698@qq.com>
  */
-//checkbox滑动插件
-$(function () {
-    //require(['bootstrap.switch'], function ($) {
-    //    $(".bootstrap-switch").bootstrapSwitch();
-    //});
-})
 require(['util'], function (util) {
-    ////显示系统菜单
+    //显示系统菜单
     util.linkBrowser = function (callback) {
         var modalobj = util.modal({
             content: ['?s=system/component/linkBrowser'],

@@ -18,8 +18,7 @@ namespace web\system\controller;
 class Component {
 	//模块列表
 	public function moduleBrowser() {
-		$modules = m( 'Site' )->modules( $_SESSION['siteid'] );
-		View::with( 'modules', $modules );
+		View::with( 'modules', v('modules') );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
 		View::make();
 	}
@@ -35,16 +34,12 @@ class Component {
 		View::with( 'modules', $modules )->make();
 	}
 
-	/**
-	 * 字体列表
-	 */
+	//字体列表
 	public function font() {
 		View::make();
 	}
 
-	/**
-	 * 上传图片webuploader
-	 */
+	//上传图片webuploader
 	public function uploader() {
 		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m' ) )->make();
 		if ( $file ) {

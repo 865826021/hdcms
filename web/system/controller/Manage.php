@@ -44,7 +44,7 @@ class Manage {
 				//更新站点缓存
 				$sites = Db::table( 'site' )->get();
 				foreach ( $sites as $s ) {
-					api( 'site' )->updateSiteCache( $s['siteid'] );
+					m( 'Site' )->updateSiteCache( $s['siteid'] );
 				}
 				//删除缓存数据
 				Dir::del( 'storage/cache' );

@@ -56,7 +56,7 @@ class quickmenu extends hdSite {
 			$field['params'] = json_decode( $field['params'] );
 		}
 		View::with( 'field', $field );
-		View::with( 'modules', api( 'site' )->modules( $_SESSION['siteid'] ) );
+		View::with( 'modules', v('modules'));
 		View::make( $this->template . '/quickmenu/post.php' );
 	}
 

@@ -24,7 +24,7 @@
 				<div class="mobile-body">
 					<img src="resource/images/mobile-header.png" style="width: 100%;">
 					<!--菜单显示区域-->
-					<div ng-init="tpl=menu.params.style+'_display.html'" ng-include="tpl"></div>
+					<div class="menu_html" ng-init="tpl=menu.params.style+'_display.html'" ng-include="tpl"></div>
 				</div>
 				<div class="mobile-footer">
 					<div class="home-btn"></div>
@@ -100,8 +100,8 @@
 
 </block>
 <style>
-	/*让二级菜单显示*/
-	.sub-menus {
+	/*菜单样式一的二级菜单默认显示*/
+	.quickmenu_normal .sub-menus {
 		display : block !important;
 	}
 </style>
@@ -118,57 +118,4 @@
 			angular.bootstrap(document.getElementById('form'), ['app']);
 		});
 	});
-	//	require(['angular', 'underscore', 'util'], function (angular, _, util) {
-	//		angular.module(['app'], []).controller('ctrl', ['$scope', function ($scope) {
-	//			$scope.field =<?php //echo json_encode( $field );?>//;
-	//			//选择底部模板风格
-	//			$scope.selectQuickStyle = function () {
-	//				$scope.params.style = $("[name='quick_style']:checked").val();
-	//				$("#myModal").modal('hide');
-	//			}
-	//			//normal默认菜单
-	//			$scope.normal = {
-	//				//添加一级菜单
-	//				addTopMenu: function () {
-	//					if ($scope.field.params.menus.length == 3) {
-	//						util.message('只能添加三个一级菜单', '', 'warning');
-	//					} else {
-	//						menu = {title: '', url: '', submenus: []};
-	//						$scope.field.params.menus.push(menu);
-	//					}
-	//				},
-	//				//添加二级菜单
-	//				addChildMenu: function (pos) {
-	//					if ($scope.field.params.menus[pos].submenus.length == 5) {
-	//						util.message('只能添加三个五级菜单', '', 'warning');
-	//					} else {
-	//						menu = {title: '', url: ''};
-	//						$scope.field.params.menus[pos].submenus.push(menu);
-	//					}
-	//				},
-	//				//删除一级菜单
-	//				removeTopMenu: function (item) {
-	//					$scope.field.params.menus = _.without($scope.field.params.menus, item);
-	//				},
-	//				//删除二级菜单
-	//				removeChildMenu: function (pos, item) {
-	//					$scope.field.params.menus[pos].submenus = _.without($scope.field.params.menus[pos].submenus, item);
-	//				},
-	//			}
-	//			//选择链接
-	//			$scope.link = {
-	//				system: function (v) {
-	//					util.linkBrowser(function (link) {
-	//						v.url = link;
-	//						$scope.$apply();
-	//					});
-	//				}
-	//			}
-
-
-	//		}]);
-	//		$(function () {
-	//			angular.bootstrap(document.getElementById('form'), ['app']);
-	//		});
-	//	});
 </script>

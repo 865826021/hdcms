@@ -100,7 +100,7 @@ class ucenter extends hdSite {
 			$cover['title']       = $ucenter['title'];
 			$cover['description'] = $ucenter['description'];
 			$cover['thumb']       = $ucenter['thumb'];
-			$cover['url']         = "?a=uc/entry/home&siteid=" . v( 'site.siteid' );
+			$cover['url']         = "?a=uc/entry/home&t=web&siteid=" . SITEID;
 			if ( $res = $replyCover->where( 'rid', $rid )->first() ) {
 				$cover['id'] = $res['id'];
 				$action      = 'save';

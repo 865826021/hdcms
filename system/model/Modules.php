@@ -89,7 +89,7 @@ class Modules extends Model {
 			}
 		}
 		//加入系统模块
-		//		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
+		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = unserialize( $m['subscribes'] );
 			$m['processors']  = unserialize( $m['processors'] );

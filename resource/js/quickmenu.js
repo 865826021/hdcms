@@ -14,9 +14,17 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
             //隐藏模态框
             $('#myModal').modal('hide');
             //界面显示模板
-            $scope.tpl = $scope.menu.params.style+'_display.html';
+            $scope.tpl = $scope.menu.params.style + '_display.html';
             //数据编辑模板
-            $scope.tplEdit =$scope.menu.params.style+'_edit.html';
+            $scope.tplEdit = $scope.menu.params.style + '_edit.html';
+        }
+        $scope.link = {
+            system: function (item) {
+                util.linkBrowser(function (link) {
+                    item.url=link;
+                    $scope.$apply();
+                });
+            }
         }
         //选择模块
         $scope.moduleBrowsers = function (obj) {
@@ -80,7 +88,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
         //--------------------------------------------------------默认菜单normal--------------------------------------------------------------------
         //显示区域
         $templateCache.put('quickmenu_normal_display.html', '' +
-            '<div class="quickmenu_normal menu_html" ng-controller="normal">\
+            '<div class="quickmenu_normal" ng-controller="normal">\
             <div class="home">\
             <a href="?a=article/entry/home&t=web&siteid=' + sys.siteid + '"><i class="fa fa-home"></i></a>\
             </div>\
