@@ -42,24 +42,5 @@ class entry extends hdSite {
 		View::make( 'ucenter/home.html' );
 	}
 
-	//修改手机号
-	public function changeMobile() {
-		if ( IS_POST ) {
-			Validate::make( [
-				[ 'mobile', 'required|phone', '原手机号输入错误', 2 ],
-				[ 'new_mobile', 'required|phone', '新手机号输入错误', 2 ],
-				[ 'password', 'required', '密码不能为空', 2 ],
-			] );
-			$user = Db::table( 'member' )->where( 'uid', $_SESSION['user']['uid'] )->first();
-			if ( $user['password'] != md5( $_POST['password'] . $user['security'] ) ) {
-				message( '密码输入错误', 'back', 'error' );
-			}
-			$data['mobile'] = $_POST['new_mobile'];
-			Db::table( 'member' )->where( 'uid', $_SESSION['user']['uid'] )->update( $data );
-			//更新用户session
-			Util::updateUserSessionData();
-			message( '手机号更新成功', u( 'home', [ 'i' => SITEID ] ), 'success' );
-		}
-		View::make( 'ucenter/change_mobile.html' );
-	}
+
 }

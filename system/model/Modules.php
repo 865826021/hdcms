@@ -167,7 +167,7 @@ class Modules extends Model {
 	public function getModulesByIndustry( $modules = [ ] ) {
 		$data = [ ];
 		foreach ( v( 'modules' ) as $m ) {
-			if ( ! empty( $modules ) && ! in_array( $m['name'], $modules ) ) {
+			if ( ! empty( $modules ) && ! in_array( $m['name'], $modules ) || $m['is_system'] == 1 ) {
 				continue;
 			}
 			$data[ $this->industry[ $m['industry'] ] ][] = [

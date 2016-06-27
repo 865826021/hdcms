@@ -1,11 +1,11 @@
-<extend file='theme/default/mobile/ucenter/master.html'/>
+<extend file='ucenter/master.html'/>
 <block name="title">我的钱包-代金券</block>
 <block name="content">
     <parent name="header" title="我的钱包-{{$_GET['t']==1?'代金券':'折扣券'}}"/>
     <div class="text-center">
         <div class="btn-group">
-            <a href="?s=uc/ticket/convert&i={{$_GET['i']}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">代金券</a>
-            <a href="?s=uc/ticket/convert&i={{$_GET['i']}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}" role="button">折扣券</a>
+            <a href="{{web_url('uc/ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">代金券</a>
+            <a href="{{web_url('uc/ticket/convert')}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}" role="button">折扣券</a>
         </div>
     </div>
     <div class="ticket">

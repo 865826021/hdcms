@@ -49,7 +49,7 @@
                             </li>
                         </if>
                         <li>
-                            <a href="http://www.kancloud.cn/houdunwang/hdphp/163276" target="_blank"><i class="fa fa-w fa-file-code-o"></i> 在线文档</a>
+                            <a href="http://doc.hdcms.com" target="_blank"><i class="fa fa-w fa-file-code-o"></i> 在线文档</a>
                         </li>
                         <li>
                             <a href="http://bbs.houdunwang.com" target="_blank"><i class="fa fa-w fa-forumbee"></i> 论坛讨论</a>

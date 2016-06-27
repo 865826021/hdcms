@@ -10,27 +10,27 @@
                     <div class="col-xs-6">100积分</div>
                 </div>
                 <div class="col-xs-2">
-                    <a href="?s=uc/info/setting&i={{v('site.siteid')}}" class="pull-right setting">
+                    <a href="{{web_url('uc/info/setting')}}" class="pull-right setting">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 </div>
             </div>
             <div class="well pay clearfix">
                 <div class="col-xs-3">
-                    <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1">
+                    <a href="{{web_url('uc/ticket/lists')}}&type=1&status=1">
                         <i class="fa fa-credit-card"></i> <span>折扣券</span>
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1">
+                    <a href="{{web_url('uc/ticket/lists')}}&type=1&status=1">
                         <i class="fa fa-diamond"></i> <span>代金券</span>
                     </a>
                 </div>
-                <div class="col-xs-3"><a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1">
+                <div class="col-xs-3"><a href="{{web_url('uc/ticket/lists')}}&type=1&status=1">
                     <i class="fa fa-flag-o"></i> <span>积分</span>
                 </a>
                 </div>
-                <div class="col-xs-3"><a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1">
+                <div class="col-xs-3"><a href="{{web_url('uc/ticket/lists')}}&type=1&status=1">
                     <i class="fa fa-money"></i> <span>余额</span>
                 </a>
                 </div>
@@ -41,10 +41,10 @@
         <a href="{{web_url('uc/account/balance')}}" class="list-group-item">
             <i class="fa fa-suitcase"></i> 余额充值 <i class="fa fa-angle-right pull-right"></i>
         </a>
-        <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=1&status=1" class="list-group-item">
+        <a href="{{web_url('uc/ticket/lists')}}&type=1&status=1" class="list-group-item">
             <i class="fa fa-gift"></i> 我的代金券 <i class="fa fa-angle-right pull-right"></i>
         </a>
-        <a href="?s=uc/ticket/lists&i={{$_GET['i']}}&type=2&status=1" class="list-group-item">
+        <a href="{{web_url('uc/ticket/lists')}}&type=2&status=1" class="list-group-item">
             <i class="fa fa-pie-chart"></i> 我的折扣券 <i class="fa fa-angle-right pull-right"></i>
         </a>
     </div>
@@ -60,15 +60,15 @@
     {{$uc['html']}}
     <!--菜单列表 end-->
     <div class="list-group">
-        <a href="?s=uc/entry/changeMobile&i={{$_GET['i']}}" class="list-group-item">
+        <a href="{{web_url('uc/mobile/changeMobile')}}" class="list-group-item">
             <i class="fa fa-mobile-phone"></i>
             修改手机号 <i class="fa fa-angle-right pull-right"></i>
         </a>
-        <a href="?s=uc/address/lists&i={{$_GET['i']}}" class="list-group-item">
+        <a href="{{web_url('uc/address/lists')}}" class="list-group-item">
             <i class="fa fa-film"></i>
             地址管理 <i class="fa fa-angle-right pull-right"></i>
         </a>
-        <a href="?s=uc/reg/out&i={{$_GET['i']}}" class="list-group-item">
+        <a href="{{web_url('uc/reg/out')}}" class="list-group-item">
             <i class="fa fa-external-link"></i>
             退出系统 <i class="fa fa-angle-right pull-right"></i>
         </a>
