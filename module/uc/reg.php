@@ -74,7 +74,7 @@ class reg extends hdSite {
 				}
 				message( $this->member->getError(), 'back', 'error' );
 			}
-			$backurl = q( 'get.backurl', web_url( 'uc/entry/home', [ 'siteid' => $_GET['siteid'] ] ), 'htmlentities' );
+			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => $_GET['siteid'] ] ), 'htmlentities' );
 			message( '登录成功', $backurl, 'success' );
 		}
 		View::make( 'ucenter/login.html' );
@@ -83,7 +83,7 @@ class reg extends hdSite {
 	//使用微信openid登录
 	public function doWEbOpenidLogin() {
 		if ( $this->member->loginByOpenid() ) {
-			$backurl = q( 'get.backurl', web_url( 'uc/entry/home' ), 'htmlentities' );
+			$backurl = q( 'get.backurl', web_url( 'entry/home' ), 'htmlentities' );
 			go( $backurl );
 		} else {
 			message( '微信登录失败', 'back', 'error' );

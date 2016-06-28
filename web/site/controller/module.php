@@ -33,9 +33,9 @@ class Module {
 		}
 		if ( $action = q( 'get.a' ) ) {
 			$info             = explode( '/', $action );
-			$this->module     = empty( $info[0] ) ? '' : $info[0];
-			$this->controller = empty( $info[1] ) ? '' : $info[1];
-			$this->action     = empty( $info[2] ) ? '' : $info[2];
+			$this->module     = count( $info ) == 3 ? array_shift( $info ) : NULL;
+			$this->controller = $info[0];
+			$this->action     = $info[1];
 		} else {
 			$this->module = v( 'module.name' );
 		}
@@ -57,13 +57,13 @@ class Module {
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		$class = '\addons\\' . $this->module . '\module';
+		$class = '\addons\\' . v( 'module.name' ) . '\module';
 		if ( ! class_exists( $class ) || ! method_exists( $class, 'settingsDisplay' ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
 		}
 		View::with( 'module_action_name', '参数设置' );
 		$obj     = new $class();
-		$setting = ( new ModuleSetting() )->getModuleConfig( $this->module );
+		$setting = ( new ModuleSetting() )->getModuleConfig( v( 'module.name' ) );
 
 		return $obj->settingsDisplay( $setting );
 	}
@@ -101,13 +101,16 @@ class Module {
 				}
 			}
 			$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
-			$cover          = $replyCover->where( 'siteid', SITEID )->where( 'module', $this->module )->where( 'do', $moduleBindings['do'] )->first();
+			$cover          = $replyCover->where( 'siteid', SITEID )
+			                             ->where( 'module', v( 'module.name' ) )
+			                             ->where( 'do', $moduleBindings['do'] )
+			                             ->first();
 			//添加封面回复
 			$data                = [ ];
 			$data['rid']         = $rid;
 			$data['do']          = $moduleBindings['do'];
 			$data['siteid']      = SITEID;
-			$data['module']      = $this->module;
+			$data['module']      = v( 'module.name' );
 			$data['title']       = $_POST['title'];
 			$data['description'] = $_POST['description'];
 			$data['thumb']       = $_POST['thumb'];
@@ -122,7 +125,10 @@ class Module {
 			message( '功能封面更新成功', 'refresh', 'success' );
 		}
 		$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
-		$field          = $replyCover->where( 'siteid', SITEID )->where( 'module', $this->module )->where( 'do', $moduleBindings['do'] )->first();
+		$field          = $replyCover->where( 'siteid', SITEID )
+		                             ->where( 'module', v( 'module.name' ) )
+		                             ->where( 'do', $moduleBindings['do'] )
+		                             ->first();
 		//获取关键词回复
 		if ( $field ) {
 			$data = $ruleModel->where( 'rid', $field['rid'] )->first();
@@ -132,7 +138,7 @@ class Module {
 			$data['keyword'] = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get();
 			View::with( 'rule', $data );
 		}
-		$field['url']  = "?s=package/web/entry&i=" . SITEID . "&m={$this->module}&c=site&do={$moduleBindings['do']}";
+		$field['url']  = '?a=site/' . $moduleBindings['do'] . "&siteid=" . SITEID . "&t=web&m=" . v( 'module.name' );
 		$field['name'] = $moduleBindings['title'];
 		View::with( 'field', $field );
 		View::make();
@@ -155,7 +161,8 @@ class Module {
 	//模块前台处理业务
 	public function web() {
 		$action = 'doWeb' . $this->action;
-		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
+		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . v( 'module.name' ) . '\\';
+		$class .= $this->module ? $this->module . '\\' . $this->controller : $this->controller;
 		if ( class_exists( $class ) && method_exists( $class, $action ) ) {
 			$obj = new $class();
 
@@ -169,7 +176,8 @@ class Module {
 			message( '你没有操作权限', 'back', 'error' );
 		}
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
-		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . $this->module . '\\' . $this->controller;
+		$class = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . v( 'module.name' ) . '\\';
+		$class .= $this->module ? '\\' . $this->module . '\\' . $this->controller : $this->controller;
 		$action = 'doSite' . $this->action;
 		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
@@ -185,7 +193,7 @@ class Module {
 			message( '你没有操作权限', 'back', 'error' );
 		}
 		$method = Db::table( 'modules_bindings' )->where( 'bid', $bid )->pluck( 'do' );
-		$class  = '\addons\\' . $this->module . '\site';
+		$class  = '\addons\\' . v( 'module.name' ) . '\site';
 		$action = "doSite{$method}";
 		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
 			message( '访问的模块不存在', 'back', 'error' );

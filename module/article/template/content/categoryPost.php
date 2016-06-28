@@ -16,9 +16,9 @@
 					<label class="col-sm-2 control-label">访问地址</label>
 					<div class="col-sm-9">
 						<div class="form-control-static">
-							<a href="{{__ROOT__}}/index.php?a=article/entry/category&t=web&siteid={{v('site.siteid')}}&cid=@{{field.cid}}&mobile=1"
+							<a href="{{__ROOT__}}/index.php?a=entry/category&t=web&siteid={{v('site.siteid')}}&cid=@{{field.cid}}&mobile=1&m={{v('module.name')}}"
 							   target="_blank">
-								{{__ROOT__}}/index.php?a=article/entry/category&t=web&siteid={{v('site.siteid')}}&cid=@{{field.cid}}&mobile=1
+								{{__ROOT__}}/index.php?a=entry/category&t=web&siteid={{v('site.siteid')}}&cid=@{{field.cid}}&mobile=1&m={{v('module.name')}}
 							</a>
 							<span class="help-block">您可以根据此地址，添加回复规则，设置访问。</span>
 						</div>
@@ -240,7 +240,7 @@
 			$scope.loadTpl = function () {
 				require(['util'], function (util) {
 					var modalobj = util.modal({
-						content: ['?a=article/manage/loadTpl&t=site'],
+						content: ["{{site_url('manage/loadTpl')}}"],
 						title: '微站模板风格列表',
 						width: 800,
 						show: true,

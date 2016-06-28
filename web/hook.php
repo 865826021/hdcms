@@ -22,13 +22,12 @@ class hook {
 
 	//模块初始化
 	protected function moduleInitialize() {
+		if ( $name = q( 'get.m' ) ) {
+			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+		}
 		//扩展模块访问
 		if ( ! empty( $_GET['a'] ) ) {
 			$_GET['s'] = 'site/module/entry';
-			$name      = current( explode( '/', $_GET['a'] ) );
-			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
-		} else if ( $name = q( 'get.m' ) ) {
-			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
 		}
 	}
 

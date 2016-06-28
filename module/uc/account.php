@@ -27,7 +27,7 @@ class account extends hdSite {
 			$data['goods_name'] = '会员充值';
 			$data['fee']        = $_POST['fee'];
 			$data['body']       = '会员余额充值';
-			$data['back_url']   = web_url( 'uc/account/PaySuccess' );//支付回调地址
+			$data['back_url']   = web_url( 'account/PaySuccess' );//支付回调地址
 			$data['attach']     = '';//附加数据
 			//在会员充值表中记录定单
 			if ( empty( $pay ) ) {

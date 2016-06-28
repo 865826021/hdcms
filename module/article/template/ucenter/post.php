@@ -5,7 +5,7 @@
 	<form action="" method="post" id="form" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="javascript:;">微站会员中心</a></li>
-			<li><a href="?a=article/quickmenu/post&t=site">微站快捷导航</a></li>
+			<li><a href="{{site_url('quickmenu/post')}}">微站快捷导航</a></li>
 		</ul>
 		<div class="app clearfix">
 			<div id="mobile" class="col-sm-4 ucenter">

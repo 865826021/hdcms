@@ -19,18 +19,23 @@ use module\hdSite;
 class ticket extends hdSite {
 	//列表
 	public function doWebLists() {
+		$uid = Session::get( 'member.uid' );
 		//获取用户卡券
 		switch ( $_GET['status'] ) {
 			case 1:
 			case 2:
-				$sql = "SELECT t.tid,count(t.tid) as nums,t.discount,t.condition,t.tid,t.starttime,t.endtime,t.title,t.limit,t.thumb,tr.status,tr.uid,tr.remark FROM " . tablename( 'ticket' ) . " t JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid " . "WHERE tr.uid={Session::get('member.uid')} AND t.type={$_GET['type']} AND tr.status={$_GET['status']} GROUP BY t.tid";
+				$sql = "SELECT t.tid,count(t.tid) as nums,t.discount,t.condition,t.tid,t.starttime,t.endtime,t.title,t.limit,t.thumb,tr.status,tr.uid,tr.remark ";
+				$sql .= "FROM " . tablename( 'ticket' ) . " t JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid ";
+				$sql .= "WHERE tr.uid={$uid} AND t.type={$_GET['type']} AND tr.status={$_GET['status']} GROUP BY t.tid";
 				break;
 			case 3:
 				//过期
-				$sql = "SELECT t.tid,count(t.tid) as nums,t.discount,t.condition,t.tid,t.starttime,t.endtime,t.title,t.limit,t.thumb,tr.status,tr.uid,tr.remark FROM " . tablename( 'ticket' ) . " t JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid " . "WHERE tr.uid={Session::get('member.uid')} AND t.type={$_GET['type']} AND t.endtime<" . time() . " GROUP BY t.tid";
+				$sql = "SELECT t.tid,count(t.tid) as nums,t.discount,t.condition,t.tid,t.starttime,t.endtime,t.title,t.limit,t.thumb,tr.status,tr.uid,tr.remark ";
+				$sql .= "FROM " . tablename( 'ticket' ) . " t JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid ";
+				$sql .= "WHERE tr.uid={$uid} AND t.type={$_GET['type']} AND t.endtime<" . time() . " GROUP BY t.tid";
 		}
 
-		$data = Db::select( $sql );
+		$data = Db::query( $sql );
 		View::with( 'data', $data );
 		View::make( 'ucenter/ticket_lists.html' );
 	}
@@ -67,10 +72,10 @@ class ticket extends hdSite {
 			Db::table( 'ticket_record' )->insert( $data );
 			message( '卡券兑换成功', '', 'success' );
 		}
-
-		//锁表
-		$sql  = "SELECT t.tid,t.starttime,t.endtime,t.description,t.title,t.limit,t.thumb FROM " . tablename( 'ticket' ) . " t LEFT JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid " . "WHERE t.starttime<" . time() . " AND t.endtime>" . time() . " AND t.type={$_GET['type']}" . " GROUP BY t.tid HAVING count(tr.id) < t.limit";
-		$data = Db::select( $sql );
+		$sql = "SELECT t.tid,t.starttime,t.endtime,t.description,t.title,t.limit,t.thumb FROM " . tablename( 'ticket' );
+		$sql .= " t LEFT JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid " . "WHERE t.starttime<" . time() . " AND t.endtime>" . time();
+		$sql .= " AND t.type={$_GET['type']}" . " AND t.siteid=" . SITEID . " GROUP BY t.tid HAVING count(tr.id) < t.limit";
+		$data = Db::query( $sql );
 		View::with( 'data', $data );
 		View::make( 'ucenter/ticket_convert.html' );
 	}

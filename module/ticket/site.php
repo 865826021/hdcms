@@ -106,20 +106,17 @@ class site extends hdSite {
 		View::make( $this->template . '/post.html' );
 	}
 
-	//	//折扣券
-	//	public function doSitediscount() {
-	//
-	//		$this->post();
-	//	}
-	//
-	//	//代金券
-	//	public function doSitecoupon() {
-	//		$this->post();
-	//	}
+	//删除卡券
+	public function doSiteDel() {
+		$res = Db::table( 'ticket_record' )->where( 'siteid', SITEID )->where( 'tid', q( 'get.tid' ) )->get();
+		if ( $res ) {
+			message( '卡券已经使用,不能删除', 'back', 'error' );
+		}
+		Db::table( 'ticket' )->where( 'siteid', SITEID )->where( 'tid', q( 'get.tid' ) )->delete();
+		message( '卡券删除成功', 'back', 'success' );
+	}
 
-	/**
-	 * 卡券核销
-	 */
+	//卡券核销
 	public function doSitecharge() {
 		$sql
 			  = "SELECT * FROM hd_member m JOIN hd_ticket_record tr ON m.uid=tr.uid JOIN hd_ticket t ON t.tid=tr.tid
@@ -128,3 +125,14 @@ class site extends hdSite {
 		View::make( $this->template . '/charge.html' );
 	}
 }
+
+
+
+
+
+
+
+
+
+
+

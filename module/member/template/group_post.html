@@ -1,9 +1,9 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li role="presentation"><a href="?a=member/site/GroupLists&t=site">会员组列表</a></li>
+        <li role="presentation"><a href="{{site_url('site/GroupLists')}}">会员组列表</a></li>
         <if value="q('get.id')">
-            <li role="presentation"><a href="?a=member/site/GroupPost&t=site"><i class="fa fa-plus"></i> 添加会员组</a></li>
+            <li role="presentation"><a href="{{site_url('site/GroupPost')}}"><i class="fa fa-plus"></i> 添加会员组</a></li>
             <li role="presentation" class="active"><a href="#"><i class="fa fa-plus"></i> 编辑会员组</a></li>
             <else/>
         <li role="presentation" class="active"><a href="#"><i class="fa fa-plus"></i> 添加会员组</a></li>

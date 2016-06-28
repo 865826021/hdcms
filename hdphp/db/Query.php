@@ -61,9 +61,9 @@ class Query {
 		if ( empty( $where ) ) {
 			throw new Exception( '缺少更新条件' );
 		}
-		$sql = "UPDATE " . $this->connection->getTable() . " SET {$field}={$field}+" . $dec . $where;
+		$sql = "UPDATE " . $this->connection->getTable() . " SET {$field}={$field}+$dec " . $where;
 
-		return $this->connection->execute( $sql, $this->build()->getParams() );
+		return $this->connection->execute( $sql, $this->build()->getUpdateParams() );
 	}
 
 	public function decrement( $field, $dec = 1 ) {
@@ -71,9 +71,9 @@ class Query {
 		if ( empty( $where ) ) {
 			throw new Exception( '缺少更新条件' );
 		}
-		$sql = "UPDATE " . $this->connection->getTable() . " SET {$field}={$field}-" . $dec . $where;
+		$sql = "UPDATE " . $this->connection->getTable() . " SET {$field}={$field}-$dec " . $where;
 
-		return $this->connection->execute( $sql, $this->build()->getParams() );
+		return $this->connection->execute( $sql, $this->build()->getUpdateParams() );
 	}
 
 	public function update( $data ) {

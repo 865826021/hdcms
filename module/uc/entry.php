@@ -25,7 +25,7 @@ class entry extends hdSite {
 		$this->member = new Member();
 		//没有登录时跳转到登录页面
 		if ( ! $this->member->isLogin() ) {
-			go( web_url( 'uc/reg/login' ) );
+			go( web_url( 'reg/login' ) );
 		}
 	}
 

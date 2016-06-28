@@ -30,6 +30,7 @@ class address extends hdSite {
 		View::make( 'ucenter/address_lists.html' );
 	}
 
+	//设置地址
 	public function doWebPost() {
 		if ( IS_POST ) {
 			$data['siteid']   = SITEID;
@@ -51,7 +52,7 @@ class address extends hdSite {
 					$data['id']        = $id;
 					$data['isdefault'] = $address['isdefault'];
 				} else {
-					message( '请求错误', web_url( 'member/uc/home' ), 'error' );
+					message( '请求错误', 'back', 'error' );
 				}
 			}
 

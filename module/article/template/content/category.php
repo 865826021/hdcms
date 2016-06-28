@@ -29,8 +29,8 @@
 							<td>{{$d['ishomepage']?'是':'否'}}</td>
 							<td>
 								<a href="javascript:;" class="copy" url='{{$d["url"]}}'>复制链接</a>
-								<a href="?a=article/content/article&t=site&cid={{$d['cid']}}">文章管理</a>
-								<a href="?a=article/content/categoryPost&t=site&cid={{$d['cid']}}">编辑</a>
+								<a href="{{site_url('content/article',['cid'=>$d['cid']])}}">文章管理</a>
+								<a href="{{site_url('content/categoryPost',['cid'=>$d['cid']])}}">编辑</a>
 								<a href="javascript:;" onclick="del({{$d['cid']}})">删除</a>
 							</td>
 						</tr>

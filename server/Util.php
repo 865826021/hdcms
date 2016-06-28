@@ -17,6 +17,11 @@ class Util {
 		$this->app = $app;
 	}
 
+	//更改会员SESSION数据
+	public function updateMemberSessionCache() {
+		return m( 'Member' )->updateUserSessionData();
+	}
+
 	/**
 	 * 支付
 	 *

@@ -1,12 +1,11 @@
 <extend file="resource/view/site"/>
-
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="{{site_url('article/manage/site')}}">返回站点列表</a></li>
 		<li class="active">
 			<a href="javascript:;"><?php echo m( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
 		</li>
-		<if value="!isset($_GET['m'])">
+		<if value="empty($_GET['m'])">
 			<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
 		</if>
 	</ul>

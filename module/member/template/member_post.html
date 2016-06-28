@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="?a=member/site/MemberLists&t=site">会员列表</a></li>
+        <li><a href="{{site_url('site/MemberLists')}}">会员列表</a></li>
         <li class="active"><a href="javascript:;">添加会员</a></li>
     </ul>
     <form action="" method="post" role="form" class="form-horizontal">

@@ -4,8 +4,8 @@
     <parent name="header" title="我的钱包-{{$_GET['t']==1?'代金券':'折扣券'}}"/>
     <div class="text-center">
         <div class="btn-group">
-            <a href="{{web_url('uc/ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">代金券</a>
-            <a href="{{web_url('uc/ticket/convert')}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}" role="button">折扣券</a>
+            <a href="{{web_url('ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">折扣券</a>
+            <a href="{{web_url('ticket/convert')}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}" role="button">代金券</a>
         </div>
     </div>
     <div class="ticket">
@@ -56,5 +56,4 @@
             })
         }, 'json')
     }
-
 </script>

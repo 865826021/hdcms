@@ -964,6 +964,19 @@
                     }
                 }
             });
+        },
+        tradeCredit: function (obj) {
+            //会员编号
+            var uid = $(obj).data('uid');
+            //积分类型 credit1积分  credit2余额
+            var type = $(obj).data('type');
+            this.modal({
+                content: ['?a=site/trade&t=site&m=member&uid=' + uid + "&type=" + type],//加载的远程地址
+                title: '会员积分操作',
+                width: 800,
+                show: true,//直接显示
+            });
+
         }
     };
     if (typeof define === "function" && define.amd) {

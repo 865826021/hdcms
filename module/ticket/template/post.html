@@ -1,12 +1,12 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="?a=ticket/site/lists&t=site&type={{$_GET['type']}}">管理{{$msg['module']['title']}}</a></li>
+        <li><a href="{{site_url('site/lists')}}&type={{$_GET['type']}}">管理{{$msg['module']['title']}}</a></li>
         <if value="$field">
-            <li><a href="?a=ticket/site/post&t=site&type={{$_GET['type']}}"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
+            <li><a href="{{site_url('site/post')}}&type={{$_GET['type']}}"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
             <li class="active"><a href="#"><i class="fa fa-plus"></i> 编辑{{$msg['module']['title']}}</a></li>
             <else/>
-            <li class="active"><a href="{{u('post')}}"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
+            <li class="active"><a href="javascript:;"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
         </if>
     </ul>
     <form action="" method="post" role="form" class="form-horizontal" id="form">

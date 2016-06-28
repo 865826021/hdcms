@@ -9,6 +9,10 @@ use system\model\ModuleSetting;
  * @author 向军
  */
 abstract class hdSite {
+
+	//站点编号
+	protected $siteid;
+
 	//模板目录
 	protected $template;
 
@@ -17,6 +21,7 @@ abstract class hdSite {
 
 	//构造函数
 	public function __construct() {
+		$this->siteid   = Session::get( 'siteid' );
 		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
 		$this->config   = ( new ModuleSetting() )->getModuleConfig();
 		define( '__TEMPLATE_PATH__', $this->template );

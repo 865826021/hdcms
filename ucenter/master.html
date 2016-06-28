@@ -22,7 +22,7 @@
     <div class="container">
         <nav class="navbar navbar-default navbar-fixed-top uc-header">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{{web_url('uc/entry/home')}}" style="position: absolute;">
+                <a class="navbar-brand" href="{{web_url('entry/home')}}" style="position: absolute;">
                     <i class="fa fa-chevron-left"></i>
                 </a>
                 <p class="navbar-text navbar-right text-center">{{title}}</p>
@@ -36,10 +36,10 @@
 <widget name="ticket_footer">
     <div style="height:60px;"></div>
     <nav class="navbar navbar-default navbar-fixed-bottom card_footer">
-        <a href="{{web_url('uc/ticket/convert')}}&type={{$_GET['type']}}">
+        <a href="{{web_url('ticket/convert')}}&type={{$_GET['type']}}">
             <i class="fa fa-credit-card" aria-hidden="true"></i> 兑换
         </a>
-        <a href="{{web_url('uc/entry/home')}}">
+        <a href="{{web_url('entry/home')}}">
             <i class="fa fa-user"></i> 会员中心
         </a>
     </nav>

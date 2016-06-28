@@ -134,7 +134,8 @@ class Member extends Model {
 	 */
 	public function updateUserSessionData() {
 		$user = Db::table( 'member' )->where( 'uid', Session::get( 'member.uid' ) )->first();
-		Session::set( 'member', $user );
+
+		return Session::set( 'member', $user );
 	}
 
 	/**

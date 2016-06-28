@@ -20,6 +20,7 @@ use system\model\WebPage;
  * 会员中心设置
  * Class ucenter
  * @package module\article
+ * @author 向军
  */
 class ucenter extends hdSite {
 	protected $webPage;
@@ -38,7 +39,7 @@ class ucenter extends hdSite {
 			}
 			$data['title']       = $modules[0]['params']['title'];
 			$data['description'] = $modules[0]['params']['description'];
-			$data['params']      = $_POST['modules'];
+			$data['params']      = $modules;
 			$data['html']        = $_POST['html'];
 			$data['type']        = 3;
 			$data['status']      = 1;
@@ -100,7 +101,7 @@ class ucenter extends hdSite {
 			$cover['title']       = $ucenter['title'];
 			$cover['description'] = $ucenter['description'];
 			$cover['thumb']       = $ucenter['thumb'];
-			$cover['url']         = "?a=uc/entry/home&t=web&siteid=" . SITEID;
+			$cover['url']         = "?a=entry/home&t=web&m=uc&siteid=" . SITEID;
 			if ( $res = $replyCover->where( 'rid', $rid )->first() ) {
 				$cover['id'] = $res['id'];
 				$action      = 'save';

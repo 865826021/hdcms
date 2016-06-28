@@ -198,4 +198,46 @@ class site extends hdSite {
 		}
 		message( '默认会员组设置成功', '', 'success' );
 	}
+
+	//修改会员积分/余额
+	public function doSiteTrade() {
+		//会员编号
+		$uid = q( 'uid' );
+		//1 积分 2 余额
+		$type = q( 'type' );
+		if ( IS_POST ) {
+			if ( empty( $_POST['remark'] ) ) {
+				message( '备注不能为空', '', 'error' );
+			}
+			if ( ! is_numeric( $_POST['num'] ) ) {
+				message( '更改数量必须为数字', '', 'error' );
+			}
+			//更改数量
+			$num       = q( 'post.num' );
+			$user      = Db::table( 'member' )->where( 'uid', $uid )->first();
+			$newCredit = $user[ $type ] + $num;
+			if ( $newCredit < 0 ) {
+				message( '你的积分数量不够', '', 'error' );
+			}
+			$data[ $type ] = $newCredit;
+			if ( Db::table( 'member' )->where( 'uid', intval( $uid ) )->update( $data ) ) {
+				Db::table( 'credits_record' )->insert( [
+					'siteid'     => SITEID,
+					'uid'        => $uid,
+					'credittype' => $type,
+					'num'        => $num,
+					'operator'   => Session::get( 'user.uid' ),
+					'module'     => 'system',
+					'createtime' => time(),
+					'remark'     => q( 'post.remark' )
+				] );
+				//更改会员session数据
+				Util::updateMemberSessionCache();
+			}
+			message( v( "setting.creditnames.$type.title" ) . '更改成功', '', 'success' );
+		}
+		View::with( 'uid', $uid );
+		View::with( 'type', $type );
+		View::make( $this->template . '/trade.html' );
+	}
 }

@@ -9,19 +9,22 @@
  *
  * @return string
  */
-function web_url( $do, $params = [ ] ) {
-	$info = explode( '/', q( 'get.a' ) );
+function web_url( $do, $params = [ ], $module = NULL ) {
+	$do     = str_replace( '.', '/', $do );
+	$module = $module ?: v( 'module.name' );
+	$info   = explode( '/', q( 'get.a' ) );
 	switch ( count( explode( '/', $do ) ) ) {
 		case 3:
-			$url = __ROOT__ . "/index.php?a=" . $do . "&t=web&siteid=" . SITEID;
+			$url = $do;
 			break;
 		case 2:
-			$url = __ROOT__ . "/index.php?a=" . $info[0] . '/' . $do . "&t=web&siteid=" . SITEID;
+			$url = count( $info ) == 3 ? $info[0] . '/' . $do : $do;
 			break;
 		case 1:
-			$url = __ROOT__ . "/index.php?a=" . $info[0] . '/' . $info[1] . '/' . $do . "&t=web&siteid=" . SITEID;
+			$url = count( $info ) == 3 ? $info[0] . '/' . $info[1] . '/' . $do : $info[0] . '/' . $do;
 			break;
 	}
+	$url = __ROOT__ . "/index.php?a=" . $url . "&t=web&siteid=" . SITEID . "&m={$module}";
 
 	return $params ? $url . '&' . http_build_query( $params ) : $url;
 }
@@ -34,19 +37,22 @@ function web_url( $do, $params = [ ] ) {
  *
  * @return string
  */
-function site_url( $do, $params = [ ] ) {
-	$info = explode( '/', q( 'get.a' ) );
+function site_url( $do, $params = [ ], $module = NULL ) {
+	$do     = str_replace( '.', '/', $do );
+	$module = $module ?: v( 'module.name' );
+	$info   = explode( '/', q( 'get.a' ) );
 	switch ( count( explode( '/', $do ) ) ) {
 		case 3:
-			$url = __ROOT__ . "/index.php?a=" . $do . "&t=site&siteid=" . SITEID;
+			$url = $do;
 			break;
 		case 2:
-			$url = __ROOT__ . "/index.php?a=" . $info[0] . '/' . $do . "&t=site&siteid=" . SITEID;
+			$url = count( $info ) == 3 ? $info[0] . '/' . $do : $do;
 			break;
 		case 1:
-			$url = __ROOT__ . "/index.php?a=" . $info[0] . '/' . $info[1] . '/' . $do . "&t=site&siteid=" . SITEID;
+			$url = count( $info ) == 3 ? $info[0] . '/' . $info[1] . '/' . $do : $info[0] . '/' . $do;
 			break;
 	}
+	$url = __ROOT__ . "/index.php?a=" . $url . "&t=site&siteid=" . SITEID . "&m={$module}";
 
 	return $params ? $url . '&' . http_build_query( $params ) : $url;
 }
