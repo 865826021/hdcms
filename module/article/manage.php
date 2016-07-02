@@ -120,7 +120,8 @@ class manage extends hdSite {
 		View::with( 'data', $data )->make( $this->template . '/manage/loadTpl.php' );
 	}
 
-	public function del() {
+	//删除站点
+	public function doSiteDel() {
 
 	}
 }

@@ -38,7 +38,7 @@
 							<a href="javascript:;" url="{{$d['url']}}&t=web" class="copy">复制链接</a>
 							<a href="javascript:preview('{{$d['url']}}&t=web&mobile=1');">预览</a>
 							<if value="$key gt 0">
-								<a href="{{site_url('del')}}&webid={{$d['id']}}">删除</a>
+								<a href="javascript:;" onclick="del({{$d['id']}})">删除</a>
 							</if>
 						</td>
 					</tr>
@@ -61,6 +61,12 @@
 			util.zclip(This, $(This).attr('url'))
 		});
 	});
+	//删除站点
+	function del(webid) {
+		$.get("{{site_url('del')}}", {webid: webid}, function (res) {
+			console.log(res);
+		}, 'json');
+	}
 	//预览
 	function preview(url) {
 		require(['util'], function (util) {

@@ -23,6 +23,12 @@ class tag {
                     //会员中心主页
                     echo '<div style="height:60px;"></div>'.\$res['html'];
                 }
+                foreach(\$params['modules'] as \$v){
+                    if(\$v['mid']==v('module.mid')){
+                        echo '<div style="height:60px;"></div>'.\$res['html'];
+                        break;
+                    }
+                }
             }
         ?>
 str;

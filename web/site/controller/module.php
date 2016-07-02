@@ -177,7 +177,7 @@ class Module {
 		}
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . v( 'module.name' ) . '\\';
-		$class .= $this->module ? '\\' . $this->module . '\\' . $this->controller : $this->controller;
+		$class .= $this->module ? $this->module . '\\' . $this->controller : $this->controller;
 		$action = 'doSite' . $this->action;
 		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
 			message( '访问的模块不存在', 'back', 'error' );

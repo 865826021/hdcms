@@ -17,58 +17,24 @@ class Util {
 		$this->app = $app;
 	}
 
-	//更改会员SESSION数据
-	public function updateMemberSessionCache() {
-		return m( 'Member' )->updateUserSessionData();
-	}
+
+//
+//
+//	/**
+//	 * 修改支付状态
+//	 *
+//	 * @param $tid
+//	 */
+//	public function paySuccess( $tid ) {
+//		Db::table( 'pay' )->where( 'tid', $tid )->update( [ 'status' => 1 ] );
+//	}
 
 	/**
-	 * 支付
-	 *
-	 * @param $param
+	 * 调用服务
 	 */
-	public function pay( $param ) {
-		if ( ! v( 'module.name' ) || ! Session::get( 'member.uid' ) || empty( $param['goods_name'] ) || empty( $param['fee'] )
-		     || empty( $param['back_url'] )
-		     || empty( $param['body'] )
-		     || empty( $param['tid'] )
-		) {
-			message( '支付参数错误,请重新提交', 'back', 'error' );
-		}
+	public function instance( $server ) {
+		$server = '\server\\'.ucfirst( $server );
 
-		if ( $pay = Db::table( 'pay' )->where( 'tid', $param['tid'] )->first() ) {
-			if ( $pay['status'] == 1 ) {
-				message( '定单已经支付完成', $param['back_url'], 'success' );
-			}
-		}
-		$data['siteid']     = SITEID;
-		$data['uid']        = Session::get( 'member.uid' );
-		$data['tid']        = $param['tid'];
-		$data['fee']        = $param['fee'];
-		$data['goods_name'] = $param['goods_name'];
-		$data['attach']     = isset( $param['attach'] ) ? $param['attach'] : '';//附加数据
-		$data['module']     = v( 'module.name' );
-		$data['body']       = $param['body'];
-		$data['attach']     = $param['attach'];
-		$data['status']     = 0;
-		$data['is_usecard'] = isset( $param['is_usecard'] ) ? $param['is_usecard'] : 0;
-		$data['card_type']  = isset( $param['card_type'] ) ? $param['card_type'] : '';
-		$data['card_id']    = isset( $param['is_usecard'] ) ? $param['card_id'] : 0;
-		$data['card_fee']   = isset( $param['card_fee'] ) ? $param['card_fee'] : 0;
-		if ( empty( $pay ) ) {
-			Db::table( 'pay' )->insertGetId( $data );
-		}
-		Session::set( 'pay', [ 'tid' => $data['tid'], 'module' => v( 'module.name' ), 'siteid=' => SITEID ] );
-		View::with( 'data', $data );
-		View::make( 'ucenter/pay.html' );
-	}
-
-	/**
-	 * 修改支付状态
-	 *
-	 * @param $tid
-	 */
-	public function paySuccess( $tid ) {
-		Db::table( 'pay' )->where( 'tid', $tid )->update( [ 'status' => 1 ] );
+		return new $server;
 	}
 }

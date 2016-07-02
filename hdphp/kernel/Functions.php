@@ -390,7 +390,7 @@ if ( ! function_exists( 'message' ) ) {
 	 * @param string $redirect 跳转地址有三种方式 1:back(返回上一页)  2:refresh(刷新当前页)  3:具体Url
 	 * @param string $type 信息类型  success(成功），error(失败），warning(警告），info(提示）
 	 */
-	function message( $content, $redirect = 'back', $type = 'success', $timeout = 3 ) {
+	function message( $content, $redirect = 'back', $type = 'success', $timeout = 2 ) {
 
 		if ( IS_AJAX ) {
 			Response::ajax( [ 'valid' => $type == 'success' ? 1 : 0, 'message' => $content ] );

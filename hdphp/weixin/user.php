@@ -22,7 +22,7 @@ class User extends Weixin {
 
 	//获取用户基本信息
 	public function getUserInfo( $openid ) {
-		$url     = $this->apiUrl . '/cgi-bin/user/info?openid={$openid}&lang=zh_CN&access_token=' . $this->getAccessToken();
+		$url     = $this->apiUrl . "/cgi-bin/user/info?openid={$openid}&lang=zh_CN&access_token=" . $this->getAccessToken();
 		$content = Curl::get( $url );
 		$result  = json_decode( $content, TRUE );
 

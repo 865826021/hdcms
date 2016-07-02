@@ -53,29 +53,30 @@ class reg extends hdSite {
 			if ( $this->member->where( 'email', $_POST['username'] )->orWhere( 'mobile', $_POST['username'] )->get() ) {
 				message( '用户名已经存在', 'back', 'error' );
 			}
-			if (! $this->member->add() ) {
+			if ( ! $this->member->add() ) {
 				message( $this->member->getError(), 'back', 'error' );
 			}
 			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success' );
 		}
 		View::with( 'placeholder', v( 'setting.register.item' ) == 1 ? '手机号' : ( v( 'setting.register.item' ) == 2 ? '邮箱' : '手机号/邮箱' ) );
-		View::make('ucenter/register.html' );
+		View::make( 'ucenter/register.html' );
 	}
 
 	//登录
 	public function doWebLogin() {
 		if ( IS_POST ) {
 			if ( ! $this->member->login() ) {
-				//微信自动登录
-				if ( IS_WEIXIN && v( 'wechat.level' ) >= 3 && v( 'setting.register.focusreg' ) == 1 ) {
-					if ( $this->member->loginByOpenid() ) {
-						message( '登录成功', 'back', 'error' );
-					}
-				}
 				message( $this->member->getError(), 'back', 'error' );
 			}
-			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => $_GET['siteid'] ] ), 'htmlentities' );
+			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ), 'htmlentities' );
 			message( '登录成功', $backurl, 'success' );
+		}
+		//微信自动登录
+		if ( IS_WEIXIN && v( 'wechat.level' ) >= 3 && v( 'setting.register.focusreg' ) == 1 ) {
+			if ( $this->member->loginByOpenid() ) {
+				$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
+				go( $url );
+			}
 		}
 		View::make( 'ucenter/login.html' );
 	}
@@ -93,7 +94,7 @@ class reg extends hdSite {
 	//退出
 	public function doWEbOut() {
 		Session::flush();
-		message( '退出成功', web_url( 'login' ), 'success' );
+		message( '退出成功', web_url( 'login' ), 'success', 1 );
 	}
 
 	//找回密码

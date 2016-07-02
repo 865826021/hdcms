@@ -1,7 +1,7 @@
-<extend file='ucenter/master.html'/>
+<extend file='resource/view/mobile'/>
 <block name="title">我的钱包-代金券</block>
 <block name="content">
-    <parent name="header" title="我的钱包-{{$_GET['t']==1?'代金券':'折扣券'}}"/>
+    <parent name="header" title="我的钱包-{{$_GET['t']==1?'折扣券':'代金券'}}"/>
     <div class="text-center">
         <div class="btn-group">
             <a href="{{web_url('ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">折扣券</a>
@@ -22,7 +22,7 @@
                     <span>使用10积分兑换</span>
                     <button class="btn btn-danger btn-sm" onclick="convert({{$d['tid']}})">点击领取</button>
                 </div>
-                <div class="more">
+                <div class="more" style="cursor: pointer;">
                     详细介绍 <i class="fa fa-arrow-circle-down"></i>
                 </div>
                 <div class="desc hide">
@@ -48,7 +48,7 @@
                         width: '',
                         events: {
                             'hidden.bs.modal': function () {
-                                if (res.valid)history.back();
+                                if (res.valid)location.reload(true);
                             }
                         }
                     }

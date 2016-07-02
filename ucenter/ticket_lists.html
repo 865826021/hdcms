@@ -1,7 +1,7 @@
-<extend file='ucenter/master.html'/>
+<extend file='resource/view/mobile'/>
 <block name="title">我的钱包-代金券</block>
 <block name="content">
-    <parent name="header" title="我的钱包-{{$_GET['type']==1?'代金券':'折扣券'}}"/>
+    <parent name="header" title="我的钱包-{{$_GET['type']==1?'折扣券':'代金券'}}"/>
     <div class="text-center">
         <div class="btn-group">
             <a href="{{web_url('ticket/lists')}}&type={{$_GET['type']}}&status=1" class="btn {{$_GET['status']==1?'btn-primary':'btn-default'}}" role="button">未使用</a>
@@ -15,7 +15,13 @@
                 <div class="item">
                     <div class="left-i">
                         <div class="info">
-                            <p class="title">{{$d['discount']}}元</p>
+                            <p class="title">
+                                <if value="$_GET['type']==1">
+                                   {{$d['discount']*10}}折
+                                    <else/>
+                                    {{$d['discount']*1}}元
+                                </if>
+                            </p>
                             <if value="$_GET['status']==1">
                                 <p class="nums">
                                     <i class="fa fa-ship"></i> 剩余{{$d['nums']}}张

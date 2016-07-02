@@ -7,7 +7,20 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-//开启调试模式
-define( 'DEBUG', TRUE );
-//引入框架
-require 'hdphp/hdphp.php';
+
+namespace system\model;
+
+use hdphp\model\Model;
+
+/**
+ * 积分记录
+ * Class CreditsRecord
+ * @package system\model
+ * @author 向军
+ */
+class CreditsRecord extends Model {
+	protected $table    = 'credits_record';
+	protected $validate = [ ];
+	protected $auto     = [ ];
+
+}

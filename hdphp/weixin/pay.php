@@ -16,8 +16,7 @@ class pay extends Weixin {
 
 	/**
 	 * 公众号支付
-	 *
-	 * @param array $data
+	 * @param $order
 	 * $data说明
 	 * $data['total_fee']=1;//支付金额单位分
 	 * $data['body']='会员充值';//商品描述

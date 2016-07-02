@@ -23,7 +23,7 @@ class Pay {
 		$data['attach']       = $pay['attach'];//附加数据
 		$data['out_trade_no'] = $pay['tid'];//会员定单号
 		c( 'weixin.notify_url', __ROOT__ . '/index.php/wxnotifyurl/' . SITEID );
-		c( 'weixin.back_url', web_url( Session::get( 'pay.module' ) . '/pay/notify', Session::get( 'pay' ) ) );
+		c( 'weixin.back_url', web_url( 'pay/notify', Session::get( 'pay' ), Session::get( 'pay.module' ) ) );
 		Weixin::instance( 'pay' )->jsapi( $data );
 	}
 

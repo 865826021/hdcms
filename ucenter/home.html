@@ -1,4 +1,4 @@
-<extend file='ucenter/master.html'/>
+<extend file='resource/view/mobile'/>
 <block name="title">会员中心 - HDCMS开源免费三网系统</block>
 <block name="content">
     <div class="ucenter">
@@ -22,15 +22,15 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="{{web_url('ticket/lists')}}&type=1&status=1">
+                    <a href="{{web_url('ticket/lists')}}&type=2&status=1">
                         <i class="fa fa-diamond"></i> <span>代金券</span>
                     </a>
                 </div>
-                <div class="col-xs-3"><a href="{{web_url('ticket/lists')}}&type=1&status=1">
+                <div class="col-xs-3"><a href="{{web_url('credit/lists')}}&type=credit1">
                     <i class="fa fa-flag-o"></i> <span>积分</span>
                 </a>
                 </div>
-                <div class="col-xs-3"><a href="{{web_url('ticket/lists')}}&type=1&status=1">
+                <div class="col-xs-3"><a href="{{web_url('credit/lists')}}&type=credit2">
                     <i class="fa fa-money"></i> <span>余额</span>
                 </a>
                 </div>

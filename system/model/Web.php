@@ -70,4 +70,15 @@ class Web extends Model {
 	public function getDefaultWeb() {
 		return $this->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->first();
 	}
+
+	//删除站点
+	public function remove( $webid ) {
+		//删除栏目
+		Db::table( 'web_category' )->where( 'web_id', $webid )->delete();
+		//删除文章
+		Db::table( 'web_article' )->where( 'web_id', $webid )->delete();
+		//删除站点
+		Db::table( 'web' )->where( 'web_id', $webid );
+		return true;
+	}
 }

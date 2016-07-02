@@ -1,5 +1,6 @@
 (function (window) {
     util = {
+        //获取get参数值
         get: function (par) {
             //获取当前URL
             var local_url = document.location.href;
@@ -16,6 +17,16 @@
                 get_par = get_par.slice(0, nextPar);
             }
             return get_par;
+        },
+        //替换get参数
+        getReplace: function (paramName, replaceWith) {
+            var oUrl = location.href.toString();
+            if (oUrl.indexOf(paramName) >= 0) {
+                var re = eval('/(' + paramName + '=)([^&]*)/gi');
+                return oUrl.replace(re, paramName + '=' + replaceWith);
+            } else {
+                return oUrl + '&' + paramName + '=' + replaceWith;
+            }
         },
         zclip: function (elem, content) {
             if (elem.clip) {

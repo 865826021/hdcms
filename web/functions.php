@@ -11,7 +11,7 @@
  */
 function web_url( $do, $params = [ ], $module = NULL ) {
 	$do     = str_replace( '.', '/', $do );
-	$module = $module ?: v( 'module.name' );
+	$module = $module ? $module : v( 'module.name' );
 	$info   = explode( '/', q( 'get.a' ) );
 	switch ( count( explode( '/', $do ) ) ) {
 		case 3:

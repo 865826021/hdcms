@@ -7,7 +7,22 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-//开启调试模式
-define( 'DEBUG', TRUE );
-//引入框架
-require 'hdphp/hdphp.php';
+namespace server;
+/**
+ * 会员接口
+ * Class Member
+ * @package server
+ * @author 向军
+ */
+class Member {
+	//检测用户登录
+	public function isLogin() {
+		return Session::get( "member.uid" ) ? TRUE : FALSE;
+	}
+
+	//更改会员SESSION数据
+	public function updateSession() {
+		return m( 'Member' )->updateUserSessionData();
+	}
+
+}

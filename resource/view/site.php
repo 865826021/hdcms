@@ -24,7 +24,7 @@
 		window.sys = {
 			attachment: 'attachment',
 			uid: <?php echo Session::get( 'user.uid' );?>,
-			siteid: <?php echo Session::get( 'siteid' );?>,
+			siteid: <?php echo SITEID;?>,
 			root: "<?php echo __ROOT__;?>",
 			module: "<?php echo v( 'module.name' );?>"
 		}
@@ -177,13 +177,18 @@
 					</a>
 				</div>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-					<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_site_modules_menu_['name']}}">
-						<i class="fa fa-comments"></i> 回复规则列表
-					</li>
-					<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_site_modules_menu_['name']}}">
-						<i class="fa fa-cog"></i> 参数设置
-					</li>
+					<if value="$_site_modules_menu_['rule']">
+						<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_site_modules_menu_['name']}}">
+							<i class="fa fa-comments"></i> 回复规则列表
+						</li>
+					</if>
+					<if value="$_site_modules_menu_['setting']">
+						<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_site_modules_menu_['name']}}">
+							<i class="fa fa-cog"></i> 参数设置
+						</li>
+					</if>
 				</ul>
+
 				<div class="panel-heading hide module_active">
 					<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
 					<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
@@ -207,32 +212,37 @@
 						</li>
 					</if>
 				</ul>
-				<div class="panel-heading hide module_active">
-					<h4 class="panel-title">{{$_site_modules_menu_['title']}}封面入口</h4>
-					<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
-						<i class="fa fa-chevron-circle-down"></i>
-					</a>
-				</div>
-				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-					<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
-						<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
-							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
-						</li>
-					</foreach>
-				</ul>
-				<div class="panel-heading hide module_active">
-					<h4 class="panel-title">{{$_site_modules_menu_['title']}}业务菜单</h4>
-					<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
-						<i class="fa fa-chevron-circle-down"></i>
-					</a>
-				</div>
-				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-					<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
-						<li class="list-group-item" dataHref="?s=site/module/business&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
-							<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
-						</li>
-					</foreach>
-				</ul>
+				<if value="$_site_modules_menu_['budings']['cover']">
+					<div class="panel-heading hide module_active">
+						<h4 class="panel-title">{{$_site_modules_menu_['title']}}封面入口</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
+							<i class="fa fa-chevron-circle-down"></i>
+						</a>
+					</div>
+
+					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+						<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
+							<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
+								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
+							</li>
+						</foreach>
+					</ul>
+				</if>
+				<if value="$_site_modules_menu_['budings']['business']">
+					<div class="panel-heading hide module_active">
+						<h4 class="panel-title">{{$_site_modules_menu_['title']}}业务菜单</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
+							<i class="fa fa-chevron-circle-down"></i>
+						</a>
+					</div>
+					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+						<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
+							<li class="list-group-item" dataHref="?s=site/module/business&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
+								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
+							</li>
+						</foreach>
+					</ul>
+				</if>
 				<!------------------------模块菜单 end------------------------>
 				<!--模块列表-->
 				<foreach from="$_site_menu_modules_" key="$t" value="$d">
@@ -310,7 +320,6 @@
 		sessionStorage.setItem('moduleActionType', type);
 		location.reload(true);
 	}
-
 	//有模块访问时
 	if (window.sys.module && sessionStorage.getItem('menuid') == 21) {
 		//显示模块展示菜单形式 默认/系统/组合
@@ -322,7 +331,7 @@
 		}
 		//设置点击按钮为蓝色
 		$('.menu_action_type button').eq(moduleActionType - 1).addClass('btn-primary');
-		switch (moduleActionType*1) {
+		switch (moduleActionType * 1) {
 			case 1:
 				//默认类型
 				$('.module_active').removeClass('hide');

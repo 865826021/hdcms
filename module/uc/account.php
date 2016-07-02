@@ -22,12 +22,16 @@ class account extends hdSite {
 	public function doWebBalance() {
 		if ( IS_POST ) {
 			//检测是否有相同金额的充值记录,如果有就使用它,避免重复金额定单产生
-			$pay                = Db::table( 'balance' )->where( 'fee', $_POST['fee'] )->where( 'status', 0 )->pluck( 'tid' );
+			$pay                = Db::table( 'balance' )
+			                        ->where( 'fee', $_POST['fee'] )
+			                        ->where( 'siteid', SITEID )
+			                        ->where( 'status', 0 )
+			                        ->where( 'uid', Session::get( 'member.uid' ) )
+			                        ->pluck( 'tid' );
 			$data['tid']        = $pay ? $pay : Cart::getOrderId();
 			$data['goods_name'] = '会员充值';
 			$data['fee']        = $_POST['fee'];
 			$data['body']       = '会员余额充值';
-			$data['back_url']   = web_url( 'account/PaySuccess' );//支付回调地址
 			$data['attach']     = '';//附加数据
 			//在会员充值表中记录定单
 			if ( empty( $pay ) ) {

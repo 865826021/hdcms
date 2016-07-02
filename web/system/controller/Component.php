@@ -18,7 +18,7 @@ namespace web\system\controller;
 class Component {
 	//模块列表
 	public function moduleBrowser() {
-		View::with( 'modules', v('modules') );
+		View::with( 'modules', v( 'modules' ) );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
 		View::make();
 	}
@@ -30,7 +30,7 @@ class Component {
 
 	//模块&模板列表
 	public function moduleList() {
-		$modules = Db::table( 'modules' )->get();
+		$modules = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		View::with( 'modules', $modules )->make();
 	}
 

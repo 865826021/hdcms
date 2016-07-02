@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="ucenter/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="?a=article/ucenter/post&t=site">微站会员中心</a></li>
+		<li><a href="?a=ucenter/post&t=site&m=article">微站会员中心</a></li>
 		<li class="active"><a href="javascript:;">微站快捷导航</a></li>
 	</ul>
 	<form action="" method="post" id="form" class="ng-cloak form-horizontal ng-cloak" ng-cloak ng-controller="commonCtrl" ng-submit="submit()">
@@ -89,7 +89,6 @@
 				</div>
 			</div>
 		</div>
-		<!--end-->
 		<br/>
 		<input type="hidden" name="data">
 		<div class="text-center">

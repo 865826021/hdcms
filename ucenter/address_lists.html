@@ -1,10 +1,10 @@
-<extend file='ucenter/master.html'/>
+<extend file='resource/view/mobile'/>
 <block name="title">地址管理 - HDCMS开源免费三网系统</block>
 <block name="content">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="{{web_url('uc/entry/home')}}" style="position: absolute;">
+                <a class="navbar-brand" href="{{web_url('entry/home')}}" style="position: absolute;">
                     <i class="fa fa-chevron-left"></i>
                 </a>
                 <p class="navbar-text navbar-right text-center">地址管理</p>
@@ -44,18 +44,18 @@
 
     <div style="height: 50px;"></div>
     <button class="btn btn-danger btn-block btn-lg navbar-fixed-bottom">
-        <a href="{{web_url('uc/address/post')}}"><i class="fa fa-plus"></i> 新建地址</a>
+        <a href="{{web_url('address/post')}}"><i class="fa fa-plus"></i> 新建地址</a>
     </button>
     <script>
         $("[name='isdefault']").click(function () {
             var id = $(this).val();
-            $.get("{{web_url('uc/address/changeDefault')}}&id=" + id, function () {
+            $.get("{{web_url('address/changeDefault')}}&id=" + id, function () {
                 location.reload(true);
             })
         })
         function del(id) {
             util.confirm('确定删除吗', function () {
-                $.get("{{web_url('uc/address/remove')}}&id=" + id, function () {
+                $.get("{{web_url('address/remove')}}&id=" + id, function () {
                     location.reload(true);
                 })
             }, {width: ''})
