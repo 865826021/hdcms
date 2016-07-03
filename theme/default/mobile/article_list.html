@@ -4,51 +4,15 @@
 <block name="content">
     <!--头部导航-->
     <line action="article.mobile_header"/>
-    <div class="category">
-        <ul>
-            <tag action="article.category" cid="1,9,11,12,10">
-                <li>{{$field['icon']}} <p>
-                    <a href="{{$field['cat_url']}}">{{$field['cat_name']}}</a>
-                </p></li>
-            </tag>
-        </ul>
-    </div>
-
     <ul class="list-group">
-        <pagelist row="10">
+        <tag action="article.pagelist" row="1">
             <li class="list-group-item">
                 <a href="{{$field['url']}}">
+                    [<a href="{{$field['category']['url']}}">{{$field['category']['title']}}</a>]
                     {{mb_substr($field['title'],0,20,'utf8')}}
                 </a>
             </li>
-        </pagelist>
+        </tag>
     </ul>
-    <pagenum/>
+    <line action="article.pagenum"/>
 </block>
-<style>
-    .category {
-        padding: 10px;
-        background: #333;
-    }
-
-    .category ul {
-        padding: 0px;
-        margin: 0px;
-        display : flex;
-        justify-content: space-between;
-        list-style : none;
-    }
-
-    .category ul li {
-        flex-grow : 1;
-        text-align: center;
-        color:#fff !important;
-    }
-    .category ul li i{
-        font-size:25px !important;
-        color:#fff !important;
-    }
-    .category ul li p{
-        margin: 0px;
-    }
-</style>

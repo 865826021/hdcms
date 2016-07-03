@@ -179,9 +179,9 @@ str;
 
 	//栏目列表
 	public function category( $attr, $content ) {
-		$cid = isset($attr['cid'])?$attr['cid']:'';
+		$cid = isset( $attr['cid'] ) ? $attr['cid'] : '';
 		$php
-			= <<<str
+		     = <<<str
 <?php
 \$cid = array_filter(explode(',','$cid'));
 \$db =  Db::table('web_category')->where('siteid',SITEID);
@@ -191,7 +191,7 @@ if(\$cid){
 \$_category =\$db->get();
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['cat_url']=empty(\$field['cat_linkurl'])?__ROOT__."/index.php?a=entry/category&m=article&siteid={\$field['siteid']}&cid={\$field['cid']}":\$field['cat_linkurl'];
+    \$field['url']=empty(\$field['cat_linkurl'])?__ROOT__."/index.php?a=entry/category&t=web&m=article&siteid={\$field['siteid']}&cid={\$field['cid']}":\$field['cat_linkurl'];
     \$css = json_decode(\$field['css']);
     if(!empty(\$field['icon'])){
                 //有图标 2
@@ -203,6 +203,73 @@ foreach(\$_category as \$field){
 ?>
 $content
 <?php }?>
+str;
+
+		return $php;
+	}
+
+	//栏目列表数据
+	public function pagelist( $attr, $content ) {
+		$row       = isset( $attr['row'] ) ? $attr['row'] : 10;
+		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
+		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
+		$php
+		           = <<<str
+        <?php
+        \$db = Db::table('web_article')->where('category_cid',q('get.cid',0,'intval'))->where('siteid',SITEID);
+        //头条
+        if($ishot){
+            \$db->where('ishot',1);
+        }
+        if($iscommend){
+            \$db->where('iscommend',1);
+        }
+        \$count = \$db->count();
+        \$page_show = Page::pageNum(8)->row($row)->make(\$count);
+        \$db = Db::table('web_article')->where('category_cid',q('get.cid',0,'intval'))->where('siteid',SITEID);
+        //头条
+        if($ishot){
+            \$db->where('ishot','=',1);
+        }
+        if($iscommend){
+            \$db->where('iscommend','=',1);
+        }
+        \$_data=\$db->limit(Page::limit())->get();
+        //栏目数据
+        \$_category = Db::table('web_category')->where('cid',q('get.cid',0,'intval'))->where('siteid',SITEID)->first();
+        //栏目链接
+        \$_category['url']=empty(\$_category['cat_linkurl'])?__ROOT__."/index.php?a=/entry/category&m=article&t=web&siteid={\$_category['siteid']}&cid={\$_category['cid']}":\$_category['cat_linkurl'];
+            //栏目图标
+            \$css = unserialize(\$_category['css']);
+            if(\$_category['icontype']==1){
+                //字体图标
+                \$_category['icon']='<i class="'.\$css['icon'].'" style="color:'.\$css['color'].';font-size:'.\$css['size'].'px;"></i>';
+            }else{
+				//图片图标
+                \$_category['icon']='<i class="icon" style="background:url(\''.\$css['image'].'\') no-repeat;background-size:cover;"></i>';
+            }
+        foreach(\$_data as \$field){
+            \$field['category']=\$_category;
+            //文章缩略图
+            if(!empty(\$field['thumb'])){
+                \$field['thumb']=__ROOT__."/{\$field['thumb']}";
+            }
+            //文章链接
+            \$field['url']=empty(\$field['linkurl'])?__ROOT__."/index.php?a=/entry/content&m=article&t=web&siteid={\$_category['siteid']}&cid={\$_category['cid']}&aid={\$field['aid']}":\$field['linkurl'];
+        ?>
+        $content
+        <?php }?>
+str;
+
+		return $php;
+
+	}
+
+	//页码
+	public function pagenum() {
+		$php
+			= <<<str
+        <?php echo isset(\$page_show)?\$page_show:'';?>
 str;
 
 		return $php;

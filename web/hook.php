@@ -16,8 +16,23 @@ class hook {
 	public function app_begin() {
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', FALSE );
+		//域名检测
+		$this->checkDomain();
 		$this->moduleInitialize();
 		$this->siteInitialize();
+	}
+
+	//域名检测
+	protected function checkDomain() {
+		if ( empty( $_SERVER['QUERY_STRING'] ) ) {
+			$domain = 'http://' . trim( $_SERVER['HTTP_HOST'], '/' );
+			if ( $web = Db::table( 'web' )->where( 'domain', $domain )->first() ) {
+				$_GET['siteid'] = $web['id'];
+				$_GET['a']      = 'entry/home';
+				$_GET['m']      = 'article';
+				$_GET['t']      = 'web';
+			}
+		}
 	}
 
 	//模块初始化
