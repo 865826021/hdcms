@@ -31,6 +31,10 @@
 				<i class="fa fa-cubes"></i>
 				<span>模块</span>
 			</a>
+			<a href="?s=system/template/design" class="tile img-rounded">
+				<i class="fa fa-file-code-o"></i>
+				<span>模板</span>
+			</a>
 		</div>
 	<?php endif; ?>
 	<h5 class="page-header">用户管理</h5>

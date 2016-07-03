@@ -40,7 +40,7 @@ class Module {
 			} else {
 				//本地模块
 				$modules[ $k ]['type']  = 2;
-				$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic-small.jpg";
+				$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
 			}
 		}
 		View::with( 'modules', $modules )->make();

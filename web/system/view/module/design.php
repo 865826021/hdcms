@@ -20,7 +20,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块名称</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="title">
+					<input type="text" class="form-control" name="title">
 					<span class="help-block">模块的名称, 由于显示在用户的模块列表中. 不要超过10个字符 </span>
 				</div>
 			</div>
@@ -28,7 +28,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块标识</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="name">
+					<input type="text" class="form-control" name="name">
 					<span class="help-block">模块标识符, 对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能由字母数字下划线组成 </span>
 				</div>
 			</div>
@@ -36,7 +36,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">版本</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="version">
+					<input type="text" class="form-control" name="version">
 					<span class="help-block">模块当前版本, 此版本号用于模块的版本更新 </span>
 				</div>
 			</div>
@@ -59,7 +59,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块简述</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="resume">
+					<input type="text" class="form-control" name="resume">
 					<span class="help-block">模块功能描述, 使用简单的语言描述模块的作用, 来吸引用户 </span>
 				</div>
 			</div>
@@ -75,7 +75,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">作者</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="author">
+					<input type="text" class="form-control" name="author">
 					<span class="help-block">模块的作者, 留下你的大名吧 </span>
 				</div>
 			</div>
@@ -83,7 +83,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">发布页</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" placeholder="" name="url" value="http://open.hdcms.com">
+					<input type="text" class="form-control" name="url" value="http://open.hdcms.com">
 					<span class="help-block">模块的发布页, 用于发布模块更新信息的页面 </span>
 				</div>
 			</div>
