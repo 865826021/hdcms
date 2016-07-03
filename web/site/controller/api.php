@@ -51,7 +51,8 @@ class Api {
 
 	//消息处理
 	private function processor( $content ) {
-		$sql = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 ";
+		$content = trim( $content );
+		$sql     = "SELECT * FROM " . tablename( 'rule_keyword' ) . " WHERE status=1 ";
 		$sql .= "AND siteid=" . SITEID . " ORDER BY rank DESC,type DESC";
 		$keys = Db::query( $sql );
 		foreach ( $keys as $key ) {
