@@ -45,5 +45,7 @@
     </nav>
 </widget>
 <!--会员卡底部 end-->
+<!--快捷导航-->
+<line action="uc.quick_menu"/>
 </body>
 </html>

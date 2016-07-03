@@ -132,7 +132,7 @@
                             cancelText: "关闭",
                             change: function (color) {
                                 if ($.isFunction(options.callback)) {
-                                    options.callback(color);
+                                    options.callback(color+'');
                                 }
                             },
                             palette: [

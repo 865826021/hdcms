@@ -124,7 +124,7 @@ if ( ! function_exists( 'p' ) ) {
  */
 if ( ! function_exists( 'clientIp' ) ) {
 	function clientIp() {
-		return Request::ip();
+		return \Request::ip();
 	}
 }
 /**

@@ -36,7 +36,7 @@ class WebCategory extends Model {
 			[ 'template_tid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'linkurl', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'ishomepage', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'css', 'serialize', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'css', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'isnav', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];

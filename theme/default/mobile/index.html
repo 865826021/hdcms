@@ -1,41 +1,92 @@
 <extend file="resource/view/mobile"/>
+<block name="title">{{$hdcms['title']}}</block>
+<link rel="stylesheet" href="{{__TEMPLATE__}}/css/index.css"/>
 <block name="content">
-    <link rel="stylesheet" href="{{__TEMPLATE__}}/css/index.css"/>
+    <div class="slide">
+        <line action="article.slide" color="#fff" height="200" autoplay="2000"/>
+    </div>
     <div class="menu">
-        <mobile_nav position="1">
-            <a href="{{$field['url']}}">
-                {{$field['icon']}}
-                {{$field['name']}}
-            </a>
-        </mobile_nav>
+        <tag action="article.mobile_nav" position="1">
+            <a href="{{$field['url']}}">{{$field['icon']}}{{$field['name']}}</a>
+        </tag>
+    </div>
+    <br/>
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">头条文章</h3>
+        </div>
+        <ul class="list-group">
+            <tag action="article.lists" row="10" cid="1" istop="1" titlelen="20">
+                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
+            </tag>
+        </ul>
+    </div>
+    <!--栏目列表-->
+    <div class="text-center row">
+        <div class="col-xs-12">
+            <tag action="article.category">
+                <a href="{{$field['url']}}" class="btn btn-success">{{$field['title']}}</a>
+            </tag>
+        </div>
+    </div>
+    <br/>
+    <!--栏目列表 end-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">推荐文章</h3>
+        </div>
+        <ul class="list-group">
+            <tag action="article.lists" row="10" cid="1" iscommend="1">
+                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
+            </tag>
+        </ul>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">最新文章</h3>
+        </div>
+        <ul class="list-group">
+            <tag action="article.lists" row="10" order="new">
+                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
+            </tag>
+        </ul>
     </div>
     <!--快捷导航-->
-    <div class="quick-menu">
-        <mobile_quick_menu/>
-    </div>
+    <line action="uc.quick_menu"/>
 </block>
 
 <style>
+    body {
+        background : #eeeeee !important;
+    }
+
+    .quickmenu_normal {
+        background : #f3f3f3;
+    }
+
+    div.slide .title {
+        background : #990000;
+        opacity    : .6;
+    }
+
     .menu {
-        display : flex;
+        display    : flex;
+        background : #dddddd;
     }
 
     .menu a {
         flex-grow       : 1;
-        background      : #2d64b3;
+        background      : #dddddd;
         text-align      : center;
         text-decoration : none;
-        color           : #fff;
         margin          : 5px;
-        border-radius   : 5px;
+        border-radius   : 2px;
     }
 
     .menu a i {
-        width     : 45px;
-        height    : 45px;
         font-size : 35px;
         display   : block;
-        color     : #fff !important;
         margin    : 5px auto;
     }
 </style>

@@ -1,16 +1,6 @@
 <?php
 namespace module\uc;
 class tag {
-	/**
-	 * @param array $attr 属性
-	 * @param string $content 内容
-	 *
-	 * @return mixed
-	 */
-	public function news( $attr, $content ) {
-		//代码...
-	}
-
 	//快捷导航
 	public function quick_menu( $attr ) {
 		$php

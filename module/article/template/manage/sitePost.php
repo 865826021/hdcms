@@ -15,6 +15,16 @@
 				<h3 class="panel-title">站点信息</h3>
 			</div>
 			<div class="panel-body">
+				<if value="q('get.webid')">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">站点链接</label>
+						<div class="col-sm-10">
+							<p class="form-control-static">
+								{{__ROOT__}}/?a=entry/home&m=article&t=web&webid={{$_GET['webid']}}&t=web
+							</p>
+						</div>
+					</div>
+				</if>
 				<div class="form-group">
 					<label class="col-sm-2 control-label star">站点名称</label>
 					<div class="col-sm-9">

@@ -47,7 +47,7 @@ class manage extends hdSite {
 		$data = Db::table( 'web' )->where( 'siteid', '=', SITEID )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], TRUE );
-			$data[ $k ]['url']       = '?a=article/entry/home&webid=' . $v['id'];
+			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid='.SITEID.'&webid=' . $v['id'];
 		}
 		View::with( 'data', $data )->make( $this->template . '/manage/site.php' );
 	}
@@ -93,7 +93,7 @@ class manage extends hdSite {
 			$cover['title']       = $data['name'];
 			$cover['description'] = $data['description'];
 			$cover['thumb']       = $data['thumb'];
-			$cover['url']         = '?a=article/entry/home&siteid=' . v( "site.siteid" ) . '&web_id=' . $web_id;
+			$cover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web_id;
 			$action               = empty( $data['reply_cover_id'] ) ? 'add' : 'save';
 			if ( ! $replyCover->$action( $cover ) ) {
 				message( $replyCover->getError(), 'back', 'error' );
@@ -122,6 +122,10 @@ class manage extends hdSite {
 
 	//删除站点
 	public function doSiteDel() {
-
+		if ( ( new Web() )->remove( q( 'get.webid' ) ) ) {
+			message( '删除站点成功', '', 'success' );
+		} else {
+			message( '站点删除失败', '', 'error' );
+		}
 	}
 }

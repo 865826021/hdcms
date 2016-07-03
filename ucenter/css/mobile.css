@@ -353,6 +353,7 @@ img {
   border-top: solid 1px #dddddd;
   height: 35px;
   font-size: 12px;
+  background: #dcdcdc !important;
 }
 .quickmenu_normal .home {
   width: 50px;

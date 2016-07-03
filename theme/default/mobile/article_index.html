@@ -1,9 +1,10 @@
-<extend file="web/resource/view/mobile"/>
+<extend file="resource/view/mobile"/>
+<!--设置页面title-->
+<block name="title">{{$hdcms['title']}}</block>
 <block name="content">
-    <!--头部导航条-->
-    <mobile_header/>
+    <!--头部导航-->
+    <line action="article.mobile_header"/>
     <slide color="#333" height="80" autoplay="2000"/>
-
     <div class="category">
         <ul>
             <category cid="9,11,12,10">
@@ -13,7 +14,6 @@
             </category>
         </ul>
     </div>
-
     <img src="{{__TEMPLATE__}}/images/img2016032812271504336.jpg" alt="">
     <ul class="list-group">
         <pagelist row="10">
@@ -26,8 +26,6 @@
         </pagelist>
     </ul>
     <pagenum/>
-    <!--快捷导航-->
-    <mobile_quick_menu/>
 </block>
 
 <style>

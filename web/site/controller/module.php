@@ -148,11 +148,9 @@ class Module {
 	public function entry() {
 		switch ( q( 'get.t' ) ) {
 			case 'site':
-				$this->site();
-				break;
+				return $this->site();
 			case 'web':
-				$this->web();
-				break;
+				return $this->web();
 			default:
 				message( '你访问的页面不存在', 'back', 'warning' );
 		}
@@ -183,7 +181,8 @@ class Module {
 			message( '访问的模块不存在', 'back', 'error' );
 		}
 		$obj = new $class();
-		$obj->$action();
+
+		return $obj->$action();
 	}
 
 	//模块业务
@@ -199,6 +198,7 @@ class Module {
 			message( '访问的模块不存在', 'back', 'error' );
 		}
 		$obj = new $class();
-		$obj->$action();
+
+		return $obj->$action();
 	}
 }

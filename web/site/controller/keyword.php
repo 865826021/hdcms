@@ -27,6 +27,7 @@ class Keyword {
 			$db->where( 'rule.rid', '<>', $rid );
 		}
 		if ( $res = $db->field( 'rule.rid,rule.name,rule.module' )->first() ) {
+			$module = Db::table( 'modules' )->where( 'name', $res['module'] )->first();
 			switch ( $res['module'] ) {
 				case 'basic':
 					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=basic&rid=" . $res['rid'] . "&m=basic'>" . "文本消息 \"" . $res['name'] . "\"</a> 规则中";
@@ -38,7 +39,7 @@ class Keyword {
 					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . "封面消息 \"" . $res['name'] . "\"</a> 规则中";
 					break;
 				default:
-					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . $res['name'] . "</a> 规则中";
+					$message = "该关键字已存在于 <a href='javascript:;'>" . $module['title']." ".$res['name'] . "</a> 规则中";
 			}
 		}
 		if ( $res ) {

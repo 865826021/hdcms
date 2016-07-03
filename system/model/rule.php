@@ -29,7 +29,12 @@ class Rule extends Model {
 		];
 
 	protected function validateRid( $field, $val ) {
-		return Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'rid', $val )->get() ? TRUE : FALSE;
+		$rule = Db::table( 'rule' )->where( 'rid', $val )->first();
+		if ( ! empty( $rule ) && $rule['siteid'] != SITEID ) {
+			return FALSE;
+		}
+
+		return TRUE;
 	}
 
 	protected $filter

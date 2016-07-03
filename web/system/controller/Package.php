@@ -55,7 +55,7 @@ class Package {
 		$field             = Db::table( 'package' )->where( 'id', q( 'get.id' ) )->first();
 		$field['modules']  = unserialize( $field['modules'] ) ?: [ ];
 		$field['template'] = unserialize( $field['template'] ) ?: [ ];
-		$modules           = Db::table( 'modules' )->get();
+		$modules           = Db::table( 'modules' )->orderBy('is_system','DESC')->get();
 		$templates           = Db::table( 'template' )->get();
 		View::with( 'modules', $modules );
 		View::with( 'templates', $templates );

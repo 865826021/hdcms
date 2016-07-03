@@ -57,25 +57,15 @@ class Controller {
 			}
 		}
 		$controller = Route::$app->make( $class, TRUE );
-		if ( ! method_exists( $controller, ACTION ) ) {
-			if ( method_exists( $controller, '__empty' ) ) {
-				call_user_func_array( [ $controller, '__empty' ], [ ] );
-			} else {
-				if ( DEBUG ) {
-					throw new Exception( ACTION . "方法不存在" );
-				} else {
-					_404();
-				}
-			}
-		}
+		$action = method_exists( $controller, ACTION )?ACTION:'__empty';
 		//执行中间件
-		Middleware::run();
+		\Middleware::run();
 		//执行动作
 		try {
-			$action = new ReflectionMethod( $controller, ACTION );
-			if ( $action->isPublic() ) {
+			$reflection = new ReflectionMethod( $controller, $action );
+			if ( $reflection->isPublic() ) {
 				//执行动作
-				if ( $result = call_user_func_array( [ $controller, ACTION ], [ ] ) ) {
+				if ( $result = call_user_func_array( [ $controller, $action ], [ ] ) ) {
 					if ( IS_AJAX ) {
 						\Response::ajax( $result );
 					} else {

@@ -148,6 +148,7 @@ abstract class Connection implements ArrayAccess, Iterator {
 		//准备sql
 		$sth = $this->getLink( TRUE )->prepare( $sql );
 		//绑定参数
+		$params = $this->setParamsSort( $params );
 		foreach ( (array) $params as $key => $value ) {
 			$sth->bindParam( $key, $params[ $key ], is_numeric( $value ) ? PDO::PARAM_INT : PDO::PARAM_STR );
 		}
@@ -164,6 +165,7 @@ abstract class Connection implements ArrayAccess, Iterator {
 				'sql'    => $sql,
 				'params' => $params
 			] );
+
 			return TRUE;
 		} catch ( Exception $e ) {
 			if ( DEBUG ) {
@@ -173,6 +175,26 @@ abstract class Connection implements ArrayAccess, Iterator {
 				return FALSE;
 			}
 		}
+	}
+
+	/**
+	 * 当绑定的参数以零开始编号时,设置为以壹开始编号
+	 * 这样才可以使用预准备
+	 *
+	 * @param array $params
+	 *
+	 * @return array
+	 */
+	public function setParamsSort( array $params ) {
+		if ( is_numeric( key( $params ) ) && key( $params ) == 0 ) {
+			$tmp = [ ];
+			foreach ( $params as $key => $value ) {
+				$tmp[ $key + 1 ] = $value;
+			}
+			$params = $tmp;
+		}
+
+		return $params;
 	}
 
 	/**
@@ -191,6 +213,7 @@ abstract class Connection implements ArrayAccess, Iterator {
 		//设置保存数据
 		$sth->setFetchMode( PDO::FETCH_ASSOC );
 		//绑定参数
+		$params = $this->setParamsSort( $params );
 		foreach ( (array) $params as $key => $value ) {
 			$sth->bindParam( $key, $params[ $key ], is_numeric( $params[ $key ] ) ? PDO::PARAM_INT : PDO::PARAM_STR );
 		}

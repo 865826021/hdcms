@@ -35,7 +35,7 @@
 							<a href="{{site_url('sitePost')}}&webid={{$d['id']}}">编辑</a>
 							<a href="{{site_url('slide/lists')}}&webid={{$d['id']}}">幻灯片</a>
 							<a href="{{u('site/nav/lists')}}&entry=home&webid={{$d['id']}}">微站导航菜单</a>
-							<a href="javascript:;" url="{{$d['url']}}&t=web" class="copy">复制链接</a>
+							<a href="javascript:;" url="{{__ROOT__}}/{{$d['url']}}&t=web" class="copy">复制链接</a>
 							<a href="javascript:preview('{{$d['url']}}&t=web&mobile=1');">预览</a>
 							<if value="$key gt 0">
 								<a href="javascript:;" onclick="del({{$d['id']}})">删除</a>
@@ -63,9 +63,15 @@
 	});
 	//删除站点
 	function del(webid) {
-		$.get("{{site_url('del')}}", {webid: webid}, function (res) {
-			console.log(res);
-		}, 'json');
+		util.confirm('确定删除该站点吗?', function () {
+			$.get("{{site_url('del')}}", {webid: webid}, function (res) {
+				if (res.valid) {
+					util.message(res.message, 'refresh', 'success');
+				} else {
+					util.message(res.message, '', 'error');
+				}
+			}, 'json');
+		});
 	}
 	//预览
 	function preview(url) {
@@ -76,6 +82,7 @@
 				content: '<iframe width="320" height="480" src="' + url + '" frameborder="0"></iframe>',//内容
 				footer: '<button type="button" class="btn btn-default confirm" data-dismiss="modal">关闭</button>',//底部
 				width: 322,//宽度
+				height:480,//高度
 			});
 			//显示模态框
 			obj.modal('show');

@@ -1,14 +1,16 @@
-<extend file="web/resource/view/mobile"/>
+<extend file="resource/view/mobile"/>
+<!--设置页面title-->
+<block name="title">{{$hdcms['title']}}</block>
 <block name="content">
-    <!--头部导航条-->
-    <mobile_header/>
+    <!--头部导航-->
+    <line action="article.mobile_header"/>
     <div class="category">
         <ul>
-            <category cid="9,11,12,10">
+            <tag action="article.category" cid="1,9,11,12,10">
                 <li>{{$field['icon']}} <p>
                     <a href="{{$field['cat_url']}}">{{$field['cat_name']}}</a>
                 </p></li>
-            </category>
+            </tag>
         </ul>
     </div>
 
@@ -16,17 +18,13 @@
         <pagelist row="10">
             <li class="list-group-item">
                 <a href="{{$field['url']}}">
-
                     {{mb_substr($field['title'],0,20,'utf8')}}
                 </a>
             </li>
         </pagelist>
     </ul>
     <pagenum/>
-    <!--快捷导航-->
-    <mobile_quick_menu/>
 </block>
-
 <style>
     .category {
         padding: 10px;

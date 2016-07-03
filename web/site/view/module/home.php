@@ -4,7 +4,7 @@
 		<li role="presentation" class="active"><a href="#">扩展功能概况 - {{v('module.title')}}</a></li>
 	</ul>
 	<div class="page-header">
-		<h4>核心功能设置</h4>
+		<h4>核心功能</h4>
 		<div class="menuLists clearfix">
 			<if value="$_site_modules_menu_['budings']['cover']">
 				<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
@@ -34,31 +34,33 @@
 			</if>
 			<if value="!empty($_site_modules_menu_['budings']['profile'])">
 				<a href="?s=site/nav/lists&entry=profile&m={{$_site_modules_menu_['name']}}">
-					<i class="fa fa-comments"></i>
+					<i class="fa fa-github"></i>
 					<span>手机个人中心导航</span>
 				</a>
 			</if>
 			<if value="!empty($_site_modules_menu_['budings']['member'])">
 				<a href="?s=site/nav/lists&entry=member&m={{$_site_modules_menu_['name']}}">
-					<i class="fa fa-comments"></i>
+					<i class="fa fa-renren"></i>
 					<span>桌面个人中心导航</span>
 				</a>
 			</if>
 		</div>
 	</div>
-	<div class="page-header">
-		<h4>业务菜单</h4>
-		<div class="menuLists clearfix">
-			<if value="$_site_modules_menu_['budings']['business']">
+	<if value="$_site_modules_menu_['budings']['business']">
+		<div class="page-header">
+			<h4>业务菜单</h4>
+			<div class="menuLists clearfix">
+
 				<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
 					<a href="?s=site/module/business&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
-						<i class="fa fa-comments"></i>
+						<i class="fa fa-check-square-o"></i>
 						<span>{{$f['title']}}</span>
 					</a>
 				</foreach>
-			</if>
+
+			</div>
 		</div>
-	</div>
+	</if>
 </block>
 <style>
 	.menuLists a {
@@ -67,7 +69,7 @@
 		text-align   : center;
 		margin-right : 1.2em;
 		padding      : 8px 5px;
-		min-width        : 7em;
+		min-width    : 7em;
 		height       : 7em;
 		overflow     : hidden;
 		color        : #333;

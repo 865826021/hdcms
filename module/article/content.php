@@ -42,7 +42,7 @@ class content extends hdSite {
 
 	//添加栏目
 	public function doSiteCategory() {
-		$data = $this->webCategory->where( 'siteid', SITEID )->get();
+		$data = $this->webCategory->where( 'siteid', SITEID )->orderBy('cid','ASC')->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['url'] = __ROOT__ . '/index.php?s=content/home/category&siteid=' . v( 'site.siteid' ) . '&cid=' . $v['cid'];
 		}
@@ -67,8 +67,8 @@ class content extends hdSite {
 			//是添加微站首页导航
 			if ( $data['isnav'] ) {
 				$nav['name']         = $data['title'];
-				$nav['url']          = $data['linkurl'] ?: '?a=article/entry/category&t=web&siteid=' . SITEID . '&cid=' . $data['cid'];
-				$nav['css']          = serialize( $data['css'] );
+				$nav['url']          = $data['linkurl'] ?: '?a=entry/category&t=web&m=article&siteid=' . SITEID . '&cid=' . $data['cid'];
+				$nav['css']          = $data['css'];
 				$nav['entry']        = 'home';
 				$nav['icontype']     = $data['icontype'];
 				$nav['category_cid'] = $cid;
@@ -99,7 +99,7 @@ class content extends hdSite {
 		if ( $this->cid ) {
 			//编辑
 			$field        = $this->webCategory->where( 'cid', $cid )->first();
-			$field['css'] = unserialize( $field['css'] );
+			$field['css'] = json_decode( $field['css'], TRUE );
 			//栏目模板
 			$template = Db::table( 'template' )->find( $field['template_tid'] );
 		} else {

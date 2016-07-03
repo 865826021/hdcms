@@ -1,7 +1,10 @@
-<extend file="web/resource/view/mobile"/>
+<extend file="resource/view/mobile"/>
+<!--设置页面title-->
+<block name="title">{{$hdcms['title']}}</block>
 <link rel="stylesheet" href="{{__TEMPLATE__}}/css/article.css">
 <block name="content">
-    <mobile_header>{{mb_substr($hdcms['title'],0,16,'utf8')}}</mobile_header>
+    <!--头部导航-->
+    <line action="article.mobile_header"/>
     <div class="wrap">
         <h3>
             {{$hdcms['title']}}
@@ -14,6 +17,4 @@
             {{$hdcms['content']}}
         </div>
     </div>
-    <!--快捷导航-->
-    <mobile_quick_menu/>
 </block>

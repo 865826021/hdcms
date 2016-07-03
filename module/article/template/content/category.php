@@ -2,7 +2,7 @@
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="active"><a href="#tab1">栏目管理</a></li>
-		<li><a href="?a=article/content/categoryPost&t=site">添加栏目</a></li>
+		<li><a href="?a=content/categoryPost&t=site&m=article">添加栏目</a></li>
 	</ul>
 	<form action="" method="post">
 		<div class="panel panel-default">
@@ -52,8 +52,8 @@
 	});
 
 	function del(cid) {
-		util.confirm('确定删除吗?', function () {
-			$.get('?a=article/content/removeCat&t=site&cid=' + cid, function (res) {
+		util.confirm('确定删除这个栏目吗?', function () {
+			$.get('?a=content/removeCat&m=article&t=site&cid=' + cid, function (res) {
 				if (res.valid) {
 					location.reload(true);
 				} else {

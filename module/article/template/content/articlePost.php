@@ -2,7 +2,7 @@
 <block name="content">
 	<form action="" method="post" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="MyController">
 		<ul class="nav nav-tabs" role="tablist">
-			<li><a href="?a=article/content/article&t=site">文章管理</a></li>
+			<li><a href="{{site_url('content/article')}}">文章管理</a></li>
 			<if value="q('get.aid')">
 				<li><a href="?a=article/content/articlePost&t=site&cid=0">发表文章</a></li>
 				<li class="active"><a href="javascript:;">编辑文章</a></li>
@@ -16,14 +16,14 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">排序</label>
+					<label class="col-sm-2 control-label">排序</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.orderby">
 						<span class="help-block">文章的显示顺序，越大则越靠前</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label star">标题</label>
+					<label class="col-sm-2 control-label star">标题</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.title" required="required">
 					</div>
@@ -40,12 +40,13 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">文章触发关键字</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.keyword">
+						<input type="text" class="form-control" ng-model="field.keyword" ng-blur="checkWxKeyword($event,field.rid)">
+						<span class="help-block has_keyword"></span>
 						<span class="help-block">添加关键字以后,系统将生成一条图文规则,用户可以通过输入关键字来阅读文章。多个关键字请用英文“,”隔开</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">自定义属性</label>
+					<label class="col-sm-2 control-label">自定义属性</label>
 					<div class="col-sm-9">
 						<label class="checkbox-inline">
 							<input type="checkbox" ng-true-value="1" ng-model="field.ishot"> 头条
@@ -57,19 +58,19 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">文章来源</label>
+					<label class="col-sm-2 control-label">文章来源</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.source">
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">文章作者</label>
+					<label class="col-sm-2 control-label">文章作者</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.author">
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">缩略图</label>
+					<label class="col-sm-2 control-label">缩略图</label>
 					<div class="col-sm-9">
 						<div class="input-group">
 							<input type="text" class="form-control" ng-model="field.thumb">
@@ -85,27 +86,28 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">选择内容模板</label>
+					<label class="col-sm-2 control-label">选择内容模板</label>
 					<div class="col-sm-9">
-						<select class="js-example-basic-single form-control" ng-model="field.template_tid" ng-options="a.tid as a.title for a in template">
+						<select class="js-example-basic-single form-control" ng-model="field.template_tid"
+						        ng-options="a.tid as a.title for a in template">
 							<option value="">选择模板风格</option>
 						</select>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">简介</label>
+					<label class="col-sm-2 control-label">简介</label>
 					<div class="col-sm-9">
 						<textarea name="description" rows="4" class="form-control" ng-model="field.description"></textarea>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label star">内容</label>
+					<label class="col-sm-2 control-label star">内容</label>
 					<div class="col-sm-9">
 						<textarea id="container" style="height:300px;width:100%;"></textarea>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">直接链接</label>
+					<label class="col-sm-2 control-label">直接链接</label>
 					<div class="col-sm-9">
 						<div class="input-group">
 							<input type="text" class="form-control" aria-label="..." ng-model="field.linkurl">
@@ -120,7 +122,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">阅读次数</label>
+					<label class="col-sm-2 control-label">阅读次数</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.click">
 						<span class="help-block">默认为0。您可以设置一个初始值,阅读次数会在该初始值上增加。</span>
@@ -181,6 +183,10 @@
 					$scope.$apply();
 				});
 			});
+			//验证关键词
+			$scope.checkWxKeyword=function(e,rid){
+				util.checkWxKeyword(e.target,rid);
+			}
 			$('form').submit(function () {
 				if (!$scope.field.content) {
 					util.message('内容不能为空', '', 'error');
@@ -188,6 +194,10 @@
 				}
 				if (!$scope.field.category_cid) {
 					util.message('请选择文章栏目', '', 'error');
+					return false;
+				}
+				if ($.trim($(".has_keyword").text())) {
+					util.message('关键词已经被使用', '', 'error');
 					return false;
 				}
 				$("[name='data']").val(angular.toJson($scope.field));
