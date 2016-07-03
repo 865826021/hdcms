@@ -28,7 +28,7 @@ class entry {
 
 	public function __construct() {
 		$this->dir   = IS_MOBILE ? 'mobile' : 'web';
-		$this->webid = q( 'get.webid', Session::get( 'webid' ), 'intval' );
+		$this->webid = isset( $_GET['webid'] ) ? intval( $_GET['webid'] ) : Session::get( 'webid' );
 		if ( ! $this->webid ) {
 			$web         = ( new Web() )->getDefaultWeb();
 			$this->webid = $web['id'];
@@ -51,9 +51,8 @@ class entry {
 	public function doWebCategory() {
 		$cid = q( 'get.cid', 0, 'intval' );
 		$cat = Db::table( 'web_category' )
-		         ->field( 'title cat_name,description cat_description,ishomepage' )
 		         ->where( 'siteid', SITEID )
-		         ->where( 'cid', '=', $cid )
+		         ->where( 'cid',$cid )
 		         ->first();
 		//模板风格编号,栏目没有选择时使用站点模块
 		if ( empty( $cat['template_tid'] ) ) {

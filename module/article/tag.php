@@ -4,7 +4,7 @@ class tag {
 	//获取文章
 	public function lists( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
-		$cid       = isset( $attr['cid'] ) ? $attr['cid'] : "''";
+		$cid       = isset( $attr['cid'] ) ? ($attr['cid'][0]=='$'?$attr['cid']:"'{$attr['cid']}'") : "''";
 		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
 		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
 		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
@@ -225,6 +225,7 @@ str;
             \$db->where('iscommend',1);
         }
         \$count = \$db->count();
+        unset(\$_GET['s']);
         \$page_show = Page::pageNum(8)->row($row)->make(\$count);
         \$db = Db::table('web_article')->where('category_cid',q('get.cid',0,'intval'))->where('siteid',SITEID);
         //头条

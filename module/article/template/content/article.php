@@ -11,6 +11,7 @@
 					<thead>
 					<tr>
 						<th width="150">排序</th>
+						<th>栏目编号</th>
 						<th>标题</th>
 						<th>属性</th>
 						<th width="150">操作</th>
@@ -21,6 +22,7 @@
 						<td>
 							<input type="text" class="form-control" ng-model="field.orderby">
 						</td>
+						<td ng-bind="field.category_cid"></td>
 						<td ng-bind="field.title"></td>
 						<td>
 							<span class="label label-danger" ng-if="field.ishot==1">头条</span>

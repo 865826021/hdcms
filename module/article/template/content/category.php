@@ -14,6 +14,7 @@
 						<th width="80">编号</th>
 						<th width="100">显示顺序</th>
 						<th>分类名称</th>
+						<th>封面栏目</th>
 						<th>微站首页导航</th>
 						<th width="200">操作</th>
 					</tr>
@@ -26,6 +27,7 @@
 								<input type="text" class="form-control" name="orderby[{{$d['cid']}}]" value="{{$d['orderby']}}">
 							</td>
 							<td>{{$d['_title']}}</td>
+							<td>{{$d['ishomepage']?'是':'否'}}</td>
 							<td>{{$d['ishomepage']?'是':'否'}}</td>
 							<td>
 								<a href="javascript:;" class="copy" url='{{$d["url"]}}'>复制链接</a>
