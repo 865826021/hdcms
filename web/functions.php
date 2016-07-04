@@ -78,3 +78,23 @@ function auth( $identify, $type ) {
 		message( '你没有操作权限', u( 'site/entry/refer', [ 'siteid' => SITEID ] ), 'warning' );
 	}
 }
+
+/**
+ * 调用模块方法
+ *
+ * @param string $module 模块.方法
+ * @param array $params 方法参数
+ *
+ * @return mixed
+ */
+function api( $module, $params ) {
+	static $instance = [ ];
+	$info = explode( '.', $module );
+	if ( ! isset( $instance[ $module ] ) ) {
+		$data                = Db::table( 'modules' )->where( 'name', $info[0] )->first();
+		$class               = 'addons\\' . $data['name'] . '\api';
+		$instance[ $module ] = new $class;
+	}
+
+	return call_user_func_array( [ $instance[ $module ], $info[1] ], $params );
+}
