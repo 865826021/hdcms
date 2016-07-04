@@ -31,7 +31,7 @@ class Module {
 
 	//已经安装模块
 	public function installed() {
-		$modules = $this->module->get();
+		$modules = $this->module->where( 'is_system', 0 )->get();
 		foreach ( $modules as $k => $m ) {
 			if ( $m['is_system'] ) {
 				//系统模块
@@ -474,6 +474,15 @@ str;
 			//获取模块xml数据
 			$manifest = Xml::toArray( file_get_contents( 'addons/' . $_POST['module'] . '/manifest.xml' ) );
 			$platform = $manifest['manifest']['platform'];
+			//添加数据
+			$installSql = trim( $manifest['manifest']['install']['@cdata'] );
+			if ( ! empty( $installSql ) ) {
+				if ( preg_match( '/.php$/', $installSql ) ) {
+					require 'addons/' . $_POST['module'] . '/' . $installSql;
+				} else {
+					Db::sql( $installSql );
+				}
+			}
 			//不需要对用户关键词进行响应的消息类型
 			$subscribes = [ ];
 			if ( ! empty( $platform['subscribes'] ) ) {
@@ -564,7 +573,7 @@ str;
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
-			(new Site())->updateAllSiteCache();
+			( new Site() )->updateAllSiteCache();
 			message( "模块安装成功", u( 'installed' ) );
 		}
 		$manifest = Xml::toArray( file_get_contents( 'addons/' . $_GET['module'] . '/manifest.xml' ) );
@@ -580,8 +589,18 @@ str;
 				'module'  => $_GET['module']
 			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $_GET['module'] ] ) );
 		}
+		$manifest = Xml::toArray( file_get_contents( 'addons/' . $_GET['module'] . '/manifest.xml' ) );
+		//卸载数据
+		$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
+		if ( ! empty( $installSql ) ) {
+			if ( preg_match( '/.php$/', $installSql ) ) {
+				require 'addons/' . $_POST['module'] . '/' . $installSql;
+			} else {
+				Db::sql( $installSql );
+			}
+		}
 		$this->module->remove( $_GET['module'], $_GET['confirm'] );
-		(new Site())->updateAllSiteCache();
+		( new Site() )->updateAllSiteCache();
 		message( '模块卸载成功', u( 'installed' ) );
 	}
 

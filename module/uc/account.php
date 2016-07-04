@@ -43,7 +43,7 @@ class account extends hdSite {
 				$balance['tid']        = $data['tid'];
 				Db::table( 'balance' )->insert( $balance );
 			}
-			Util::pay( $data );
+			Util::instance( 'pay' )->weixin( $data );
 		}
 		View::make( 'ucenter/balance.html' );
 	}
