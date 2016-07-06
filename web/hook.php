@@ -27,7 +27,8 @@ class hook {
 		if ( empty( $_SERVER['QUERY_STRING'] ) ) {
 			$domain = 'http://' . trim( $_SERVER['HTTP_HOST'], '/' );
 			if ( $web = Db::table( 'web' )->where( 'domain', $domain )->first() ) {
-				$_GET['siteid'] = $web['id'];
+				$_GET['siteid'] = $web['siteid'];
+				$_GET['webid']  = $web['id'];
 				$_GET['a']      = 'entry/home';
 				$_GET['m']      = 'article';
 				$_GET['t']      = 'web';

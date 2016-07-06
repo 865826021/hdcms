@@ -62,7 +62,7 @@ class Site {
 		}
 		//普通站长获取站点列表
 		if ( ! $this->user->isSuperUser() ) {
-			$db->where( 'user.uid', '=', Session::get( 'user.uid' ) );
+			$db->where( 'user.uid', Session::get( 'user.uid' ) );
 		}
 		$sites        = $db->get();
 		$packageModel = new Package();

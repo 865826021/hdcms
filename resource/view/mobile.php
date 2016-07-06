@@ -46,6 +46,8 @@
 </widget>
 <!--会员卡底部 end-->
 <!--快捷导航-->
+<if value="IS_MOBILE">
 <line action="uc.quick_menu"/>
+</if>
 </body>
 </html>
