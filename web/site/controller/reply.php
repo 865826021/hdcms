@@ -13,7 +13,6 @@ use system\model\Menu;
 use system\model\Rule;
 use system\model\RuleKeyword;
 use system\model\User;
-use system\model\UserPermission;
 
 /**
  * 关键词回复处理

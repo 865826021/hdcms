@@ -6,9 +6,9 @@
  * @author 后盾网
  * @url http://open.hdcms.com
  */
-use module\HdModule;
+use module\hdModule;
 
-class Module extends HdModule {
+class Module extends hdModule {
 
 	public function __construct() {
 		parent::__construct();
