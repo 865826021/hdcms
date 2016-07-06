@@ -61,7 +61,7 @@ class manage extends hdSite {
 			//添加微站
 			$web                 = $data;
 			$web['id']           = empty( $web['web_id'] ) ? 0 : $web['web_id'];
-			$web['template_tid'] = $data['template_tid'];
+			$web['template_name'] = $data['template_name'];
 			$web['title']        = $data['name'];
 			$web['site_info']    = $_POST['data'];
 			$action              = $this->webid ? 'save' : 'add';

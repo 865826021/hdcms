@@ -50,6 +50,7 @@ class Module {
 	public function prepared() {
 		$modules  = Db::table( 'modules' )->lists( 'name' );
 		$dirs     = Dir::tree( 'addons' );
+		//本地模块
 		$locality = [ ];
 		foreach ( $dirs as $d ) {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/manifest.xml' ) ) {

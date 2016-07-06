@@ -53,7 +53,7 @@
 					<div class="col-sm-9 box" ng-if="field.template_tid">
 						<div class="thumbnail">
 							<h5 ng-bind="field.template_title"></h5>
-							<img src="theme/@{{field.template_name}}/thumb.jpg">
+							<img src="theme/@{{field.template_name}}/@{{field.template_thumb}}">
 						</div>
 					</div>
 				</div>
@@ -62,7 +62,7 @@
 					<div class="col-sm-9">
 						<input type="text" class="form-control" required="required" ng-blur="checkWxKeyword($event)" ng-model="field.keyword"
 						       placeholder="请输入微信关键词">
-						<span class="help-block"></span>
+						<span class="help-block keyword_error"></span>
 						<span class="help-block">用户触发关键字，系统回复此页面的图文链接</span>
 					</div>
 				</div>
@@ -169,6 +169,9 @@
 				if (!$scope.field.thumb) {
 					msg += "请选择封面图片<br/>";
 				}
+				if ($(".keyword_error").text()) {
+					msg += "关键词已经存在<br/>";
+				}
 				if (!$scope.field.template_tid) {
 					msg += "请选择微站风格<br/>";
 				}
@@ -182,7 +185,7 @@
 				var modalobj = util.modal({
 					content: ["{{site_url('loadTpl')}}"],
 					title: '微站模板风格列表',
-					width: 800,
+					width: 850,
 					show: true,
 				});
 				modalobj.on('hidden.bs.modal', function () {
@@ -192,10 +195,12 @@
 					var name = $(this).attr('name');
 					var title = $(this).attr('title');
 					var id = $(this).attr('id');
+					var thumb = $(this).attr('thumb');
 					modalobj.modal('hide');
 					$scope.field.template_tid = id;
 					$scope.field.template_title = title;
 					$scope.field.template_name = name;
+					$scope.field.template_thumb = thumb;
 					$scope.$apply();
 				});
 			}

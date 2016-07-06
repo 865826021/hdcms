@@ -33,7 +33,7 @@
                 <foreach from="$data" value="$d">
                     <div class="thumbnail action">
                         <h5>{{$d['title']}}</h5>
-                        <img src="theme/{{$d['name']}}/thumb.jpg">
+                        <img src="theme/{{$d['name']}}/{{$d['thumb']}}">
                         <div class="caption">
                             <button type="button" class="btn btn-default btn-xs btn-block">预览</button>
                         </div>

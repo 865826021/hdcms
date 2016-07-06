@@ -38,7 +38,7 @@ class Template extends Model {
 	 * @throws \Exception
 	 */
 	public function getSiteAllTemplate( $siteid = NULL, $type = NULL ) {
-		$siteid = $siteid ?: Session::get( 'siteid' );
+		$siteid = $siteid ?: SITEID;
 		if ( empty( $siteid ) ) {
 			throw new \Exception( '$siteid 参数错误' );
 		}
@@ -65,7 +65,6 @@ class Template extends Model {
 				$templates = $this->whereIn( 'name', $templateNames )->get();
 			}
 		}
-
 		return $cache[ $siteid ] = $templates;
 	}
 
@@ -94,6 +93,7 @@ class Template extends Model {
 
 	/**
 	 * 删除模板
+	 *
 	 * @param $name 模板标识
 	 *
 	 * @return bool

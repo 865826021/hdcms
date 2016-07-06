@@ -13,6 +13,5 @@ class pay {
 
 	//异步通知
 	public function doWebAsync( $res ) {
-		file_put_contents( 'ccccccc.txt', var_export( $res, TRUE ) );
 	}
 }

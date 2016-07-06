@@ -18,7 +18,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">排序</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.orderby">
+						<input type="number" class="form-control" ng-model="field.orderby">
 						<span class="help-block">文章的显示顺序，越大则越靠前</span>
 					</div>
 				</div>
@@ -88,8 +88,8 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">选择内容模板</label>
 					<div class="col-sm-9">
-						<select class="js-example-basic-single form-control" ng-model="field.template_tid"
-						        ng-options="a.tid as a.title for a in template">
+						<select class="js-example-basic-single form-control" ng-model="field.template_name"
+						        ng-options="a.name as a.title for a in template">
 							<option value="">选择模板风格</option>
 						</select>
 					</div>

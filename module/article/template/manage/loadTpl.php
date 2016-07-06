@@ -2,9 +2,9 @@
     <foreach from="$data" value="$d">
         <div class="thumbnail">
             <h5>{{$d['title']}}</h5>
-            <img src="theme/{{$d['name']}}/thumb.jpg">
+            <img src="theme/{{$d['name']}}/{{$d['thumb']}}">
             <div class="caption">
-                <button type="button" class="btn btn-default btn-xs btn-block" id="{{$d['tid']}}" title="{{$d['title']}}" name="{{$d['name']}}" type="button">选择模板</button>
+                <button type="button" class="btn btn-default btn-xs btn-block" id="{{$d['tid']}}" thumb="{{$d['thumb']}}" title="{{$d['title']}}" name="{{$d['name']}}" type="button">选择模板</button>
             </div>
         </div>
     </foreach>

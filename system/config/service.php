@@ -5,7 +5,7 @@ return [
 	'providers' => [
 		'hdphp\alipay\AlipayProvider',
 		'hdphp\arr\ArrProvider',
-		'hdphp\backup\backupProvider',
+		'hdphp\backup\BackupProvider',
 		'hdphp\cache\CacheProvider',
 		'hdphp\cart\CartProvider',
 		'hdphp\code\CodeProvider',

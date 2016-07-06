@@ -42,7 +42,7 @@ class content extends hdSite {
 
 	//添加栏目
 	public function doSiteCategory() {
-		$data = $this->webCategory->where( 'siteid', SITEID )->orderBy('cid','ASC')->get();
+		$data = $this->webCategory->where( 'siteid', SITEID )->orderBy( 'cid', 'ASC' )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['url'] = __ROOT__ . '/index.php?s=content/home/category&siteid=' . v( 'site.siteid' ) . '&cid=' . $v['cid'];
 		}
@@ -101,22 +101,22 @@ class content extends hdSite {
 			$field        = $this->webCategory->where( 'cid', $cid )->first();
 			$field['css'] = json_decode( $field['css'], TRUE );
 			//栏目模板
-			$template = Db::table( 'template' )->find( $field['template_tid'] );
+			$template = Db::table( 'template' )->where( 'name', $field['template_name'] )->first();
 		} else {
 			$defaultWeb = ( new Web() )->getDefaultWeb();
 			$field      = [
-				'isnav'        => 0,
-				'ishomepage'   => 0,
-				'css'          => [ 'icon' => 'fa fa-external-link', 'image' => '', 'color' => '#333333', 'size' => 35 ],
-				'icontype'     => 1,
-				'description'  => '',
-				'orderby'      => 0,
-				'pid'          => 0,
-				'template_tid' => 0,
-				'status'       => 1,
-				'linkurl'      => '',
-				'siteid'       => SITEID,
-				'web_id'       => $defaultWeb['id'],
+				'isnav'         => 0,
+				'ishomepage'    => 0,
+				'css'           => [ 'icon' => 'fa fa-external-link', 'image' => '', 'color' => '#333333', 'size' => 35 ],
+				'icontype'      => 1,
+				'description'   => '',
+				'orderby'       => 0,
+				'pid'           => 0,
+				'template_name' => '',
+				'status'        => 1,
+				'linkurl'       => '',
+				'siteid'        => SITEID,
+				'web_id'        => $defaultWeb['id'],
 			];
 			$template   = [ ];
 		}

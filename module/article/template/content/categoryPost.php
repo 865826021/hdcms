@@ -88,13 +88,13 @@
 						<button class="btn btn-success" type="button" ng-click="loadTpl()">选择风格</button>
 					</div>
 				</div>
-				<div class="form-group template current_style" ng-show="field.template_tid">
+				<div class="form-group template current_style" ng-show="field.template_name">
 					<label class="col-sm-2 control-label">当前微站风格</label>
 					<div class="col-sm-9 box">
 						<div class="thumbnail">
 							<input type="hidden" name="template_tid" ng-model="field.template_tid"/>
 							<h5 ng-bind="template.title">{{$field['template']['title']}}</h5>
-							<img ng-src="theme/@{{template.name}}/thumb.jpg">
+							<img ng-src="theme/@{{template.name}}/@{{template.thumb}}">
 						</div>
 					</div>
 				</div>
@@ -242,7 +242,7 @@
 					var modalobj = util.modal({
 						content: ["{{site_url('manage/loadTpl')}}"],
 						title: '微站模板风格列表',
-						width: 800,
+						width: 850,
 						show: true,
 					});
 					modalobj.on('hidden.bs.modal', function () {
@@ -253,9 +253,11 @@
 						var name = $(this).attr('name');
 						var title = $(this).attr('title');
 						var id = $(this).attr('id');
-						$scope.field.template_tid = id;
+						var thumb = $(this).attr('thumb');
+						$scope.field.template_name = name;
 						$scope.template.title = title;
 						$scope.template.name = name;
+						$scope.template.thumb = thumb;
 						modalobj.modal('hide');
 						$scope.$apply();
 					});

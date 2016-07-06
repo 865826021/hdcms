@@ -72,6 +72,7 @@ class Component {
 		           ->where( 'type', q( 'get.type' ) )
 		           ->where( 'user_type', $type )
 		           ->limit( Page::limit() )
+		           ->orderBy('id' ,'DESC')
 		           ->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );

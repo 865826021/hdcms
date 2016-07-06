@@ -49,6 +49,10 @@ class Template {
 			};
 			//模板标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
+			//模板缩略图
+			if ( ! is_file( $_POST['thumb'] ) ) {
+				message( '缩略图文件不存在', 'back', 'error' );
+			}
 			//检查插件是否存在
 			if ( is_dir( 'theme/' . $_POST['name'] ) || $this->db->where( 'name', $_POST['name'] )->first() ) {
 				message( '模板已经存在,请更改模板标识', 'back', 'error' );
@@ -58,8 +62,7 @@ class Template {
 			}
 			mkdir( 'theme/' . $_POST['name'] . '/mobile', 0755, TRUE );
 			mkdir( 'theme/' . $_POST['name'] . '/web', 0755, TRUE );
-
-			//模板缩略图
+			//缩略图处理
 			$info = pathinfo( $_POST['thumb'] );
 			copy( $_POST['thumb'], 'theme/' . $_POST['name'] . '/thumb.' . $info['extension'] );
 			$_POST['thumb'] = 'thumb.' . $info['extension'];
@@ -78,15 +81,14 @@ class Template {
 			'name'        => [ '@cdata' => $_POST['name'] ],
 			'title'       => [ '@cdata' => $_POST['title'] ],
 			'url'         => [ '@cdata' => $_POST['url'] ],
+			'type'        => [ '@cdata' => $_POST['type'] ],
 			'version'     => [ '@cdata' => $_POST['version'] ],
 			'description' => [ '@cdata' => $_POST['description'] ],
 			'author'      => [ '@cdata' => $_POST['author'] ],
 			'position'    => [ '@cdata' => $_POST['position'] ],
 			'thumb'       => [ '@cdata' => $_POST['thumb'] ],
 		];
-		p( $xml_data );
 		$manifest = Xml::toXml( 'manifest', $xml_data );
-		p( $manifest );
 		file_put_contents( 'theme/' . $_POST['name'] . '/manifest.xml', $manifest );
 	}
 
@@ -94,7 +96,8 @@ class Template {
 	public function installed() {
 		$template = $this->db->get();
 		foreach ( $template as $k => $m ) {
-			$template[ $k ]['thumb'] = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
+			$template[ $k ]['thumb']         = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
+			$template[ $k ]['template_type'] = is_file( "theme/{$m['name']}/manifest.xml" ) ? '本地模板' : '应用商店模板';
 		}
 		View::with( 'template', $template );
 		View::make();
@@ -102,8 +105,9 @@ class Template {
 
 	//安装新模板列表
 	public function prepared() {
-		$modules = $this->db->lists( 'name' );
-		$dirs    = \Dir::tree( 'theme' );
+		$modules  = $this->db->lists( 'name' );
+		$dirs     = \Dir::tree( 'theme' );
+		//本地模板
 		$locality = [ ];
 		foreach ( $dirs as $d ) {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/manifest.xml' ) ) {
@@ -131,9 +135,14 @@ class Template {
 		if ( $m = $this->db->where( 'name', $_GET['name'] )->first() ) {
 			message( $m['title'] . '模板已经安装或已经存在系统模板, 你可以卸载后重新安装', 'back', 'error' );
 		}
+		$manifestFile = 'theme/' . $_GET['name'] . '/manifest.xml';
+		if ( ! is_file( $manifestFile ) ) {
+			message( '模板缺少 manifest.xml 文件', 'back', 'error' );
+		}
+
 		if ( IS_POST ) {
 			//获取模板xml数据
-			$manifest = Xml::toArray( file_get_contents( 'theme/' . $_POST['name'] . '/manifest.xml' ) );
+			$manifest = Xml::toArray( file_get_contents( $manifestFile ) );
 			//整合添加到模板表中的数据
 			$moduleData = [
 				'name'        => $manifest['manifest']['name']['@cdata'],
@@ -141,6 +150,7 @@ class Template {
 				'description' => $manifest['manifest']['description']['@cdata'],
 				'title'       => $manifest['manifest']['title']['@cdata'],
 				'url'         => $manifest['manifest']['url']['@cdata'],
+				'type'        => $manifest['manifest']['type']['@cdata'],
 				'author'      => $manifest['manifest']['author']['@cdata'],
 				'rule'        => $manifest['manifest']['rule']['@attributes']['embed'] ? 1 : 0,
 				'thumb'       => $manifest['manifest']['thumb']['@cdata'],
@@ -164,7 +174,7 @@ class Template {
 			( new Site() )->updateAllSiteCache();
 			message( "模板安装成功", u( 'installed' ) );
 		}
-		$manifest = Xml::toArray( file_get_contents( 'theme/' . $_GET['name'] . '/manifest.xml' ) );
+		$manifest = Xml::toArray( file_get_contents( $manifestFile ) );
 		$package  = Db::table( 'package' )->get();
 		View::with( 'template', $manifest['manifest'] )->with( 'package', $package )->make();
 	}

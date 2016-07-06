@@ -1,6 +1,6 @@
 <?php namespace web;
 
-use Hdphp\View\TagBase;
+use hdphp\view\TagBase;
 
 class tag extends TagBase {
 	/**

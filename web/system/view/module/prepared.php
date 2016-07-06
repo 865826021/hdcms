@@ -11,6 +11,7 @@
         <li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
         <li role="presentation"><a href="?s=system/store/module">应用商城</a></li>
     </ul>
+    <h5 class="page-header">已购买的模块</h5>
     <h5 class="page-header">未安装的本地模块</h5>
     <foreach from="$locality" value="$local">
         <div class="media">

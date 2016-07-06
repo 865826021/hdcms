@@ -44,11 +44,16 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模板类型</label>
 				<div class="col-sm-10 col-xs-12">
 					<select name="type" class="form-control">
-						<option value="business">主要业务</option>
-						<option value="customer">客户关系</option>
-						<option value="marketing">营销与活动</option>
-						<option value="tools">常用服务与工具</option>
-						<option value="industry">行业解决方案</option>
+						<option value="often">常用模板</option>
+						<option value="rummery">酒店</option>
+						<option value="car">汽车</option>
+						<option value="tourism">旅游</option>
+						<option value="drink">餐饮</option>
+						<option value="realty">房地产</option>
+						<option value="medical">医疗保健</option>
+						<option value="education">教育</option>
+						<option value="cosmetology">健身美容</option>
+						<option value="shoot">婚纱摄影</option>
 						<option value="other">其他</option>
 					</select>
 					<span class="help-block">模板的类型, 用于分类展示和查找你的模板 </span>
