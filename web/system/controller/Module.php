@@ -48,8 +48,8 @@ class Module {
 
 	//安装新模块列表
 	public function prepared() {
-		$modules  = Db::table( 'modules' )->lists( 'name' );
-		$dirs     = Dir::tree( 'addons' );
+		$modules = Db::table( 'modules' )->lists( 'name' );
+		$dirs    = Dir::tree( 'addons' );
 		//本地模块
 		$locality = [ ];
 		foreach ( $dirs as $d ) {
@@ -590,14 +590,18 @@ str;
 				'module'  => $_GET['module']
 			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $_GET['module'] ] ) );
 		}
-		$manifest = Xml::toArray( file_get_contents( 'addons/' . $_GET['module'] . '/manifest.xml' ) );
-		//卸载数据
-		$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
-		if ( ! empty( $installSql ) ) {
-			if ( preg_match( '/.php$/', $installSql ) ) {
-				require 'addons/' . $_POST['module'] . '/' . $installSql;
-			} else {
-				Db::sql( $installSql );
+		//本地安装的模块删除处理
+		$xmlFile = 'addons/' . $_GET['module'] . '/manifest.xml';
+		if ( is_file( $xmlFile ) ) {
+			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
+			//卸载数据
+			$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
+			if ( ! empty( $installSql ) ) {
+				if ( preg_match( '/.php$/', $installSql ) ) {
+					require 'addons/' . $_POST['module'] . '/' . $installSql;
+				} else {
+					Db::sql( $installSql );
+				}
 			}
 		}
 		$this->module->remove( $_GET['module'], $_GET['confirm'] );

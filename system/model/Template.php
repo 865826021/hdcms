@@ -65,6 +65,7 @@ class Template extends Model {
 				$templates = $this->whereIn( 'name', $templateNames )->get();
 			}
 		}
+
 		return $cache[ $siteid ] = $templates;
 	}
 
@@ -111,6 +112,10 @@ class Template extends Model {
 			$p['template'] = serialize( $p['template'] );
 			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
 		}
+		//删除文章系统使用的模块
+		Db::table( 'web' )->where( 'template_name', $name )->update( [ 'template_name' => 'default' ] );
+		Db::table( 'web_category' )->where( 'template_name', $name )->update( [ 'template_name' => '' ] );
+		Db::table( 'web_article' )->where( 'template_name', $name )->update( [ 'template_name' => '' ] );
 		//更新站点缓存
 		$siteids   = Db::table( 'site' )->lists( 'siteid' );
 		$siteModel = new Site();

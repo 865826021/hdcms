@@ -142,7 +142,6 @@ class Site extends Model {
 			'member_group',
 			'module_setting',
 			'pay',
-			'profile_fields',
 			'reply_cover',
 			'rule',
 			'rule_keyword',

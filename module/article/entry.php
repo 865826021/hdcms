@@ -40,8 +40,10 @@ class entry {
 	public function doWebHome() {
 		$web = Db::table( 'web' )->where( 'id', $this->webid )->first();
 		//模板风格
-		$style = Db::table( 'template' )->where( 'tid', $web['template_tid'] )->pluck( 'name' ) ?: 'default';
-		$path  = 'theme/' . $style . '/' . $this->dir;
+		if ( empty( $web['template_name'] ) ) {
+			$web['template_name'] = Db::table( 'template' )->where( 'is_default', 1 )->pluck( 'name' );
+		}
+		$path = 'theme/' . $web['template_name'] . '/' . $this->dir;
 		define( '__TEMPLATE__', $path );
 		View::with( 'hdcms', $web );
 		View::make( $path . '/index.html' );
@@ -50,19 +52,16 @@ class entry {
 	//栏目页
 	public function doWebCategory() {
 		$cid = q( 'get.cid', 0, 'intval' );
-		$cat = Db::table( 'web_category' )
-		         ->where( 'siteid', SITEID )
-		         ->where( 'cid',$cid )
-		         ->first();
+		$cat = Db::table( 'web_category' )->where( 'siteid', SITEID )->where( 'cid', $cid )->first();
 		//模板风格编号,栏目没有选择时使用站点模块
-		if ( empty( $cat['template_tid'] ) ) {
-			$template_id = Db::table( 'web' )->where( 'id', $this->webid )->pluck( 'template_tid' );
-		} else {
-			$template_id = $cat['template_tid'];
+		if ( empty( $cat['template_name'] ) ) {
+			$cat['template_name'] = Db::table( 'web' )->where( 'id', $this->webid )->pluck( 'template_name' );
+			if ( empty( $cat['template_name'] ) ) {
+				$cat['template_name'] = Db::table( 'template' )->where( 'is_default', 1 )->pluck( 'name' );
+			}
 		}
-		$style = Db::table( 'template' )->where( 'tid', $template_id )->pluck( 'name' );
-		$path  = "theme/{$style}/{$this->dir}";
-		$file  = $cat['ishomepage'] ? 'article_index.html' : 'article_list.html';
+		$path = "theme/{$cat['template_name']}/{$this->dir}";
+		$file = $cat['ishomepage'] ? 'article_index.html' : 'article_list.html';
 		if ( is_file( $path . '/' . $file ) ) {
 			$tpl = $path . '/' . $file;
 			define( '__TEMPLATE__', $path );
@@ -83,12 +82,14 @@ class entry {
 		//栏目
 		$category = Db::table( 'web_category' )->where( 'cid', $article['category_cid'] )->first();
 		//模板风格
-		$templateTid = $article['template_tid'] ?: $category['template_tid'];
-		if ( empty( $templateTid ) ) {
-			$templateTid = Db::table( 'web' )->where( 'id', $this->webid )->pluck( 'template_tid' );
+		$template_name = $article['template_name'] ?: $category['template_name'];
+		if ( empty( $template_name ) ) {
+			$template_name = Db::table( 'web' )->where( 'id', $this->webid )->pluck( 'template_name' );
+			if ( empty( $template_name ) ) {
+				$template_name = Db::table( 'template' )->where( 'is_default', 1 )->pluck( 'name' );
+			}
 		}
-		$style = Db::table( 'template' )->where( 'tid', $templateTid )->pluck( 'name' ) ?: 'default';
-		$path  = "theme/{$style}/{$this->dir}";
+		$path = "theme/{$template_name}/{$this->dir}";
 		if ( is_file( $path . '/article.html' ) ) {
 			$tpl = $path . '/article.html';
 			define( '__TEMPLATE__', $path );

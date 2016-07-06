@@ -145,7 +145,7 @@
 		angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
 			$scope.field = <?php echo $field ? $field : 'false'?>;
 			if (!$scope.field) {
-				$scope.field = {rid: 0, status: 1};
+				$scope.field = {rid: 0, status: 1, is_default: 0};
 			}
 			//上传封面图片
 			$scope.upImage = function (obj) {

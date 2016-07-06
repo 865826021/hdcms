@@ -94,7 +94,7 @@ class Template {
 
 	//已经安装模板
 	public function installed() {
-		$template = $this->db->get();
+		$template = $this->db->where( 'is_system', 0 )->get();
 		foreach ( $template as $k => $m ) {
 			$template[ $k ]['thumb']         = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
 			$template[ $k ]['template_type'] = is_file( "theme/{$m['name']}/manifest.xml" ) ? '本地模板' : '应用商店模板';
@@ -105,8 +105,8 @@ class Template {
 
 	//安装新模板列表
 	public function prepared() {
-		$modules  = $this->db->lists( 'name' );
-		$dirs     = \Dir::tree( 'theme' );
+		$modules = $this->db->lists( 'name' );
+		$dirs    = \Dir::tree( 'theme' );
 		//本地模板
 		$locality = [ ];
 		foreach ( $dirs as $d ) {
@@ -156,6 +156,7 @@ class Template {
 				'thumb'       => $manifest['manifest']['thumb']['@cdata'],
 				'position'    => $manifest['manifest']['position']['@cdata'],
 				'is_system'   => 0,
+				'is_default'  => 0
 			];
 			Db::table( 'template' )->insertGetId( $moduleData );
 			//在服务套餐中添加模板
@@ -181,12 +182,6 @@ class Template {
 
 	//卸载模板
 	public function uninstall() {
-		if ( ! isset( $_GET['confirm'] ) ) {
-			confirm( '确定删除模板吗？', u( 'uninstall', [
-				'confirm' => 1,
-				'name'    => $_GET['name']
-			] ), u( 'uninstall', [ 'confirm' => 0, 'name' => $_GET['name'] ] ) );
-		}
 		$this->db->remove( $_GET['name'], $_GET['confirm'] );
 		( new Site() )->updateAllSiteCache();
 		message( '模板卸载成功', u( 'installed' ) );

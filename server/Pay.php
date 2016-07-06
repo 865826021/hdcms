@@ -45,6 +45,6 @@ class Pay {
 		}
 		Session::set( 'pay', [ 'tid' => $data['tid'], 'module' => v( 'module.name' ), 'siteid=' => SITEID ] );
 		View::with( 'data', $data );
-		View::make( 'ucenter/pay.html' );
+		View::make( 'server/template/pay.html' );
 	}
 }
