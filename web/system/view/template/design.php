@@ -105,7 +105,7 @@
 						<img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail img-thumb" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" onclick="removeImg(this)">×</em>
 					</div>
-					<span class="help-block">用 48*48 的图片来让你的模块更吸引眼球吧</span>
+					<span class="help-block">图片尺寸为225x170 会有良好的显示效果</span>
 				</div>
 				<script>
 					//上传图片
