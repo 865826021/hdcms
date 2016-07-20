@@ -14,7 +14,7 @@ return [
 	],
 	#Mysql
 	'mysql'    => [
-		'table' => 'hd_core_session',
+		'table' => 'core_session',
 	],
 	#Memcache
 	'memcache' => [
