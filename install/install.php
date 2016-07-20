@@ -104,10 +104,12 @@ if ( $action == 'table' ) {
 	//修改配置文件
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
 	file_put_contents( 'system/config/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
-	header('Location:?a=finish');
+	header( 'Location:?a=finish' );
 }
-if($action=='finish')
-{
+if ( $action == 'finish' ) {
+	//清除运行数据
+	unlink( 'hdcms2.0.zip' );
+	unlink( 'install.sql' );
 	//显示界面
 	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
 	echo $content;
@@ -115,12 +117,13 @@ if($action=='finish')
 }
 //编译install.php安装文件,主要是将模板整合进来
 if ( $action == 'compile' ) {
-	$tpl     = [ 'copyright', 'environment', 'database', 'download','finish' ];
+	$tpl     = [ 'copyright', 'environment', 'database', 'download', 'finish' ];
 	$content = substr( file_get_contents( 'install.php' ), 5 );
 	foreach ( $tpl as $t ) {
 		$content = '$' . $t . "=<<<str\n" . file_get_contents( $t . '.html' ) . "\nstr;\n" . $content;
 	}
 	file_put_contents( '../install.php', "<?php \n" . $content );
+	echo "<h1>编译成功</h1>";
 }
 
 function curl_get( $url ) {
