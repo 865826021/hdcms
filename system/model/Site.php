@@ -142,9 +142,12 @@ class Site extends Model {
 			'member_group',
 			'module_setting',
 			'pay',
-			'reply_cover',
 			'rule',
 			'rule_keyword',
+			'reply_cover',
+			'reply_basic',
+			'reply_image',
+			'reply_news',
 			'site',//站点表
 			'site_modules',//站点模块
 			'site_package',

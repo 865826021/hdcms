@@ -9,11 +9,24 @@
  * '-------------------------------------------------------------------*/
 namespace web\install\controller;
 
+/**
+ * 安装/卸载程序
+ * Class Setup
+ * @package web\install\controller
+ * @author 向军
+ */
 class Setup {
-	/**
-	 * 安装程序
-	 */
-	public function handle() {
-		
+
+	//安装程序
+	public function install() {
+		//执行SQL安装语句
+		$sql = file_get_contents( 'install.sql' );
+		Db::sql( $sql );
+	}
+
+	//更新程序
+	public function upgrade() {
+		$sql = file_get_contents( 'upgrade.sql' );
+		Db::sql( $sql );
 	}
 }
