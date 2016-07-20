@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `hd_balance`;
+
 CREATE TABLE `hd_balance` (
   `bid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -11,6 +13,8 @@ CREATE TABLE `hd_balance` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员余额充值';
 
+DROP TABLE IF EXISTS `hd_button`;
+
 CREATE TABLE `hd_button` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL DEFAULT '' COMMENT '标题',
@@ -21,6 +25,8 @@ CREATE TABLE `hd_button` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信菜单';
 
+DROP TABLE IF EXISTS `hd_cloud`;
+
 CREATE TABLE `hd_cloud` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL DEFAULT '' COMMENT '平台帐号',
@@ -30,7 +36,7 @@ CREATE TABLE `hd_cloud` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='与平台有关的设置';
 
-
+DROP TABLE IF EXISTS `hd_config`;
 CREATE TABLE `hd_config` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `site` text NOT NULL COMMENT '网站开启/登录等设置',
@@ -43,6 +49,7 @@ INSERT INTO `hd_config` (`id`, `site`, `upload`, `register`)
 VALUES
 	(1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护中,请稍候访问\"}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":2}');
 
+DROP TABLE IF EXISTS `hd_core_attachment`;
 CREATE TABLE `hd_core_attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT '会员id',
@@ -58,21 +65,21 @@ CREATE TABLE `hd_core_attachment` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='附件';
 
-
+DROP TABLE IF EXISTS `hd_core_cache`;
 CREATE TABLE `hd_core_cache` (
   `key` varchar(100) NOT NULL COMMENT '缓存名称',
   `value` mediumtext NOT NULL COMMENT '缓存数据',
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='缓存';
 
-
+DROP TABLE IF EXISTS `hd_core_config`;
 CREATE TABLE `hd_core_config` (
   `key` varchar(100) NOT NULL COMMENT '配置名称',
   `value` text NOT NULL COMMENT '配置项',
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='配置  todo';
 
-
+DROP TABLE IF EXISTS `hd_core_session`;
 CREATE TABLE `hd_core_session` (
   `sessid` char(50) NOT NULL,
   `data` mediumtext COMMENT 'session数据',
@@ -80,7 +87,7 @@ CREATE TABLE `hd_core_session` (
   PRIMARY KEY (`sessid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='session';
 
-
+DROP TABLE IF EXISTS `hd_credits_record`;
 CREATE TABLE `hd_credits_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -97,7 +104,7 @@ CREATE TABLE `hd_credits_record` (
   KEY `operator` (`operator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='积分变动记录';
 
-
+DROP TABLE IF EXISTS `hd_member`;
 CREATE TABLE `hd_member` (
   `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -144,7 +151,7 @@ CREATE TABLE `hd_member` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员表';
 
-
+DROP TABLE IF EXISTS `hd_member_address`;
 CREATE TABLE `hd_member_address` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -162,7 +169,7 @@ CREATE TABLE `hd_member_address` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员收货地址';
 
-
+DROP TABLE IF EXISTS `hd_member_fields`;
 CREATE TABLE `hd_member_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -174,6 +181,7 @@ CREATE TABLE `hd_member_fields` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员字段信息中文名称与状态';
 
+DROP TABLE IF EXISTS `hd_member_group`;
 CREATE TABLE `hd_member_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -190,6 +198,7 @@ INSERT INTO `hd_member_group` (`id`, `siteid`, `title`, `credit`, `rank`, `isdef
 VALUES
 	(1,1,'普通会员',0,0,1,1);
 
+DROP TABLE IF EXISTS `hd_menu`;
 CREATE TABLE `hd_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL DEFAULT '0' COMMENT '父级',
@@ -245,6 +254,7 @@ VALUES
 	(85,78,'微站快捷导航','article_quick_menu','?a=quickmenu/menu&t=site&m=article','','fa fa-cubes',0,1,0,'article'),
 	(86,82,'微信菜单','menus_lists','?a=site/lists&t=site&m=button','','fa fa-cubes',0,1,0,'platform');
 
+DROP TABLE IF EXISTS `hd_module_setting`;
 CREATE TABLE `hd_module_setting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点名称',
@@ -255,6 +265,7 @@ CREATE TABLE `hd_module_setting` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块配置';
 
+DROP TABLE IF EXISTS `hd_modules`;
 CREATE TABLE `hd_modules` (
   `mid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL COMMENT '英文标识',
@@ -291,6 +302,7 @@ VALUES
 	(9,'uc','business','会员中心','1.0','会员中心的管理操作','会员信息的管理，包括收货地址、个人资料、会员卡券等管理','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.png','cover.jpg'),
 	(10,'button','business','微信菜单','1.0','微信菜单管理','用于添加微信菜单，更新菜单后需要取消关注再关注或等微信更新缓存后有效','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg');
 
+DROP TABLE IF EXISTS `hd_modules_bindings`;
 CREATE TABLE `hd_modules_bindings` (
   `bid` int(11) NOT NULL AUTO_INCREMENT,
   `module` varchar(45) NOT NULL DEFAULT '' COMMENT '模块名称',
@@ -305,6 +317,7 @@ CREATE TABLE `hd_modules_bindings` (
   PRIMARY KEY (`bid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块动作';
 
+DROP TABLE IF EXISTS `hd_package`;
 CREATE TABLE `hd_package` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '套餐名称',
@@ -313,6 +326,7 @@ CREATE TABLE `hd_package` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='套餐';
 
+DROP TABLE IF EXISTS `hd_pay`;
 CREATE TABLE `hd_pay` (
   `pid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT '会员编号',
@@ -334,6 +348,7 @@ CREATE TABLE `hd_pay` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='支付记录';
 
+DROP TABLE IF EXISTS `hd_profile_fields`;
 CREATE TABLE `hd_profile_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `field` varchar(45) NOT NULL COMMENT '字段名',
@@ -370,7 +385,7 @@ VALUES
 	(20,'bloodtype','血型',0,0,0,1),
 	(21,'birthyear','出生日期',0,0,0,1);
 
-
+DROP TABLE IF EXISTS `hd_reply_basic`;
 CREATE TABLE `hd_reply_basic` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -381,7 +396,7 @@ CREATE TABLE `hd_reply_basic` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='普通文本回复';
 
-
+DROP TABLE IF EXISTS `hd_reply_cover`;
 CREATE TABLE `hd_reply_cover` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -398,7 +413,7 @@ CREATE TABLE `hd_reply_cover` (
   KEY `rid` (`rid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块封面关键词回复内容';
 
-
+DROP TABLE IF EXISTS `hd_reply_image`;
 CREATE TABLE `hd_reply_image` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -412,7 +427,7 @@ CREATE TABLE `hd_reply_image` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
-
+DROP TABLE IF EXISTS `hd_reply_news`;
 CREATE TABLE `hd_reply_news` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -431,7 +446,7 @@ CREATE TABLE `hd_reply_news` (
   KEY `rid` (`rid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='图文回复';
 
-
+DROP TABLE IF EXISTS `hd_rule`;
 CREATE TABLE `hd_rule` (
   `rid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -443,7 +458,7 @@ CREATE TABLE `hd_rule` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则';
 
-
+DROP TABLE IF EXISTS `hd_rule_keyword`;
 CREATE TABLE `hd_rule_keyword` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
@@ -458,7 +473,7 @@ CREATE TABLE `hd_rule_keyword` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则关键词';
 
-
+DROP TABLE IF EXISTS `hd_site`;
 CREATE TABLE `hd_site` (
   `siteid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '站点名称',
@@ -469,6 +484,7 @@ CREATE TABLE `hd_site` (
   KEY `weid` (`weid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点信息';
 
+DROP TABLE IF EXISTS `hd_site_modules`;
 CREATE TABLE `hd_site_modules` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -477,7 +493,7 @@ CREATE TABLE `hd_site_modules` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模块';
 
-
+DROP TABLE IF EXISTS `hd_site_package`;
 CREATE TABLE `hd_site_package` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -486,7 +502,7 @@ CREATE TABLE `hd_site_package` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点可以使用的套餐';
 
-
+DROP TABLE IF EXISTS `hd_site_setting`;
 CREATE TABLE `hd_site_setting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -503,6 +519,7 @@ CREATE TABLE `hd_site_setting` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点设置';
 
+DROP TABLE IF EXISTS `hd_site_template`;
 CREATE TABLE `hd_site_template` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -511,6 +528,7 @@ CREATE TABLE `hd_site_template` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模板';
 
+DROP TABLE IF EXISTS `hd_site_user`;
 CREATE TABLE `hd_site_user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned DEFAULT NULL COMMENT '用户id',
@@ -521,6 +539,7 @@ CREATE TABLE `hd_site_user` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点管理员';
 
+DROP TABLE IF EXISTS `hd_site_wechat`;
 CREATE TABLE `hd_site_wechat` (
   `weid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -539,6 +558,7 @@ CREATE TABLE `hd_site_wechat` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信帐号';
 
+DROP TABLE IF EXISTS `hd_template`;
 CREATE TABLE `hd_template` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '模板名称',
@@ -559,7 +579,7 @@ INSERT INTO `hd_template` (`tid`, `name`, `title`, `version`, `description`, `au
 VALUES
 	(1,'default','默认模板','1.9','HDCMS 默认模板','后盾人','http://open.hdcms.com','other',10,1,'thumb.jpg',0);
 
-
+DROP TABLE IF EXISTS `hd_ticket`;
 CREATE TABLE `hd_ticket` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点',
@@ -580,6 +600,7 @@ CREATE TABLE `hd_ticket` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='折扣券';
 
+DROP TABLE IF EXISTS `hd_ticket_groups`;
 CREATE TABLE `hd_ticket_groups` (
   `tgid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点id',
@@ -591,6 +612,7 @@ CREATE TABLE `hd_ticket_groups` (
   KEY `group_id` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='代金券和优惠券可使用的会员组';
 
+DROP TABLE IF EXISTS `hd_ticket_module`;
 CREATE TABLE `hd_ticket_module` (
   `tmid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tid` int(10) unsigned NOT NULL COMMENT '券编号',
@@ -601,7 +623,7 @@ CREATE TABLE `hd_ticket_module` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='代金券或优惠券可使用的模块';
 
-
+DROP TABLE IF EXISTS `hd_ticket_record`;
 CREATE TABLE `hd_ticket_record` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -620,7 +642,7 @@ CREATE TABLE `hd_ticket_record` (
   KEY `manage` (`manage`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='折扣券与代金券使用记录';
 
-
+DROP TABLE IF EXISTS `hd_user`;
 CREATE TABLE `hd_user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `groupid` int(11) NOT NULL,
@@ -647,7 +669,7 @@ INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `st
 VALUES
 	(1,0,'admin','e155336561b4a25e34e7a01409dba680','c028b5ef0f',1,1465771582,'123.119.83.235',1468914277,'192.168.10.1',1465771582,1465771582,'','','','系统管理员帐号');
 
-
+DROP TABLE IF EXISTS `hd_user_group`;
 CREATE TABLE `hd_user_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '组名',
@@ -661,6 +683,7 @@ INSERT INTO `hd_user_group` (`id`, `name`, `maxsite`, `daylimit`, `package`)
 VALUES
 	(1,'体验用户组',3,16,'a:2:{i:0;s:2:\"-1\";i:1;s:2:\"12\";}');
 
+DROP TABLE IF EXISTS `hd_user_permission`;
 CREATE TABLE `hd_user_permission` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
@@ -673,7 +696,7 @@ CREATE TABLE `hd_user_permission` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户权限分配';
 
-
+DROP TABLE IF EXISTS `hd_user_profile`;
 CREATE TABLE `hd_user_profile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL,
@@ -704,7 +727,7 @@ CREATE TABLE `hd_user_profile` (
   UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户信息表';
 
-
+DROP TABLE IF EXISTS `hd_web`;
 CREATE TABLE `hd_web` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点id',
@@ -719,7 +742,7 @@ CREATE TABLE `hd_web` (
   KEY `template_name` (`template_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点设置';
 
-
+DROP TABLE IF EXISTS `hd_web_article`;
 CREATE TABLE `hd_web_article` (
   `aid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -745,7 +768,7 @@ CREATE TABLE `hd_web_article` (
   KEY `category_cid` (`category_cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点文章';
 
-
+DROP TABLE IF EXISTS `hd_web_category`;
 CREATE TABLE `hd_web_category` (
   `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
@@ -766,7 +789,7 @@ CREATE TABLE `hd_web_category` (
   KEY `template_name` (`template_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='文章分类';
 
-
+DROP TABLE IF EXISTS `hd_web_nav`;
 CREATE TABLE `hd_web_nav` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -788,7 +811,7 @@ CREATE TABLE `hd_web_nav` (
   KEY `category_cid` (`category_cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='导航';
 
-
+DROP TABLE IF EXISTS `hd_web_page`;
 CREATE TABLE `hd_web_page` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
@@ -805,6 +828,7 @@ CREATE TABLE `hd_web_page` (
   KEY `web_id` (`web_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微官网页面(快捷导航/专题页面)';
 
+DROP TABLE IF EXISTS `hd_web_slide`;
 CREATE TABLE `hd_web_slide` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
