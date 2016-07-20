@@ -1,4 +1,5 @@
-<?php
+<?php namespace web\site\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,7 +8,6 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace web\site\controller;
 
 use system\model\Menu;
 use system\model\Template;
@@ -27,6 +27,9 @@ class Nav {
 	protected $id;
 
 	public function __construct() {
+		if ( ! Session::get( 'user.uid' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		//分配菜单
 		( new Menu() )->getMenus( TRUE );
 		//站点编号

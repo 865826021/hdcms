@@ -22,13 +22,13 @@ class Manage {
 
 	public function __construct() {
 		$this->user = new User();
-		if ( ! $this->user->isLogin() ) {
-			message( '请登录后进行操作', 'back', 'error' );
-		}
 	}
 
 	//系统设置管理
 	public function menu() {
+		if ( ! $this->user->isLogin() ) {
+			message( '请登录后进行操作', 'system/entry/login', 'error' );
+		}
 		View::with( 'isSuperUser', $this->user->isSuperUser() );
 		View::make();
 	}

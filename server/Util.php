@@ -21,7 +21,7 @@ class Util {
 	 * 调用服务
 	 */
 	public function instance( $server ) {
-		$server = '\server\\'.ucfirst( $server );
+		$server = '\server\build\\'.ucfirst( $server );
 
 		return new $server;
 	}

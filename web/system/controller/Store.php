@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace web\system\controller;
 
+use system\model\User;
 use web\auth;
 
 /**
@@ -20,7 +21,9 @@ use web\auth;
 class Store {
 
 	public function __construct() {
-		api( "user" )->isLogin();
+		if ( ! ( new User() )->isLogin() ) {
+			message( '你还没有登录,无法进行操作', 'system/entry/login', 'warning' );
+		}
 	}
 
 	//模块菜单

@@ -21,7 +21,7 @@ use system\model\User;
  */
 class Entry {
 	public function __construct() {
-		if ( ! Session::get( 'user' ) ) {
+		if ( ! Session::get( 'user.uid' ) ) {
 			message( '请登录后操作', 'system/entry/login', 'error' );
 		}
 		//验证站点权限

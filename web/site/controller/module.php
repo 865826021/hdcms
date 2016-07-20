@@ -176,7 +176,7 @@ class Module {
 
 	//模块后台管理业务
 	public function site() {
-		if ( ! Session::get( 'user' ) ) {
+		if ( ! Session::get( 'user.uid' ) ) {
 			message( '请登录后操作', 'system/entry/login', 'error' );
 		}
 		if ( ! ( new User() )->verifyModuleAccess() ) {

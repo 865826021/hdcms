@@ -16,6 +16,12 @@ namespace web\site\controller;
  * @package site\controller
  */
 class Keyword {
+	public function __construct() {
+		if ( ! Session::get( 'user.uid' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
+	}
+
 	//检测微信关键词是否已经使用
 	public function checkWxKeyword() {
 		$db = Db::table( 'rule_keyword' )
@@ -39,7 +45,7 @@ class Keyword {
 					$message = "该关键字已存在于 <a href='?s=site/reply/post&m=news&rid=" . $res['rid'] . "&m=basic'>" . "封面消息 \"" . $res['name'] . "\"</a> 规则中";
 					break;
 				default:
-					$message = "该关键字已存在于 <a href='javascript:;'>" . $module['title']." ".$res['name'] . "</a> 规则中";
+					$message = "该关键字已存在于 <a href='javascript:;'>" . $module['title'] . " " . $res['name'] . "</a> 规则中";
 			}
 		}
 		if ( $res ) {
@@ -53,11 +59,7 @@ class Keyword {
 	public function getKeywords() {
 		$key = q( 'post.key' );
 		if ( $key ) {
-			$content = Db::table( 'rule_keyword' )
-			             ->where( "content LIKE '%$key%'" )
-			             ->where( 'siteid', SITEID )
-			             ->where( 'status', 1 )
-			             ->get();
+			$content = Db::table( 'rule_keyword' )->where( "content LIKE '%$key%'" )->where( 'siteid', SITEID )->where( 'status', 1 )->get();
 		} else {
 			$content = Db::table( 'rule_keyword' )->where( 'siteid', v( 'site.siteid' ) )->where( 'status', 1 )->limit( 10 )->get();
 		}

@@ -7,10 +7,11 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace server;
+namespace server\build;
 class Pay {
 	/**
 	 * 支付
+	 *
 	 * @param $param
 	 */
 	public function weixin( $param ) {
@@ -45,6 +46,6 @@ class Pay {
 		}
 		Session::set( 'pay', [ 'tid' => $data['tid'], 'module' => v( 'module.name' ), 'siteid=' => SITEID ] );
 		View::with( 'data', $data );
-		View::make( 'server/template/pay.html' );
+		View::make( 'server/build/template/pay.html' );
 	}
 }

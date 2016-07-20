@@ -77,7 +77,7 @@ class site extends hdSite {
 			$field = $this->db->where( 'id', $id )->first();
 		} else {
 			$field['title'] = '';
-			$data           = [ 'button' => [ [ 'type' => 'view', 'name' => '菜单名称', 'url' => '' ] ] ];
+			$data           = [ 'button' => [ [ 'type' => 'view', 'name' => '菜单名称', 'url' => '', 'sub_button' => [ ] ] ] ];
 			$field['data']  = json_encode( $data, JSON_UNESCAPED_UNICODE );
 		}
 		View::with( 'field', $field );

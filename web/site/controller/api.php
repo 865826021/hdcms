@@ -42,6 +42,7 @@ class Api {
 
 	/**
 	 * 默认消息处理
+	 *
 	 * @param string $content 内容
 	 */
 	protected function defaultMessage( $content ) {
@@ -160,7 +161,7 @@ class Api {
 				$this->moduleProcessing( 'text', $info['module'], $info['rid'] );
 			}
 			//没有匹配的时,使用系统默认回复
-			$this->instance->text( v( 'setting.welcome' ) );
+			$this->defaultMessage( v( 'setting.welcome' ) );
 		}
 		//取消关注
 		if ( $this->instance->isUnSubscribeEvent() ) {
@@ -207,7 +208,7 @@ class Api {
 				$this->moduleProcessing( 'text', $info['module'], $info['rid'] );
 			}
 			//没有匹配的时,使用系统默认回复
-			$this->instance->text( v( 'setting.default_message' ) );
+			$this->defaultMessage( v( 'setting.default_message' ) );
 		}
 		//图片消息
 		if ( $this->instance->isImageMsg() ) {

@@ -131,7 +131,7 @@ class User {
 	//修改我的密码
 	public function myPassword() {
 		if ( IS_POST ) {
-			$_POST['uid'] = $_SESSION['user']['uid'];
+			$_POST['uid'] = Session::get( 'user.uid' );
 			if ( $this->db->save( $_POST ) ) {
 				session_unset();
 				session_destroy();

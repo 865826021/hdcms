@@ -36,7 +36,7 @@ class Site {
 		//登录检测
 		$this->user = new User();
 		if ( ! $this->user->isLogin() ) {
-			message( '你还没有登录,无法进行操作', u( 'entry/login' ), 'warning' );
+			message( '你还没有登录,无法进行操作', 'system/entry/login', 'warning' );
 		}
 		$this->siteid = Session::get( 'siteid' );
 		$this->db     = new \system\model\Site();
