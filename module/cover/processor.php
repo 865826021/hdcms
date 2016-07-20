@@ -1,0 +1,26 @@
+<?php namespace module\cover;
+
+use module\hdProcessor;
+
+/**
+ * 封面消息处理
+ * Class processor
+ * @package module\basic
+ */
+class processor extends hdProcessor {
+	//规则编号
+	public function handle( $rid ) {
+		$res = Db::table( 'reply_cover' )->where( 'rid', $rid )->where( 'siteid', SITEID )->first();
+		if ( $res ) {
+			$data[] = [
+				'title'       => $res['title'],
+				'discription' => $res['description'],
+				'picurl'      => __ROOT__ . '/' . $res['thumb'],
+				'url'         => __ROOT__ . '/' . $res['url'],
+			];
+			$this->news( $data );
+
+			return TRUE;
+		}
+	}
+}
