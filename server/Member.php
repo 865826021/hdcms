@@ -17,7 +17,11 @@ namespace server;
 class Member {
 	//检测用户登录
 	public function isLogin() {
-		return Session::get( "member.uid" ) ? TRUE : FALSE;
+		if ( ! Session::get( "member.uid" ) ) {
+			message( '请登录后操作', web_url( 'reg/login', [ ], 'uc' ), 'error' );
+		}
+
+		return TRUE;
 	}
 
 	//更改会员SESSION数据

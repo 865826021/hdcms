@@ -57,6 +57,6 @@ class credit extends hdSite {
 		View::with( 'page', $page );
 		View::with( 'user', $user );
 		View::with( 'data', $data );
-		View::make( 'ucenter/credit_lists.html' );
+		View::make( $this->ucenter_template .'/credit_lists.html' );
 	}
 }

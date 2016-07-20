@@ -17,18 +17,6 @@ class Util {
 		$this->app = $app;
 	}
 
-
-//
-//
-//	/**
-//	 * 修改支付状态
-//	 *
-//	 * @param $tid
-//	 */
-//	public function paySuccess( $tid ) {
-//		Db::table( 'pay' )->where( 'tid', $tid )->update( [ 'status' => 1 ] );
-//	}
-
 	/**
 	 * 调用服务
 	 */

@@ -479,7 +479,11 @@ str;
 			$installSql = trim( $manifest['manifest']['install']['@cdata'] );
 			if ( ! empty( $installSql ) ) {
 				if ( preg_match( '/.php$/', $installSql ) ) {
-					require 'addons/' . $_POST['module'] . '/' . $installSql;
+					$file = 'addons/' . $_POST['module'] . '/' . $installSql;
+					if ( ! is_file( $file ) ) {
+						message( '安装文件:' . $file . " 不存在", 'back', 'error' );
+					}
+					require $file;
 				} else {
 					Db::sql( $installSql );
 				}
@@ -598,7 +602,11 @@ str;
 			$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
 			if ( ! empty( $installSql ) ) {
 				if ( preg_match( '/.php$/', $installSql ) ) {
-					require 'addons/' . $_POST['module'] . '/' . $installSql;
+					$file = 'addons/' . $_POST['module'] . '/' . $installSql;
+					if ( ! is_file( $file ) ) {
+						message( '卸载文件:' . $file . '不存在', 'back', 'error' );
+					}
+					require $file;
 				} else {
 					Db::sql( $installSql );
 				}

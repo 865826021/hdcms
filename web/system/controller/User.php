@@ -133,7 +133,9 @@ class User {
 		if ( IS_POST ) {
 			$_POST['uid'] = $_SESSION['user']['uid'];
 			if ( $this->db->save( $_POST ) ) {
-				message( '我的资料修改成功', 'system/manage/menu', 'success' );
+				session_unset();
+				session_destroy();
+				message( '我的资料修改成功', 'system/entry/login', 'success' );
 			}
 			message( $this->db->getError(), 'back', 'error' );
 		}

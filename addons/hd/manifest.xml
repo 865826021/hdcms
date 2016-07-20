@@ -75,7 +75,7 @@
     </web>
   </bindings>
   <permission><![CDATA[添加商品:shop_add]]></permission>
-  <install><![CDATA[install.php]]></install>
-  <uninstall><![CDATA[uninstall.php]]></uninstall>
-  <upgrade><![CDATA[upgrade.php]]></upgrade>
+  <install><![CDATA[]]></install>
+  <uninstall><![CDATA[]]></uninstall>
+  <upgrade><![CDATA[]]></upgrade>
 </manifest>

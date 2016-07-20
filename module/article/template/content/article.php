@@ -10,6 +10,7 @@
 				<table class="table table-hover">
 					<thead>
 					<tr>
+						<th>编号</th>
 						<th width="150">排序</th>
 						<th>栏目编号</th>
 						<th>标题</th>
@@ -19,6 +20,7 @@
 					</thead>
 					<tbody>
 					<tr ng-repeat="field in data">
+						<td>@{{field.aid}}</td>
 						<td>
 							<input type="text" class="form-control" ng-model="field.orderby">
 						</td>
@@ -29,7 +31,7 @@
 							<span class="label label-success" ng-if="field.iscommend==1">推荐</span>
 						</td>
 						<td>
-							<a href="javascript:;" class="copy" url="?a=entry/content&aid=@{{field.aid}}&m=article">复制链接</a> -
+							<a href="javascript:;" class="copy" url="{{__ROOT__}}?a=entry/content&aid=@{{field.aid}}&m=article&siteid={{SITEID}}&t=web">复制链接</a> -
 							<a href="?a=content/articlePost&t=site&aid=@{{field.aid}}&m=article">编辑</a> -
 							<a href="javascript:;" ng-click="del(field.aid)">删除</a>
 						</td>

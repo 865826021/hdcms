@@ -134,7 +134,7 @@ class Request {
 		if ( IS_WEIXIN ) {
 			return TRUE;
 		}
-		if ( isset( $_GET['mobile'] ) ) {
+		if ( !empty( $_GET['mobile'] ) ) {
 			return TRUE;
 		}
 		$_SERVER['ALL_HTTP'] = isset( $_SERVER['ALL_HTTP'] ) ? $_SERVER['ALL_HTTP'] : '';

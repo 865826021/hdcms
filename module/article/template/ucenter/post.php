@@ -1,5 +1,5 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="ucenter/css/ucenter.css">
+<link rel="stylesheet" href="ucenter/mobile/css/ucenter.css">
 <link rel="stylesheet" href="{{__TEMPLATE__}}/ucenter/css.css">
 <block name="content">
 	<form action="" method="post" id="form" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
@@ -74,6 +74,7 @@
 
 <script>
 	require(['wapeditor'], function () {
+		rid = '{{$rid}}';
 		modules = <?php echo $modules ?: '[{"id":"UCheader","name":"会员主页","params":{"title":"会员中心","bgImage":"","description":"","thumb":""},"issystem":1,"index":0,"displayorder":0}]';?>;
 		//动态菜单
 		menus = <?php echo json_encode( $menusData );?>;

@@ -10,6 +10,7 @@
 namespace module\uc;
 
 use module\hdSite;
+use system\model\MemberAddress;
 
 /**
  * 地址管理
@@ -18,6 +19,15 @@ use module\hdSite;
  * @author 向军
  */
 class address extends hdSite {
+	protected $db;
+
+	public function __construct() {
+		//登录检测
+		Util::instance( 'Member' )->isLogin();
+		parent::__construct();
+		$this->db = new MemberAddress();
+	}
+
 	//地址列表
 	public function doWebLists() {
 		$data = Db::table( 'member_address' )
@@ -27,47 +37,27 @@ class address extends hdSite {
 		          ->where( 'uid', Session::get( 'member.uid' ) )
 		          ->get();
 		View::with( 'data', $data );
-		View::make( 'ucenter/address_lists.html' );
+		View::make( $this->ucenter_template . '/address_lists.html' );
 	}
 
 	//设置地址
 	public function doWebPost() {
-		if ( IS_POST ) {
-			$data['siteid']   = SITEID;
-			$data['uid']      = Session::get( 'member.uid' );
-			$data['username'] = $_POST['username'];
-			$data['mobile']   = $_POST['mobile'];
-			$data['zipcode']  = $_POST['zipcode'];
-			$data['province'] = $_POST['province'];
-			$data['city']     = $_POST['city'];
-			$data['district'] = $_POST['district'];
-			$data['address']  = $_POST['address'];
-			//不存在默认地址时将此地址设置为默认
-			if ( ! Db::table( 'member_address' )->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->get() ) {
-				$data['isdefault'] = 1;
-			}
-			if ( $id = q( 'get.id', 0, 'intval' ) ) {
-				$address = Db::table( 'member_address' )->where( 'id', $id )->where( 'siteid', SITEID )->first();
-				if ( $address['uid'] == Session::get( 'member.uid' ) && $address['siteid'] == SITEID ) {
-					$data['id']        = $id;
-					$data['isdefault'] = $address['isdefault'];
-				} else {
-					message( '请求错误', 'back', 'error' );
-				}
-			}
 
-			Db::table( 'member_address' )->replace( $data );
-			message( '保存地址成功', web_url( 'lists' ), 'success' );
+		if ( IS_POST ) {
+			//不存在默认地址时将此地址设置为默认
+			if ( ! $this->db->getMemberDefaultAddress() ) {
+				$_POST['isdefault'] = 1;
+			}
+			$action = empty( $_POST['id'] ) ? 'add' : 'save';
+			if ( $this->db->$action() ) {
+				message( '保存地址成功', web_url( 'lists' ), 'success' );
+			}
+			message( $this->db->getError(), 'back', 'error' );
 		}
 		if ( $id = q( 'get.id', 0, 'intval' ) ) {
-			$data = Db::table( 'member_address' )
-			          ->where( 'id', $id )
-			          ->where( 'siteid', SITEID )
-			          ->where( 'uid', Session::get( 'member.uid' ) )
-			          ->first();
-			View::with( 'field', $data );
+			View::with( 'field', $this->db->find( $id ) );
 		}
-		View::make( 'ucenter/address_post.html' );
+		View::make( $this->ucenter_template . '/address_post.html' );
 	}
 
 	//修改默认地址
@@ -85,7 +75,7 @@ class address extends hdSite {
 	//删除地址
 	public function doWebRemove() {
 		$id = q( 'id', 0, 'intval' );
-		$ad = Db::table( 'member_address' )->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'id', $id )->first();
+		$ad = $this->db->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'id', $id )->first();
 		if ( $ad ) {
 			//删除地址
 			Db::table( 'member_address' )->where( 'id', $id )->delete();
@@ -99,5 +89,6 @@ class address extends hdSite {
 				  ->update( [ 'isdefault' => 1 ] );
 			}
 		}
+		message( '地址不存在', 'back', 'error' );
 	}
 }

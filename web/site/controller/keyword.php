@@ -55,9 +55,8 @@ class Keyword {
 		if ( $key ) {
 			$content = Db::table( 'rule_keyword' )
 			             ->where( "content LIKE '%$key%'" )
-			             ->where( 'siteid', v( 'site.siteid' ) )
+			             ->where( 'siteid', SITEID )
 			             ->where( 'status', 1 )
-			             ->limit( 10 )
 			             ->get();
 		} else {
 			$content = Db::table( 'rule_keyword' )->where( 'siteid', v( 'site.siteid' ) )->where( 'status', 1 )->limit( 10 )->get();

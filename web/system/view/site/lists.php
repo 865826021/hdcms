@@ -77,7 +77,7 @@
 
 					<div class="panel-body clearfix" style="padding:8px 15px;">
 						<div class="col-xs-4 col-md-1">
-							<if value="$s['icon']">
+							<if value="$s['icon'] && is_file($s['icon'])">
 								<img src="{{$s['icon']}}" style="width:50px;height:50px;border-radius: 5px;border:solid 1px #dcdcdc;">
 								<else/>
 								<i class="fa fa-rss fa-4x"></i>

@@ -4,7 +4,7 @@ class tag {
 	//获取文章
 	public function lists( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
-		$cid       = isset( $attr['cid'] ) ? ($attr['cid'][0]=='$'?$attr['cid']:"'{$attr['cid']}'") : "''";
+		$cid       = isset( $attr['cid'] ) ? ( $attr['cid'][0] == '$' ? $attr['cid'] : "'{$attr['cid']}'" ) : "''";
 		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
 		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
 		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
@@ -31,10 +31,36 @@ class tag {
 			case 'new':
 				\$db->orderBy('aid','DESC');
 				break;
+			case 'old':
+				\$db->orderBy('aid','ASC');
+				break;
 		}
 		\$_result = \$db->get();
 		foreach(\$_result as \$field){
-			\$field['url'] = __ROOT__.'/?a=entry/content&m=article&aid='.\$field['aid'].'&cid='.\$field['category_cid'].'&t=web&siteid='.SITEID;
+			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
+			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
+		?>
+			$content
+		<?php }?>
+str;
+
+		return $php;
+	}
+
+	//相关文章
+	public function relation( $attr, $content ) {
+		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
+		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
+		$php
+		           = <<<str
+		<?php \$db = Db::table('web_article')->where('siteid',SITEID)->limit($row);
+		//栏目检索
+		\$db->where('category_cid',\$_GET['cid']);
+		//排序
+		\$db->orderBy('rand()');
+		\$_result = \$db->get();
+		foreach(\$_result as \$field){
+			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
@@ -54,7 +80,7 @@ str;
 		          = <<<str
         <?php \$slideData = Db::table('web_slide')->where('web_id',Session::get('webid'))->where('siteid',SITEID)->orderBy('id','DESC')->get();?>
         <?php if(!empty(\$slideData)){?>
-<div class="swiper-container">
+<div class="hdcms_swiper_container">
         <div class="swiper-wrapper">
             <?php foreach(\$slideData as \$_s){?>
             <div class="swiper-slide">
@@ -64,22 +90,22 @@ str;
             <?php }?>
         </div>
         <!-- 如果需要分页器 -->
-        <div class="swiper-pagination"></div>
+        <div class="hdcms_swiper_pagination"></div>
     </div>
     <style>
-        .swiper-container {
+        .hdcms_swiper_container {
             width      : 100%;
             height     : {$height}px;
             background : #aaa;
             overflow:hidden;
         }
-        .swiper-container-horizontal > .swiper-pagination-bullets {
+        .hdcms_swiper_container .swiper-container-horizontal > .swiper-pagination-bullets {
             bottom : 17px;
         }
-        .swiper-container .swiper-slide img {
+        .hdcms_swiper_container .swiper-slide img {
             width : 100%;
         }
-        .swiper-container .swiper-slide div.title {
+        .hdcms_swiper_container .swiper-slide div.title {
             position   : absolute;
             bottom     : 0px;
             text-align : center;
@@ -91,14 +117,14 @@ str;
     <script>
         $(function () {
             require(['swiper'], function ($) {
-                var mySwiper = new Swiper('.swiper-container', {
+                var mySwiper = new Swiper('.hdcms_swiper_container', {
                     width: {$width},
                     height: {$height},
                     autoplay: {$autoplay},
                     direction: 'horizontal',
                     loop: true,
                     //如果需要分页器
-                    pagination: '.swiper-pagination',
+                    pagination: '.hdcms_swiper_pagination',
                 })
             })
         })
@@ -154,12 +180,12 @@ str;
                  \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get();
                  \$categoryData = Data::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
-                        \$d['url']=empty(\$d['linkurl'])?__ROOT__."/index.php?a=entry/category&m=article&t=web&siteid={\$d['siteid']}&cid={\$d['cid']}":\$d['linkurl'];
+                        \$d['url']=empty(\$d['linkurl'])?web_url('entry/category',['cid'=>\$d['cid']],'article'):\$d['linkurl'];
                         echo "<dt><a href='{\$d['url']}'>{\$d['title']}</a></dt>";
                         if(!empty(\$d['_data'])){
                             echo '<dd>';
                             foreach(\$d['_data'] as \$_m){
-                                \$_m['url']=empty(\$_m['linkurl'])?__ROOT__."/in11dex.php?a=entry/category&m=article&t=web&siteid={\$_m['siteid']}&cid={\$_m['cid']}":\$_m['linkurl'];
+                                \$_m['url']=empty(\$_m['linkurl'])?web_url('entry/category',['cid'=>\$_m['cid']],'article'):\$_m['linkurl'];
                                 echo "<a href='{\$_m['url']}'>{\$_m['title']}</a>";
                             }
                             echo '</dd>';
@@ -191,7 +217,8 @@ if(\$cid){
 \$_category =\$db->get();
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['url']=empty(\$field['cat_linkurl'])?__ROOT__."/index.php?a=entry/category&t=web&m=article&siteid={\$field['siteid']}&cid={\$field['cid']}":\$field['cat_linkurl'];
+    \$field['url']=empty(\$field['cat_linkurl'])?web_url('entry/category',['cid'=>\$field['cid']],'article'):\$field['cat_linkurl'];
+    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
     \$css = json_decode(\$field['css']);
     if(!empty(\$field['icon'])){
                 //有图标 2
@@ -256,7 +283,7 @@ str;
                 \$field['thumb']=__ROOT__."/{\$field['thumb']}";
             }
             //文章链接
-            \$field['url']=empty(\$field['linkurl'])?__ROOT__."/index.php?a=/entry/content&m=article&t=web&siteid={\$_category['siteid']}&cid={\$_category['cid']}&aid={\$field['aid']}":\$field['linkurl'];
+            \$field['url']=empty(\$field['linkurl'])?web_url('entry/content',['cid'=>\$_category['cid'],'aid'=>\$field['aid']],'article'):\$field['linkurl'];
         ?>
         $content
         <?php }?>

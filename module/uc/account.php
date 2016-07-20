@@ -45,7 +45,7 @@ class account extends hdSite {
 			}
 			Util::instance( 'pay' )->weixin( $data );
 		}
-		View::make( 'ucenter/balance.html' );
+		View::make( $this->ucenter_template . '/balance.html' );
 	}
 
 

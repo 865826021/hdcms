@@ -14,6 +14,7 @@ use system\model\MemberGroup;
 use system\model\Ticket;
 use system\model\TicketGroups;
 use system\model\TicketModule;
+use system\model\TicketRecord;
 
 /**
  * 卡券管理
@@ -116,13 +117,70 @@ class site extends hdSite {
 		message( '卡券删除成功', 'back', 'success' );
 	}
 
-	//卡券核销
+	//卡券核销列表
 	public function doSitecharge() {
-		$sql
-			  = "SELECT * FROM hd_member m JOIN hd_ticket_record tr ON m.uid=tr.uid JOIN hd_ticket t ON t.tid=tr.tid
-                WHERE t.type={$_GET['type']}";
-		$data = Db::select( $sql );
+		//分页数据
+		$db = Db::table( 'member' );
+		$db->field( "ticket_record.id,member.uid,ticket.title,ticket.thumb,ticket.condition,ticket.discount,user.username,ticket_record.createtime,ticket_record.usetime,ticket_record.status" );
+		$db->join( 'ticket_record', 'member.uid', '=', 'ticket_record.uid' );
+		$db->join( 'ticket', 'ticket.tid', '=', 'ticket_record.tid' );
+		$db->leftJoin( 'user', 'user.uid', '=', 'ticket_record.manage' );
+		$db->where( 'ticket.type', q( 'get.type' ) )->where( 'member.siteid', SITEID );
+		//有搜索条件
+		if ( $tid = q( 'get.tid' ) ) {
+			$db->where( 'ticket.tid', $tid );
+		}
+		if ( $status = q( 'get.status' ) ) {
+			$db->where( 'ticket_record.status', $status );
+		}
+		if ( $uid = q( 'get.uid' ) ) {
+			$db->where( 'ticket_record.uid', $uid );
+		}
+		$page = Page::row( 15 )->make( $db->count() );
+		//查询数据
+		$db = Db::table( 'member' );
+		$db->field( "ticket_record.id,member.uid,ticket.title,ticket.thumb,ticket.condition,ticket.discount,user.username,ticket_record.createtime,ticket_record.usetime,ticket_record.status" );
+		$db->join( 'ticket_record', 'member.uid', '=', 'ticket_record.uid' );
+		$db->join( 'ticket', 'ticket.tid', '=', 'ticket_record.tid' );
+		$db->leftJoin( 'user', 'user.uid', '=', 'ticket_record.manage' );
+		$db->where( 'ticket.type', q( 'get.type' ) )->where( 'member.siteid', SITEID );
+		//有搜索条件
+		if ( $tid = q( 'get.tid' ) ) {
+			$db->where( 'ticket.tid', $tid );
+		}
+		if ( $status = q( 'get.status' ) ) {
+			$db->where( 'ticket_record.status', $status );
+		}
+		if ( $uid = q( 'get.uid' ) ) {
+			$db->where( 'ticket_record.uid', $uid );
+		}
+		$data = $db->limit( Page::limit() )->get();
+		//卡券数据
+		$ticket = Db::table( 'ticket' )->where( 'siteid', SITEID )->where( 'type', q( 'get.type' ) )->groupBy( 'tid' )->get();
+		View::with( 'ticket', $ticket );
+		View::with( 'data', $data );
+		View::with( 'page', $page );
 		View::make( $this->template . '/charge.html' );
+	}
+
+	//核销卡券
+	public function doSiteVerification() {
+		$id    = q( 'get.id', 0, 'intval' );
+		$model = new TicketRecord();
+		if ( $model->verification( $id ) ) {
+			message( '卡券核销成功', 'back', 'success' );
+		}
+		message( $model->getError(), 'back', 'error' );
+	}
+
+	//删除卡券
+	public function doSiteRemove() {
+		$id    = q( 'get.id', 0, 'intval' );
+		$model = new TicketRecord();
+		if ( $model->delete( $id ) ) {
+			message( '卡券删除成功', 'back', 'success' );
+		}
+		message( $model->getError(), 'back', 'error' );
 	}
 }
 

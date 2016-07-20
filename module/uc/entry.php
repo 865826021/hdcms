@@ -37,9 +37,9 @@ class entry extends hdSite {
 		//获取菜单
 		$menus = Db::table( 'web_nav' )->where( 'siteid', SITEID )->where( 'entry', 'profile' )->get();
 		//会员信息
-		$group = $this->member->getGroupName( Session::get( 'user.uid' ) );
-		View::with( [ 'uc' => $uc, 'menus' => $menus, 'user' => Session::get( 'user' ), 'group' => $group ] );
-		View::make( 'ucenter/home.html' );
+		$group = $this->member->getGroupName( Session::get( 'member.uid' ) );
+		View::with( [ 'uc' => $uc, 'menus' => $menus, 'user' => Session::get( 'member' ), 'group' => $group ] );
+		View::make( $this->ucenter_template . '/home.html' );
 	}
 
 

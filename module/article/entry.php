@@ -79,8 +79,13 @@ class entry {
 		$aid = q( 'get.aid', 0, 'intval' );
 		//文章
 		$article = Db::table( 'web_article' )->where( 'siteid', SITEID )->where( 'aid', $aid )->first();
+		if ( empty( $article ) ) {
+			message( '文章不存在', 'back', 'error' );
+		}
+		$article['url']=web_url('entry/content',['aid'=>$article['aid'],'cid'=>$article['category_cid']],'article');
 		//栏目
 		$category = Db::table( 'web_category' )->where( 'cid', $article['category_cid'] )->first();
+		$category['url']=empty($category['cat_linkurl'])?web_url('entry/category',['cid'=>$category['cid']],'article'):$category['cat_linkurl'];
 		//模板风格
 		$template_name = $article['template_name'] ?: $category['template_name'];
 		if ( empty( $template_name ) ) {
@@ -100,16 +105,6 @@ class entry {
 		}
 		View::with( 'hdcms', $article );
 		View::with( 'category', $category );
-		View::make( $tpl );
-	}
-
-	//图文消息回复
-	public function news() {
-		$id      = q( 'get.id', 0, 'intval' );
-		$article = Db::table( 'reply_news' )->where( 'id', $id )->first();
-		$tpl     = 'theme/default/' . $this->dir . '/article/article.html';
-		define( '__TEMPLATE__', "theme/default/{$this->dir}/article" );
-		View::with( 'hdcms', $article );
 		View::make( $tpl );
 	}
 }

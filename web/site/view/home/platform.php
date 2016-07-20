@@ -23,7 +23,7 @@
                 </p>
                 <p>
                     <strong>接口地址:</strong>
-                    <span>http://hdcms.jiunixing.com/index.php?s=site/api/deal&siteid={{v("site.siteid")}}</span>
+                    <span>{{__ROOT__}}/index.php?s=site/api/deal&siteid={{SITEID}}</span>
                 </p>
                 <p>
                     <strong>Token:</strong>

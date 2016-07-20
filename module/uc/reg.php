@@ -59,7 +59,7 @@ class reg extends hdSite {
 			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success' );
 		}
 		View::with( 'placeholder', v( 'setting.register.item' ) == 1 ? '手机号' : ( v( 'setting.register.item' ) == 2 ? '邮箱' : '手机号/邮箱' ) );
-		View::make( 'ucenter/register.html' );
+		View::make( $this->ucenter_template .'/register.html' );
 	}
 
 	//登录
@@ -78,17 +78,19 @@ class reg extends hdSite {
 				go( $url );
 			}
 		}
-		View::make( 'ucenter/login.html' );
+		View::make( $this->ucenter_template .'/login.html' );
 	}
 
 	//使用微信openid登录
 	public function doWEbOpenidLogin() {
-		if ( $this->member->loginByOpenid() ) {
-			$backurl = q( 'get.backurl', web_url( 'entry/home' ), 'htmlentities' );
-			go( $backurl );
-		} else {
-			message( '微信登录失败', 'back', 'error' );
+		//微信自动登录
+		if ( IS_WEIXIN && v( 'wechat.level' ) >= 3) {
+			if ( $this->member->loginByOpenid() ) {
+				$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
+				go( $url );
+			}
 		}
+		message( '微信登录失败', 'back', 'error' );
 	}
 
 	//退出

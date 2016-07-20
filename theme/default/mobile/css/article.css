@@ -1,18 +1,19 @@
 .wrap {
-  padding: 15px;
-  font-size: 12px;
-  line-height: 2em;
+  padding: 20px;
 }
-.wrap div.info {
-  margin-bottom: 15px;
-  clear: both;
+.wrap h3 {
+  font-size: 22px;
 }
-.wrap div.info .times {
-  color: #aaaaaa;
-}
-.wrap div.info .author {
+.wrap .info {
   color: #999999;
+  border-bottom: solid 1px #dcdcdc;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
-.wrap img {
-  max-width: 98%;
+.wrap .content {
+  line-height: 1.5em;
+  font-size: 16px;
+}
+.wrap .content img {
+  max-width: 98% !important;
 }

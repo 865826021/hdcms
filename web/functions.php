@@ -26,7 +26,9 @@ function web_url( $do, $params = [ ], $module = NULL ) {
 	}
 	$url = __ROOT__ . "/index.php?a=" . $url . "&t=web&siteid=" . SITEID . "&m={$module}";
 
-	return $params ? $url . '&' . http_build_query( $params ) : $url;
+	$url = $params ? $url . '&' . http_build_query( $params ) : $url;
+
+	return $url . ( IS_MOBILE ? '&mobile=1' : '' );
 }
 
 /**

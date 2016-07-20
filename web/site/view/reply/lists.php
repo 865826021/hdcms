@@ -14,9 +14,9 @@
                     <label class="col-sm-2 control-label">状态</label>
                     <div class="col-sm-10">
                         <div class="btn-group" role="group" aria-label="...">
-                            <a class="btn {{q('get.status')?'btn-default':'btn-primary'}}" href="?s=module/reply/lists&m={{v('module.name')}}">所有</a>
-                            <a class="btn {{q('get.status')=='close'?'btn-primary':'btn-default'}}" href="?s=module/reply/lists&m={{v('module.name')}}&status=close">禁用</a>
-                            <a class="btn {{q('get.status')=='open'?'btn-primary':'btn-default'}}" href="?s=module/reply/lists&m={{v('module.name')}}&status=open">启用</a>
+                            <a class="btn {{q('get.status')?'btn-default':'btn-primary'}}" href="?s=site/reply/lists&m={{v('module.name')}}">所有</a>
+                            <a class="btn {{q('get.status')=='close'?'btn-primary':'btn-default'}}" href="?s=site/reply/lists&m={{v('module.name')}}&status=close">禁用</a>
+                            <a class="btn {{q('get.status')=='open'?'btn-primary':'btn-default'}}" href="?s=site/reply/lists&m={{v('module.name')}}&status=open">启用</a>
                         </div>
                     </div>
                 </div>

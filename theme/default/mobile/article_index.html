@@ -1,7 +1,6 @@
 <extend file="resource/view/mobile"/>
 <!--设置页面title-->
 <block name="title">{{$hdcms['title']}}</block>
-<link rel="stylesheet" href="{{__TEMPLATE__}}/css/article.css">
 <block name="content">
     <!--头部导航-->
     <line action="article.mobile_header"/>
@@ -9,6 +8,7 @@
         <line action="article.slide" color="#fff" height="200" autoplay="2000"/>
     </div>
     <br/>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{$hdcms['title']}}</h3>

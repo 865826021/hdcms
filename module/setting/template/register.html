@@ -18,7 +18,7 @@
                         <label class="radio-inline">
                             <input type="radio" name="register[focusreg]" value="1" {{v('setting.register.focusreg')==1?'checked="checked"':""}}"> 系统自动注册
                         </label>
-                        <span class="help-block">当设置为"系统自动注册"，用户从微信进入系统时，当模块使用"Util::isLogin()"验证用户身份时，可以在非登录状态下直接使用模块功能。</span>
+                        <span class="help-block">当设置为"系统自动注册",并且微信号是认证服务号,用户从微信进入系统时将自动进行登录。</span>
                     </div>
                 </div>
 

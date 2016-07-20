@@ -21,6 +21,9 @@ use system\model\User;
  */
 class Entry {
 	public function __construct() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		//验证站点权限
 		if ( ! ( new User() )->isOperate() ) {
 			message( '你没有管理站点的权限', 'back', 'warning' );

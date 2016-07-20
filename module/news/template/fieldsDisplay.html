@@ -241,6 +241,7 @@
         $scope.uploadThumb = function () {
             util.image(function (images) {
                 if (images.length > 0) {
+                    console.log(images);
                     //上传成功的图片，数组类型
                     $scope.activeItem.thumb = images[0];
                     $scope.$digest();

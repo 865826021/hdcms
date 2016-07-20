@@ -10,6 +10,7 @@
 namespace module\uc;
 
 use module\hdSite;
+use system\model\Member;
 
 /**
  * 会员中心代金券处理
@@ -37,47 +38,30 @@ class ticket extends hdSite {
 
 		$data = Db::query( $sql );
 		View::with( 'data', $data );
-		View::make( 'ucenter/ticket_lists.html' );
+		View::make( $this->ucenter_template . '/ticket_lists.html' );
 	}
 
 	//兑换
 	public function doWebConvert() {
 		if ( IS_POST ) {
-			$tid = q( 'post.tid' );
-			Db::lock( 'ticket_record,ticket,member' );
-			//会员已经兑换的数量
-			$count = Db::table( 'ticket_record' )->where( 'tid', $tid )->where( 'uid', Session::get( 'member.uid' ) )->count();
-			//卡券信息
-			$ticket = Db::table( 'ticket' )->where( 'tid', $tid )->first();
-			if ( $count > $ticket['limit'] ) {
-				message( '卡券已经全部兑换完毕', '', 'error' );
+			$TicketModel = new \system\model\Ticket();
+			//兑换卡券
+			if ( ! $TicketModel->convert( q( 'post.tid' ) ) ) {
+				message( $TicketModel->getError(), 'back', 'error' );
 			}
-			//执行兑换,首先看会员积分数量够不够了..:)
-			$user = Db::table( 'member' )->where( 'uid', Session::get( 'member.uid' ) )->first();
-			if ( $user['credit1'] < $ticket['credit'] ) {
-				message( '您的积分不够,不能兑换哟', '', 'error' );
-			}
-			//减掉会员积分
-			Db::table( "member" )->where( 'uid', Session::get( 'member.uid' ) )->decrement( 'credit1', $ticket['credit'] );
-			//增加会员卡券记录
-			$data['tid']        = $ticket['tid'];
-			$data['uid']        = Session::get( 'member.uid' );
-			$data['siteid']     = SITEID;
-			$data['createtime'] = time();
-			$data['usetime']    = 0;
-			$data['module']     = '';
-			$data['remark']     = '';
-			$data['status']     = 1;//1 兑换 2 核销
-			$data['manage']     = 0;//管理员
-			Db::table( 'ticket_record' )->insert( $data );
-			message( '卡券兑换成功', '', 'success' );
+			message( '兑换成功', '', 'success' );
 		}
-		$sql = "SELECT t.tid,t.starttime,t.endtime,t.description,t.title,t.limit,t.thumb FROM " . tablename( 'ticket' );
+		$sql = "SELECT t.tid,t.credit,t.starttime,t.credittype,t.endtime,t.description,t.title,t.limit,t.thumb FROM " . tablename( 'ticket' );
 		$sql .= " t LEFT JOIN " . tablename( 'ticket_record' ) . " tr ON t.tid=tr.tid " . "WHERE t.starttime<" . time() . " AND t.endtime>" . time();
 		$sql .= " AND t.type={$_GET['type']}" . " AND t.siteid=" . SITEID . " GROUP BY t.tid HAVING count(tr.id) < t.limit";
-		$data = Db::query( $sql );
+		$data   = Db::query( $sql );
+		$Member = new Member();
+		foreach ( $data as $k => $v ) {
+			//兑换积分名称,积分或余额
+			$data[ $k ]['credit_title'] = $Member->getCreditTitle( $v['credittype'] );
+		}
 		View::with( 'data', $data );
-		View::make( 'ucenter/ticket_convert.html' );
+		View::make( $this->ucenter_template . '/ticket_convert.html' );
 	}
 
 	//使用卡券
@@ -86,6 +70,6 @@ class ticket extends hdSite {
 		//会员卡卷记录
 		$ticket = Db::table( 'ticket' )->where( 'tid', $tid )->first();
 		View::with( 'ticket', $ticket );
-		View::make( 'ucenter/ticket_employ.html' );
+		View::make( $this->ucenter_template . '/ticket_employ.html' );
 	}
 }

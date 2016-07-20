@@ -1,4 +1,5 @@
 <?php namespace module;
+
 use system\model\ModuleSetting;
 
 /**
@@ -16,4 +17,11 @@ abstract class hdSubscribe {
 	}
 
 	abstract function handle();
+
+	public function __call( $method, $arguments ) {
+		$instance = \Weixin::instance( 'message' );
+		if ( method_exists( $instance, $method ) ) {
+			call_user_func_array( [ $instance, $method ], $arguments );
+		}
+	}
 }

@@ -36,8 +36,8 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
                 uc.menu.params.modules = [];
                 $(modules).each(function (i) {
                     uc.menu.params.modules.push({title: this.title, mid: this.mid});
-                    $scope.$apply();
                 })
+                $scope.$apply();
             }, mid.join(','));
         };
         //提交表单
@@ -90,7 +90,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
         $templateCache.put('quickmenu_normal_display.html', '' +
             '<div class="quickmenu_normal" ng-controller="normal">\
             <div class="home">\
-            <a href="?a=entry/home&m=article&t=web&siteid=' + sys.siteid + '"><i class="fa fa-home"></i></a>\
+            <a href="?a=entry/home&m=article&t=web&siteid=' + sys.siteid + '&mobile=1"><i class="fa fa-home"></i></a>\
             </div>\
             <ul>\
             <li ng-repeat="v in menu.params.menus">\

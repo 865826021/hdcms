@@ -18,6 +18,9 @@ namespace web\system\controller;
 class Component {
 	//模块列表
 	public function moduleBrowser() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		View::with( 'modules', v( 'modules' ) );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
 		View::make();
@@ -25,55 +28,74 @@ class Component {
 
 	//加载系统链接
 	public function linkBrowser() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		View::make();
 	}
 
 	//模块&模板列表
 	public function moduleList() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		$modules = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		View::with( 'modules', $modules )->make();
 	}
 
 	//字体列表
 	public function font() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		View::make();
 	}
 
 	//上传图片webuploader
 	public function uploader() {
-		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m' ) )->make();
+		$uid = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		if ( empty( $uid ) ) {
+			message( '没有操作权限', 'back', 'error' );
+		}
+		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
 		if ( $file ) {
 			$data = [
-				'uid'        => Session::get( 'user.uid' ) ?: Session::get( 'member.uid' ),
-				'siteid'     => q( 'session.siteid', 0 ),
+				'uid'        => $uid,
+				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
 				'path'       => $file[0]['path'],
-				'type'       => $file[0]['image'] ? 'image' : 'file',
+				'extension'  => strtolower( $file[0]['ext'] ),
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
-				'user_type'  => Session::get( 'user.uid' ) ? 1 : 0
+				'is_member'  => Session::get( 'is_member' ) ? 1 : 0,
 			];
 			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
 		} else {
-			ajax( [ 'valid' => 0, 'message' => Upload::getError() ] );
+			ajax( [ 'valid' => 0, 'message' => \Upload::getError() ] );
 		}
 	}
 
 	//获取文件列表webuploader
-	public function imageLists() {
-		$uid   = Session::get( 'user.uid' ) ?: Session::get( 'member.uid' );
-		$type  = Session::get( 'user' ) ? 1 : 0;
-		$count = Db::table( 'core_attachment' )->where( 'uid', $uid )->where( 'type', q( 'get.type' ) )->where( 'user_type', $type )->count();
-		$page  = Page::row( 10 )->pageNum( 8 )->make( $count );
-		$data  = Db::table( 'core_attachment' )
-		           ->where( 'uid', $uid )
-		           ->where( 'type', q( 'get.type' ) )
-		           ->where( 'user_type', $type )
-		           ->limit( Page::limit() )
-		           ->orderBy('id' ,'DESC')
-		           ->get();
+	public function filesLists() {
+		$uid       = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		$is_member = Session::get( 'is_member' ) ? 1 : 0;
+		$count     = Db::table( 'core_attachment' )
+		               ->where( 'uid', $uid )
+		               ->where( 'is_member', $is_member )
+		               ->where( 'siteid', SITEID )
+		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
+		               ->count();
+		$page      = Page::row( 32 )->pageNum( 8 )->make( $count );
+		$data      = Db::table( 'core_attachment' )
+		               ->where( 'uid', $uid )
+		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
+		               ->where( 'is_member', $is_member )
+		               ->where( 'siteid', SITEID )
+		               ->limit( Page::limit() )
+		               ->orderBy( 'id', 'DESC' )
+		               ->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );
 			$data[ $k ]['size']       = get_size( $v['size'] );
@@ -83,16 +105,22 @@ class Component {
 
 	//删除图片delWebuploader
 	public function removeImage() {
+		if ( ! Session::get( 'member' ) && ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		$db   = Db::table( 'core_attachment' );
-		$file = $db->where( 'id', $_POST['id'] )->where( 'uid', Session::get( 'user.uid' ) )->where( 'user_type', $_SESSION['admin'] )->first();
+		$file = $db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID)->first();
 		if ( is_file( $file['path'] ) ) {
 			unlink( $file['path'] );
 		}
-		$db->where( 'id', $_POST['id'] )->where( 'uid', $_SESSION['user']['uid'] )->where( 'user_type', $_SESSION['admin'] )->delete();
+		$db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID)->delete();
 	}
 
 	//选择用户
 	public function users() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		if ( isset( $_GET['loadUser'] ) ) {
 			//过滤不显示的用户
 			$filterUid = explode( ',', q( 'get.filterUid', '' ) );
@@ -114,6 +142,9 @@ class Component {
 
 	//模块与模板列表,添加站点时选择扩展模块时使用
 	public function ajaxModulesTemplate() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		$modules   = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		$templates = Db::table( 'template' )->get();
 		View::with( [
@@ -121,9 +152,11 @@ class Component {
 			'templates' => $templates
 		] )->make();
 	}
-
 	//百度编辑器
 	public function ueditor() {
+		if ( ! Session::get( 'member' ) && ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( "config.json" ) ), TRUE );
 		$action = $_GET['action'];
 		switch ( $action ) {
@@ -177,8 +210,12 @@ class Component {
 
 	//编辑器上传
 	public function kindUpload() {
+		$uid       = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		if ( empty($uid)) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		//文件保存目录路径
-		$save_path = Config::get( 'upload.path' ) . '/keditor/' . $_SESSION['uid'] . '/';
+		$save_path = \Config::get( 'upload.path' ) . '/keditor/' . ( Session::get( 'is_member' ) ? 'member' : 'admin' ) . '/' . $uid . '/';
 		//定义允许上传的文件扩展名
 		$ext_arr = [
 			'image' => [ 'gif', 'jpg', 'jpeg', 'png', 'bmp' ],
@@ -187,8 +224,20 @@ class Component {
 			'file'  => [ 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'htm', 'html', 'txt', 'zip', 'rar', 'gz', 'bz2' ],
 		];
 		$dir     = Q( 'get.dir', 'image' );
-		$file    = Upload::type( $ext_arr[ $dir ] )->path( $save_path . $dir . '/' . date( "Y/m" ) . '/' )->make();
+		$file    = \Upload::type( $ext_arr[ $dir ] )->path( $save_path . $dir . '/' . date( "Y/m" ) . '/' )->make();
 		if ( $file ) {
+			$data = [
+				'uid'        => $uid,
+				'siteid'     => defined( SITEID ) ? SITEID : 0,
+				'name'       => $file[0]['name'],
+				'filename'   => $file[0]['filename'],
+				'path'       => $file[0]['path'],
+				'type'       => $file[0]['image'] ? 'image' : 'file',
+				'createtime' => time(),
+				'size'       => $file[0]['size'],
+				'user_type'  => \Session::get( 'user.uid' ) ? 1 : 0
+			];
+			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'error' => 0, 'url' => $file[0]['path'] ] );
 		} else {
 			ajax( [ 'error' => 1, 'message' => Upload::getError() ] );
@@ -197,6 +246,9 @@ class Component {
 
 	//文件管理
 	public function kindFileManagerJson() {
+		if ( ! Session::get( 'member' ) && ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		//根目录路径，可以指定绝对路径，比如 /var/www/attached/
 		$root_path = ROOT_PATH . '/' . Config::get( 'upload.path' ) . '/keditor/' . $_SESSION['uid'] . '/';
 		if ( ! is_dir( $root_path ) ) {

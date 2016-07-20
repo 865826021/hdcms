@@ -10,26 +10,36 @@
 namespace module\uc;
 
 use module\hdSite;
+use system\model\Member;
 
 class mobile extends hdSite {
+	protected $db;
+
+	public function __construct() {
+		parent::__construct();
+		$this->db = new Member();
+	}
+
 	//修改手机号
 	public function doWebChangeMobile() {
 		if ( IS_POST ) {
 			Validate::make( [
-				[ 'mobile', 'required|phone', '原手机号输入错误', 2 ],
-				[ 'new_mobile', 'required|phone', '新手机号输入错误', 2 ],
-				[ 'password', 'required', '密码不能为空', 2 ],
+				[ 'mobile', 'required|phone', '手机号输入错误', 3 ],
 			] );
-			$user = Db::table( 'member' )->where( 'uid', $_SESSION['member']['uid'] )->first();
-			if ( $user['password'] != md5( $_POST['password'] . $user['security'] ) ) {
-				message( '密码输入错误', 'back', 'error' );
+			if ( Validate::fail() ) {
+				message( Validate::getError(), 'back', 'error' );
 			}
-			$data['mobile'] = $_POST['new_mobile'];
-			Db::table( 'member' )->where( 'uid', $_SESSION['user']['uid'] )->update( $data );
-			//更新用户session
-			m('Member')->updateUserSessionData();
-			message( '手机号更新成功', web_url( 'uc/entry/home' ), 'success' );
+			if ( $this->db->where( 'mobile', $_POST['mobile'] )->where( 'uid', '<>', Session::get( 'member.uid' ) )->get() ) {
+				message( '手机号已经被使用', 'back', 'error' );
+			}
+			$_POST['uid'] = Session::get( 'member.uid' );
+			if ( $d = $this->db->save() ) {
+				//更新用户session
+				$this->db->updateUserSessionData();
+				message( '手机号更新成功', web_url( 'entry/home' ), 'success' );
+			}
+			message( $this->db->getError(), 'back', 'error' );
 		}
-		View::make( 'ucenter/change_mobile.html' );
+		View::make( $this->ucenter_template .'/change_mobile.html' );
 	}
 }

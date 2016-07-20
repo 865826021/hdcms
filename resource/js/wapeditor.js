@@ -111,7 +111,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'angular.drag', 'jquery-ui
             }
             var modules = "<textarea name='modules' hidden='hidden'>" + angular.toJson(widgets) + "</textarea>";
             $('form').append(modules);
-            var f = $("#module-lists").html();
+            var f = $("#module-lists").find('div').remove('.module-edit-action').html();
             f = f.replace(/<\!\-\-([^-]*?)\-\->/g, "");
             f = f.replace(/ng\-[a-zA-Z-]+=\"[^\"]*\"/g, "");
             f = f.replace(/ng\-[a-zA-Z]+/g, "");
@@ -261,7 +261,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'angular.drag', 'jquery-ui
                     <div class="form-group">\
                         <label class="col-sm-3 control-label star">触发关键字</label>\
                         <div class="col-sm-9">\
-                            <input type="text" class="form-control" ng-model="active.params.keyword" required="required" onblur="util.checkWxKeyword(this)">\
+                            <input type="text" class="form-control" ng-model="active.params.keyword" required="required" onblur="util.checkWxKeyword(this,rid)">\
                             <span class="help-block"></span>\
                             <span class="help-block">用户触发关键字，系统回复此页面的图文链接</span>\
                         </div>\

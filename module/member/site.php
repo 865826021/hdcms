@@ -182,12 +182,9 @@ class site extends hdSite {
 	public function doSiteSetDefaultGroup() {
 		$model = new MemberGroup();
 		$id    = q( 'get.id' );
-		$group = $model->where( 'siteid', v( 'site.siteid' ) )->find( $id );
+		$group = $model->where( 'siteid', SITEID )->find( $id );
 		if ( empty( $group ) ) {
 			message( '会员组不存在', '', 'error' );
-		}
-		if ( $group['isdefault'] == 1 ) {
-			message( '该会员组已经是默认的会员组', '', 'error' );
 		}
 		if ( $group['credit'] != 0 ) {
 			message( '默认会员组初始积分必须为0', '', 'error' );
@@ -213,27 +210,20 @@ class site extends hdSite {
 				message( '更改数量必须为数字', '', 'error' );
 			}
 			//更改数量
-			$num       = q( 'post.num' );
-			$user      = Db::table( 'member' )->where( 'uid', $uid )->first();
-			$newCredit = $user[ $type ] + $num;
-			if ( $newCredit < 0 ) {
-				message( '你的积分数量不够', '', 'error' );
+			$Member             = new Member();
+			$data               = [ ];
+			$data['uid']        = $uid;
+			$data['credittype'] = $type;
+			$data['num']        = q( 'post.num' );
+			$data['module']     = '';
+			$data['action']     = '';
+			$data['action']     = 'decrement';
+			$data['operator']   = Session::get( 'user.uid' );
+			$data['remark']     = $_POST['remark'];
+			if ( ! $Member->changeCredit( $data ) ) {
+				message( $Member->getError(), '', 'error' );
 			}
-			$data[ $type ] = $newCredit;
-			if ( Db::table( 'member' )->where( 'uid', intval( $uid ) )->update( $data ) ) {
-				Db::table( 'credits_record' )->insert( [
-					'siteid'     => SITEID,
-					'uid'        => $uid,
-					'credittype' => $type,
-					'num'        => $num,
-					'operator'   => Session::get( 'user.uid' ),
-					'module'     => 'system',
-					'createtime' => time(),
-					'remark'     => q( 'post.remark' )
-				] );
-				//更改会员session数据
-				Util::updateMemberSessionCache();
-			}
+			$Member->updateUserSessionData();
 			message( v( "setting.creditnames.$type.title" ) . '更改成功', '', 'success' );
 		}
 		View::with( 'uid', $uid );

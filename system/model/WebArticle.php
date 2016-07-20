@@ -41,7 +41,7 @@ class WebArticle extends Model {
 			[ 'linkurl', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'orderby', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
-			[ 'click', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'click', 'trim', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'thumb', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 }

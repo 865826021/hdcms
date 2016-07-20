@@ -54,7 +54,7 @@ class ucenter extends hdSite {
 			//删除旧的菜单
 			$webNavModel = new WebNav();
 			$webNavModel->where( 'siteid', SITEID )->where( 'entry', 'profile' )->delete();
-			foreach ( $menus as $m ) {
+			foreach ( (array) $menus as $m ) {
 				if ( ! empty( $m['name'] ) ) {
 					$data             = [ ];
 					$data['name']     = $m['name'];
@@ -128,7 +128,7 @@ class ucenter extends hdSite {
 		foreach ( $menusData as $k => $v ) {
 			$menusData[ $k ]['css'] = json_decode( $v['css'], TRUE );
 		}
-
+		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '会员中心' )->pluck( 'rid' ) );
 		View::with( [ 'modules' => $modules, 'menusData' => $menusData ] );
 		View::make( $this->template . '/ucenter/post.php' );
 	}

@@ -1,6 +1,6 @@
 <extend file="resource/view/site"/>
 <link rel="stylesheet" href="module/article/template/quickmenu/css.css">
-<link rel="stylesheet" href="ucenter/css/quickmenu.css">
+<link rel="stylesheet" href="ucenter/mobile/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="?a=ucenter/post&t=site&m=article">微站会员中心</a></li>
@@ -32,13 +32,13 @@
 			</div>
 			<div class="slide col-sm-6" style="margin: 80px 0px 0px 10px;">
 				<div class="well">
-					将导航应用在以下页面:
-					<div style="margin-top: 10px;">
-						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter"> 会员中心</label>
-						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页</label>
-						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_special"> 专题页</label>
-						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类</label>
-					</div>
+						<!--将导航应用在以下页面:-->
+<!--					<div style="margin-top: 10px;">-->
+<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter"> 会员中心</label>-->
+<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页</label>-->
+<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_special"> 专题页</label>-->
+<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类</label>-->
+<!--					</div>-->
 					<div style="margin-top: 10px;">
 						将导航隐藏在以下模块:
 						<a href="javascript:;" ng-click="moduleBrowsers(this)">选择模块</a>

@@ -54,6 +54,9 @@ class Module {
 
 	//模块配置
 	public function setting() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
@@ -71,6 +74,9 @@ class Module {
 
 	//模块封面设置
 	public function cover() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
@@ -170,6 +176,9 @@ class Module {
 
 	//模块后台管理业务
 	public function site() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
@@ -187,6 +196,9 @@ class Module {
 
 	//模块业务
 	public function business() {
+		if ( ! Session::get( 'user' ) ) {
+			message( '请登录后操作', 'system/entry/login', 'error' );
+		}
 		$bid = q( 'get.bid', 0, 'intval' );
 		if ( ! ( new User() )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );

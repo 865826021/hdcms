@@ -16,6 +16,8 @@ class hook {
 	public function app_begin() {
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', FALSE );
+		//前台访问
+		Session::set( 'is_member', isset( $_GET['t'] ) && $_GET['t'] == 'web' );
 		//域名检测
 		$this->checkDomain();
 		$this->moduleInitialize();
@@ -62,6 +64,8 @@ class hook {
 				Session::del( 'siteid' );
 				message( '你访问的站点不存在', 'back', 'error' );
 			}
+			//微官网首页
+			define( '__HOME__', web_url( 'entry/home', [ ], 'article' ) );
 		}
 	}
 }

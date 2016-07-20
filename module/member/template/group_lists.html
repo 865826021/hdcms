@@ -5,9 +5,9 @@
         <li role="presentation"><a href="{{site_url('site/GroupPost')}}"><i class="fa fa-plus"></i> 添加会员组</a></li>
     </ul>
     <div class="alert alert-info">
-        <strong class="text-danger"><i class="fa fa-info-circle"></i> 会员组的总积分是根据(积分+贡献)的值算出来的,管理员不能直接修改会员所在的会员组. 如果需要修改会员组,请通过设置积分或者贡献的值来影响总积分,系统会根据影响后的总积分自动算出对应的会员组<br/></strong>
+        <strong class="text-danger"><i class="fa fa-info-circle"></i> 管理员不能直接修改会员所在的会员组. 如果需要修改会员组,请通过设置积分或者贡献的值来影响总积分,系统会根据影响后的总积分自动算出对应的会员组<br/></strong>
         <i class="fa fa-info-circle"></i> 默认会员组的积分需设置为 0<br/>
-        <i class="fa fa-info-circle"></i> 系统会根据会员的总积分(积分+贡献)多少自动对会员的分组进行调整<br/>
+        <i class="fa fa-info-circle"></i> 系统会根据会员的总积分多少自动对会员的分组进行调整<br/>
     </div>
     <form action="" method="post" role="form">
         <div class="panel panel-default">
@@ -27,7 +27,6 @@
                         <label class="radio-inline">
                             <input type="radio" name="grouplevel" value="3" {{$grouplevel==3?'checked="checked"':''}}> 根据总积分多少只升不降
                         </label>
-                        <span class="help-block">设置变更方式后,请谨慎修改</span>
                         <span class="help-block">不自动变更：<strong class="text-danger">会员组的变更只能通过管理员来变更</strong></span>
 <span class="help-block">根据积分多少自动升降：<strong class="text-danger">系统根据当前会员的总积分，按照每个会员组所需总积分的设置进行变更。可自动升降会员组</strong><span>
 <span class="help-block">根据积分多少只升不降：<strong class="text-danger">系统根据当前会员的总积分，如果会员的总积分达到更高一级的会员组，则变更会员组，如果积分少于当前所在会员组所需总积分，保持当前会员组不变，不会降级。</strong></span>
@@ -70,7 +69,7 @@
                             </td>
                             <td>{{$g['uid']?$g['user_count']:0}}人</td>
                             <td class="text-right">
-                                <a href="?a=member/site/GroupPost&t=site&id={{$g['id']}}">编辑</a>
+                                <a href="{{site_url('site/GroupPost',['id'=>$g['id']])}}">编辑</a>
                                 <if value="$g['is_system']==0">
                                     -
                                     <a href="javascript:;" onclick="del({{$g['id']}})">删除</a>

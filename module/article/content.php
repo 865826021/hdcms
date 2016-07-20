@@ -31,7 +31,7 @@ class content extends hdSite {
 	protected $webArticle;
 
 	public function __construct() {
-		parent::__construct();
+		parent::__construct();p(V());
 		$this->cid         = q( 'get.cid', 0, 'intval' );
 		$this->webCategory = new WebCategory();
 		$this->webArticle  = new WebArticle();
@@ -145,7 +145,12 @@ class content extends hdSite {
 	public function doSiteArticle() {
 		$count = Db::table( 'web_article' )->where( 'siteid', '=', v( 'site.siteid' ) )->count();
 		$page  = Page::make( $count );
-		$data  = Db::table( 'web_article' )->where( 'siteid', '=', v( 'site.siteid' ) )->limit( Page::limit() )->orderBy( 'orderby', 'desc' )->get();
+		$data  = Db::table( 'web_article' )
+		           ->where( 'siteid', '=', v( 'site.siteid' ) )
+		           ->limit( Page::limit() )
+		           ->orderBy( 'orderby', 'desc' )
+		           ->orderBy( 'aid', 'desc' )
+		           ->get();
 		View::with( 'data', $data );
 		View::with( 'page', $page );
 		View::make( $this->template . '/content/article.php' );
@@ -201,7 +206,7 @@ class content extends hdSite {
 				}
 			}
 			//修改文章回复规则编号
-			if ( ! $this->webArticle->save( [ 'aid' => $aid, 'rid' => $rid ] ) ) {
+			if ( ! $this->webArticle->update( [ 'aid' => $aid, 'rid' => $rid ] ) ) {
 				message( $this->webArticle->getError(), 'back', 'error' );
 			}
 			message( '保存文章成功', site_url( 'article', [ 'cid' => q( 'get.cid' ) ] ), 'success' );
