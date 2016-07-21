@@ -21,14 +21,6 @@ class Template extends Model {
 	protected $table = 'template';
 
 	/**
-	 *
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return array
-	 * @throws \Exception
-	 */
-	/**
 	 * 获取站点所有模板
 	 *
 	 * @param int $siteid 站点编号

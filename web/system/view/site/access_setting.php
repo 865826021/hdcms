@@ -31,7 +31,12 @@
 					<label class="col-sm-2 control-label">网站站长</label>
 
 					<div class="col-sm-10">
-						<span class="label label-success" id="username">&nbsp;{{$user['username']}}</span>
+						<span class="label label-success" id="username">
+							<if value="$user['username']">
+								<i class="fa fa-times-circle" style="cursor: pointer" onclick="delOwner({{SITEID}})"></i>
+							</if>
+							{{$user['username']}}
+						</span>
 						<input type="hidden" name="uid" value="{{$user['uid']}}">
 						<a href="javascript:;" onclick="selectUser()">选择用户</a> -
 						如果是新用户请先<a href="javascript:;" onclick="addUser()">添加</a>
@@ -98,7 +103,7 @@
 						<td id="extModule">
 							<foreach from="$extModule" value="$v">
 								<span class="label label-success">{{$v['title']}}</span>
-								<input name="modules[]" value="{{$v['name']}}" type="hidden" />
+								<input name="modules[]" value="{{$v['name']}}" type="hidden"/>
 							</foreach>
 						</td>
 						<td id="extTemplate">
@@ -159,18 +164,24 @@
 			width: 700
 		})
 	}
-
+	//删除站长
+	function delOwner(siteid) {
+		$.get('{{u("delOwner")}}', {siteid: siteid}, function () {
+			util.message('站长删除成功', 'refresh', 'success');
+		})
+	}
 	//专属附加权限
 	function extModules() {
 		require(['util'], function (util) {
-			var module = [];var template = [];
+			var module = [];
+			var template = [];
 			$("#extModule input").each(function () {
 				module.push($(this).val());
 			});
 			$("#extTemplate input").each(function () {
 				template.push($(this).val());
 			});
-			url = '?s=system/component/ajaxModulesTemplate&module=' + module.join('|')+'&template='+template.join('|');
+			url = '?s=system/component/ajaxModulesTemplate&module=' + module.join('|') + '&template=' + template.join('|');
 			var modalobj = util.modal({
 				id: 'modalList',
 				content: [url],

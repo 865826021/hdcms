@@ -53,13 +53,11 @@ class User {
 		}
 		if ( IS_POST ) {
 			//用户组过期时间
-			$daylimit = Db::table( 'user_group' )->where( 'id', $_POST['groupid'] )->pluck( 'daylimit' );
-			$data     = [
-				'groupid' => intval( $_POST['groupid'] ),
-				'regtime' => time(),
-				'endtime' => $daylimit ? time() + $daylimit * 3600 * 24 : 0,
-			];
-			if ( $this->db->add( $data ) ) {
+			$daylimit         = Db::table( 'user_group' )->where( 'id', $_POST['groupid'] )->pluck( 'daylimit' );
+			$_POST['groupid'] = intval( $_POST['groupid'] );
+			$_POST['regtime'] = time();
+			$_POST['endtime'] = $daylimit ? time() + $daylimit * 3600 * 24 : 0;
+			if ( $this->db->add() ) {
 				message( '添加新用户成功', 'lists', 'success' );
 			}
 			message( $this->db->getError(), 'back', 'error' );
