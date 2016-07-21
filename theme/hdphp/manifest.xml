@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <name><![CDATA[hdphp]]></name>
+  <title><![CDATA[HDPHP发布页]]></title>
+  <url><![CDATA[http://open.hdcms.com]]></url>
+  <type><![CDATA[often]]></type>
+  <version><![CDATA[2.0]]></version>
+  <description><![CDATA[hdphp发布页2.0]]></description>
+  <author><![CDATA[周宇翔]]></author>
+  <position><![CDATA[0]]></position>
+  <thumb><![CDATA[thumb.jpg]]></thumb>
+</manifest>
