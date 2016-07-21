@@ -100,6 +100,8 @@ class Site extends Model {
 		foreach ( $this->lists( 'siteid' ) as $siteid ) {
 			$this->updateSiteCache( $siteid );
 		}
+
+		return TRUE;
 	}
 
 	/**

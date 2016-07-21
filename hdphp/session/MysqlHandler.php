@@ -27,7 +27,6 @@ class MysqlHandler implements AbSession {
 		$options  = Config::get( 'session.mysql' );
 		//数据表
 		$this->table = Config::get( 'database.prefix' ) . $options['table'];
-
 		//过期时间
 		$expire       = Config::get( 'session.expire' );
 		$this->expire = $expire ? $expire : 864000;

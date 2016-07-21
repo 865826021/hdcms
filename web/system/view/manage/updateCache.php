@@ -17,7 +17,10 @@
                     <input type="checkbox" name="data" value="1" checked="checked"> 数据缓存
                 </label>
                 <label class="checkbox-inline">
-                    <input type="checkbox" name="tpl" value="1" checked="checked"> 模板缓存
+                    <input type="checkbox" name="tpl" value="1" checked="checked"> 模板编译
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" name="weixin" value="1" checked="checked"> 微信数据
                 </label>
             </div>
         </div>

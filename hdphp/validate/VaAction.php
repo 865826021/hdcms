@@ -53,7 +53,7 @@ class VaAction {
 
 	//邮编验证
 	public function zipCode( $name, $value, $params ) {
-		$preg = "/^[1-9]\d{5}$/i";
+		$preg = "/^\d{6}$/i";
 		if ( preg_match( $preg, $value ) ) {
 			return TRUE;
 		}

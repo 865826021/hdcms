@@ -41,18 +41,18 @@ class Manage {
 		if ( IS_POST ) {
 			//更新数据缓存
 			if ( isset( $_POST['data'] ) ) {
-				//更新站点缓存
-				$sites = Db::table( 'site' )->get();
-				foreach ( $sites as $s ) {
-					m( 'Site' )->updateSiteCache( $s['siteid'] );
-				}
-				//删除缓存数据
 				Dir::del( 'storage/cache' );
 			}
 			//更新模板缓存
 			if ( isset( $_POST['tpl'] ) ) {
 				Dir::del( 'storage/view' );
 			}
+			//微信缓存
+			if ( isset( $_POST['weixin'] ) ) {
+				Dir::del( 'storage/weixin' );
+			}
+			//更新所有站点缓存
+			m( 'Site' )->updateAllSiteCache();
 			message( '缓存更新成功', 'back', 'success' );
 		}
 

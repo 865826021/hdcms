@@ -602,7 +602,7 @@ str;
 			$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
 			if ( ! empty( $installSql ) ) {
 				if ( preg_match( '/.php$/', $installSql ) ) {
-					$file = 'addons/' . $_POST['module'] . '/' . $installSql;
+					$file = 'addons/' . $_GET['module'] . '/' . $installSql;
 					if ( ! is_file( $file ) ) {
 						message( '卸载文件:' . $file . '不存在', 'back', 'error' );
 					}
