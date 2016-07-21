@@ -1,5 +1,5 @@
 <?php
-return [
+$database = [
 	//读库列表
 	'read'     => [ ],
 	//写库列表
@@ -7,15 +7,17 @@ return [
 	//开启读写分离
 	'proxy'    => FALSE,
 	//主机
-	'host'     => 'houdunwang.mysql.rds.aliyuncs.com',
+	'host'     => 'localhost',
 	//类型
 	'driver'   => 'mysql',
 	//帐号
-	'user'     => 'dev',
+	'user'     => '',
 	//密码
-	'password' => 'Hdw19&^2010',
+	'password' => '',
 	//数据库
-	'database' => 'dev',
+	'database' => '',
 	//表前缀
 	'prefix'   => 'hd_'
 ];
+
+return array_merge( $database, include 'data/database.php' );
