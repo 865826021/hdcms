@@ -170,7 +170,7 @@ class Member extends Model {
 	 *  'credittype'=>积分类型,如credit1
 	 *  'num'=>数量,负数为减少
 	 *  'module'=>变动积分的模块
-	 *  'remark'=>变量说明
+	 *  'remark'=>说明
 	 * );
 	 *
 	 * @return bool

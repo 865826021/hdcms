@@ -1,4 +1,5 @@
-<?php
+<?php namespace module\article;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,7 +8,6 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\article;
 
 use module\hdSite;
 use system\model\WebPage;
@@ -38,13 +38,14 @@ class quickmenu extends hdSite {
 				'type'        => 1,//页面类型  1 导航菜单
 				'status'      => 1,
 				'params'      => [
-					'style'       => 'quickmenu_normal',
-					'menus'       => [ ],
-					'modules'     => [ ],
-					'has_ucenter' => 1,//会员中心
-					'has_home'    => 1,//微站主页
-					'has_special' => 1,//微页面
-					'has_article' => 1,//文章及分类
+					'style'           => 'quickmenu_normal',
+					'menus'           => [ ],
+					'modules'         => [ ],
+					'has_home_button' => 1,
+					'has_ucenter'     => 1,//会员中心
+					'has_home'        => 1,//微站主页
+					'has_special'     => 1,//微页面
+					'has_article'     => 1,//文章及分类
 				]
 			];
 		} else {

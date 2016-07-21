@@ -29,4 +29,13 @@ class Member {
 		return m( 'Member' )->updateUserSessionData();
 	}
 
+	//积分修改
+	public function changeCredit( $data ) {
+		$Model = m( 'Member' );
+		if ( ! $Model->changeCredit( $data ) ) {
+			return $Model->getError();
+		}
+
+		return TRUE;
+	}
 }

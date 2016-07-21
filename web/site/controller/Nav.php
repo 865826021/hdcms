@@ -59,8 +59,9 @@ class Nav {
 		}
 		//当前显示导航的站点
 		if ( ! $this->webid ) {
-			$web         = ( new Web() )->getDefaultWeb();
-			$this->webid = $_GET['webid'] = $web['id'];
+			if ( $web = ( new Web() )->getDefaultWeb() ) {
+				$this->webid = $_GET['webid'] = $web['id'];
+			}
 		}
 		//当前站点模板数据
 		$template = $this->web->getTemplateData( $this->webid );
@@ -71,7 +72,7 @@ class Nav {
 			//从模块动作中移除已经在菜单中有值的菜单
 			$modulesBindings = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', q( 'get.entry' ) )->get();
 			foreach ( $modulesBindings as $k => $v ) {
-				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&siteid=" . SITEID;
+				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&t=web&siteid=" . SITEID.'&m='.v( 'module.name' );
 				foreach ( $nav as $n ) {
 					if ( strstr( $n['url'], $modulesBindings[ $k ]['url'] ) ) {
 						unset( $modulesBindings[ $k ] );

@@ -46,7 +46,10 @@
 						<th>标题</th>
 						<th width="250">链接</th>
 						<th width="120">排序</th>
-						<th width="90">位置</th>
+						<if value="!v('module.name')">
+							<!--模块链接时不显示位置,位置在文章系统有效-->
+							<th width="90">位置</th>
+						</if>
 						<th>是否在微站上显示</th>
 						<th width="100">操作</th>
 					</tr>
@@ -76,12 +79,15 @@
 						<td>
 							<input type="text" class="form-control" ng-model="field.orderby"/>
 						</td>
-						<td>
-							<select class="form-control" ng-options="a.position as a.title for a in template.template_position"
-							        ng-model="field.position">
-								<option value="">不显示</option>
-							</select>
-						</td>
+						<if value="!v('module.name')">
+							<!--模块链接时不显示位置,位置在文章系统有效-->
+							<td>
+								<select class="form-control" ng-options="a.position as a.title for a in template.template_position"
+								        ng-model="field.position">
+									<option value="">不显示</option>
+								</select>
+							</td>
+						</if>
 						<td>
 							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
 						</td>

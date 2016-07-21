@@ -251,7 +251,7 @@ VALUES
 	(81,27,'扩展功能管理','package_managa','?s=site/entry/package','','fa fa-cubes',0,1,0,'package'),
 	(82,1,'高级功能','','','','fa fa-cubes',0,1,0,'platform'),
 	(84,33,'会员字段管理','member_fields','?a=site/Fieldlists&t=site&m=member','','fa fa-cubes',0,1,0,'member'),
-	(85,78,'微站快捷导航','article_quick_menu','?a=quickmenu/menu&t=site&m=article','','fa fa-cubes',0,1,0,'article'),
+	(85,78,'微站快捷导航','article_quick_menu','?a=quickmenu/post&t=site&m=article','','fa fa-cubes',0,1,0,'article'),
 	(86,82,'微信菜单','menus_lists','?a=site/lists&t=site&m=button','','fa fa-cubes',0,1,0,'platform');
 
 DROP TABLE IF EXISTS `hd_module_setting`;

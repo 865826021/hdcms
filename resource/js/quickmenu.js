@@ -89,7 +89,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
         //显示区域
         $templateCache.put('quickmenu_normal_display.html', '' +
             '<div class="quickmenu_normal" ng-controller="normal">\
-            <div class="home">\
+            <div class="home" ng-if="menu.params.has_home_button">\
             <a href="?a=entry/home&m=article&t=web&siteid=' + sys.siteid + '&mobile=1"><i class="fa fa-home"></i></a>\
             </div>\
             <ul>\
@@ -106,7 +106,12 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'jquery-ui'], function (an
             </div>');
         //编辑区域
         $templateCache.put('quickmenu_normal_edit.html', '' +
-            '<div class="quickmenu_normal_setting" ng-controller="normal">\
+        '<div class="checkbox"><label>\
+            <input type="checkbox" value="1" ng-model="menu.params.has_home_button" ng-checked="menu.params.has_home_button">\
+                        显示文章首页按钮\
+            </label>\
+        </div>\
+            <div class="quickmenu_normal_setting" ng-controller="normal">\
             <div class="item" ng-repeat="(k,v) in menu.params.menus">\
             <i class="fa fa-times-circle delete-ico" ng-click="removeTopMenu(v)"></i>\
             <div class="top_menus">\
