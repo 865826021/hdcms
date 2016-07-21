@@ -70,11 +70,11 @@
 		//进度条
 		var w = 0;
 		var tid = setInterval(function () {
-			w += 2;
+			w += 1;
 			$("#progress").css({width: w + '%'})
 			$("#progress").text(w + '%');
 
-		}, 1000);
+		}, 800);
 		//下载包
 		$.get('?a=downloadFile', function (status) {
 			if (status == 1) {
@@ -84,6 +84,7 @@
 				location.href = '?a=table';
 			} else {
 				alert('下载超时,你可以去官网下载离线安装包');
+				window.history.back();
 			}
 		});
 	})

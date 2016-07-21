@@ -1,9 +1,11 @@
 <?php
 session_start();
+error_reporting( 0 );
+set_time_limit( 0 );
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$file_url = 'http://dev.hdcms.com/archive.zip';
+define( 'HDCMS_DOWNLOAD_URL', 'http://dev.hdcms.com/archive.zip' );
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -38,22 +40,39 @@ if ( $action == 'environment' ) {
 //执行安装
 if ( $action == 'database' ) {
 	if ( ! empty( $_POST ) ) {
-		//测试数据库连接
 		$_SESSION['config'] = $_POST;
-		$dsn                = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
-		$username           = $_SESSION['config']['user'];
-		$password           = $_SESSION['config']['password'];
-		try {
-			$pdo = new Pdo( $dsn, $username, $password );
-			echo json_encode( [ 'valid' => 1, 'message' => '成功' ] );
-		} catch ( PDOException $e ) {
-			echo json_encode( [ 'valid' => 0, 'message' => '数据库连接失败' ] );
+		//使用原生MYSQL操作
+		if ( function_exists( 'mysql_connect' ) ) {
+			$link = @mysql_connect( $_SESSION['config']['host'], $_SESSION['config']['user'], $_SESSION['config']['password'] );
+			if ( ! $link ) {
+				echo json_encode( [ 'valid' => 0, 'message' => '数据库连接失败,请检测帐号/密码是否正确' ] );
+			} else {
+				if ( ! @mysql_select_db( $_SESSION['config']['database'], $link ) ) {
+					if ( mysql_query( "CREATE DATABASE IF NOT EXISTS {$_SESSION['config']['database']} CHARSET UTF8 " ) ) {
+						echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
+					} else {
+						echo json_encode( [ 'valid' => 0, 'message' => '数据库连接失败,请检测帐号/密码及数据库是否存在' ] );
+					}
+				} else {
+					echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
+				}
+			}
+		} else {
+			//使用PDO操作数据库
+			$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
+			$username = $_SESSION['config']['user'];
+			$password = $_SESSION['config']['password'];
+			try {
+				$pdo = new Pdo( $dsn, $username, $password );
+				echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
+			} catch ( PDOException $e ) {
+				echo json_encode( [ 'valid' => 0, 'message' => '数据库连接失败,请检测帐号/密码及数据库是否存在' ] );
+			}
 		}
 		exit;
 	}
 	$content = isset( $database ) ? $database : file_get_contents( 'database.html' );
 	echo $content;
-	exit;
 }
 //环境检测
 if ( $action == 'download' ) {
@@ -64,16 +83,22 @@ if ( $action == 'download' ) {
 
 //远程下载文件
 if ( $action == 'downloadFile' ) {
-	$d = curl_get( $file_url );
-	if ( strlen( $d ) < 2787715 ) {
-		//下载失败
-		exit;
+	if ( is_dir( 'web' ) ) {
+		//已经下载过
+		echo 1;
+	} else {
+		//下载软件包
+		$d = curl_get( HDCMS_DOWNLOAD_URL );
+		if ( strlen( $d ) < 2787715 ) {
+			//下载失败
+			exit;
+		}
+		$zipFile = 'hdcms2.0.zip';
+		file_put_contents( $zipFile, $d );
+		//解包
+		get_zip_originalsize( $zipFile, './' );
+		echo 1;
 	}
-	$zipFile = 'hdcms2.0.zip';
-	file_put_contents( $zipFile, $d );
-	//解包
-	get_zip_originalsize( $zipFile, './' );
-	echo 1;
 	exit;
 }
 
@@ -83,7 +108,7 @@ if ( $action == 'table' ) {
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
 	$username = $_SESSION['config']['user'];
 	$password = $_SESSION['config']['password'];
-	$pdo      = new Pdo( $dsn, $username, $password );
+	$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	$sql = file_get_contents( 'install.sql' );
 	//替换表前缀
@@ -91,7 +116,7 @@ if ( $action == 'table' ) {
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
 		try {
-			$pdo->exec( $r );
+			$pdo->exec( $r );echo $r.'<br/>';
 		} catch ( PDOException $e ) {
 			die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
 		}
@@ -108,8 +133,8 @@ if ( $action == 'table' ) {
 }
 if ( $action == 'finish' ) {
 	//清除运行数据
-	unlink( 'hdcms2.0.zip' );
-	unlink( 'install.sql' );
+	is_file( 'hdcms2.0.zip' ) and unlink( 'hdcms2.0.zip' );
+	is_file( 'install.sql' ) and unlink( 'install.sql' );
 	//显示界面
 	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
 	echo $content;

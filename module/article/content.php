@@ -31,7 +31,7 @@ class content extends hdSite {
 	protected $webArticle;
 
 	public function __construct() {
-		parent::__construct();p(V());
+		parent::__construct();
 		$this->cid         = q( 'get.cid', 0, 'intval' );
 		$this->webCategory = new WebCategory();
 		$this->webArticle  = new WebArticle();

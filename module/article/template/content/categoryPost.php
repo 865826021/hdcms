@@ -95,6 +95,7 @@
 							<input type="hidden" name="template_tid" ng-model="field.template_tid"/>
 							<h5 ng-bind="template.title">{{$field['template']['title']}}</h5>
 							<img ng-src="theme/@{{template.name}}/@{{template.thumb}}">
+							<a href="javascript:;" ng-click="field.template_name=''"><i class="fa fa-times-circle"></i></a>
 						</div>
 					</div>
 				</div>
@@ -196,6 +197,7 @@
 		overflow : hidden;
 		float    : left;
 		margin   : 3px 7px;
+		position: relative;
 	}
 
 	.template .thumbnail .caption {
@@ -218,6 +220,10 @@
 
 	.template .thumbnail .caption {
 		margin-top : 8px;
+	}
+	.template .thumbnail a{
+		position: absolute;
+		right:10px;top:10px;
 	}
 
 </style>

@@ -47,7 +47,7 @@ class manage extends hdSite {
 		$data = Db::table( 'web' )->where( 'siteid', '=', SITEID )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], TRUE );
-			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid='.SITEID.'&webid=' . $v['id'];
+			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid=' . SITEID . '&webid=' . $v['id'];
 		}
 		View::with( 'data', $data )->make( $this->template . '/manage/site.php' );
 	}
@@ -59,15 +59,17 @@ class manage extends hdSite {
 		if ( IS_POST ) {
 			$data = json_decode( $_POST['data'], TRUE );
 			//添加微站
-			$web                 = $data;
-			$web['id']           = empty( $web['web_id'] ) ? 0 : $web['web_id'];
+			$web                  = $data;
+			$web['id']            = empty( $web['web_id'] ) ? 0 : $web['web_id'];
 			$web['template_name'] = $data['template_name'];
-			$web['title']        = $data['name'];
-			$web['site_info']    = $_POST['data'];
-			$action              = $this->webid ? 'save' : 'add';
+			$web['title']         = $data['name'];
+			$web['site_info']     = $_POST['data'];
+			$action               = $this->webid ? 'save' : 'add';
 			if ( ! $web_id = $this->web->$action( $web ) ) {
 				message( $this->web->getError(), 'back', 'error' );
 			}
+			//站点编号
+			$web['id'] = $web['id'] ?: $web_id;
 			//添加回复规则
 			$data['module'] = 'cover';
 			$ruleModel      = new Rule();
@@ -75,7 +77,7 @@ class manage extends hdSite {
 			if ( ! $rid = $ruleModel->$action( $data ) ) {
 				message( $ruleModel->getError(), 'back', 'error' );
 			}
-			$rid = q( 'get.rid', $rid );
+			$rid = $data['rid'] ?: $rid;
 			//添加回复关键词
 			$keyword['id']      = empty( $data['keyword_id'] ) ? 0 : $data['keyword_id'];
 			$keyword['content'] = $data['keyword'];
@@ -87,14 +89,14 @@ class manage extends hdSite {
 			}
 			//添加封面回复
 			$cover['id']          = empty( $data['reply_cover_id'] ) ? 0 : $data['reply_cover_id'];
-			$cover['web_id']      = $web_id;
+			$cover['web_id']      = $web['id'];
 			$cover['rid']         = $rid;
 			$cover['module']      = 'site';
 			$cover['title']       = $data['name'];
 			$cover['description'] = $data['description'];
 			$cover['thumb']       = $data['thumb'];
-			$cover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web_id;
-			$action               = empty( $data['reply_cover_id'] ) ? 'add' : 'save';
+			$cover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
+			$action               = $cover['id'] ? 'save' : 'add';
 			if ( ! $replyCover->$action( $cover ) ) {
 				message( $replyCover->getError(), 'back', 'error' );
 			}
@@ -104,7 +106,7 @@ class manage extends hdSite {
 			//编辑数据时
 			$web                     = $this->web->find( $this->webid );
 			$field                   = json_decode( $web['site_info'], TRUE );
-			$reply_cover             = $replyCover->where( 'web_id', $web['id'] )->first();
+			$reply_cover             = $replyCover->where( 'web_id', $this->webid )->first();
 			$field['rid']            = $reply_cover['rid'];
 			$field['web_id']         = $web['id'];
 			$field['keyword_id']     = $ruleKeyword->where( 'rid', $reply_cover['rid'] )->pluck( 'id' );

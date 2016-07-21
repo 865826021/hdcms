@@ -41,7 +41,7 @@
 					<label class="col-sm-2 control-label">文章触发关键字</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="field.keyword" ng-blur="checkWxKeyword($event,field.rid)">
-						<span class="help-block has_keyword"></span>
+						<span class="help-block keyword_error"></span>
 						<span class="help-block">添加关键字以后,系统将生成一条图文规则,用户可以通过输入关键字来阅读文章。多个关键字请用英文“,”隔开</span>
 					</div>
 				</div>
@@ -184,20 +184,24 @@
 				});
 			});
 			//验证关键词
-			$scope.checkWxKeyword=function(e,rid){
-				util.checkWxKeyword(e.target,rid);
+			$scope.checkWxKeyword = function (e, rid) {
+				util.checkWxKeyword(e.target, $scope.field.rid, function (res) {
+					$scope.$apply();
+				});
 			}
 			$('form').submit(function () {
+				var msg = '';
 				if (!$scope.field.content) {
-					util.message('内容不能为空', '', 'error');
-					return false;
+					msg += '内容不能为空<br/>';
 				}
 				if (!$scope.field.category_cid) {
-					util.message('请选择文章栏目', '', 'error');
-					return false;
+					msg += '请选择文章栏目<br/>';
 				}
-				if ($.trim($(".has_keyword").text())) {
-					util.message('关键词已经被使用', '', 'error');
+				if ($.trim($(".keyword_error").text())) {
+					msg += '关键词已经被使用<br/>';
+				}
+				if (msg) {
+					util.message(msg, '', 'error');
 					return false;
 				}
 				$("[name='data']").val(angular.toJson($scope.field));
