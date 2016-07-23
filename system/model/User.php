@@ -38,6 +38,8 @@ class User extends Model {
 			[ 'password', 'autoPassword', 'method', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'regtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'mobile_valid', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'email_valid', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'regip', 'clientIp', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'lasttime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'lastip', 'clientIp', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
@@ -113,7 +115,7 @@ class User extends Model {
 		$data['lastip']   = Request::ip();
 		$data['lasttime'] = time();
 		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
-		Session::set( "user", [ 'uid' => $user['uid'], 'username' => $user['username'] ] );
+		Session::set( "user", $user );
 
 		return TRUE;
 	}

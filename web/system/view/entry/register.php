@@ -66,7 +66,7 @@
 					</div>
 				</if>
 				<button type="submit" class="btn btn-primary">注册</button>
-				<a class="btn btn-default" href="?s=system/entry/login">登录</a>
+				<a class="btn btn-default" href="{{u('system/entry/login',['from'=>$_GET['from']])}}">登录</a>
 			</form>
 		</div>
 	</div>

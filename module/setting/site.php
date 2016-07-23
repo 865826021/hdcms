@@ -21,7 +21,7 @@ class site extends hdSite {
 	public function __construct() {
 		parent::__construct();
 		$this->db = new SiteSetting();
-		$this->id = $this->db->where( 'siteid', v( 'site.siteid' ) )->pluck( 'id' );
+		$this->id = $this->db->where( 'siteid', SITEID )->pluck( 'id' );
 	}
 
 	//积分设置
@@ -70,7 +70,16 @@ class site extends hdSite {
 			$_POST['id'] = $this->id;
 			$this->db->save();
 			m( 'Site' )->updateSiteCache();
-			message( '修改会员注册设置成功', '', 'success' );
+			//发送测试邮件
+			if ( v( 'setting.smtp.testing' ) ) {
+				$d = Mail::send( v( 'setting.smtp.testusername' ), v( 'setting.smtp.testusername' ), "邮箱配置测试", '恭喜!邮箱配置成功' );
+				if ( $d ) {
+					message( "邮箱设置成功,测试邮件发送成功", 'refresh', 'success', 3 );
+				} else {
+					message( "邮箱配置保存成功,测试邮件发送失败", 'refresh', 'error', 3 );
+				}
+			}
+			message( '邮箱设置成功', 'refresh', 'success' );
 		}
 		View::make( $this->template . '/mail.html' );
 	}

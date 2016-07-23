@@ -26,7 +26,7 @@ class Entry {
 		}
 		//验证站点权限
 		if ( ! ( new User() )->isOperate() ) {
-			message( '你没有管理站点的权限', 'back', 'warning' );
+			message( '你没有管理站点的权限', 'system/site/lists', 'warning' );
 		}
 		//分配菜单
 		( new Menu() )->getMenus();

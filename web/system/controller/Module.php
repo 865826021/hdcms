@@ -339,8 +339,8 @@ str;
  * @author {$_POST['author']}
  * @url {$_POST['url']}
  */
-use module\HdModule;
-class Module extends HdModule
+use module\hdModule;
+class Module extends hdModule
 {
 	$moduleScript
 }
@@ -594,26 +594,9 @@ str;
 				'module'  => $_GET['module']
 			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $_GET['module'] ] ) );
 		}
-		//本地安装的模块删除处理
-		$xmlFile = 'addons/' . $_GET['module'] . '/manifest.xml';
-		if ( is_file( $xmlFile ) ) {
-			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
-			//卸载数据
-			$installSql = trim( $manifest['manifest']['uninstall']['@cdata'] );
-			if ( ! empty( $installSql ) ) {
-				if ( preg_match( '/.php$/', $installSql ) ) {
-					$file = 'addons/' . $_GET['module'] . '/' . $installSql;
-					if ( ! is_file( $file ) ) {
-						message( '卸载文件:' . $file . '不存在', 'back', 'error' );
-					}
-					require $file;
-				} else {
-					Db::sql( $installSql );
-				}
-			}
+		if ( ! $this->module->remove( $_GET['module'], $_GET['confirm'] ) ) {
+			message( $this->module->getError(), 'back', 'error' );
 		}
-		$this->module->remove( $_GET['module'], $_GET['confirm'] );
-		( new Site() )->updateAllSiteCache();
 		message( '模块卸载成功', u( 'installed' ) );
 	}
 

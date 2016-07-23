@@ -10,7 +10,7 @@
 		<li role="presentation"><a href="{{u('installed')}}">已经安装模板</a></li>
 		<li role="presentation" class="active"><a href="?s=system/template/prepared">安装模板</a></li>
 		<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
-		<li role="presentation"><a href="?s=system/store/module">应用商城</a></li>
+		<li role="presentation"><a href="http://www.hdcms.com/store">应用商城</a></li>
 	</ul>
 	<h5 class="page-header">已购买的模板</h5>
 	<h5 class="page-header">未安装的本地模板</h5>

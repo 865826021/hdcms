@@ -188,13 +188,14 @@
 						</li>
 					</if>
 				</ul>
-
-				<div class="panel-heading hide module_active">
-					<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
-					<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
-						<i class="fa fa-chevron-circle-down"></i>
-					</a>
-				</div>
+				<if value="!empty($_site_modules_menu_['budings']['home'])||!empty($_site_modules_menu_['budings']['profile'])||!empty($_site_modules_menu_['budings']['member'])">
+					<div class="panel-heading hide module_active">
+						<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
+							<i class="fa fa-chevron-circle-down"></i>
+						</a>
+					</div>
+				</if>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 					<if value="!empty($_site_modules_menu_['budings']['home'])">
 						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=home&m={{$_site_modules_menu_['name']}}">

@@ -60,6 +60,8 @@ class hook {
 				define( 'SITEID', $siteid );
 				//加载站点缓存
 				$siteModel->loadSite();
+				//设置配置
+				Config::set( 'mail', v( 'setting.smtp' ) );
 			} else {
 				Session::del( 'siteid' );
 				message( '你访问的站点不存在', 'back', 'error' );

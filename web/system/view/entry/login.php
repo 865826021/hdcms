@@ -63,7 +63,7 @@
 					</div>
 				</if>
 				<button type="submit" class="btn btn-primary btn-lg">登录</button>
-				<a class="btn btn-default btn-lg" href="?s=system/entry/register">注册</a>
+				<a class="btn btn-default btn-lg" href="{{u('system/entry/register',['from'=>$_GET['from']])}}">注册</a>
 			</form>
 		</div>
 		<div class="col-md-6">

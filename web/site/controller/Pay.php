@@ -18,7 +18,7 @@ class Pay {
 	//微信支付
 	public function wechat() {
 		$pay                  = Db::table( 'pay' )->where( 'tid', Session::get( 'pay.tid' ) )->first();
-		$data['total_fee']    = $pay['fee'] * 1;//支付金额单位分
+		$data['total_fee']    = $pay['fee'] * 100;//支付金额单位分
 		$data['body']         = $pay['body'];//商品描述
 		$data['attach']       = $pay['attach'];//附加数据
 		$data['out_trade_no'] = $pay['tid'];//会员定单号

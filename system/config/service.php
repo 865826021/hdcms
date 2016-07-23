@@ -41,6 +41,8 @@ return [
 		'hdphp\middleware\MiddlewareProvider',
 		'hdphp\hook\HookProvider',
 		'hdphp\form\FormProvider',
+		'hdphp\tool\ToolProvider',
+		'hdphp\cloud\CloudProvider',
 		'server\UtilProvider',
 	],
 
@@ -85,6 +87,8 @@ return [
 		'Middleware' => 'hdphp\middleware\MiddlewareFacade',
 		'Hook'       => 'hdphp\hook\HookFacade',
 		'Form'       => 'hdphp\form\FormFacade',
+		'Tool'       => 'hdphp\tool\ToolFacade',
+		'Cloud'      => 'hdphp\cloud\CloudFacade',
 		'Util'       => 'server\UtilFacade',
 	],
 ];

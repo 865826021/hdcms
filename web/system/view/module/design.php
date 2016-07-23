@@ -402,7 +402,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" name="bindings[rule][title][]" type="text" placeholder="请输入操作名称">
+								<input class="form-control" name="bindings[rule][title][]" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
@@ -451,7 +451,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" name="bindings[business][title][]" type="text" placeholder="请输入操作名称">
+								<input class="form-control" name="bindings[business][title][]" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
@@ -511,7 +511,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" name="bindings[home][title][]" type="text" placeholder="请输入操作名称">
+								<input class="form-control" name="bindings[home][title][]" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
@@ -559,7 +559,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" name="bindings[profile][title][]" type="text" placeholder="请输入操作名称">
+								<input class="form-control" name="bindings[profile][title][]" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">

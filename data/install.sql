@@ -47,7 +47,7 @@ CREATE TABLE `hd_config` (
 
 INSERT INTO `hd_config` (`id`, `site`, `upload`, `register`)
 VALUES
-	(1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护中,请稍候访问\"}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":2}');
+	(1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护中,请稍候访问\"}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":1}');
 
 DROP TABLE IF EXISTS `hd_core_attachment`;
 CREATE TABLE `hd_core_attachment` (
@@ -659,15 +659,13 @@ CREATE TABLE `hd_user` (
   `qq` varchar(20) NOT NULL DEFAULT '' COMMENT 'QQ号',
   `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
   `email` varchar(20) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `mobile_valid` tinyint(1) NOT NULL COMMENT '手机验证',
+  `email_valid` tinyint(1) NOT NULL COMMENT '邮箱验证',
   `remark` varchar(300) NOT NULL COMMENT '备注',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `username` (`username`),
   KEY `groupid` (`groupid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户';
-
-INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `remark`)
-VALUES
-	(1,0,'admin','e155336561b4a25e34e7a01409dba680','c028b5ef0f',1,1465771582,'123.119.83.235',1468914277,'192.168.10.1',1465771582,1465771582,'','','','系统管理员帐号');
 
 DROP TABLE IF EXISTS `hd_user_group`;
 CREATE TABLE `hd_user_group` (

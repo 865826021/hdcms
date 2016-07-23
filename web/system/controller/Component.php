@@ -135,6 +135,7 @@ class Component {
 			} else {
 				$users = $db->where( "username LIKE '%{$_GET['username']}%'" )->get();
 			}
+
 			ajax( $users );
 		}
 		View::make();

@@ -29,7 +29,7 @@ class Module {
 	public function __construct() {
 		//站点模块功能检测
 		if ( ! v( 'module' ) ) {
-			message( '站点不存在这个模块,请系统管理员添加', 'back', 'error' );
+			message( '访问的模块不存在', 'back', 'error' );
 		}
 		if ( $action = q( 'get.a' ) ) {
 			$info             = explode( '/', $action );
@@ -164,7 +164,7 @@ class Module {
 
 	//模块前台处理业务
 	public function web() {
-		$action = 'doWeb' . $this->action;
+		$action = 'doWeb' . ucfirst($this->action);
 		$class  = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . v( 'module.name' ) . '\\';
 		$class .= $this->module ? $this->module . '\\' . $this->controller : $this->controller;
 		if ( class_exists( $class ) && method_exists( $class, $action ) ) {
@@ -185,7 +185,7 @@ class Module {
 		//系统模块只存在name值,如果存在is_system等其他值时为插件扩展模块
 		$class = ( v( 'module.is_system' ) ? '\module\\' : '\addons\\' ) . v( 'module.name' ) . '\\';
 		$class .= $this->module ? $this->module . '\\' . $this->controller : $this->controller;
-		$action = 'doSite' . $this->action;
+		$action = 'doSite' . ucfirst($this->action);
 		if ( ! class_exists( $class ) || ! method_exists( $class, $action ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
 		}

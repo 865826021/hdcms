@@ -94,7 +94,7 @@ class Template {
 
 	//已经安装模板
 	public function installed() {
-		$template = $this->db->where( 'is_system', 0 )->get();
+		$template = $this->db->get();
 		foreach ( $template as $k => $m ) {
 			$template[ $k ]['thumb']         = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
 			$template[ $k ]['template_type'] = is_file( "theme/{$m['name']}/manifest.xml" ) ? '本地模板' : '应用商店模板';

@@ -11,7 +11,7 @@
 			<li role="presentation" class="active"><a href="javascript:;">已经安装模板</a></li>
 			<li role="presentation"><a href="?s=system/template/prepared">安装模板</a></li>
 			<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
-			<li role="presentation"><a href="http://open.hdphp.com">应用商城</a></li>
+			<li role="presentation"><a href="http://www.hdcms.com/store">应用商城</a></li>
 		</ul>
 
 		<nav role="navigation" class="navbar navbar-default">
@@ -56,7 +56,11 @@
 					<img class="media-object" src="{{$m['thumb']}}"/>
 					<div class="caption">
 						<span class="label label-info">{{$m['template_type']}}</span>
-						<a href="javascript:;" class="btn btn-default btn-xs btn-block" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+						<if value="$m['is_system']">
+							<a href="javascript:;" class="btn btn-default btn-xs btn-block">系统模板不允许卸载</a>
+							<else/>
+							<a href="javascript:;" class="btn btn-default btn-xs btn-block" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+						</if>
 					</div>
 				</div>
 			</foreach>

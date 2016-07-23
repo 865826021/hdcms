@@ -43,7 +43,7 @@ class Entry {
 			if ( ! $this->db->add() ) {
 				message( $this->db->getError(), 'back', 'error' );
 			}
-			message( '注册成功,请登录系统', 'login' );
+			message( '注册成功,请登录系统', u( 'login', [ 'from' => $_GET['from'] ] ) );
 		}
 		View::with( 'registerConfig', $registerConfig );
 		View::make();
@@ -60,7 +60,7 @@ class Entry {
 			if ( Session::get( 'user.uid' ) != 1 ) {
 				checkSiteClose();
 			}
-			message( '登录成功,系统准备跳转到后台', 'system/site/lists' );
+			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
 		}
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );
@@ -78,6 +78,6 @@ class Entry {
 	public function quit() {
 		session_unset();
 		session_destroy();
-		message( '退出系统成功,系统将自动进行跳转', u( 'login' ) );
+		message( '退出系统成功,系统将自动进行跳转', q('get.from',u( 'login' )) );
 	}
 }
