@@ -29,4 +29,27 @@ class Cloud {
 
 		return Xml::toSimpleArray( $res );
 	}
+
+	/**
+	 * 测试云帐号连接
+	 *
+	 * @param string $AppID 应用ID
+	 * @param string $AppSecret 应用密钥
+	 *
+	 * @return mixed
+	 */
+	public function checkConnect( $AppID, $AppSecret ) {
+		$res = Curl::get( self::URL . "?a=cloud/check_connect&t=web&siteid=1&m=store&AppID={$AppID}&AppSecret={$AppSecret}" );
+
+		return Xml::toSimpleArray( $res );
+	}
+
+	/**
+	 * 获取HDCMS最新版信息
+	 * @return mixed
+	 */
+	public function getHdcmsLatestVersion() {
+		$res = Curl::get( self::URL . "?a=cloud/hdcms_latest_version&t=web&siteid=1&m=store" );
+		return Xml::toSimpleArray( $res );
+	}
 }
