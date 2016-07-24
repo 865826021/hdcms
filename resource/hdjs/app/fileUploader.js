@@ -274,7 +274,7 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                     multiple: options.multiple,
                                     fileNumLimit: 100,//允许上传的文件数量
                                     fileSizeLimit: 200 * 1024 * 1024,    // 200 M 允许上传文件大小
-                                    fileSingleSizeLimit: 2 * 1024 * 1024    // 2 M 单个文件上传大小
+                                    fileSingleSizeLimit: options.fileSingleSizeLimit    // 2 M 单个文件上传大小
                                 });
                                 uploader.on('uploadAccept', function (file, response) {
                                     if (response.valid) {
