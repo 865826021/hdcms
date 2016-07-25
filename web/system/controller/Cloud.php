@@ -24,7 +24,7 @@ class Cloud {
 	public function __construct() {
 		$this->user = new User();
 		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以执行操作', 'back', 'error' );
+			message( '只有系统管理员可以执行操作', 'back', 'error' ); 
 		}
 	}
 
