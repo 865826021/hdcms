@@ -44,6 +44,8 @@ class Site {
 
 	//站点列表
 	public function lists() {
+		\Curl::get('')
+		exit;
 		//加载当前操作的站点缓存
 		$this->db->loadSite();
 		$db = Db::table( 'site' )

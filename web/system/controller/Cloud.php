@@ -20,7 +20,6 @@ use system\model\UserGroup;
  */
 class Cloud {
 	protected $user;
-	protected $url;
 
 	public function __construct() {
 		$this->user = new User();
@@ -37,9 +36,10 @@ class Cloud {
 			$res = \Cloud::checkConnect( $_POST['AppID'], $_POST['AppSecret'] );
 			if ( $res['valid'] == 1 ) {
 				//连接成功
+				$data['id']        = 1;
 				$data['AppID']     = $_POST['AppID'];
 				$data['AppSecret'] = $_POST['AppSecret'];
-				Db::table( 'cloud_user' )->where( 'id', 1 )->replace( $data );
+				Db::table( 'cloud_user' )->replace( $data );
 				message( '连接成功', 'refresh', 'success' );
 			}
 			message( '云服务连接失败', 'back', 'error' );
@@ -47,5 +47,12 @@ class Cloud {
 		$field = Db::table( 'cloud_user' )->find( 1 );
 		View::with( 'field', $field );
 		View::make();
+	}
+
+	/**
+	 * 更新HDCMS
+	 */
+	public function upgrade() {
+		$res = \Cloud::checkConnect( $_POST['AppID'], $_POST['AppSecret'] );
 	}
 }
