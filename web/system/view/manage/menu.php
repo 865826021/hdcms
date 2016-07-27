@@ -9,7 +9,7 @@
 		<h5 class="page-header">云服务</h5>
 
 		<div class="clearfix">
-			<a href="" class="tile img-rounded">
+			<a href="{{u('system/cloud/upgrade')}}" class="tile img-rounded">
 				<i class="fa fa-cloud-download"></i>
 				<span>一键更新</span>
 			</a>

@@ -53,6 +53,45 @@ class Cloud {
 	 * 更新HDCMS
 	 */
 	public function upgrade() {
-		$res = \Cloud::checkConnect( $_POST['AppID'], $_POST['AppSecret'] );
+		if ( IS_POST ) {
+			//下载更新文件,一个一个下载
+			$allDown = TRUE;
+			foreach ( $_SESSION['_hdcms_upgrade']['message']['upgrade_files'] as $file => $stat ) {
+				if ( $stat == FALSE ) {
+					$allDown = FALSE;
+					$content = Curl::post( 'http://dev.hdcms.com/index.php?a=cloud/download&t=web&siteid=1&m=store', [
+						'version' => $_SESSION['_hdcms_upgrade']['message']['version'],
+						'file'    => $file
+					] );
+					if ( ! empty( $content ) ) {
+						file_put_contents( 'aaaa.php', $content );
+						$_SESSION['_hdcms_upgrade']['message']['upgrade_files'][ $file ] = TRUE;
+						echo json_encode( [ 'valid' => 1, 'file' => $file, 'alldown' => 0 ] );
+						die;
+					}
+				}
+			}
+			if ( $allDown ) {
+				echo json_encode( [ 'valid' => 1, 'alldown' => 1 ] );
+				die;
+			}
+		}
+		$version                            = Db::table( 'cloud_hdcms' )->where( 'id', 1 )->pluck( 'version' );
+		$res                                = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&version=' . $version );
+		$_SESSION['_hdcms_upgrade']         = Xml::toSimpleArray( $res );
+		$_SESSION['_hdcms_upgrade']['logs'] = nl2br( $_SESSION['_hdcms_upgrade']['logs'] );
+		if ( $_SESSION['_hdcms_upgrade']['valid'] == 1 ) {
+			//首次下载时将文件列表组合成数组
+			if ( ! is_array( $_SESSION['upgrade_files']['upgrade_files'] ) ) {
+				//有更新包时,组合更新文件列表
+				$files                                                  = preg_split( '/\n|\r/', $_SESSION['_hdcms_upgrade']['message']['upgrade_files'] );
+				$_SESSION['_hdcms_upgrade']['message']['upgrade_files'] = [ ];
+				foreach ( $files as $v ) {
+					$_SESSION['_hdcms_upgrade']['message']['upgrade_files'][ $v ] = FALSE;
+				}
+			}
+		}
+		View::with( 'data', $_SESSION['_hdcms_upgrade'] );
+		View::make();
 	}
 }
