@@ -34,7 +34,7 @@ class oauth extends Weixin {
 
 	//是用来获取用户的基本信息的
 	public function snsapiUserinfo() {
-		$data = $this->request( 'snsapi_userinfo' );;
+		$data = $this->request( 'snsapi_userinfo' );
 		if ( $data !== FALSE ) {
 			$url = "https://api.weixin.qq.com/sns/userinfo?access_token=" . $data['access_token'] . "&openid=" . $data['openid'] . "&lang=zh_CN";
 			$d   = Curl::get( $url );
