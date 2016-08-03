@@ -1,5 +1,5 @@
 <?php
-return [
+$database = [
 	//读库列表
 	'read'     => [ ],
 	//写库列表
@@ -19,3 +19,5 @@ return [
 	//表前缀
 	'prefix'   => 'hd_'
 ];
+
+return array_merge( $database, include 'data/database.php' );

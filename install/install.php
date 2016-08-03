@@ -129,9 +129,10 @@ if ( $action == 'table' ) {
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
 	$password = md5( $_SESSION['config']['upassword'] . $row[0]['security'] );
 	$pdo->exec( "UPDATE {$_SESSION['config']['prefix']}user SET password='{$password}' WHERE uid=1" );
-	//修改配置文件    
+	//修改配置文件
+	file_put_contents('data/database.php','<?php return [];?>');
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'system/config/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
