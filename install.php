@@ -107,7 +107,7 @@ $download=<<<str
 					<li class="list-group-item"><i class="fa fa-pencil-square-o"></i> 环境检测</li>
 					<li class="list-group-item"><i class="fa fa-database"></i> 数据库配置</li>
 					<li class="list-group-item" style="background: #dff0d8"><i class="fa fa-cloud-download"></i> 下载软件包</li>
-					<li class="list-group-item"><i class="fa fa-check-circle"></i> 守成</li>
+					<li class="list-group-item"><i class="fa fa-check-circle"></i> 完成</li>
 				</ul>
 			</div>
 			<form class="form-horizontal" method="post">
@@ -200,7 +200,7 @@ $database=<<<str
                     <li class="list-group-item"><i class="fa fa-pencil-square-o"></i> 环境检测</li>
                     <li class="list-group-item" style="background: #dff0d8"><i class="fa fa-database"></i> 数据库配置</li>
                     <li class="list-group-item"><i class="fa fa-cloud-download"></i> 下载软件包</li>
-                    <li class="list-group-item"><i class="fa fa-check-circle"></i> 守成</li>
+                    <li class="list-group-item"><i class="fa fa-check-circle"></i> 完成</li>
                 </ul>
             </div>
             <form class="form-horizontal" method="post">
@@ -358,7 +358,7 @@ $environment=<<<str
 					<li class="list-group-item" style="background: #dff0d8"><i class="fa fa-pencil-square-o"></i> 环境检测</li>
 					<li class="list-group-item"><i class="fa fa-database"></i> 数据库配置</li>
 					<li class="list-group-item"><i class="fa fa-cloud-download"></i> 下载软件包</li>
-					<li class="list-group-item"><i class="fa fa-check-circle"></i> 守成</li>
+					<li class="list-group-item"><i class="fa fa-check-circle"></i> 完成</li>
 				</ul>
 			</div>
 			<div class="col-xs-9">
@@ -554,7 +554,7 @@ $copyright=<<<str
                     <li class="list-group-item"><i class="fa fa-pencil-square-o"></i> 环境检测</li>
                     <li class="list-group-item"><i class="fa fa-database"></i> 数据库配置</li>
                     <li class="list-group-item"><i class="fa fa-cloud-download"></i> 下载软件包</li>
-                    <li class="list-group-item"><i class="fa fa-check-circle"></i> 守成</li>
+                    <li class="list-group-item"><i class="fa fa-check-circle"></i> 完成</li>
                 </ul>
             </div>
             <div class="col-xs-9">
@@ -725,13 +725,13 @@ if ( $action == 'table' ) {
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
 	$password = md5( $_SESSION['config']['upassword'] . $row[0]['security'] );
 	$pdo->exec( "UPDATE {$_SESSION['config']['prefix']}user SET password='{$password}' WHERE uid=1" );
-	//修改配置文件    
+	//修改配置文件
+	file_put_contents('data/database.php','<?php return [];?>');
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'system/config/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
-	print_r($_SESSION);exit;
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
 		if ( $f != 'database.php' ) {
