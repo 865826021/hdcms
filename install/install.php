@@ -138,7 +138,7 @@ if ( $action == 'table' ) {
 if ( $action == 'finish' ) {
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
-		if ( $f != 'database.php' ) {
+		if ( basename($f) != 'database.php' ) {
 			unlink( $f );
 		}
 	}
