@@ -11,7 +11,7 @@ $database = [
 	//类型
 	'driver'   => 'mysql',
 	//帐号
-	'user'     => '',
+	'user'     => 'root',
 	//密码
 	'password' => '',
 	//数据库
