@@ -27,10 +27,7 @@ class Cloud {
 			message( '只有系统管理员可以执行操作', 'back', 'error' );
 		}
 	}
-	//生成版本差异文件
-	public function patch(){
 
-	}
 	/**
 	 * 云帐号管理
 	 */

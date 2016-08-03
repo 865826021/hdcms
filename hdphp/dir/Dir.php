@@ -88,4 +88,20 @@ class Dir {
 			return $this->del( $old );
 		}
 	}
+
+	/**
+	 * 移动文件
+	 *
+	 * @param string $file 文件
+	 * @param string $dir 目录
+	 *
+	 * @return bool
+	 */
+	public function moveFile( $file, $dir ) {
+		if ( is_file( $file ) && is_dir( $dir ) ) {
+			copy( $file, $dir . '/' . basename( $file ) );
+
+			return unlink( $file );
+		}
+	}
 }
