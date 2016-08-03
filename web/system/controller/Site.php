@@ -44,6 +44,8 @@ class Site {
 
 	//站点列表
 	public function lists() {
+		$data =  \Xml::toArray(file_get_contents('data/upgrade.xml'));
+		p($data);exit;
 		//加载当前操作的站点缓存
 		$this->db->loadSite();
 		$db = Db::table( 'site' )
