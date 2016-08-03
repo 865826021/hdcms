@@ -91,10 +91,12 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		try {
-			$pdo->exec( $r );
-		} catch ( PDOException $e ) {
-			die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+		if ( ! empty( $r ) ) {
+			try {
+				$pdo->exec( $r );
+			} catch ( PDOException $e ) {
+				die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+			}
 		}
 	}
 	//添加表初始数据
@@ -103,10 +105,12 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		try {
-			$pdo->exec( $r );
-		} catch ( PDOException $e ) {
-			die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+		if ( ! empty( $r ) ) {
+			try {
+				$pdo->exec( $r );
+			} catch ( PDOException $e ) {
+				die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+			}
 		}
 	}
 	//设置管理员帐号
