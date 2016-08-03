@@ -14,6 +14,7 @@ use system\model\Site;
 class hook {
 	//系统自动执行此方法
 	public function app_begin() {
+		Config::set( 'database', include 'data/database.php' );
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', FALSE );
 		//前台访问

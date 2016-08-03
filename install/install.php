@@ -135,7 +135,6 @@ if ( $action == 'table' ) {
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
-	print_r($_SESSION);exit;
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
 		if ( $f != 'database.php' ) {
