@@ -69,7 +69,7 @@ if ( $action == 'downloadFile' ) {
 		//下载失败
 		exit;
 	}
-	$zipFile = 'hdcms2.0.zip';
+	$zipFile = 'hdcms.zip';
 	file_put_contents( $zipFile, $d );
 	//解包
 	get_zip_originalsize( $zipFile, './' );
@@ -83,9 +83,22 @@ if ( $action == 'table' ) {
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
 	$username = $_SESSION['config']['user'];
 	$password = $_SESSION['config']['password'];
-	$pdo      = new Pdo( $dsn, $username, $password );
+	$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	$sql = file_get_contents( 'install.sql' );
+	//执行建表语句
+	$sql = file_get_contents( 'data/install.sql' );
+	//替换表前缀
+	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
+	$result = preg_split( '/;(\r|\n)/is', $sql );
+	foreach ( (array) $result as $r ) {
+		try {
+			$pdo->exec( $r );
+		} catch ( PDOException $e ) {
+			die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+		}
+	}
+	//添加表初始数据
+	$sql = file_get_contents( 'data/init_data.sql' );
 	//替换表前缀
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
@@ -108,8 +121,13 @@ if ( $action == 'table' ) {
 }
 if ( $action == 'finish' ) {
 	//清除运行数据
-	unlink( 'hdcms2.0.zip' );
-	unlink( 'install.sql' );
+	foreach ( glob( 'data/*' ) as $f ) {
+		if ( $f !== 'database.php' ) {
+			unlink( $f );
+		}
+	}
+	//删除下载的压缩包
+	unlink( 'hdcms.zip' );
 	//显示界面
 	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
 	echo $content;
