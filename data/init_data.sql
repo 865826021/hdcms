@@ -1,3 +1,7 @@
+INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `mobile_valid`, `email_valid`, `remark`)
+VALUES
+	(1,0,'admin','3df440190ae5c0397d8dd7dd99e59047','e489322ee5',1,1465771582,'123.119.83.235',1470217059,'124.205.39.82',1465771582,1465771582,'','','',0,0,'系统管理员帐号');
+
 INSERT INTO `hd_config` (`id`, `site`, `upload`, `register`)
 VALUES (1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护中,请稍候访问\"}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":1}');
 

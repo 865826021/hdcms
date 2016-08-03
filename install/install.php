@@ -1,4 +1,5 @@
 <?php
+error_reporting( 0 );
 session_start();
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
@@ -40,15 +41,25 @@ if ( $action == 'database' ) {
 	if ( ! empty( $_POST ) ) {
 		//测试数据库连接
 		$_SESSION['config'] = $_POST;
-		$dsn                = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
+		$host               = $_SESSION['config']['host'];
 		$username           = $_SESSION['config']['user'];
 		$password           = $_SESSION['config']['password'];
-		try {
-			$pdo = new Pdo( $dsn, $username, $password );
-			echo json_encode( [ 'valid' => 1, 'message' => '成功' ] );
-		} catch ( PDOException $e ) {
-			echo json_encode( [ 'valid' => 0, 'message' => '数据库连接失败' ] );
+		$dbname             = $_SESSION['config']['database'];
+		if ( ! mysql_connect( $host, $username, $password ) ) {
+			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,请检查帐号与密码' ] );
 		}
+		//数据库
+		if ( mysql_select_db( $dbname ) ) {
+			if ( ! empty( $_POST['del_database'] ) ) {
+				//删除数据库
+				mysql_query( "drop database if exists $dbname" );
+			} else {
+				echo json_encode( [ 'valid' => 0, 'message' => '数据库已经存在' ] );
+				exit;
+			}
+		}
+		mysql_query( "CREATE DATABASE $dbname CHARSET UTF8" );
+		echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
 		exit;
 	}
 	$content = isset( $database ) ? $database : file_get_contents( 'database.html' );
