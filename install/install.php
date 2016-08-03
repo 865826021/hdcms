@@ -1,6 +1,6 @@
 <?php
-error_reporting( 0 );
 session_start();
+error_reporting( 0 );
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
@@ -135,9 +135,10 @@ if ( $action == 'table' ) {
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
+	print_r($_SESSION);exit;
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
-		if ( $f !== 'database.php' ) {
+		if ( $f != 'database.php' ) {
 			unlink( $f );
 		}
 	}
