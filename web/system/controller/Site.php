@@ -299,7 +299,7 @@ class Site {
 		if ( ! $this->user->isSuperUser() ) {
 			message( '没有操作权限', 'back', 'error' );
 		}
-		( new SiteUser() )->delOwner(SITEID);
+		( new SiteUser() )->delOwner( SITEID );
 		message( '删除站长成功', 'back', 'success' );
 	}
 }

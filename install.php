@@ -727,11 +727,10 @@ if ( $action == 'table' ) {
 		}
 	}
 	//更新系统版本号
-	$data        = \Xml::toArray( file_get_contents( 'data/upgrade.xml' ) );
-	$versionCode = $data['manifest']['@attributes']['versionCode'];
-	$releaseCode = $data['manifest']['@attributes']['releaseCode'];
+	$xml        = file_get_contents( 'data/upgrade.xml' ) ;
+	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time        = time();
-	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('$versionCode','$releaseCode',$time)";
+	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('{$ver[1]}','{$ver[2]}',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
