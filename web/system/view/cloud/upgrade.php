@@ -32,10 +32,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="alert alert-danger">
-		<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
-	</div>
 	<if value="$data['valid']==1">
+		<div class="alert alert-danger">
+			<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
+		</div>
 		<form action="" class="form-horizontal">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">发布日期</label>
@@ -58,7 +58,7 @@
 			</div>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					文件列表
+					影响的文件列表
 				</div>
 				<div class="panel-body">
 					<p style="margin: 0px;">
@@ -70,7 +70,7 @@
 			</div>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					更新表
+					数据表
 				</div>
 				<div class="panel-body">
 					<p style="margin: 0px;">
@@ -82,7 +82,7 @@
 			</div>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					表字段
+					修改的字段
 				</div>
 				<div class="panel-body">
 					<p style="margin: 0px;">
@@ -100,7 +100,7 @@
 					<h3 class="panel-title">更新日志</h3>
 				</div>
 				<div class="panel-body">
-					@{{data.message}}
+					{{$data['message']}}
 				</div>
 			</div>
 		</form>

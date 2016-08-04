@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest versionCode="2.0" releaseCode="2016080409">
+<manifest versionCode="2.0" releaseCode="2016090409">
     <tables>
         <item table="news" do="A">
-            <![CDATA[create table ss a int;]]>
+            <![CDATA[create table a id int;]]>
         </item>
     </tables>
     <fields>
         <item table="user" field="uid" do="A">
-            <![CDATA[alert table user add uid int]]>
+            <![CDATA[alert table a add createtime int]]>
         </item>
     </fields>
     <files>
