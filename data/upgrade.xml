@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest versionCode="2.0" releaseCode="20160804">
+<manifest versionCode="2.0" releaseCode="201608040900">
     <tables>
         <item table="news" do="A">
             <![CDATA[create table ss a int;]]>
