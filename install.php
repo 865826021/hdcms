@@ -698,7 +698,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( preg_match( '/^[a-z]/i', $r ) ) {
+		if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -712,7 +712,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( preg_match( '/^[a-z]/i', $r ) ) {
+		if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
