@@ -9,10 +9,10 @@
 		<li role="presentation" class="active"><a href="#">系统更新</a></li>
 	</ul>
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-6" style="padding-left: 0px;">
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
-					<h4 style="margin-top: 0px;"><i class="fa fa-refresh"></i> 更新日志</h4>
+					<h5 style="margin-top: 0px;"><i class="fa fa-refresh"></i> <strong>更新日志</strong></h5>
 					<p>
 						<a href="#">HDCMS 2.0更新说明【2016年08月1日】</a>
 						<span class="pull-right">2016-08-1</span>
@@ -20,15 +20,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-sm-6" style="padding: 0px;">
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
-					<h4 style="margin-top: 0px;"><i class="fa fa-bullhorn"></i> 系统公告</h4>
+					<h5 style="margin-top: 0px;"><i class="fa fa-bullhorn"></i> <strong>系统公告</strong></h5>
 					<p>
 						<a href="">HDCMS 开发视频正在筹划中</a>
 						<span class="pull-right">2016-08-2</span>
 					</p>
-
 				</div>
 			</div>
 		</div>
@@ -36,34 +35,63 @@
 	<div class="alert alert-danger">
 		<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
 	</div>
-	<form action="" class="form-horizontal ng-cloak" method="post" id="form" ng-cloak ng-controller="ctrl">
-		<if value="$data['valid']==1">
-			<div class="panel panel-info">
+	<if value="$data['valid']==1">
+		<form action="" class="form-horizontal">
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">发布日期</label>
+				<div class="col-sm-10">
+					<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前Release版本: Build {{$hdcms['releaseCode']}}</p>
+					<div class="help-block">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">更新文件列表</h3>
+					本次更新的版本
 				</div>
 				<div class="panel-body">
-					<p ng-repeat="(k,v) in data.message.upgrade_files" style="margin: 0px;">
-						<span class="text-info">@{{k}} <i class="fa fa-check" ng-if="v"></i> [M] </span> <br/>
-						<span class="text-info">@{{k}} <i class="fa fa-check" ng-if="v"></i> [U] </span> <br/>
-
+					<p style="margin: 0px;">
+						<foreach from="$data['lists']" value="$f">
+							<span class="text-info"> HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}} 更新时间【{{date('Y年m月d日',$f['createtime'])}}】 </span> <br/>
+						</foreach>
 					</p>
 				</div>
 			</div>
-			<div class="panel panel-success">
+			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h3 class="panel-title">数据更新</h3>
+					文件列表
 				</div>
 				<div class="panel-body">
-					<p ng-repeat="(k,v) in data.message.upgrade_files" style="margin: 0px;">
-						<span class="text-info">@{{k}} <i class="fa fa-check" ng-if="v"></i> [M] </span> <br/>
-						<span class="text-info">@{{k}} <i class="fa fa-check" ng-if="v"></i> [U] </span> <br/>
-
+					<p style="margin: 0px;">
+						<foreach from="$data['data']['files']" value="$f">
+							<span class="text-info"> {{preg_replace('/\s+/','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$f)}} </span> <br/>
+						</foreach>
 					</p>
 				</div>
 			</div>
-			<div class="alert alert-danger" ng-if="alldown">
-				<strong>系统更新完毕!</strong>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					更新表
+				</div>
+				<div class="panel-body">
+					<p style="margin: 0px;">
+						<foreach from="$data['data']['tables']" value="$f">
+							<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}} </span> <br/>
+						</foreach>
+					</p>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					表字段
+				</div>
+				<div class="panel-body">
+					<p style="margin: 0px;">
+						<foreach from="$data['data']['fields']" value="$f">
+							<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fields::{{$f['field']}} </span>
+							<br/>
+						</foreach>
+					</p>
+				</div>
 			</div>
 			<button class="btn btn-primary" type="button" ng-click="download()" ng-if="!alldown">开始更新</button>
 			<else/>
@@ -75,30 +103,6 @@
 					@{{data.message}}
 				</div>
 			</div>
-		</if>
-	</form>
+		</form>
+	</if>
 </block>
-<script>
-	require(['angular'], function (angular) {
-		angular.module('myApp', []).controller('ctrl', ['$scope', '$http', '$interval', function ($scope, $http, $interval) {
-			$scope.data =<?php echo json_encode( $_SESSION['_hdcms_upgrade'] );?>;
-			//全部更新完毕
-			$scope.alldown = false;
-			$scope.download = function () {
-				stop = $interval(function () {
-					$http.post("{{__URL__}}").success(function (res) {
-						console.log(res);
-						if (res.alldown == 1) {
-							$scope.alldown = true;
-							//全部下载完成
-							$interval.cancel(stop);
-						} else {
-							$scope.data.message.upgrade_files[res.file] = true;
-						}
-					})
-				}, 500);
-			}
-		}]);
-		angular.bootstrap(document.getElementById('form'), ['myApp']);
-	})
-</script>

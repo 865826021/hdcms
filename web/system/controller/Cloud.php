@@ -53,11 +53,13 @@ class Cloud {
 	 * 更新HDCMS
 	 */
 	public function upgrade() {
-		$releaseCode                        = Db::table( 'cloud_hdcms' )->where( 'id', 1 )->pluck( 'releaseCode' );
-		$res                                = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $releaseCode );
-		$res = json_decode($res,true);
-		p($res);
-		View::with( 'data', $_SESSION['_hdcms_upgrade'] );
+		$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
+		$data  = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+		$data  = json_decode( $data, TRUE );
+		F( '_upgrade_', $data );
+		p( $data );
+		View::with( 'data', $data );
+		View::with( 'hdcms', $hdcms );
 		View::make();
 	}
 }
