@@ -671,17 +671,23 @@ if ( $action == 'download' ) {
 
 //远程下载文件
 if ( $action == 'downloadFile' ) {
-	$d = curl_get( $file_url );
-	if ( strlen( $d ) < 2787715 ) {
-		//下载失败
+	if ( is_dir( 'web' ) ) {
+		//完整版时
+		echo 1;
+		exit;
+	} else {
+		$d = curl_get( $file_url );
+		if ( strlen( $d ) < 2787715 ) {
+			//下载失败
+			exit;
+		}
+		$zipFile = 'hdcms.zip';
+		file_put_contents( $zipFile, $d );
+		//解包
+		get_zip_originalsize( $zipFile, './' );
+		echo 1;
 		exit;
 	}
-	$zipFile = 'hdcms.zip';
-	file_put_contents( $zipFile, $d );
-	//解包
-	get_zip_originalsize( $zipFile, './' );
-	echo 1;
-	exit;
 }
 
 //安装完成,添加数据
