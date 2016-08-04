@@ -113,7 +113,7 @@ $download=<<<str
 			<form class="form-horizontal" method="post">
 				<div class="col-xs-9">
 					<div class="alert alert-info">
-						你的网速不同会影响下载速度,也可能造成下载失败的情况,如果下载失败,你可以尝试 <a href="http://www.hdcms.com">下载离线数据包</a>.
+						服务器下载人数过多或你的网速过低都会影响下载速度,也可能造成下载失败的情况,如果下载失败,你可以尝试 <a href="http://www.hdcms.com">下载离线数据包</a>.
 					</div>
 					<h1>
 						<div class="progress">
@@ -698,7 +698,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( ! empty( $r ) && $r[0] != '#' ) {
+		if ( preg_match( '/^[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -712,7 +712,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( ! empty( $r ) ) {
+		if ( preg_match( '/^[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -724,7 +724,7 @@ if ( $action == 'table' ) {
 	$data        = \Xml::toArray( file_get_contents( 'data/upgrade.xml' ) );
 	$versionCode = $data['manifest']['@attributes']['versionCode'];
 	$releaseCode = $data['manifest']['@attributes']['releaseCode'];
-	$time        = time(); 
+	$time        = time();
 	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('$versionCode','$releaseCode',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号

@@ -102,7 +102,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( ! empty( $r ) && $r[0] != '#' ) {
+		if ( preg_match( '/^[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -116,7 +116,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( ! empty( $r ) ) {
+		if ( preg_match( '/^[a-z]/i', $r ) ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -128,7 +128,7 @@ if ( $action == 'table' ) {
 	$data        = \Xml::toArray( file_get_contents( 'data/upgrade.xml' ) );
 	$versionCode = $data['manifest']['@attributes']['versionCode'];
 	$releaseCode = $data['manifest']['@attributes']['releaseCode'];
-	$time        = time(); 
+	$time        = time();
 	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('$versionCode','$releaseCode',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
