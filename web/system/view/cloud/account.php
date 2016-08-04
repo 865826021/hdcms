@@ -10,6 +10,12 @@
         </ul>
     <form action="" class="form-horizontal" method="post">
         <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10">
+                <a href="http://dev.hdcms.com/?a=site/store&m=store&t=web&siteid=1" target="_blank" class="form-control-static">登录云帐号查看</a>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-2 control-label">AppID(应用ID)</label>
             <div class="col-sm-10">
                 <input type="text" name="AppID" value="{{$field['AppID']}}" class="form-control">

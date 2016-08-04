@@ -14,12 +14,8 @@
 				<div class="panel-body alert-info">
 					<h4 style="margin-top: 0px;"><i class="fa fa-refresh"></i> 更新日志</h4>
 					<p>
-						<a href="">微擎0.7更新说明【2016年07月26日】</a>
-						<span class="pull-right">2016-07-26</span>
-					</p>
-					<p>
-						<a href="">微擎0.7更新说明【2016年07月26日】</a>
-						<span class="pull-right">2016-07-26</span>
+						<a href="#">HDCMS 2.0更新说明【2016年08月1日】</a>
+						<span class="pull-right">2016-08-1</span>
 					</p>
 				</div>
 			</div>
@@ -29,13 +25,10 @@
 				<div class="panel-body alert-info">
 					<h4 style="margin-top: 0px;"><i class="fa fa-bullhorn"></i> 系统公告</h4>
 					<p>
-						<a href="">微擎运营学院征集大赛，文案策划有福利啦！（抢楼送交易币）</a>
-						<span class="pull-right">2016-07-26</span>
+						<a href="">HDCMS 开发视频正在筹划中</a>
+						<span class="pull-right">2016-08-2</span>
 					</p>
-					<p>
-						<a href="">微擎0.7更新说明【2016年07月26日】</a>
-						<span class="pull-right">2016-07-26</span>
-					</p>
+
 				</div>
 			</div>
 		</div>
