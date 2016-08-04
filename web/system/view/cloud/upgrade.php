@@ -51,7 +51,8 @@
 				<div class="panel-body">
 					<p style="margin: 0px;">
 						<foreach from="$data['lists']" value="$f">
-							<span class="text-info"> HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}} 更新时间【{{date('Y年m月d日',$f['createtime'])}}】 </span> <br/>
+							<span class="text-info"> HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}} 更新时间【{{date('Y年m月d日',$f['createtime'])}}】 </span>
+							<br/>
 						</foreach>
 					</p>
 				</div>
@@ -93,7 +94,7 @@
 					</p>
 				</div>
 			</div>
-			<button class="btn btn-primary" type="button" ng-click="download()" ng-if="!alldown">开始更新</button>
+			<a class="btn btn-primary" href="{{u('upgrade',['action'=>'downloadLists'])}}">开始更新</a>
 			<else/>
 			<div class="panel panel-success">
 				<div class="panel-heading">
