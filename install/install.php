@@ -102,7 +102,7 @@ if ( $action == 'table' ) {
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
 	foreach ( (array) $result as $r ) {
-		if ( ! empty( $r ) ) {
+		if ( ! empty( $r ) && $r[0] != '#' ) {
 			try {
 				$pdo->exec( $r );
 			} catch ( PDOException $e ) {
@@ -124,13 +124,20 @@ if ( $action == 'table' ) {
 			}
 		}
 	}
+	//更新系统版本号
+	$data        = \Xml::toArray( file_get_contents( 'data/upgrade.xml' ) );
+	$versionCode = $data['manifest']['@attributes']['versionCode'];
+	$releaseCode = $data['manifest']['@attributes']['releaseCode'];
+	$time        = time();
+	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('$versionCode','$releaseCode',$time)";
+	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
 	$password = md5( $_SESSION['config']['upassword'] . $row[0]['security'] );
 	$pdo->exec( "UPDATE {$_SESSION['config']['prefix']}user SET password='{$password}' WHERE uid=1" );
 	//修改配置文件
-	file_put_contents('data/database.php','<?php return [];?>');
+	file_put_contents( 'data/database.php', '<?php return [];?>' );
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
 	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
 	header( 'Location:?a=finish' );
@@ -138,7 +145,7 @@ if ( $action == 'table' ) {
 if ( $action == 'finish' ) {
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
-		if ( basename($f) != 'database.php' ) {
+		if ( basename( $f ) != 'database.php' ) {
 			unlink( $f );
 		}
 	}
