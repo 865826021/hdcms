@@ -128,7 +128,7 @@ if ( $action == 'table' ) {
 	$data        = \Xml::toArray( file_get_contents( 'data/upgrade.xml' ) );
 	$versionCode = $data['manifest']['@attributes']['versionCode'];
 	$releaseCode = $data['manifest']['@attributes']['releaseCode'];
-	$time        = time();
+	$time        = time(); 
 	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('$versionCode','$releaseCode',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
