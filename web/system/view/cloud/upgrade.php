@@ -9,7 +9,7 @@
 		<li role="presentation" class="active"><a href="#">系统更新</a></li>
 	</ul>
 	<div class="row">
-		<div class="col-sm-6" style="padding-left: 0px;">
+		<div class="col-sm-6">
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
 					<h5 style="margin-top: 0px;"><i class="fa fa-refresh"></i> <strong>更新日志</strong></h5>
@@ -20,7 +20,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-6" style="padding: 0px;">
+		<div class="col-sm-6">
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
 					<h5 style="margin-top: 0px;"><i class="fa fa-bullhorn"></i> <strong>系统公告</strong></h5>
@@ -44,57 +44,75 @@
 					<div class="help-block">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动</div>
 				</div>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					本次更新的版本
-				</div>
-				<div class="panel-body">
-					<p style="margin: 0px;">
-						<foreach from="$data['lists']" value="$f">
-							<span class="text-info"> HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}} 更新时间【{{date('Y年m月d日',$f['createtime'])}}】 </span>
-							<br/>
-						</foreach>
-					</p>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新版本</label>
+				<div class="col-sm-10">
+					<foreach from="$data['lists']" value="$f">
+						<p class="form-control-static">
+							<span class="fa fa-square-o"></span> &nbsp; HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}}
+							更新时间【{{date('Y年m月d日',$f['createtime'])}}】
+						</p>
+					</foreach>
 				</div>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					影响的文件列表
+			<if value="!empty($data['data']['files'])">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">文件列表</label>
+					<div class="col-sm-10 ">
+						<div class="alert alert-success form-control-static">
+							<foreach from="$data['data']['files']" value="$f">
+								{{preg_replace('/\s+/','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$f)}}<br/>
+							</foreach>
+						</div>
+					</div>
 				</div>
-				<div class="panel-body">
-					<p style="margin: 0px;">
-						<foreach from="$data['data']['files']" value="$f">
-							<span class="text-info"> {{preg_replace('/\s+/','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$f)}} </span> <br/>
-						</foreach>
-					</p>
+			</if>
+			<if value="!empty($data['data']['tables'])">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">数据表</label>
+					<div class="col-sm-10 ">
+						<div class="alert alert-success form-control-static">
+							<foreach from="$data['data']['tables']" value="$f">
+								[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}} <br/>
+							</foreach>
+						</div>
+					</div>
+				</div>
+			</if>
+			<if value="!empty($data['data']['fields'])">
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">表字段</label>
+					<div class="col-sm-10 ">
+						<div class="alert alert-success form-control-static">
+							<foreach from="$data['data']['fields']" value="$f">
+								<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fields::{{$f['field']}} </span>
+								<br/>
+							</foreach>
+						</div>
+					</div>
+				</div>
+			</if>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新协议</label>
+				<div class="col-sm-10">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="cp1"> 我已经做好了相关文件的备份工作
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="cp2"> 认同官方的更新行为并自愿承担更新所存在的风险
+						</label>
+					</div>
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" id="cp3"> 理解官方的辛勤劳动并报以感恩的心态点击更新按钮
+						</label>
+					</div>
 				</div>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					数据表
-				</div>
-				<div class="panel-body">
-					<p style="margin: 0px;">
-						<foreach from="$data['data']['tables']" value="$f">
-							<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}} </span> <br/>
-						</foreach>
-					</p>
-				</div>
-			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					修改的字段
-				</div>
-				<div class="panel-body">
-					<p style="margin: 0px;">
-						<foreach from="$data['data']['fields']" value="$f">
-							<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fields::{{$f['field']}} </span>
-							<br/>
-						</foreach>
-					</p>
-				</div>
-			</div>
-			<a class="btn btn-primary" href="{{u('upgrade',['action'=>'downloadLists'])}}">开始更新</a>
+			<button class="btn btn-primary" type="button" onclick="upgrade()">开始更新</button>
 			<else/>
 			<div class="panel panel-success">
 				<div class="panel-heading">
@@ -107,3 +125,16 @@
 		</form>
 	</if>
 </block>
+<script>
+	function upgrade() {
+		require(['util'], function (util) {
+			if ($("#cp1:checked").is(':checked') && $("#cp2:checked").is(':checked') && $("#cp3:checked").is(':checked')) {
+				if (confirm('更新将直接覆盖本地文件, 请注意备份文件和数据. \n\n**另注意** 更新过程中不要关闭此浏览器窗口.')) {
+					location.href = "{{u('upgrade',['action'=>'sql'])}}";
+				}
+			} else {
+				util.message('请认真检查系统协议', '', 'error');
+			}
+		})
+	}
+</script>

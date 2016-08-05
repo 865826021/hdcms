@@ -21,44 +21,53 @@
 		</div>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				准备下载的文件
+				下载更新文件
 			</div>
 			<div class="panel-body">
 				<p style="margin: 0px;">
 						<span class="text-info" ng-repeat="(k,v) in files" style="display: block;">
 							@{{v.file}}
 							<i class="fa fa-check-circle-o alert-success" ng-if="v.downloaded==1"></i>
-							<i class="fa fa-times-circle-o alert-danger" ng-if="v.downloaded==2"></i>
+							<i class="fa fa-times-circle-o alert-danger" ng-if="v.downloaded==0"></i>
 						</span>
 				</p>
 			</div>
 		</div>
-		<a class="btn btn-primary" href="{{u('upgrade',['action'=>'downloadLists'])}}">开始下载</a>
 	</form>
 </block>
 <script>
-	require(['util', 'angular'], function (util, angular) {
+	require(['util', 'angular', 'underscore'], function (util, angular, _) {
 		angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
 			$scope.files = <?php echo json_encode( $data['data']['files'] );?>;
 			angular.forEach($scope.files, function (v, k) {
-				$scope.files[k] = {downloaded: 0, file: v};
+				$scope.files[k] = {downloaded: null, file: v};
 			});
-			downIndex = 0;
 			//执行下载
 			$scope.download = function () {
 				$http.get("{{u('upgrade',['action'=>'download'])}}").success(function (res) {
-					if (res == 1) {
-						$scope.files[downIndex].downloaded = 1;
-					} else if (res == 2) {
-						$scope.files[downIndex].downloaded = 2;
-					} else if (res == 'finish') {
+					if (res.valid == 0) {
+						//更新失败
+						var i = $scope.getFileIndex(res.file);
+						$scope.files[i].downloaded = 0;
+					} else if (res.valid == 1) {
+						//更新成功
+						var i = $scope.getFileIndex(res.file);
+						$scope.files[i].downloaded = 1;
+					} else if (res.valid == 2) {
+						//更新完成
 						location.href = "{{u('upgrade',['action'=>'sql'])}}";
 						return;
 					}
-					downIndex++;
 					$scope.download();
 				});
-
+			}
+			//根据文件获取位置,用于设置下载状态
+			$scope.getFileIndex = function (file) {
+				for (var i = 0; i < $scope.files.length; i++) {
+					if ($scope.files[i].file == file) {
+						return i;
+					}
+				}
 			}
 			$scope.download();
 		}]);

@@ -53,11 +53,12 @@ class Cloud {
 	 * 更新HDCMS
 	 */
 	public function upgrade() {
+		View::with( 'data', F( '_upgrade_' ) );
 		switch ( q( 'get.action' ) ) {
 			case 'downloadLists':
 				//显示更新列表,准备执行更新
 				$data = F( '_upgrade_' );
-				if ( empty( $data['files'] ) ) {
+				if ( empty( $data['data']['files'] ) ) {
 					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
 					go( u( 'upgrade', [ 'action' => 'sql' ] ) );
 				}
@@ -66,43 +67,75 @@ class Cloud {
 				break;
 			case 'download':
 				//下载文件
-				$data     = F( '_upgrade_' );
-				$file     = trim( substr( current( $data['data']['files'] ), 1 ) );
-				$postData = [ 'file' => $file, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
-				$content  = \Curl::post( 'http://dev.hdcms.com/index.php?a=cloud/download&t=web&siteid=1&m=store', $postData );
-				if ( file_put_contents( $file, $content ) ) {
-					array_shift( $data['data']['files'] );
+				$data = F( '_upgrade_' );
+				if ( empty( $data['data']['files'] ) ) {
+					//全部下载完成
+					$res = [ 'valid' => 2 ];
+				} else {
+					//从第一个文件开始下载
+					$file = array_shift( $data['data']['files'] );
 					F( '_upgrade_', $data );
-					echo 1;
+					$downFile = trim( substr( $file, 1 ) );
+					$postData = [ 'file' => $downFile, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
+					$content  = \Curl::post( 'http://dev.hdcms.com/index.php?a=cloud/download&t=web&siteid=1&m=store', $postData );
+					if ( file_put_contents( $file, $content ) ) {
+						$res = [ 'valid' => 1, 'file' => $file ];
+					} else {
+						$res = [ 'valid' => 0, 'file' => $file ];
+					}
 				}
+				echo json_encode( $res );
 				break;
 			case 'sql':
 				$data = F( '_upgrade_' );
 				if ( IS_POST ) {
 					//执行表操作的SQL
-					foreach ( $data['data']['tables'] as $d ) {
-						if ( ! Db::sql( $d['sql'] ) ) {
-							message( '执行失败: ' . $d['sql'], 'back', 'error' );
+					if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
+						//全部下载完成
+						$res = [ 'valid' => 2 ];
+					} else {
+						if ( ! empty( $data['data']['tables'] ) ) {
+							$t = array_shift( $data['data']['tables'] );
+						} else {
+							$t = array_shift( $data['data']['tables'] );
+						}
+						if ( Db::sql( $t['sql'] ) ) {
+							F( '_upgrade_', $data );
+							$res = [ 'valid' => 1, 'sql' => $t['sql'] ];
+						} else {
+							$res = [ 'valid' => 0, 'sql' => $t['sql'] ];
 						}
 					}
-					//执行字段操作的SQL
-					foreach ( $data['data']['fields'] as $d ) {
-						if ( ! Db::sql( $d['sql'] ) ) {
-							message( '执行失败: ' . $d['sql'], 'back', 'error' );
-						}
-					}
-					message( '操作成功', 'back', 'success' );
+					echo json_encode( $res );
+					exit;
+				}
+				if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
+					//没有更新数据时执行文件更新
+					go( 'upgrade', [ 'action' => 'downloadLists' ] );
 				}
 				View::make( 'updateSql' );
-				//执行SQL
+				break;
+			case 'finish':
+				//全部更新完成
+				$data = F( '_upgrade_' );
+				$data = [
+					'versionCode' => $data['lastVersion']['versionCode'],
+					'releaseCode' => $data['lastVersion']['releaseCode'],
+				];
+				Db::table( 'cloud_hdcms' )->where( 'id', 1 )->update( $data );
+				//删除更新缓存
+				F( '_upgrade_', '[del]' );
+				go( 'upgrade' );
 				break;
 			default:
-				$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
-				$data  = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
-				$tmp   = $data = json_decode( $data, TRUE );
-				//本次更新的多个版本中的最新版本
-				$data['lastVersion'] = array_pop( $tmp['lists'] );
-				F( '_upgrade_', $data );
+				if ( ! $data = F( '_upgrade_' ) ) {
+					$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
+					$data  = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+					$tmp   = $data = json_decode( $data, TRUE );
+					//本次更新的多个版本中的最新版本
+					$data['lastVersion'] = array_pop( $tmp['lists'] );
+					F( '_upgrade_', $data );
+				}
 				View::with( 'data', $data );
 				View::with( 'hdcms', $hdcms );
 				View::make();
