@@ -2,7 +2,7 @@
 <manifest versionCode="2.0" releaseCode="2016090419">
     <tables>
         <item table="a" do="A">
-            <![CDATA[create table a id int(10);]]>
+            <![CDATA[create table a (id int(10));]]>
         </item>
     </tables>
     <fields>
