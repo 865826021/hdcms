@@ -53,11 +53,12 @@ class Cloud {
 	 * 更新HDCMS
 	 */
 	public function upgrade() {
-		View::with( 'data', F( '_upgrade_' ) );
+		$data = D( '_upgrade_' );
+		View::with( 'data', $data );
 		switch ( q( 'get.action' ) ) {
 			case 'downloadLists':
 				//显示更新列表,准备执行更新
-				$data = F( '_upgrade_' );
+				$data = D( '_upgrade_' );
 				if ( empty( $data['data']['files'] ) ) {
 					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
 					go( u( 'upgrade', [ 'action' => 'sql' ] ) );
@@ -67,14 +68,13 @@ class Cloud {
 				break;
 			case 'download':
 				//下载文件
-				$data = F( '_upgrade_' );
 				if ( empty( $data['data']['files'] ) ) {
 					//全部下载完成
 					$res = [ 'valid' => 2 ];
 				} else {
 					//从第一个文件开始下载
 					$file = array_shift( $data['data']['files'] );
-					F( '_upgrade_', $data );
+					D( '_upgrade_', $data );
 					$downFile = trim( substr( $file, 1 ) );
 					$postData = [ 'file' => $downFile, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
 					$content  = \Curl::post( 'http://dev.hdcms.com/index.php?a=cloud/download&t=web&siteid=1&m=store', $postData );
@@ -87,7 +87,6 @@ class Cloud {
 				echo json_encode( $res );
 				break;
 			case 'sql':
-				$data = F( '_upgrade_' );
 				if ( IS_POST ) {
 					//执行表操作的SQL
 					if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
@@ -100,7 +99,7 @@ class Cloud {
 							$t = array_shift( $data['data']['tables'] );
 						}
 						if ( Db::sql( $t['sql'] ) ) {
-							F( '_upgrade_', $data );
+							D( '_upgrade_', $data );
 							$res = [ 'valid' => 1, 'sql' => $t['sql'] ];
 						} else {
 							$res = [ 'valid' => 0, 'sql' => $t['sql'] ];
@@ -117,24 +116,23 @@ class Cloud {
 				break;
 			case 'finish':
 				//全部更新完成
-				$data = F( '_upgrade_' );
 				$data = [
 					'versionCode' => $data['lastVersion']['versionCode'],
 					'releaseCode' => $data['lastVersion']['releaseCode'],
 				];
 				Db::table( 'cloud_hdcms' )->where( 'id', 1 )->update( $data );
 				//删除更新缓存
-				F( '_upgrade_', '[del]' );
+				D( '_upgrade_', '[del]' );
 				go( 'upgrade' );
 				break;
 			default:
-				if ( ! $data = F( '_upgrade_' ) ) {
+				if ( empty( $data ) ) {
 					$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
 					$data  = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 					$tmp   = $data = json_decode( $data, TRUE );
 					//本次更新的多个版本中的最新版本
 					$data['lastVersion'] = array_pop( $tmp['lists'] );
-					F( '_upgrade_', $data );
+					D( '_upgrade_', $data );
 				}
 				View::with( 'data', $data );
 				View::with( 'hdcms', $hdcms );
