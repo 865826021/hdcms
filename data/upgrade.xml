@@ -7,7 +7,7 @@
     </tables>
     <fields>
         <item table="a" field="createtime" do="A">
-            <![CDATA[alert table a add createtime int(10);]]>
+            <![CDATA[alter table a add createtime int(10);]]>
         </item>
     </fields>
     <files>

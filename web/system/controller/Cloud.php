@@ -96,7 +96,7 @@ class Cloud {
 						if ( ! empty( $data['data']['tables'] ) ) {
 							$t = array_shift( $data['data']['tables'] );
 						} else {
-							$t = array_shift( $data['data']['tables'] );
+							$t = array_shift( $data['data']['fields'] );
 						}
 						if ( Db::sql( $t['sql'] ) ) {
 							D( '_upgrade_', $data );
