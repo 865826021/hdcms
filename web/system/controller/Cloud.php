@@ -61,7 +61,7 @@ class Cloud {
 				$data = D( '_upgrade_' );
 				if ( empty( $data['data']['files'] ) ) {
 					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
-					go( u( 'upgrade', [ 'action' => 'sql' ] ) );
+					go( u( 'upgrade', [ 'action' => 'finish' ] ) );
 				}
 				View::with( 'data', $data );
 				View::make( 'downloadLists' );
@@ -119,11 +119,12 @@ class Cloud {
 				$data = [
 					'versionCode' => $data['lastVersion']['versionCode'],
 					'releaseCode' => $data['lastVersion']['releaseCode'],
+					'createtime'  => time()
 				];
 				Db::table( 'cloud_hdcms' )->where( 'id', 1 )->update( $data );
 				//删除更新缓存
 				D( '_upgrade_', '[del]' );
-				go( 'upgrade' );
+				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
 				if ( empty( $data ) ) {

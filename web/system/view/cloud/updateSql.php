@@ -42,11 +42,12 @@
 				//执行更新
 				$.post("{{__URL__}}", function (res) {
 					if (res.valid == 2) {
-						util.message('更新完成', "{{u('upgrade')}}", 'success');
+						location.href = "{{u('upgrade',['action'=>'downloadLists'])}}";
 					} else if (res.valid == 0) {
 						$scope.error = res.sql + " 执行失败";
 					} else if (res.valid == 1) {
 						$scope.success = res.sql + " 执行成功";
+						$scope.upgrade();
 					}
 					$scope.$apply();
 				}, 'json');

@@ -55,7 +55,7 @@
 						$scope.files[i].downloaded = 1;
 					} else if (res.valid == 2) {
 						//更新完成
-						location.href = "{{u('upgrade',['action'=>'sql'])}}";
+						location.href = "{{u('upgrade',['action'=>'finish'])}}";
 						return;
 					}
 					$scope.download();

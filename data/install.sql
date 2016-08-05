@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2016-08-04 02:22:12 +0000
+# Generation Time: 2016-08-05 10:17:09 +0000
 # ************************************************************
 
 
@@ -57,32 +57,22 @@ CREATE TABLE `hd_button` (
 
 
 
-# Dump of table hd_cloud_hdcms
+# Dump of table hd_cloud
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `hd_cloud_hdcms`;
+DROP TABLE IF EXISTS `hd_cloud`;
 
-CREATE TABLE `hd_cloud_hdcms` (
+CREATE TABLE `hd_cloud` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL COMMENT '云帐号用户编号',
+  `username` varchar(30) NOT NULL COMMENT '帐号',
+  `AppID` varchar(50) NOT NULL DEFAULT '' COMMENT '应用ID',
+  `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
   `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
   `releaseCode` char(16) NOT NULL DEFAULT '' COMMENT '发行版本，补丁版本',
   `createtime` int(10) unsigned NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='HDCMS版本信息';
-
-
-
-# Dump of table hd_cloud_user
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `hd_cloud_user`;
-
-CREATE TABLE `hd_cloud_user` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `AppID` varchar(50) NOT NULL DEFAULT '' COMMENT '应用ID',
-  `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='云帐号';
 
 
 
@@ -699,6 +689,63 @@ CREATE TABLE `hd_site_wechat` (
   PRIMARY KEY (`weid`),
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信帐号';
+
+
+
+# Dump of table hd_store_account
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_store_account`;
+
+CREATE TABLE `hd_store_account` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL COMMENT '会员编号',
+  `AppID` varchar(50) NOT NULL COMMENT '应用ID',
+  `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
+  `god` int(10) unsigned NOT NULL COMMENT '大神币',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用商城模块会员资料';
+
+
+
+# Dump of table hd_store_hdcms
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_store_hdcms`;
+
+CREATE TABLE `hd_store_hdcms` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
+  `package` varchar(255) NOT NULL DEFAULT '' COMMENT '完整版压缩包',
+  `releaseCode` int(10) NOT NULL COMMENT '发行版本，大版本下的补钉版本',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '0 开发版 1 发行版',
+  `downloads` int(11) unsigned NOT NULL COMMENT '下载次数',
+  `type` char(10) NOT NULL DEFAULT '' COMMENT 'full 完整版 small 精简版',
+  `createtime` int(10) NOT NULL COMMENT '创建时间',
+  `data` text NOT NULL COMMENT '更新xml解析数据',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table hd_store_modules
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_store_modules`;
+
+CREATE TABLE `hd_store_modules` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '模块名称',
+  `app_type` tinyint(1) NOT NULL COMMENT 'module 模块 template 模板',
+  `package_type` varchar(30) NOT NULL DEFAULT '' COMMENT 'install 新安装 upgrade更新包',
+  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图',
+  `cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面图',
+  `author` varchar(50) NOT NULL DEFAULT '' COMMENT '作者',
+  `price` decimal(10,2) NOT NULL COMMENT '售价',
+  `file` varchar(255) NOT NULL DEFAULT '' COMMENT '文件',
+  `createtime` int(10) NOT NULL COMMENT '创建时间/版本号也用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
