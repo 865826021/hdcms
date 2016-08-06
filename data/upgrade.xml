@@ -2,12 +2,12 @@
 <manifest versionCode="2.0" releaseCode="2016090519">
     <tables>
         <item table="a" do="A">
-            <![CDATA[create table a (id int(10));]]>
+            <![CDATA[create table a (uid int(10));]]>
         </item>
     </tables>
     <fields>
         <item table="a" field="createtime" do="A">
-            <![CDATA[alter table a add createtime int(10);]]>
+            <![CDATA[alter table a add ucreatetime int(10);]]>
         </item>
     </fields>
     <files>
