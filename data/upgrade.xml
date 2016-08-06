@@ -12,7 +12,8 @@
     </fields>
     <files>
         <![CDATA[
-        
+       M       data/upgrade.xml
+M       index.php
     ]]>
     </files>
 </manifest>
