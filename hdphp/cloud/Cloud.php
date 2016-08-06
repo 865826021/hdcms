@@ -6,11 +6,12 @@
  * @author 向军
  */
 class Cloud {
-	private $app;
-	const URL = 'http://dev.hdcms.com/index.php';
+	private   $app;
+	protected $url;
 
 	public function __construct( $app ) {
 		$this->app = $app;
+		$this->url = c( 'api.cloud' );
 	}
 
 
@@ -25,7 +26,7 @@ class Cloud {
 	public function mobile( $mobile, $content ) {
 		$data = [ 'mobile' => $mobile, 'content' => $content ];
 		$data = http_build_query( $data );
-		$res  = Curl::post( self::URL . '?a=cloud/mobile_message&t=web&siteid=1&m=store', $data );
+		$res  = Curl::post( $this->url . '?a=cloud/mobile_message&t=web&siteid=1&m=store', $data );
 
 		return Xml::toSimpleArray( $res );
 	}
@@ -33,15 +34,15 @@ class Cloud {
 	/**
 	 * 测试云帐号连接
 	 *
-	 * @param string $AppID 应用ID
-	 * @param string $AppSecret 应用密钥
+	 * @param string $username 帐号
+	 * @param string $password 密码
 	 *
 	 * @return mixed
 	 */
-	public function checkConnect( $AppID, $AppSecret ) {
-		$res = Curl::get( self::URL . "?a=cloud/check_connect&t=web&siteid=1&m=store&AppID={$AppID}&AppSecret={$AppSecret}" );
+	public function connect($data) {
+		$res              = Curl::post( $this->url . "?a=cloud/connect&t=web&siteid=1&m=store", $data );
 
-		return Xml::toSimpleArray( $res );
+		return json_decode( $res ,true);
 	}
 
 	/**
@@ -49,7 +50,8 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function getHdcmsLatestVersion() {
-		$res = Curl::get( self::URL . "?a=cloud/hdcms_latest_version&t=web&siteid=1&m=store" );
+		$res = Curl::get( $this->url . "?a=cloud/hdcms_latest_version&t=web&siteid=1&m=store" );
+
 		return Xml::toSimpleArray( $res );
 	}
 }

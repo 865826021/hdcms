@@ -100,13 +100,13 @@ class User extends Model {
 		}
 		$user = Db::table( 'user' )->where( 'username', $_POST['username'] )->first();
 		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
-			$this->error = '帐号密码输入错误,不允许登录';
+			$this->error = '密码输入错误';
 
 			return FALSE;
 		}
 
 		if ( ! $user['status'] ) {
-			$this->error = '您的帐号正在审核中,暂时不能登录系统';
+			$this->error = '您的帐号正在审核中';
 
 			return FALSE;
 		}

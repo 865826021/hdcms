@@ -8,9 +8,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-use system\model\Package;
 use system\model\User;
-use system\model\UserGroup;
 
 /**
  * 云帐号管理
@@ -20,12 +18,17 @@ use system\model\UserGroup;
  */
 class Cloud {
 	protected $user;
+	//云URL
+	protected $url;
+	protected $db;
 
 	public function __construct() {
 		$this->user = new User();
 		if ( ! $this->user->isSuperUser() ) {
 			message( '只有系统管理员可以执行操作', 'back', 'error' );
 		}
+		$this->url = c( 'api.cloud' );
+		$this->db  = new \system\model\Cloud();
 	}
 
 	/**
@@ -33,18 +36,22 @@ class Cloud {
 	 */
 	public function account() {
 		if ( IS_POST ) {
-			$res = \Cloud::checkConnect( $_POST['AppID'], $_POST['AppSecret'] );
+			$_POST['weburl'] = __ROOT__;
+			$res             = \Cloud::connect( $_POST );
 			if ( $res['valid'] == 1 ) {
 				//连接成功
 				$data['id']        = 1;
-				$data['AppID']     = $_POST['AppID'];
-				$data['AppSecret'] = $_POST['AppSecret'];
-				Db::table( 'cloud_user' )->replace( $data );
+				$data['uid']       = $res['message']['uid'];
+				$data['username']  = $res['message']['username'];
+				$data['AppID']     = $res['message']['AppID'];
+				$data['AppSecret'] = $res['message']['AppSecret'];
+				$data['webname']   = $_POST['webname'];
+				$this->db->replace( $data );
 				message( '连接成功', 'refresh', 'success' );
 			}
-			message( '云服务连接失败', 'back', 'error' );
+			message( $res['message'], 'back', 'error' );
 		}
-		$field = Db::table( 'cloud_user' )->find( 1 );
+		$field = $this->db->find( 1 );
 		View::with( 'field', $field );
 		View::make();
 	}
@@ -77,7 +84,7 @@ class Cloud {
 					D( '_upgrade_', $data );
 					$downFile = trim( substr( $file, 1 ) );
 					$postData = [ 'file' => $downFile, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
-					$content  = \Curl::post( 'http://dev.hdcms.com/index.php?a=cloud/download&t=web&siteid=1&m=store', $postData );
+					$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
 					if ( file_put_contents( $file, $content ) ) {
 						$res = [ 'valid' => 1, 'file' => $file ];
 					} else {
@@ -129,7 +136,7 @@ class Cloud {
 			default:
 				if ( empty( $data ) ) {
 					$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
-					$data  = \Curl::get( 'http://dev.hdcms.com/index.php?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 					$tmp   = $data = json_decode( $data, TRUE );
 					//本次更新的多个版本中的最新版本
 					$data['lastVersion'] = array_pop( $tmp['lists'] );
