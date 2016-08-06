@@ -68,13 +68,6 @@
 						<p class="form-control-static">{{$field['AppSecret']}}</p>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">通信编号(AppID)</label>
-					<div class="col-sm-10">
-						<p class="form-control-static">{{$field['AppID']}}</p>
-					</div>
-				</div>
-
 			</div>
 		</div>
 	</form>

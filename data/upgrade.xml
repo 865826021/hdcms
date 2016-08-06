@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest versionCode="2.0" releaseCode="2016090419">
+<manifest versionCode="2.0" releaseCode="2016090519">
     <tables>
         <item table="a" do="A">
             <![CDATA[create table a (id int(10));]]>
@@ -12,13 +12,7 @@
     </fields>
     <files>
         <![CDATA[
-        A       data/upgrade.php
-        D       data/upgrade.sql
-        M       index.php
-        D       install.php
-        M       web/system/controller/Cloud.php
-        A       web/system/view/cloud/upgrade.php
-        M       web/system/view/manage/menu.php
+        A       index.php
     ]]>
     </files>
 </manifest>

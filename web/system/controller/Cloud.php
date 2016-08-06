@@ -124,18 +124,19 @@ class Cloud {
 			case 'finish':
 				//全部更新完成
 				$data = [
+					'id'          => 1,
 					'versionCode' => $data['lastVersion']['versionCode'],
 					'releaseCode' => $data['lastVersion']['releaseCode'],
 					'createtime'  => time()
 				];
-				Db::table( 'cloud_hdcms' )->where( 'id', 1 )->update( $data );
+				$this->db->save( $data );
 				//删除更新缓存
 				D( '_upgrade_', '[del]' );
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
 				if ( empty( $data ) ) {
-					$hdcms = Db::table( 'cloud_hdcms' )->find( 1 );
+					$hdcms = $this->db->find( 1 );
 					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 					$tmp   = $data = json_decode( $data, TRUE );
 					//本次更新的多个版本中的最新版本
