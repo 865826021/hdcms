@@ -46,7 +46,7 @@ class Cloud {
 				$data['AppID']     = $res['message']['AppID'];
 				$data['AppSecret'] = $res['message']['AppSecret'];
 				$data['webname']   = $_POST['webname'];
-				$this->db->replace( $data );
+				$this->db->save( $data );
 				message( '连接成功', 'refresh', 'success' );
 			}
 			message( $res['message'], 'back', 'error' );
