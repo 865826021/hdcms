@@ -1,5 +1,6 @@
 <?php
 session_start();
+set_time_limit(0);
 error_reporting( 0 );
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
@@ -134,7 +135,7 @@ if ( $action == 'table' ) {
 	$xml        = file_get_contents( 'data/upgrade.xml' ) ;
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time        = time();
-	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud_hdcms (versionCode,releaseCode,createtime) VALUES('{$ver[1]}','{$ver[2]}',$time)";
+	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud (versionCode,releaseCode,createtime) VALUES('{$ver[1]}','{$ver[2]}',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
