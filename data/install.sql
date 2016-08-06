@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2016-08-05 10:17:09 +0000
+# Generation Time: 2016-08-06 04:35:31 +0000
 # ************************************************************
 
 
@@ -66,6 +66,7 @@ CREATE TABLE `hd_cloud` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL COMMENT '云帐号用户编号',
   `username` varchar(30) NOT NULL COMMENT '帐号',
+  `webname` varchar(200) DEFAULT NULL COMMENT '网站名称',
   `AppID` varchar(50) NOT NULL DEFAULT '' COMMENT '应用ID',
   `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
   `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
@@ -703,6 +704,8 @@ CREATE TABLE `hd_store_account` (
   `AppID` varchar(50) NOT NULL COMMENT '应用ID',
   `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
   `god` int(10) unsigned NOT NULL COMMENT '大神币',
+  `webname` varchar(200) NOT NULL DEFAULT '' COMMENT '网站名称',
+  `weburl` varchar(200) NOT NULL DEFAULT '' COMMENT '网站url',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用商城模块会员资料';
 
