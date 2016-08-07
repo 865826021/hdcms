@@ -545,13 +545,13 @@ str;
 				'resume'      => $manifest['manifest']['application']['resume']['@cdata'],
 				'detail'      => $manifest['manifest']['application']['detail']['@cdata'],
 				'author'      => $manifest['manifest']['application']['author']['@cdata'],
-				'rule'        => $manifest['manifest']['application']['rule']['@attributes']['embed'] ? 1 : 0,
+				'rule'        => $manifest['manifest']['application']['rule']['@attributes']['embed'] =='true'? 1 : 0,
 				'thumb'       => $manifest['manifest']['application']['thumb']['@cdata'],
 				'cover'       => $manifest['manifest']['application']['cover']['@cdata'],
 				'is_system'   => 0,
 				'subscribes'  => serialize( $subscribes ),
 				'processors'  => serialize( $processors ),
-				'setting'     => $manifest['manifest']['application']['@attributes']['setting'] ? 1 : 0,
+				'setting'     => $manifest['manifest']['application']['@attributes']['setting']=='true' ? 1 : 0,
 				'permissions' => serialize( preg_split( '/\n/', $manifest['manifest']['permission']['@cdata'] ) ),
 			];
 			$moduleData['locality'] = ! is_file( 'addons/' . $_POST['module'] . '/cloud.hd' ) ? 1 : 0;

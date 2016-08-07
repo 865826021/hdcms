@@ -9,7 +9,7 @@
 		<li role="presentation"><a href="{{u('installed')}}">已经安装模块</a></li>
 		<li role="presentation" class="active"><a href="?s=system/module/prepared">安装模块</a></li>
 		<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
-		<li role="presentation"><a href="http://open.hdphp.com">应用商城</a></li>
+		<li role="presentation"><a href="{{v('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
 	</ul>
 	<div class="clearfix">
 		<h5 class="page-header">下载软件包...</h5>

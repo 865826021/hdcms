@@ -170,24 +170,26 @@
 				<!----------返回模块列表 end------------>
 
 				<!------------------------模块菜单 start------------------------>
-				<div class="panel-heading hide module_active">
-					<h4 class="panel-title">{{$_site_modules_menu_['title']}}回复规则</h4>
-					<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
-						<i class="fa fa-chevron-circle-down"></i>
-					</a>
-				</div>
-				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-					<if value="$_site_modules_menu_['rule']">
-						<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_site_modules_menu_['name']}}">
-							<i class="fa fa-comments"></i> 回复规则列表
-						</li>
-					</if>
-					<if value="$_site_modules_menu_['setting']">
-						<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_site_modules_menu_['name']}}">
-							<i class="fa fa-cog"></i> 参数设置
-						</li>
-					</if>
-				</ul>
+				<if value="!empty($_site_modules_menu_['rule'])||!empty($_site_modules_menu_['setting'])">
+					<div class="panel-heading hide module_active">
+						<h4 class="panel-title">{{$_site_modules_menu_['title']}}回复规则</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
+							<i class="fa fa-chevron-circle-down"></i>
+						</a>
+					</div>
+					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
+						<if value="$_site_modules_menu_['rule']">
+							<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_site_modules_menu_['name']}}">
+								<i class="fa fa-comments"></i> 回复规则列表
+							</li>
+						</if>
+						<if value="$_site_modules_menu_['setting']">
+							<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_site_modules_menu_['name']}}">
+								<i class="fa fa-cog"></i> 参数设置
+							</li>
+						</if>
+					</ul>
+				</if>
 				<if value="!empty($_site_modules_menu_['budings']['home'])||!empty($_site_modules_menu_['budings']['profile'])||!empty($_site_modules_menu_['budings']['member'])">
 					<div class="panel-heading hide module_active">
 						<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
