@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2016-08-07 09:36:08 +0000
+# Generation Time: 2016-08-07 21:11:06 +0000
 # ************************************************************
 
 
@@ -354,6 +354,7 @@ CREATE TABLE `hd_modules` (
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模块缩略图',
   `cover` varchar(255) NOT NULL DEFAULT '' COMMENT '模块封面图',
   `locality` tinyint(1) unsigned NOT NULL COMMENT '本地应用',
+  `releaseCode` varchar(50) NOT NULL DEFAULT '' COMMENT '发行版本号',
   PRIMARY KEY (`mid`),
   UNIQUE KEY `name` (`name`),
   KEY `is_system` (`is_system`)
@@ -645,7 +646,7 @@ DROP TABLE IF EXISTS `hd_site_template`;
 CREATE TABLE `hd_site_template` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
-  `template` varchar(45) DEFAULT NULL COMMENT '模块名称',
+  `template` varchar(45) NOT NULL DEFAULT '' COMMENT '模块名称',
   PRIMARY KEY (`id`),
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模板';
@@ -694,63 +695,6 @@ CREATE TABLE `hd_site_wechat` (
 
 
 
-# Dump of table hd_store_account
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `hd_store_account`;
-
-CREATE TABLE `hd_store_account` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `uid` int(10) unsigned NOT NULL COMMENT '会员编号',
-  `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
-  `god` int(10) unsigned NOT NULL COMMENT '大神币',
-  `webname` varchar(200) NOT NULL DEFAULT '' COMMENT '网站名称',
-  `weburl` varchar(200) NOT NULL DEFAULT '' COMMENT '网站url',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用商城模块会员资料';
-
-
-
-# Dump of table hd_store_hdcms
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `hd_store_hdcms`;
-
-CREATE TABLE `hd_store_hdcms` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
-  `package` varchar(255) NOT NULL DEFAULT '' COMMENT '完整版压缩包',
-  `releaseCode` varchar(50) NOT NULL DEFAULT '' COMMENT '发行版本，大版本下的补钉版本',
-  `packType` varchar(10) NOT NULL DEFAULT '' COMMENT 'test 测试版 release  正式版',
-  `downloads` int(11) unsigned NOT NULL COMMENT '下载次数',
-  `createtime` int(10) NOT NULL COMMENT '创建时间',
-  `data` text NOT NULL COMMENT '更新xml解析数据',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-# Dump of table hd_store_modules
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `hd_store_modules`;
-
-CREATE TABLE `hd_store_modules` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '模块名称',
-  `app_type` tinyint(1) NOT NULL COMMENT 'module 模块 template 模板',
-  `package_type` varchar(30) NOT NULL DEFAULT '' COMMENT 'install 新安装 upgrade更新包',
-  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '缩略图',
-  `cover` varchar(255) NOT NULL DEFAULT '' COMMENT '封面图',
-  `author` varchar(50) NOT NULL DEFAULT '' COMMENT '作者',
-  `price` decimal(10,2) NOT NULL COMMENT '售价',
-  `file` varchar(255) NOT NULL DEFAULT '' COMMENT '文件',
-  `createtime` int(10) NOT NULL COMMENT '创建时间/版本号也用',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
 # Dump of table hd_template
 # ------------------------------------------------------------
 
@@ -761,14 +705,15 @@ CREATE TABLE `hd_template` (
   `name` varchar(45) NOT NULL COMMENT '模板名称',
   `title` varchar(200) NOT NULL COMMENT '中文标题',
   `version` varchar(45) NOT NULL COMMENT '版本号',
-  `description` varchar(500) NOT NULL COMMENT '模板描述',
+  `resume` varchar(500) NOT NULL DEFAULT '' COMMENT '模板描述',
   `author` varchar(45) NOT NULL COMMENT '作者',
   `url` varchar(300) NOT NULL COMMENT '发布页URL地址',
-  `type` varchar(45) NOT NULL COMMENT '行业类型 hotel(酒店) car(汽车) tour(旅游) real(房地产) medical(医疗) 教育(edu) beauty(美容健身) photography(婚纱摄影) other(其他行业)',
+  `industry` varchar(45) NOT NULL DEFAULT '' COMMENT '行业类型 hotel(酒店) car(汽车) tour(旅游) real(房地产) medical(医疗) 教育(edu) beauty(美容健身) photography(婚纱摄影) other(其他行业)',
   `position` tinyint(4) unsigned NOT NULL COMMENT '位置 ',
   `is_system` tinyint(1) unsigned NOT NULL COMMENT '系统模板',
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模板缩略图',
-  `is_default` tinyint(1) NOT NULL COMMENT '默认模板',
+  `is_default` tinyint(1) unsigned NOT NULL COMMENT '默认模板',
+  `locality` tinyint(1) unsigned NOT NULL COMMENT '本地模板',
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点模板';
 
