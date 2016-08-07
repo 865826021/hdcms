@@ -88,7 +88,7 @@ if ( $action == 'downloadFile' ) {
 		echo 1;
 		exit;
 	} else {
-		$d = curl_get( $_SESSION['soft']['package'] );
+		$d = curl_get( $download_file_url );
 		if ( strlen( $d ) < 2787715 ) {
 			//下载失败
 			exit;
@@ -142,7 +142,7 @@ if ( $action == 'table' ) {
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time = time();
-	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (versionCode,releaseCode,createtime) VALUES('{$_SESSION['soft']['versionCode']}','{$_SESSION['soft']['releaseCode']}',$time)";
+	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (username,webname,versionCode,releaseCode,createtime,status) VALUES('','','{$_SESSION['soft']['versionCode']}','{$_SESSION['soft']['releaseCode']}',$time,0)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
