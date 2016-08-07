@@ -36,22 +36,35 @@ class Cloud {
 	 */
 	public function account() {
 		if ( IS_POST ) {
-			$_POST['weburl'] = __ROOT__;
-			$res             = \Cloud::connect( $_POST );
+			$data           = json_decode( $_POST['data'], TRUE );
+			$data['weburl'] = __ROOT__;
+			$res            = \Cloud::connect( $data );
 			if ( $res['valid'] == 1 ) {
 				//连接成功
 				$data['id']        = 1;
 				$data['uid']       = $res['message']['uid'];
 				$data['username']  = $res['message']['username'];
-				$data['AppID']     = $res['message']['AppID'];
 				$data['AppSecret'] = $res['message']['AppSecret'];
-				$data['webname']   = $_POST['webname'];
+				$data['webname']   = $res['message']['webname'];
+				$data['status']    = 1;
 				$this->db->save( $data );
 				message( '连接成功', 'refresh', 'success' );
 			}
 			message( $res['message'], 'back', 'error' );
 		}
-		$field = $this->db->find( 1 );
+		if ( ! $field = $this->db->find( 1 ) ) {
+			$field = [
+				'uid'         => 0,
+				'username'    => '',
+				'webname'     => '',
+				'AppID'       => '',
+				'AppSecret'   => '',
+				'versionCode' => '',
+				'releaseCode' => '',
+				'createtime'  => 0,
+				'status'      => 0
+			];
+		}
 		View::with( 'field', $field );
 		View::make();
 	}
@@ -139,9 +152,11 @@ class Cloud {
 					$hdcms = $this->db->find( 1 );
 					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 					$tmp   = $data = json_decode( $data, TRUE );
-					//本次更新的多个版本中的最新版本
-					$data['lastVersion'] = array_pop( $tmp['lists'] );
-					D( '_upgrade_', $data );
+					if ( $data['valid'] == 1 ) {
+						//本次更新的多个版本中的最新版本
+						$data['lastVersion'] = array_pop( $tmp['lists'] );
+						D( '_upgrade_', $data );
+					}
 				}
 				View::with( 'data', $data );
 				View::with( 'hdcms', $hdcms );

@@ -37,6 +37,7 @@ class Modules extends Model {
 			[ 'setting', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'rule', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+			[ 'locality', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		];
 	protected $industry
 	                            = [

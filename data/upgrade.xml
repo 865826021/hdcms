@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest versionCode="2.0" releaseCode="2016090619">
-    <tables>
-        <item table="a" do="A">
-            <![CDATA[create table a (uid int(10));]]>
-        </item>
-    </tables>
-    <fields>
-        <item table="a" field="createtime" do="A">
-            <![CDATA[alter table a add ucreatetime int(10);]]>
-        </item>
-    </fields>
+<manifest versionCode="2.0">
+    <sql>
+        <![CDATA[
+            create table a (uid int(10));
+            alter table a add ucreatetime int(10);
+        ]]>
+    </sql>
     <files>
         <![CDATA[
-       M       data/upgrade.xml
+M       data/upgrade.xml
 M       index.php
     ]]>
     </files>

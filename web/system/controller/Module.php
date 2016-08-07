@@ -29,6 +29,14 @@ class Module {
 		$this->module = new Modules();
 	}
 
+	//发布模块到应用商店
+	public function publish() {
+		$name = q( 'get.name' );
+		$xml =\Xml::toArray(file_get_contents("addons/$name/manifest.xml"));
+		p($xml);
+		View::make();
+	}
+
 	//已经安装模块
 	public function installed() {
 		$modules = $this->module->where( 'is_system', 0 )->get();

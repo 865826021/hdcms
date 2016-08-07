@@ -10,7 +10,7 @@
 			<li role="presentation" class="active"><a href="javascript:;">已经安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/prepared">安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
-			<li role="presentation"><a href="http://open.hdphp.com">应用商城</a></li>
+			<li role="presentation"><a href="{{v('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
 		</ul>
 		<h5 class="page-header">菜单列表</h5>
 
@@ -48,11 +48,15 @@
 			<div class="media" type="{{$m['industry']}}">
 				<div class="pull-right">
 					<div style="margin-right: 10px;">
-						<if value="$m['type']==1">
-							<span class="label label-primary">系统内置模块</span>
+						<if value="$m['locality']==1">
+							<div class="btn-group" role="group" aria-label="...">
+								<a href="{{u('publish',['name'=>$m['name']])}}" class="btn btn-default btn-sm">发布到应用商店</a>
+								<a href="javascript:;" class="btn btn-sm btn-default" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+							</div>
 							<else/>
-							<span class="label label-success">本地安装模块</span>&nbsp;&nbsp;&nbsp;
-							<a href="javascript:;" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+							<div class="btn-group" role="group" aria-label="...">
+								<a href="javascript:;" class="btn btn-sm btn-default" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+							</div>
 						</if>
 					</div>
 				</div>
@@ -64,6 +68,9 @@
 				<div class="media-body">
 					<h4 class="media-heading">{{$m['title']}}
 						<small>（标识：{{$m['name']}} 版本：{{$m['version']}} 作者：{{$m['author']}}）</small>
+						<if value="$m['locality']==1">
+							<span class="label label-info">本地模块</span>
+						</if>
 					</h4>
 					<a href="javascript:;" class="detail">详细介绍</a>
 				</div>

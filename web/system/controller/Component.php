@@ -109,11 +109,11 @@ class Component {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db   = Db::table( 'core_attachment' );
-		$file = $db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID)->first();
+		$file = $db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->first();
 		if ( is_file( $file['path'] ) ) {
 			unlink( $file['path'] );
 		}
-		$db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID)->delete();
+		$db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->delete();
 	}
 
 	//选择用户
@@ -153,6 +153,7 @@ class Component {
 			'templates' => $templates
 		] )->make();
 	}
+
 	//百度编辑器
 	public function ueditor() {
 		if ( ! Session::get( 'member' ) && ! Session::get( 'user' ) ) {
@@ -211,8 +212,8 @@ class Component {
 
 	//编辑器上传
 	public function kindUpload() {
-		$uid       = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
-		if ( empty($uid)) {
+		$uid = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		if ( empty( $uid ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		//文件保存目录路径

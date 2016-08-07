@@ -13,73 +13,63 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				绑定信息
-				<a href="javascript:;" ng-click="changAction('bind')" ng-if="action=='show'">更改</a>
-				<a href="javascript:;" ng-click="changAction('show')" ng-if="action=='bind'">显示</a>
+				<span class="label label-danger" ng-if="field.status==0">与云平台绑定失败</span>
+				<span class="label label-success" ng-if="field.status==1">与云平台绑定成功</span>
 			</div>
-			<div class="panel-body" ng-if="action=='bind'">
+			<div class="panel-body">
 				<div class="form-group">
 					<label class="col-sm-2 control-label">云帐号</label>
 					<div class="col-sm-8">
-						<input type="text" name="username" class="form-control" required="required">
+						<input type="text" class="form-control" required="required" ng-model="field.username">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">云密码</label>
 					<div class="col-sm-8">
-						<input type="password" name="password" class="form-control" required="required">
+						<input type="password" class="form-control" required="required" ng-model="field.password">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">网站名称</label>
 					<div class="col-sm-8">
-						<input type="text" name="webname" value="{{$field['webname']}}" class="form-control" required="required">
+						<input type="text" ng-model="field.webname" class="form-control" required="required">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">网站URL</label>
 					<div class="col-sm-8">
-						<input type="text" name="weburl" disabled="disabled" value="{{__ROOT__}}" class="form-control">
-					</div>
-				</div>
-				<button class="btn btn-default col-sm-offset-2">开始绑定</button>
-			</div>
-			<div class="panel-body" ng-if="action=='show'">
-				<div class="form-group">
-					<label class="col-sm-2 control-label">云帐号</label>
-					<div class="col-sm-8">
-						<p class="form-control-static">{{$field['username']}}</p>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">网站名称</label>
-					<div class="col-sm-10">
-						<p class="form-control-static">{{$field['webname']}}</p>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">通信编号(AppID)</label>
-					<div class="col-sm-10">
-						<p class="form-control-static">{{$field['AppID']}}</p>
+						<input type="text" value="{{__ROOT__}}" disabled="disabled" class="form-control">
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">应用密钥(AppSecret)</label>
-					<div class="col-sm-10">
-						<p class="form-control-static">{{$field['AppSecret']}}</p>
+					<div class="col-sm-8">
+						<div class="input-group">
+							<input type="text" class="form-control" ng-model="field.AppSecret">
+							<span class="input-group-addon" style="cursor: pointer" ng-click="createAppSecret()">生成新的</span>
+						</div>
 					</div>
 				</div>
+				<textarea name="data" hidden="hidden"></textarea>
+				<button class="btn btn-success col-sm-offset-2">重新与云平台绑定</button>
 			</div>
 		</div>
 	</form>
 </block>
 <script>
-	require(['angular', 'util'], function (angular, util) {
+	require(['angular', 'util','md5'], function (angular, util,md5) {
 		angular.module('myApp', []).controller('ctrl', ['$scope', function ($scope) {
-			$scope.action = 'show';
+			$scope.field=<?php echo json_encode($field);?>;
 			$scope.changAction = function (action) {
 				$scope.action = action;
 			}
+			//生成createAppSecret
+			$scope.createAppSecret=function(){
+				$scope.field.AppSecret=md5(Math.random());
+			}
 			$("form").submit(function () {
+				$("[name='data']").val(angular.toJson($scope.field));
+				var msg = '';
 				$.post('{{__URL__}}', $("form").serialize(), function (res) {
 					if (res.valid == 1) {
 						util.message('连接成功', 'refresh', 'success');
