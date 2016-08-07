@@ -601,7 +601,7 @@ error_reporting( 0 );
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$file_url = 'http://dev.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&type=small';
+$file_url = 'http://dev.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&packType=release';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
