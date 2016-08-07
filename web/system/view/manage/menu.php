@@ -17,7 +17,7 @@
 				<i class="fa fa-globe"></i>
 				<span>云帐号</span>
 			</a>
-			<a href="" class="tile img-rounded">
+			<a href="{{c('api.cloud')}}?a=site/store&m=store&t=web&siteid=1" class="tile img-rounded">
 				<i class="fa fa-shopping-bag"></i>
 				<span>云商城</span>
 			</a>
