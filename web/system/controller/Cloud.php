@@ -88,20 +88,21 @@ class Cloud {
 				break;
 			case 'download':
 				//下载文件
-				if ( empty( $data['data']['files'] ) ) {
+				if ( ! isset( $data['data']['files'][ q( 'get.i' ) ] ) ) {
 					//全部下载完成
 					$res = [ 'valid' => 2 ];
 				} else {
 					//从第一个文件开始下载
-					$file = array_shift( $data['data']['files'] );
-					D( '_upgrade_', $data );
-					$downFile = trim( substr( $file, 1 ) );
+					$downFile = trim( substr( $data['data']['files'][ q( 'get.i' ) ], 1 ) );
 					$postData = [ 'file' => $downFile, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
 					$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
-					if ( file_put_contents( $file, $content ) ) {
-						$res = [ 'valid' => 1, 'file' => $file ];
+					if ( file_put_contents( $downFile, $content ) ) {
+						//下载文件打标识
+						unset($data['data']['files'][ q( 'get.i' ) ]);
+						D( '_upgrade_', $data );
+						$res = [ 'valid' => 1];
 					} else {
-						$res = [ 'valid' => 0, 'file' => $file ];
+						$res = [ 'valid' => 0];
 					}
 				}
 				echo json_encode( $res );
@@ -135,19 +136,23 @@ class Cloud {
 				View::make( 'updateSql' );
 				break;
 			case 'finish':
-				//全部更新完成
-				$data = [
-					'id'          => 1,
-					'versionCode' => $data['lastVersion']['versionCode'],
-					'releaseCode' => $data['lastVersion']['releaseCode'],
-					'createtime'  => time()
-				];
-				$this->db->save( $data );
-				//删除更新缓存
-				D( '_upgrade_', '[del]' );
-				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
+				if ( empty( $data['data']['files'] ) && empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
+					//全部更新完成
+					$data = [
+						'id'          => 1,
+						'versionCode' => $data['lastVersion']['versionCode'],
+						'releaseCode' => $data['lastVersion']['releaseCode'],
+						'createtime'  => time()
+					];
+					$this->db->save( $data );
+					//删除更新缓存
+					D( '_upgrade_', '[del]' );
+					message( '恭喜! 系统更新完成', 'upgrade', 'success' );
+				}
+				message( '部分文件下载失败,请重新运行更新程序', 'upgrade', 'error' );
 				break;
 			default:
+				$data = '';
 				if ( empty( $data ) ) {
 					$hdcms = $this->db->find( 1 );
 					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );

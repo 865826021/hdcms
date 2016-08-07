@@ -73,7 +73,7 @@
 					<div class="col-sm-10 ">
 						<div class="alert alert-success form-control-static">
 							<foreach from="$data['data']['tables']" value="$f">
-								[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}} <br/>
+								table:{{$f['table']}} <br/>
 							</foreach>
 						</div>
 					</div>

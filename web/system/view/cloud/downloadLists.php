@@ -43,31 +43,24 @@
 				$scope.files[k] = {downloaded: null, file: v};
 			});
 			//执行下载
+			var i=0;
 			$scope.download = function () {
-				$http.get("{{u('upgrade',['action'=>'download'])}}").success(function (res) {
+				$.get("{{u('upgrade',['action'=>'download'])}}",{i:i},function(res){
 					if (res.valid == 0) {
 						//更新失败
-						var i = $scope.getFileIndex(res.file);
 						$scope.files[i].downloaded = 0;
 					} else if (res.valid == 1) {
 						//更新成功
-						var i = $scope.getFileIndex(res.file);
 						$scope.files[i].downloaded = 1;
 					} else if (res.valid == 2) {
 						//更新完成
 						location.href = "{{u('upgrade',['action'=>'finish'])}}";
 						return;
 					}
+					i++;
 					$scope.download();
-				});
-			}
-			//根据文件获取位置,用于设置下载状态
-			$scope.getFileIndex = function (file) {
-				for (var i = 0; i < $scope.files.length; i++) {
-					if ($scope.files[i].file == file) {
-						return i;
-					}
-				}
+					$scope.$apply();
+				},'json')
 			}
 			$scope.download();
 		}]);
