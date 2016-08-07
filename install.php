@@ -596,12 +596,13 @@ $copyright=<<<str
 str;
 
 session_start();
-set_time_limit(0);
+set_time_limit( 0 );
 error_reporting( 0 );
 header( "Content-type:text/html;charset=utf-8" );
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$file_url = 'http://dev.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&packType=release';
+$download_file_url = 'http://dev.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
+$last_version_url  = 'http://dev.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -610,6 +611,12 @@ if ( $action == 'copyright' ) {
 }
 //环境检测
 if ( $action == 'environment' ) {
+	//获取新新版本
+	if ( ! $soft = curl_get( $last_version_url ) ) {
+		echo '请求HDCMS云主机失败';
+		exit;
+	}
+	$_SESSION['soft'] = json_decode( $soft, TRUE );
 	//系统信息
 	$data['PHP_OS']              = PHP_OS;
 	$data['SERVER_SOFTWARE']     = $_SERVER['SERVER_SOFTWARE'];
@@ -677,7 +684,7 @@ if ( $action == 'downloadFile' ) {
 		echo 1;
 		exit;
 	} else {
-		$d = curl_get( $file_url );
+		$d = curl_get( $_SESSION['soft']['package'] );
 		if ( strlen( $d ) < 2787715 ) {
 			//下载失败
 			exit;
@@ -728,10 +735,10 @@ if ( $action == 'table' ) {
 		}
 	}
 	//更新系统版本号
-	$xml        = file_get_contents( 'data/upgrade.xml' ) ;
+	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
-	$time        = time();
-	$sql         = "INSERT INTO {$_SESSION['config']['prefix']}cloud (versionCode,releaseCode,createtime) VALUES('{$ver[1]}','{$ver[2]}',$time)";
+	$time = time();
+	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (versionCode,releaseCode,createtime) VALUES('{$_SESSION['soft']['versionCode']}','{$_SESSION['soft']['releaseCode']}',$time)";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );

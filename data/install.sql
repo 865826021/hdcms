@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2016-08-06 09:08:26 +0000
+# Generation Time: 2016-08-07 09:36:08 +0000
 # ************************************************************
 
 
@@ -67,11 +67,11 @@ CREATE TABLE `hd_cloud` (
   `uid` int(10) unsigned NOT NULL COMMENT '云帐号用户编号',
   `username` varchar(30) NOT NULL COMMENT '帐号',
   `webname` varchar(200) DEFAULT NULL COMMENT '网站名称',
-  `AppID` varchar(50) NOT NULL DEFAULT '' COMMENT '应用ID',
   `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
   `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
   `releaseCode` char(16) NOT NULL DEFAULT '' COMMENT '发行版本，补丁版本',
   `createtime` int(10) unsigned NOT NULL COMMENT '更新时间',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '与云平台绑定状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='HDCMS版本信息';
 
@@ -353,6 +353,7 @@ CREATE TABLE `hd_modules` (
   `permissions` varchar(5000) NOT NULL DEFAULT '' COMMENT '业务规则权限验证标识',
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模块缩略图',
   `cover` varchar(255) NOT NULL DEFAULT '' COMMENT '模块封面图',
+  `locality` tinyint(1) unsigned NOT NULL COMMENT '本地应用',
   PRIMARY KEY (`mid`),
   UNIQUE KEY `name` (`name`),
   KEY `is_system` (`is_system`)
@@ -701,7 +702,6 @@ DROP TABLE IF EXISTS `hd_store_account`;
 CREATE TABLE `hd_store_account` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned NOT NULL COMMENT '会员编号',
-  `AppID` varchar(50) NOT NULL COMMENT '应用ID',
   `AppSecret` varchar(50) NOT NULL DEFAULT '' COMMENT '应用密钥',
   `god` int(10) unsigned NOT NULL COMMENT '大神币',
   `webname` varchar(200) NOT NULL DEFAULT '' COMMENT '网站名称',
@@ -720,10 +720,9 @@ CREATE TABLE `hd_store_hdcms` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `versionCode` char(30) NOT NULL DEFAULT '' COMMENT '版本',
   `package` varchar(255) NOT NULL DEFAULT '' COMMENT '完整版压缩包',
-  `releaseCode` int(10) NOT NULL COMMENT '发行版本，大版本下的补钉版本',
-  `status` tinyint(1) unsigned NOT NULL COMMENT '0 开发版 1 发行版',
+  `releaseCode` varchar(50) NOT NULL DEFAULT '' COMMENT '发行版本，大版本下的补钉版本',
+  `packType` varchar(10) NOT NULL DEFAULT '' COMMENT 'test 测试版 release  正式版',
   `downloads` int(11) unsigned NOT NULL COMMENT '下载次数',
-  `type` char(10) NOT NULL DEFAULT '' COMMENT 'full 完整版 small 精简版',
   `createtime` int(10) NOT NULL COMMENT '创建时间',
   `data` text NOT NULL COMMENT '更新xml解析数据',
   PRIMARY KEY (`id`)
