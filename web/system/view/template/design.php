@@ -10,7 +10,7 @@
 			<li role="presentation"><a href="{{u('installed')}}">已经安装模板</a></li>
 			<li role="presentation"><a href="?s=system/template/prepared">安装模板</a></li>
 			<li role="presentation" class="active"><a href="javascript:;">设计新模板</a></li>
-			<li role="presentation"><a href="http://www.hdcms.com/store">应用商城</a></li>
+			<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme">应用商城</a></li>
 		</ul>
 		<form action="" id="form" class="form-horizontal form" method="post" enctype="multipart/form-data">
 			<h5 class="page-header">模板基本信息
@@ -43,7 +43,7 @@
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模板类型</label>
 				<div class="col-sm-10 col-xs-12">
-					<select name="type" class="form-control">
+					<select name="industry" class="form-control">
 						<option value="often">常用模板</option>
 						<option value="rummery">酒店</option>
 						<option value="car">汽车</option>
@@ -63,7 +63,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模板简述</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" name="description">
+					<input type="text" class="form-control" name="resume">
 					<span class="help-block">模板功能描述, 使用简单的语言描述模板, 来吸引用户 </span>
 				</div>
 			</div>
@@ -140,40 +140,6 @@
 </block>
 
 <script>
-	function addFeature(type, title) {
-		var html = '<div class="form-group">\
-            <label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">' + title + '</label>\
-            <div class="col-sm-10">\
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">\
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">\
-            <span class="input-group-addon">操作名称</span>\
-            <input class="form-control" name="bindings[' + type + '][title][]" type="text" placeholder="请输入中文操作名称">\
-            </div>\
-            </div>\
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">\
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">\
-            <span class="input-group-addon">入口标识</span>\
-            <input class="form-control" name="bindings[' + type + '][do][]" type="text" placeholder="请输入操作入口">\
-            </div>\
-            </div>\
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">\
-            <div class="input-group" style="margin-left:-15px;margin-bottom:10px">\
-            <span class="input-group-addon">操作附加数据</span>\
-            <input class="form-control" name="bindings[' + type + '][data][]" type="text" placeholder="操作附加数据">\
-            </div>\
-            </div>\
-            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">\
-                <div style="margin-left:-15px;">\
-                    <label class="checkbox-inline " style="vertical-align:bottom">\
-                        <input type="checkbox" name="bindings[' + type + '][directly][]" value="true">无需登陆直接展示\
-                    </label> &nbsp; &nbsp; &nbsp;\
-                     <a href="javascript:;" onclick="$(this).parents(\'.form-group\').eq(0).remove()" class="fa fa-times-circle" title="删除此操作"></a>\
-                </div>\
-            </div>\
-            </div>\
-            </div>';
-		$('#bindings-' + type).append(html);
-	}
 	$("form").submit(function () {
 		//验证表单
 		var msg = '';
@@ -189,7 +155,7 @@
 		if (!/^[\d\.]+$/i.test(version)) {
 			msg += '请设置版本号. 版本号只能为数字或小数点<br/>';
 		}
-		var resume = $.trim($(':text[name="description"]').val());
+		var resume = $.trim($(':text[name="resume"]').val());
 		if (resume == '') {
 			msg += '模板简述不能为空<br/>';
 		}

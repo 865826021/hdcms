@@ -98,6 +98,7 @@ class Dir {
 	 * @return bool
 	 */
 	public function moveFile( $file, $dir ) {
+		is_dir( $dir ) or mkdir( $dir, 0755, TRUE );
 		if ( is_file( $file ) && is_dir( $dir ) ) {
 			copy( $file, $dir . '/' . basename( $file ) );
 

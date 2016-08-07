@@ -50,7 +50,7 @@
 					<div style="margin-right: 10px;">
 						<if value="$m['locality']==1">
 							<div class="btn-group" role="group" aria-label="...">
-								<a href="{{u('publish',['name'=>$m['name']])}}" class="btn btn-default btn-sm">发布到应用商店</a>
+								<a href="{{u('createZip',['name'=>$m['name']])}}" class="btn btn-default btn-sm">打包下载</a>
 								<a href="javascript:;" class="btn btn-sm btn-default" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
 							</div>
 							<else/>
@@ -70,6 +70,8 @@
 						<small>（标识：{{$m['name']}} 版本：{{$m['version']}} 作者：{{$m['author']}}）</small>
 						<if value="$m['locality']==1">
 							<span class="label label-info">本地模块</span>
+							<else/>
+							<span class="label label-success">应用商店模块</span>
 						</if>
 					</h4>
 					<a href="javascript:;" class="detail">详细介绍</a>

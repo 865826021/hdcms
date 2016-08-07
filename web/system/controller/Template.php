@@ -34,10 +34,10 @@ class Template {
 			//字段基本检测
 			Validate::make( [
 				[ 'title', 'required', '模板名称不能为空' ],
-				[ 'type', 'required', '请选择行业类型' ],
+				[ 'industry', 'required', '请选择行业类型' ],
 				[ 'name', 'regexp:/^[a-z]\w+$/i', '模板标识必须以英文字母开始, 后跟英文,字母,数字或下划线' ],
 				[ 'version', 'regexp:/^[\d\.]+$/i', '请设置版本号, 版本号只能为数字或小数点' ],
-				[ 'description', 'required', '模板简述不能为空' ],
+				[ 'resume', 'required', '模板简述不能为空' ],
 				[ 'author', 'required', '作者不能为空' ],
 				[ 'url', 'required', '请输入发布url' ],
 				[ 'thumb', 'required', '模板缩略图不能为空' ],
@@ -73,22 +73,42 @@ class Template {
 		}
 	}
 
+	//获取云商店的模块
+	public function getCloudModules() {
+		$data = Db::table( 'cloud' )->find( 1 );
+		$post = [
+			'type'      => 'theme',
+			'uid'       => $data['uid'],
+			'AppSecret' => $data['AppSecret']
+		];
+		$res  = \Curl::post( c( 'api.cloud' ) . '?a=site/GetUserApps&t=web&siteid=1&m=store', $post );
+		$res  = json_decode( $res, 'true' );
+		$apps = [ ];
+		foreach ( $res['apps'] as $k => $v ) {
+			$v          = json_decode( $v['xml'], TRUE );
+			$apps[ $k ] = $v;
+		}
+		//缓存
+		d( 'cloudTheme', $apps );
+		echo json_encode( $apps );
+	}
+
 	//创建manifest.xml文件
 	private function createManifestFile() {
 		//------------------------- 创建xml文件 start
 		//创建xml文件
-		$xml_data = [
-			'name'        => [ '@cdata' => $_POST['name'] ],
-			'title'       => [ '@cdata' => $_POST['title'] ],
-			'url'         => [ '@cdata' => $_POST['url'] ],
-			'type'        => [ '@cdata' => $_POST['type'] ],
-			'version'     => [ '@cdata' => $_POST['version'] ],
-			'description' => [ '@cdata' => $_POST['description'] ],
-			'author'      => [ '@cdata' => $_POST['author'] ],
-			'position'    => [ '@cdata' => $_POST['position'] ],
-			'thumb'       => [ '@cdata' => $_POST['thumb'] ],
+		$xml_data['application'] = [
+			'name'     => [ '@cdata' => $_POST['name'] ],
+			'title'    => [ '@cdata' => $_POST['title'] ],
+			'url'      => [ '@cdata' => $_POST['url'] ],
+			'industry' => [ '@cdata' => $_POST['industry'] ],
+			'version'  => [ '@cdata' => $_POST['version'] ],
+			'resume'   => [ '@cdata' => $_POST['resume'] ],
+			'author'   => [ '@cdata' => $_POST['author'] ],
+			'position' => [ '@cdata' => $_POST['position'] ],
+			'thumb'    => [ '@cdata' => $_POST['thumb'] ],
 		];
-		$manifest = Xml::toXml( 'manifest', $xml_data );
+		$manifest                = Xml::toXml( 'manifest', $xml_data );
 		file_put_contents( 'theme/' . $_POST['name'] . '/manifest.xml', $manifest );
 	}
 
@@ -96,11 +116,19 @@ class Template {
 	public function installed() {
 		$template = $this->db->get();
 		foreach ( $template as $k => $m ) {
-			$template[ $k ]['thumb']         = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
-			$template[ $k ]['template_type'] = is_file( "theme/{$m['name']}/manifest.xml" ) ? '本地模板' : '应用商店模板';
+			$template[ $k ]['thumb']    = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
+			$template[ $k ]['locality'] = ! is_file( "theme/{$m['name']}/cloud.hd" ) ? 1 : 0;
 		}
 		View::with( 'template', $template );
 		View::make();
+	}
+
+	//生成压缩包
+	public function createZip() {
+		$name = q( 'get.name' );
+		Zip::PclZip( "app.zip" );//设置压缩文件名
+		Zip::create( "theme/{$name}" );//压缩目录
+		\Tool::download( "app.zip", $name . '.zip' );
 	}
 
 	//安装新模板列表
@@ -111,18 +139,21 @@ class Template {
 		$locality = [ ];
 		foreach ( $dirs as $d ) {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/manifest.xml' ) ) {
-				$xml   = Xml::toArray( file_get_contents( $d['path'] . '/manifest.xml' ) );
-				$thumb = $xml['manifest']['thumb']['@cdata'];
-				//去除已经安装的模板
-				if ( ! in_array( $xml['manifest']['name']['@cdata'], $modules ) ) {
-					//预览图片
-					$x['thumb']             = is_file( $d['path'] . '/' . $thumb ) ? $d['path'] . '/' . $thumb : 'resource/images/nopic_small.jpg';
-					$x['name']              = $xml['manifest']['name']['@cdata'];
-					$x['title']             = $xml['manifest']['title']['@cdata'];
-					$x['version']           = $xml['manifest']['version']['@cdata'];
-					$x['description']       = $xml['manifest']['description']['@cdata'];
-					$x['author']            = $xml['manifest']['author']['@cdata'];
-					$locality[ $x['name'] ] = $x;
+				if ( $xml = Xml::toArray( file_get_contents( $d['path'] . '/manifest.xml' ) ) ) {
+					//本地模板
+					$thumb = $xml['manifest']['application']['thumb']['@cdata'];
+					//去除已经安装的模板
+					if ( ! in_array( $xml['manifest']['application']['name']['@cdata'], $modules ) ) {
+						//预览图片
+						$x['thumb']             = is_file( $d['path'] . '/' . $thumb ) ? $d['path'] . '/' . $thumb : 'resource/images/nopic_small.jpg';
+						$x['name']              = $xml['manifest']['application']['name']['@cdata'];
+						$x['title']             = $xml['manifest']['application']['title']['@cdata'];
+						$x['version']           = $xml['manifest']['application']['version']['@cdata'];
+						$x['resume']            = $xml['manifest']['application']['resume']['@cdata'];
+						$x['author']            = $xml['manifest']['application']['author']['@cdata'];
+						$x['locality']          = ! is_file( 'theme/' . $x['name'] . '/cloud.hd' ) ? 1 : 0;
+						$locality[ $x['name'] ] = $x;
+					}
 				}
 			}
 		}
@@ -135,28 +166,28 @@ class Template {
 		if ( $m = $this->db->where( 'name', $_GET['name'] )->first() ) {
 			message( $m['title'] . '模板已经安装或已经存在系统模板, 你可以卸载后重新安装', 'back', 'error' );
 		}
-		$manifestFile = 'theme/' . $_GET['name'] . '/manifest.xml';
-		if ( ! is_file( $manifestFile ) ) {
-			message( '模板缺少 manifest.xml 文件', 'back', 'error' );
-		}
-
 		if ( IS_POST ) {
+			$manifestFile = 'theme/' . $_GET['name'] . '/manifest.xml';
+			if ( ! is_file( $manifestFile ) ) {
+				message( '模板缺少 manifest.xml 文件', 'back', 'error' );
+			}
 			//获取模板xml数据
 			$manifest = Xml::toArray( file_get_contents( $manifestFile ) );
 			//整合添加到模板表中的数据
 			$moduleData = [
-				'name'        => $manifest['manifest']['name']['@cdata'],
-				'version'     => $manifest['manifest']['version']['@cdata'],
-				'description' => $manifest['manifest']['description']['@cdata'],
-				'title'       => $manifest['manifest']['title']['@cdata'],
-				'url'         => $manifest['manifest']['url']['@cdata'],
-				'type'        => $manifest['manifest']['type']['@cdata'],
-				'author'      => $manifest['manifest']['author']['@cdata'],
-				'rule'        => $manifest['manifest']['rule']['@attributes']['embed'] ? 1 : 0,
-				'thumb'       => $manifest['manifest']['thumb']['@cdata'],
-				'position'    => $manifest['manifest']['position']['@cdata'],
-				'is_system'   => 0,
-				'is_default'  => 0
+				'name'       => $manifest['manifest']['application']['name']['@cdata'],
+				'version'    => $manifest['manifest']['application']['version']['@cdata'],
+				'resume'     => $manifest['manifest']['application']['resume']['@cdata'],
+				'title'      => $manifest['manifest']['application']['title']['@cdata'],
+				'url'        => $manifest['manifest']['application']['url']['@cdata'],
+				'type'       => $manifest['manifest']['application']['type']['@cdata'],
+				'author'     => $manifest['manifest']['application']['author']['@cdata'],
+				'rule'       => $manifest['manifest']['application']['rule']['@attributes']['embed'] ? 1 : 0,
+				'thumb'      => $manifest['manifest']['application']['thumb']['@cdata'],
+				'position'   => $manifest['manifest']['application']['position']['@cdata'],
+				'is_system'  => 0,
+				'is_default' => 0,
+				'locality'   => ! is_file( "theme/{$_GET['name']}/cloud.hd" ) ? 1 : 0,
 			];
 			Db::table( 'template' )->insertGetId( $moduleData );
 			//在服务套餐中添加模板
@@ -175,9 +206,37 @@ class Template {
 			( new Site() )->updateAllSiteCache();
 			message( "模板安装成功", u( 'installed' ) );
 		}
-		$manifest = Xml::toArray( file_get_contents( $manifestFile ) );
+		$xmlFile = 'theme/' . $_GET['name'] . '/manifest.xml';
+		if ( is_file( $xmlFile ) ) {
+			//本地应用
+			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
+		} else {
+			//下载模块目录
+			go( u( 'download', [ 'name' => $_GET['name'] ] ) );
+		}
+		$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
 		$package  = Db::table( 'package' )->get();
-		View::with( 'template', $manifest['manifest'] )->with( 'package', $package )->make();
+		View::with( 'template', $manifest['manifest']['application'] )->with( 'package', $package )->make();
+	}
+
+	//下载远程模块
+	public function download() {
+		if ( IS_POST ) {
+			$module = q( 'get.name' );
+			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=theme&module=' . $module );
+			$app    = json_decode( $app, TRUE );
+			if ( $app['valid'] == 1 ) {
+				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=theme', [ 'file' => $app['data']['package'] ] );
+				file_put_contents( 'tmp.zip', $package );
+				//释放压缩包
+				Zip::PclZip( 'tmp.zip' );//设置压缩文件名
+				Zip::extract( "." );//解压缩
+				file_put_contents( 'theme/' . $module . '/cloud.hd', json_encode( $app['data'], JSON_UNESCAPED_UNICODE ) );
+				message( '模块下载成功,准备安装', '', 'success' );
+			}
+			message( '应用商店不存在模板', '', 'error' );
+		}
+		View::make();
 	}
 
 	//卸载模板

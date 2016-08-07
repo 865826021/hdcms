@@ -2,14 +2,12 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            create table a (uid int(10));
-            alter table a add ucreatetime int(10);
+
         ]]>
     </sql>
     <files>
         <![CDATA[
-M       data/upgrade.xml
-M       index.php
+
     ]]>
     </files>
 </manifest>

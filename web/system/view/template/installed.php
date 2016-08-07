@@ -11,7 +11,7 @@
 			<li role="presentation" class="active"><a href="javascript:;">已经安装模板</a></li>
 			<li role="presentation"><a href="?s=system/template/prepared">安装模板</a></li>
 			<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
-			<li role="presentation"><a href="http://www.hdcms.com/store">应用商城</a></li>
+			<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme">应用商城</a></li>
 		</ul>
 
 		<nav role="navigation" class="navbar navbar-default">
@@ -51,15 +51,20 @@
 		</nav>
 		<div class="template">
 			<foreach from="$template" value="$m">
-				<div class="thumbnail" type="{{$m['type']}}">
+				<div class="thumbnail" industry="{{$m['industry']}}">
 					<h5>{{$m['title']}}</h5>
 					<img class="media-object" src="{{$m['thumb']}}"/>
 					<div class="caption">
-						<span class="label label-info">{{$m['template_type']}}</span>
+						<span class="label label-info">{{$m['locality']?  '本地模板' : '应用商店模板'}}</span>
 						<if value="$m['is_system']">
 							<a href="javascript:;" class="btn btn-default btn-xs btn-block">系统模板不允许卸载</a>
 							<else/>
-							<a href="javascript:;" class="btn btn-default btn-xs btn-block" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+							<if value="$m['locality']==1">
+								<a href="javascript:;" class="btn btn-default btn-xs" style="width: 45%" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+								<a class="btn btn-default btn-xs" style="width: 45%" href="{{u('createZip',array('name'=>$m['name']))}}">打包下载</a>
+								<else/>
+								<a href="javascript:;" class="btn btn-default btn-xs btn-block" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+							</if>
 						</if>
 					</div>
 				</div>
@@ -72,7 +77,7 @@
 	$(".navbar-nav [data-type]").click(function () {
 		//类型
 		var dataType = $(this).attr('data-type');
-		$(".thumbnail").show().not('[type=' + dataType + ']').hide();
+		$(".thumbnail").show().not('[industry=' + dataType + ']').hide();
 		$('.navbar-nav').find('li').removeClass('active');
 		$(this).parent().addClass('active');
 	});

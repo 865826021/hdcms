@@ -30,26 +30,39 @@ class Module {
 	}
 
 	//发布模块到应用商店
-	public function publish() {
+	public function createZip() {
 		$name = q( 'get.name' );
-		$xml =\Xml::toArray(file_get_contents("addons/$name/manifest.xml"));
-		p($xml);
-		View::make();
+		Zip::PclZip( "app.zip" );//设置压缩文件名
+		Zip::create( "addons/{$name}" );//压缩目录
+		\Tool::download( "app.zip", $name . '.zip' );
+	}
+
+	//获取云商店的模块
+	public function getCloudModules() {
+		$data = Db::table( 'cloud' )->find( 1 );
+		$post = [
+			'type'      => 'addons',
+			'uid'       => $data['uid'],
+			'AppSecret' => $data['AppSecret']
+		];
+		$res  = \Curl::post( c( 'api.cloud' ) . '?a=site/GetUserApps&t=web&siteid=1&m=store&type=addons', $post );
+		$res  = json_decode( $res, 'true' );
+		$apps = [ ];
+		foreach ( $res['apps'] as $k => $v ) {
+			$v          = json_decode( $v['xml'], TRUE );
+			$apps[ $k ] = $v;
+		}
+		//缓存
+		d( 'cloudModules', $apps );
+		echo json_encode( $apps );
 	}
 
 	//已经安装模块
 	public function installed() {
 		$modules = $this->module->where( 'is_system', 0 )->get();
 		foreach ( $modules as $k => $m ) {
-			if ( $m['is_system'] ) {
-				//系统模块
-				$modules[ $k ]['type']  = 1;
-				$modules[ $k ]['cover'] = "module/{$m['name']}/{$m['cover']}";
-			} else {
-				//本地模块
-				$modules[ $k ]['type']  = 2;
-				$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
-			}
+			//本地模块
+			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
 		}
 		View::with( 'modules', $modules )->make();
 	}
@@ -72,6 +85,7 @@ class Module {
 					$x['version']           = $xml['manifest']['application']['version']['@cdata'];
 					$x['detail']            = $xml['manifest']['application']['detail']['@cdata'];
 					$x['author']            = $xml['manifest']['application']['author']['@cdata'];
+					$x['locality']          = ! is_file( 'addons/' . $x['name'] . '/cloud.hd' ) ? 1 : 0;
 					$locality[ $x['name'] ] = $x;
 				}
 			}
@@ -116,11 +130,11 @@ class Module {
 			//模块缩略图
 			$info = pathinfo( $_POST['thumb'] );
 			copy( $_POST['thumb'], 'addons/' . $_POST['name'] . '/thumb.' . $info['extension'] );
-			$_POST['thumb'] = 'thumb.' . $info['extension'];
+			$_POST['thumb'] = 'thumb.' . strtolower( $info['extension'] );
 			//封面图片
 			$info = pathinfo( $_POST['cover'] );
 			copy( $_POST['cover'], 'addons/' . $_POST['name'] . '/cover.' . $info['extension'] );
-			$_POST['cover'] = 'cover.' . $info['extension'];
+			$_POST['cover'] = 'cover.' . strtolower( $info['extension'] );
 
 			$this->siteScript();
 			$this->moduleScript();
@@ -481,7 +495,8 @@ str;
 		}
 		if ( IS_POST ) {
 			//获取模块xml数据
-			$manifest = Xml::toArray( file_get_contents( 'addons/' . $_POST['module'] . '/manifest.xml' ) );
+			$xmlFile  = 'addons/' . $_POST['module'] . '/manifest.xml';
+			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
 			$platform = $manifest['manifest']['platform'];
 			//添加数据
 			$installSql = trim( $manifest['manifest']['install']['@cdata'] );
@@ -521,7 +536,7 @@ str;
 				}
 			}
 			//整合添加到模块表中的数据
-			$moduleData = [
+			$moduleData             = [
 				'name'        => $manifest['manifest']['application']['name']['@cdata'],
 				'version'     => $manifest['manifest']['application']['version']['@cdata'],
 				'industry'    => $manifest['manifest']['application']['industry']['@cdata'],
@@ -537,8 +552,9 @@ str;
 				'subscribes'  => serialize( $subscribes ),
 				'processors'  => serialize( $processors ),
 				'setting'     => $manifest['manifest']['application']['@attributes']['setting'] ? 1 : 0,
-				'permissions' => serialize( preg_split( '/\n/', $manifest['manifest']['permission']['@cdata'] ) )
+				'permissions' => serialize( preg_split( '/\n/', $manifest['manifest']['permission']['@cdata'] ) ),
 			];
+			$moduleData['locality'] = ! is_file( 'addons/' . $_POST['module'] . '/cloud.hd' ) ? 1 : 0;
 			Db::table( 'modules' )->insertGetId( $moduleData );
 			//添加模块动作表数据
 			if ( ! empty( $manifest['manifest']['bindings'] ) ) {
@@ -589,9 +605,52 @@ str;
 			( new Site() )->updateAllSiteCache();
 			message( "模块安装成功", u( 'installed' ) );
 		}
-		$manifest = Xml::toArray( file_get_contents( 'addons/' . $_GET['module'] . '/manifest.xml' ) );
-		$package  = Db::table( 'package' )->get();
+		$xmlFile = 'addons/' . $_GET['module'] . '/manifest.xml';
+		if ( is_file( $xmlFile ) ) {
+			//本地应用
+			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
+		} else {
+			//下载模块目录
+			go( u( 'download', [ 'module' => $_GET['module'] ] ) );
+		}
+		$package = Db::table( 'package' )->get();
 		View::with( 'module', $manifest['manifest'] )->with( 'package', $package )->make();
+	}
+
+	//下载远程模块
+	public function download() {
+		if ( IS_POST ) {
+			$module = q( 'get.module' );
+			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=addons&module=' . $module );
+			$app = json_decode($app,true);
+			if ( $app ) {
+				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=addons', [ 'file' => $app['data']['package'] ] );
+				file_put_contents( 'tmp.zip', $package );
+				//释放压缩包
+				Zip::PclZip( 'tmp.zip' );//设置压缩文件名
+				Zip::extract( "." );//解压缩
+				file_put_contents( 'addons/' . $module . '/cloud.hd', json_encode($app['data'],JSON_UNESCAPED_UNICODE) );
+				message( '模块下载成功,准备安装', '', 'success' );
+			}
+			message( '应用商店不存在模块', '', 'error' );
+		}
+		View::make();
+	}
+
+	/**
+	 * 从远程应用模块缓存中获取模块
+	 *
+	 * @param $module
+	 *
+	 * @return mixed
+	 */
+	protected function getCacheModuleManifest( $module ) {
+		$apps = d( 'cloudModules' );
+		foreach ( $apps as $a ) {
+			if ( $a['manifest']['application']['name']['@cdata'] == $module ) {
+				return $a;
+			}
+		}
 	}
 
 	//卸载模块
