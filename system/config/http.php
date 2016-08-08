@@ -9,9 +9,9 @@ return [
 	//禁止使用的模块
 	'deny_module'        => [ ],
 	//默认模块
-	'default_module'     => 'web',
+	'default_module'     => 'home',
 	//默认控制器
-	'default_controller' => 'home',
+	'default_controller' => 'entry',
 	//默认方法
 	'default_action'     => 'index',
 	//缓存路由
