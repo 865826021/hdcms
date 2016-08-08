@@ -45,7 +45,7 @@
 					<label class="col-sm-2 control-label">应用密钥(AppSecret)</label>
 					<div class="col-sm-8">
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="field.AppSecret">
+							<input type="text" class="form-control" ng-model="field.AppSecret" required="required">
 							<span class="input-group-addon" style="cursor: pointer" ng-click="createAppSecret()">生成新的</span>
 						</div>
 					</div>
