@@ -696,6 +696,27 @@ if ( $action == 'downloadFile' ) {
 		file_put_contents( $zipFile, $d );
 		//解包
 		get_zip_originalsize( $zipFile, './' );
+		function dcopy( $old, $new ) {
+			is_dir( $new ) or mkdir( $new, 0755, TRUE );
+			foreach ( glob( $old . '/*' ) as $v ) {
+				$to = $new . '/' . basename( $v );
+				is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
+			}
+			return TRUE;
+		}
+		dcopy('upload','.');
+		//删除目录
+		function del( $dir ) {
+			if ( ! is_dir( $dir ) ) {
+				return TRUE;
+			}
+			foreach ( glob( $dir . "/*" ) as $v ) {
+				is_dir( $v ) ?del( $v ) : unlink( $v );
+			}
+
+			return rmdir( $dir );
+		}
+		del('upload');
 		echo 1;
 		exit;
 	}
