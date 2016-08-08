@@ -605,7 +605,7 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
 $download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
-$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&packType=test';
+$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&type=small';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -741,7 +741,7 @@ if ( $action == 'table' ) {
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time = time();
-	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (username,webname,versionCode,releaseCode,createtime,status) VALUES('','','{$_SESSION['soft']['versionCode']}','{$_SESSION['soft']['releaseCode']}',$time,0)";
+	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET versionCode='{$_SESSION['soft']['versionCode']}',releaseCode='{$_SESSION['soft']['releaseCode']}',createtime={$time}";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );

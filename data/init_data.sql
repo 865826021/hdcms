@@ -8,6 +8,10 @@ VALUES (1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护
 INSERT INTO `hd_member_group` (`id`, `siteid`, `title`, `credit`, `rank`, `isdefault`, `is_system`)
 VALUES (1,1,'普通会员',0,0,1,1);
 
+INSERT INTO `hd_cloud` (`id`, `uid`, `username`, `webname`, `AppSecret`, `versionCode`, `releaseCode`, `createtime`, `status`)
+VALUES
+	(1,1,'','','','','',1470656410,0);
+
 INSERT INTO `hd_menu` (`id`, `pid`, `title`, `permission`, `url`, `append_url`, `icon`, `orderby`, `is_display`, `is_system`, `mark`)
 VALUES
 	(1,0,'基础设置','','?s=site/entry/home&p=platform','','fa fa-comments-o',0,1,0,'platform'),
