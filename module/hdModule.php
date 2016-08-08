@@ -23,7 +23,7 @@ abstract class HdModule {
 
 	//保存模块配置
 	public function saveSettings( $field ) {
-		$id              = $this->moduleSetting->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->pluck( 'id' );
+		$id              = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->pluck( 'id' );
 		$data['siteid']  = SITEID;
 		$data['module']  = v( 'module.name' );
 		$data['status']  = 1;

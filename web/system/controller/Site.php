@@ -269,7 +269,7 @@ class Site {
 			$wechat = Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->first();
 			c( "weixin", $wechat );
 			//与微信官网通信绑定验证
-			$status = Weixin::getAccessToken();
+			$status = \Weixin::getAccessToken('',true);
 			Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 			$this->db->updateSiteCache( $this->siteid );
 			if ( $status ) {
@@ -286,6 +286,8 @@ class Site {
 	//公众号连接测试
 	public function connect() {
 		//与微信官网通信绑定验证
+		$wechat = Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->first();
+		c( "weixin", $wechat );
 		$status = Weixin::getAccessToken();
 		Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {

@@ -48,13 +48,13 @@ class site extends hdSite {
 		$data = $this->db->where( 'id', $id )->pluck( 'data' );
 		$data = json_decode( $data, TRUE );
 		$data = $this->addHttp( $data );
-		$res  = Weixin::instance( 'button' )->createButton( $data );
+		$res  = \Weixin::instance( 'button' )->createButton( $data );
 		if ( $res['errcode'] == 0 ) {
 			$this->db->whereNotIn( 'id', [ $id ] )->update( [ 'status' => 0 ] );
 			$this->db->where( 'id', $id )->update( [ 'status' => 1 ] );
 			message( '推送微信菜单成功', 'back', 'success' );
 		}
-		message( '微信菜单推送失败', 'back', 'error' );
+		message( $res['errinfo'], 'back', 'error',5 );
 	}
 
 	//添加/编辑菜单

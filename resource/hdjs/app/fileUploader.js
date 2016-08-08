@@ -46,7 +46,7 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                     $.get(url, {extensions: options.extensions}, function (res) {
                                         var html = '<ul class="clearfix image-list-box">';
                                         $(res.data).each(function (i) {
-                                            html += '<li style="background-image: url(' + res.data[i].path + ');" path="'+res.data[i].path+'"></li>';
+                                            html += '<li style="background-image: url(' + res.data[i].path + ');" path="' + res.data[i].path + '"></li>';
                                         });
                                         html += "</ul>";
                                         html += res.page;
@@ -269,8 +269,9 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                     accept: {
                                         title: 'file',
                                         extensions: options.extensions,//允许上传的文件类型
-                                        mimeTypes: '.' + options.extensions.replace(/,/g, ',.')
+                                        mimeTypes: '.' + options.extensions.replace(/,/g, ',.'),
                                     },
+                                    formData: {data: options.data},
                                     multiple: options.multiple,
                                     fileNumLimit: 100,//允许上传的文件数量
                                     fileSizeLimit: 200 * 1024 * 1024,    // 200 M 允许上传文件大小

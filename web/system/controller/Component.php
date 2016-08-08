@@ -69,6 +69,7 @@ class Component {
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
 				'is_member'  => Session::get( 'is_member' ) ? 1 : 0,
+				'data'       => q( 'post.data', '' )
 			];
 			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
