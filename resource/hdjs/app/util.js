@@ -773,6 +773,7 @@
                 type: 'image',
                 extensions: 'gif,jpg,jpeg,bmp,png',
                 multiple: false,
+                data: ''
             }, options);
 
             require(['bootstrap', 'fileUploader'], function ($, fileUploader) {
@@ -792,7 +793,8 @@
                 extensions: 'doc,ppt,wps,zip,txt',
                 multiple: false,
                 fileSizeLimit: 200 * 1024 * 1024,
-                fileSingleSizeLimit: 2 * 1024 * 1024
+                fileSingleSizeLimit: 2 * 1024 * 1024,
+                data: ''
             }, options);
             require(['bootstrap', 'fileUploader'], function ($, fileUploader) {
                 fileUploader.show(function (files) {
