@@ -605,7 +605,7 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
 $download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
-$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
+$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&packType=test';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
