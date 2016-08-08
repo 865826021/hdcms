@@ -732,6 +732,7 @@ if ( $action == 'table' ) {
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	//执行建表语句
 	$sql = file_get_contents( 'data/install.sql' );
+	$sql = preg_replace('/^(\/\*|#.*).*/m', '', $sql);
 	//替换表前缀
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
@@ -746,6 +747,7 @@ if ( $action == 'table' ) {
 	}
 	//添加表初始数据
 	$sql = file_get_contents( 'data/init_data.sql' );
+	$sql = preg_replace('/^(\/\*|#.*).*/m', '', $sql);
 	//替换表前缀
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
