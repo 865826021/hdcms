@@ -775,7 +775,7 @@ if ( $action == 'table' ) {
 	//修改配置文件
 	file_put_contents( 'data/database.php', '<?php return [];?>' );
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );exit;
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
