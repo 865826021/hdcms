@@ -51,10 +51,6 @@ $finish=<<<str
 					<h1><i class="fa fa-flag"></i> 恭喜你 HDCMS 已经安装成功</h1>
 				</div>
 				<a href="admin.php" class="btn btn-success btn-block btn-lg">登录系统</a>
-				<br/>
-				<div class="text-center col-xs-12">
-				<p class="text-muted">为了安装请删除根目录下的 install.php 文件</p>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -702,21 +698,24 @@ if ( $action == 'downloadFile' ) {
 				$to = $new . '/' . basename( $v );
 				is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
 			}
+
 			return TRUE;
 		}
-		dcopy('upload','.');
+
+		dcopy( 'upload', '.' );
 		//删除目录
 		function del( $dir ) {
 			if ( ! is_dir( $dir ) ) {
 				return TRUE;
 			}
 			foreach ( glob( $dir . "/*" ) as $v ) {
-				is_dir( $v ) ?del( $v ) : unlink( $v );
+				is_dir( $v ) ? del( $v ) : unlink( $v );
 			}
 
 			return rmdir( $dir );
 		}
-		del('upload');
+
+		del( 'upload' );
 		echo 1;
 		exit;
 	}
@@ -732,7 +731,7 @@ if ( $action == 'table' ) {
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	//执行建表语句
 	$sql = file_get_contents( 'data/install.sql' );
-	$sql = preg_replace('/^(\/\*|#.*).*/m', '', $sql);
+	$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
 	//替换表前缀
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
@@ -747,7 +746,7 @@ if ( $action == 'table' ) {
 	}
 	//添加表初始数据
 	$sql = file_get_contents( 'data/init_data.sql' );
-	$sql = preg_replace('/^(\/\*|#.*).*/m', '', $sql);
+	$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
 	//替换表前缀
 	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
 	$result = preg_split( '/;(\r|\n)/is', $sql );
@@ -764,7 +763,7 @@ if ( $action == 'table' ) {
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time = time();
-	$ver = include 'data/version.php';
+	$ver  = include 'data/version.php';
 	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET versionCode='{$ver['versionCode']}',releaseCode='{$ver['releaseCode']}',createtime={$time}";
 	$pdo->exec( $sql );
 	//设置管理员帐号
@@ -787,6 +786,7 @@ if ( $action == 'finish' ) {
 	}
 	//删除下载的压缩包
 	unlink( 'hdcms.zip' );
+	unlink( 'install.php' );
 	//显示界面
 	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
 	echo $content;
