@@ -7,7 +7,12 @@
     </sql>
     <files>
         <![CDATA[
-            index.php
+D       hdphp/zip/Zip.php
+M       hdphp/zip/ZipProvider.php
+A       theme/article/images/hdcms.jpg
+D       theme/article/images/hdcms.png
+M       theme/article/index.html
+M       web/system/view/cloud/account.php
     ]]>
     </files>
 </manifest>
