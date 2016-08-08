@@ -765,8 +765,12 @@ if ( $action == 'table' ) {
 	$time = time();
 	$ver  = include 'data/version.php';
 	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET versionCode='{$ver['versionCode']}',releaseCode='{$ver['releaseCode']}',createtime={$time}";
-	$pdo->exec( $sql );
-	echo $sql;
+	try {
+		$pdo->exec( $sql );
+	} catch ( PDOException $e ) {
+		die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+	}
+
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
@@ -779,7 +783,6 @@ if ( $action == 'table' ) {
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
-	exit;
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
 		if ( basename( $f ) != 'database.php' ) {
