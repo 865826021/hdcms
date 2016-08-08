@@ -3,10 +3,13 @@ session_start();
 set_time_limit( 0 );
 error_reporting( 0 );
 header( "Content-type:text/html;charset=utf-8" );
+if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
+	die( 'HDCMS 需要PHP版本大于php5.4' . PHP_VERSION );
+}
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://dev.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
-$last_version_url  = 'http://dev.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
+$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
+$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
