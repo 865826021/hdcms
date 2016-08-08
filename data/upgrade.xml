@@ -2,7 +2,8 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            create database a(id int(10));
+            create table a(id int(10));
+            create table a22(id int(10));
         ]]>
     </sql>
     <files>
