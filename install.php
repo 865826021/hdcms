@@ -50,7 +50,7 @@ $finish=<<<str
 				<div class="alert alert-danger text-center">
 					<h1><i class="fa fa-flag"></i> 恭喜你 HDCMS 已经安装成功</h1>
 				</div>
-				<a href="index.php" class="btn btn-success btn-block btn-lg">登录系统</a>
+				<a href="admin.php" class="btn btn-success btn-block btn-lg">登录系统</a>
 				<br/>
 				<div class="text-center col-xs-12">
 				<p class="text-muted">为了安装请删除根目录下的 install.php 文件</p>
