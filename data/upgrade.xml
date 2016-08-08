@@ -4,6 +4,7 @@
         <![CDATA[
             create table a(id int(10));
             create table a22(id int(10));
+             create table abc(id int(10));
         ]]>
     </sql>
     <files>
