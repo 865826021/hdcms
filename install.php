@@ -615,7 +615,7 @@ if ( $action == 'copyright' ) {
 //环境检测
 if ( $action == 'environment' ) {
 	//获取新新版本
-	if ( ! $soft = curl_get( $last_version_url ) ) {
+	if ( ! is_dir( 'web' ) && ! $soft = curl_get( $last_version_url ) ) {
 		echo '请求HDCMS云主机失败';
 		exit;
 	}
@@ -741,7 +741,8 @@ if ( $action == 'table' ) {
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
 	$time = time();
-	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET versionCode='{$_SESSION['soft']['versionCode']}',releaseCode='{$_SESSION['soft']['releaseCode']}',createtime={$time}";
+	$ver = include 'data/version.php';
+	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET versionCode='{$ver['versionCode']}',releaseCode='{$ver['releaseCode']}',createtime={$time}";
 	$pdo->exec( $sql );
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
