@@ -9,11 +9,11 @@ return [
 	//禁止使用的模块
 	'deny_module'        => [ ],
 	//默认模块
-	'default_module'     => 'system',
+	'default_module'     => 'web',
 	//默认控制器
-	'default_controller' => 'entry',
+	'default_controller' => 'home',
 	//默认方法
-	'default_action'     => 'login',
+	'default_action'     => 'index',
 	//缓存路由
 	'route_cache'        => FALSE
 ];
