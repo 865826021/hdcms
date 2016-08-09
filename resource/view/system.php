@@ -127,7 +127,7 @@
     </div>
     <style>
         .hdcms-upgrade{
-            position : fixed;
+            position : absolute;
             top:0px;
             left:45%;
             display: none;

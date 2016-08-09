@@ -695,7 +695,6 @@ if ( $action == 'downloadFile' ) {
 		function dcopy( $old, $new ) {
 			is_dir( $new ) or mkdir( $new, 0755, TRUE );
 			foreach ( glob( $old . '/*' ) as $v ) {
-				echo $v;
 				if ( $v != 'upload/install.php' ) {
 					$to = $new . '/' . basename( $v );
 					is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
