@@ -600,7 +600,7 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
+$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&type=small';
 $last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&type=small';
 //版权信息
 if ( $action == 'copyright' ) {
@@ -610,12 +610,14 @@ if ( $action == 'copyright' ) {
 }
 //环境检测
 if ( $action == 'environment' ) {
-	//获取新新版本
-	if ( ! is_dir( 'web' ) && ! $soft = curl_get( $last_version_url ) ) {
-		echo '请求HDCMS云主机失败';
-		exit;
+	if ( ! is_dir( 'web' ) ) {
+		//检查云主机连接
+		$soft = json_decode( curl_get( $last_version_url ), TRUE );
+		if ( ! $soft || $soft['valid'] == 0 ) {
+			echo '获取HDCMS压缩包失败';
+			exit;
+		}
 	}
-	$_SESSION['soft'] = json_decode( $soft, TRUE );
 	//系统信息
 	$data['PHP_OS']              = PHP_OS;
 	$data['SERVER_SOFTWARE']     = $_SERVER['SERVER_SOFTWARE'];
@@ -684,7 +686,7 @@ if ( $action == 'downloadFile' ) {
 		exit;
 	} else {
 		$d = curl_get( $download_file_url );
-		if ( strlen( $d ) < 2787715 ) {
+		if ( strlen( $d ) < 1000000 ) {
 			//下载失败
 			exit;
 		}
