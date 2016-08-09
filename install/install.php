@@ -8,7 +8,7 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
+$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&type=small';
 $last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&type=small';
 //版权信息
 if ( $action == 'copyright' ) {
@@ -103,8 +103,10 @@ if ( $action == 'downloadFile' ) {
 		function dcopy( $old, $new ) {
 			is_dir( $new ) or mkdir( $new, 0755, TRUE );
 			foreach ( glob( $old . '/*' ) as $v ) {
-				$to = $new . '/' . basename( $v );
-				is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
+				if ( $v != 'upload/install.php' ) {
+					$to = $new . '/' . basename( $v );
+					is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
+				}
 			}
 
 			return TRUE;
@@ -200,7 +202,7 @@ if ( $action == 'finish' ) {
 	foreach ( glob( 'install/*' ) as $f ) {
 		@unlink( $f );
 	}
-	is_dir( 'install' ) or rmdir( 'install' );
+	is_dir( 'install' ) and rmdir( 'install' );
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
