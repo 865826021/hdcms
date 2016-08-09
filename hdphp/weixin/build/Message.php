@@ -126,7 +126,7 @@ class Message extends Weixin {
 
 	//未关注用户扫描二维码
 	public function isSubscribeScanEvent() {
-		return $this->message->MsgType == 'event' && $this->message->Event = self::EVENT_TYPE_UNSUBSCRIBE_SCAN;
+		return $this->message->MsgType == 'event' && $this->message->Event == self::EVENT_TYPE_UNSUBSCRIBE_SCAN;
 	}
 
 	//关注用户二维码事件

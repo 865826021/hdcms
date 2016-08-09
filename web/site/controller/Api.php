@@ -134,7 +134,7 @@ class Api {
 	 */
 	protected function moduleSubscribe( $messageType ) {
 		foreach ( v( 'modules' ) as $module ) {
-			if ( in_array( $messageType, $module['processors'] ) ) {
+			if ( in_array( $messageType, $module['subscribes'] ) ) {
 				$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\subscribe';
 				if ( class_exists( $class ) ) {
 					$obj = new $class();
@@ -151,6 +151,7 @@ class Api {
 	 */
 	protected function event() {
 		$message = $this->instance->getMessage();
+
 		//关注事件
 		if ( $this->instance->isSubscribeEvent() ) {
 			//消息定阅处理
@@ -198,6 +199,7 @@ class Api {
 	 */
 	protected function message() {
 		$message = $this->instance->getMessage();
+
 		//文本消息
 		if ( $this->instance->isTextMsg() ) {
 			//消息定阅处理
@@ -258,6 +260,7 @@ class Api {
 			$this->moduleSubscribe( 'click' );
 			//消息回复
 			$info = $this->text( $message->EventKey );
+			file_put_contents( 'a.txt', var_export( $info, TRUE ) );
 			if ( ! is_null( $info ) ) {
 				$this->moduleProcessing( 'text', $info['module'], $info['rid'] );
 			}

@@ -92,9 +92,9 @@ class Modules extends Model {
 		//加入系统模块
 		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
-			$m['subscribes']  = unserialize( $m['subscribes'] );
-			$m['processors']  = unserialize( $m['processors'] );
-			$m['permissions'] = unserialize( $m['permissions'] );
+			$m['subscribes']  = unserialize( $m['subscribes'] )?:[];
+			$m['processors']  = unserialize( $m['processors'] )?:[];
+			$m['permissions'] = unserialize( $m['permissions'] )?:[];
 			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get();
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
