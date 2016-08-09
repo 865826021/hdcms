@@ -58,18 +58,15 @@ if ( $action == 'database' ) {
 		$dbname             = $_SESSION['config']['database'];
 		if ( ! mysql_connect( $host, $username, $password ) ) {
 			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,请检查帐号与密码' ] );
+			exit;
 		}
 		//数据库
-		if ( mysql_select_db( $dbname ) ) {
-			if ( ! empty( $_POST['del_database'] ) ) {
-				//删除数据库
-				mysql_query( "drop database if exists $dbname" );
-			} else {
-				echo json_encode( [ 'valid' => 0, 'message' => '数据库已经存在' ] );
+		if ( ! mysql_select_db( $dbname ) ) {
+			if ( ! mysql_query( "CREATE DATABASE $dbname CHARSET UTF8" ) ) {
+				echo json_encode( [ 'valid' => 0, 'message' => '创建数据库失败' ] );
 				exit;
 			}
 		}
-		mysql_query( "CREATE DATABASE $dbname CHARSET UTF8" );
 		echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
 		exit;
 	}
@@ -140,35 +137,41 @@ if ( $action == 'table' ) {
 	$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 	//执行建表语句
-	$sql = file_get_contents( 'data/install.sql' );
-	$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
-	//替换表前缀
-	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
-	$result = preg_split( '/;(\r|\n)/is', $sql );
-	foreach ( (array) $result as $r ) {
-		if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
-			try {
-				$pdo->exec( $r );
-			} catch ( PDOException $e ) {
-				die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+	if ( is_file( 'data/install.sql' ) ) {
+		$sql = file_get_contents( 'data/install.sql' );
+		$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
+		//替换表前缀
+		$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
+		$result = preg_split( '/;(\r|\n)/is', $sql );
+		foreach ( (array) $result as $r ) {
+			if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
+				try {
+					$pdo->exec( $r );
+				} catch ( PDOException $e ) {
+					die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+				}
 			}
 		}
 	}
+
 	//添加表初始数据
-	$sql = file_get_contents( 'data/init_data.sql' );
-	$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
-	//替换表前缀
-	$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
-	$result = preg_split( '/;(\r|\n)/is', $sql );
-	foreach ( (array) $result as $r ) {
-		if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
-			try {
-				$pdo->exec( $r );
-			} catch ( PDOException $e ) {
-				die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+	if ( is_file( 'data/init_data.sql' ) ) {
+		$sql = file_get_contents( 'data/init_data.sql' );
+		$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
+		//替换表前缀
+		$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
+		$result = preg_split( '/;(\r|\n)/is', $sql );
+		foreach ( (array) $result as $r ) {
+			if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
+				try {
+					$pdo->exec( $r );
+				} catch ( PDOException $e ) {
+					die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+				}
 			}
 		}
 	}
+
 	//更新系统版本号
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
