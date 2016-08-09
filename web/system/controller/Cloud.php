@@ -69,6 +69,13 @@ class Cloud {
 		View::make();
 	}
 
+	//检测有没有新版本
+	public function checkUpgrade() {
+		$hdcms = $this->db->find( 1 );
+		echo \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+		exit;
+	}
+
 	/**
 	 * 更新HDCMS
 	 */

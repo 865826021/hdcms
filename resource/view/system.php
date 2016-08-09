@@ -122,9 +122,30 @@
         <br/>
         Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
     </div>
+    <div class="hdcms-upgrade">
+        <a href="{{u('system/cloud/upgrade')}}"><span class="label label-danger">有新版本了,亲! 快更新吧</span></a>
+    </div>
+    <style>
+        .hdcms-upgrade{
+            position : fixed;
+            top:0px;
+            left:45%;
+            display: none;
+        }
+    </style>
 </div>
     <script>
-        require(['bootstrap'], function ($) {})
+        require(['bootstrap','util'], function ($,util) {
+            var n = Math.floor(Math.random()*10);
+            if(n>0){
+                $.get('{{u("cloud/checkUpgrade")}}',function(res){
+                    if(res.valid==1){
+                        //有新版本
+                        $(".hdcms-upgrade").show();
+                    }
+                },'json')
+            }
+        })
     </script>
 </body>
 </html>
