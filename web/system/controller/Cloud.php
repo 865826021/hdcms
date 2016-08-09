@@ -87,24 +87,35 @@ class Cloud {
 				View::make( 'downloadLists' );
 				break;
 			case 'download':
-				//下载文件
-				if ( ! isset( $data['data']['files'][ q( 'get.i' ) ] ) ) {
+				//处理文件的编号
+				$i = $data['downloadId'];
+				//下载文件,根据文件类型 ADM  AM下载,D删除
+				if ( ! isset( $data['data']['files'][ $i ] ) ) {
 					//全部下载完成
 					$res = [ 'valid' => 2 ];
 				} else {
 					//从第一个文件开始下载
-					$downFile = trim( substr( $data['data']['files'][ q( 'get.i' ) ], 1 ) );
-					$postData = [ 'file' => $downFile, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
-					$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
-					if ( file_put_contents( $downFile, $content ) ) {
-						//下载文件打标识
-						unset($data['data']['files'][ q( 'get.i' ) ]);
-						D( '_upgrade_', $data );
-						$res = [ 'valid' => 1];
+					$action = strtoupper( $data['data']['files'][ $i ][0] );
+					$file   = trim( substr( $data['data']['files'][ $i ], 1 ) );
+					if ( $action == 'D' ) {
+						//删除文件
+						\Dir::delFile( $file );
+						unset( $data['data']['files'][ $i ] );
+						$res = [ 'valid' => 1 ];
 					} else {
-						$res = [ 'valid' => 0];
+						//下载文件
+						$postData = [ 'file' => $file, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
+						$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
+						if ( file_put_contents( $file, $content ) ) {
+							unset( $data['data']['files'][ $i ] );
+							$res = [ 'valid' => 1 ];
+						} else {
+							$res = [ 'valid' => 0 ];
+						}
 					}
 				}
+				$data['downloadId'] ++;
+				D( '_upgrade_', $data );
 				echo json_encode( $res );
 				break;
 			case 'sql':
@@ -131,7 +142,7 @@ class Cloud {
 				}
 				if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
 					//没有更新数据时执行文件更新
-					go( 'upgrade', [ 'action' => 'downloadLists' ] );
+					go( u( 'upgrade', [ 'action' => 'downloadLists' ] ) );
 				}
 				View::make( 'updateSql' );
 				break;
@@ -152,7 +163,6 @@ class Cloud {
 				message( '部分文件下载失败,请重新运行更新程序', 'upgrade', 'error' );
 				break;
 			default:
-				$data = '';
 				if ( empty( $data ) ) {
 					$hdcms = $this->db->find( 1 );
 					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
@@ -160,9 +170,12 @@ class Cloud {
 					if ( $data['valid'] == 1 ) {
 						//本次更新的多个版本中的最新版本
 						$data['lastVersion'] = array_pop( $tmp['lists'] );
+						//处理文件的编号
+						$data['downloadId'] = 0;
 						D( '_upgrade_', $data );
 					}
 				}
+				p( $data );
 				View::with( 'data', $data );
 				View::with( 'hdcms', $hdcms );
 				View::make();
