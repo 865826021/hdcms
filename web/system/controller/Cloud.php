@@ -175,7 +175,6 @@ class Cloud {
 						D( '_upgrade_', $data );
 					}
 				}
-				p( $data );
 				View::with( 'data', $data );
 				View::with( 'hdcms', $hdcms );
 				View::make();
