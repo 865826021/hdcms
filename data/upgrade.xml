@@ -6,6 +6,7 @@
     </sql>
     <files>
         <![CDATA[
+        M	data/upgrade.xml
 A	resource/hdjs/component/clockpicker/bootstrap-clockpicker.min.css
 A	resource/hdjs/component/clockpicker/bootstrap-clockpicker.min.js
 A	resource/hdjs/component/emotion/emotion.css
@@ -290,21 +291,6 @@ A	resource/hdjs/component/webuploader/upload.js
 A	resource/hdjs/component/webuploader/webuploader.css
 A	resource/hdjs/component/webuploader/webuploader.min.js
 A	resource/hdjs/component/zclip/ZeroClipboard.swf
-A	resource/hdjs/fonts/FontAwesome.otf
-A	resource/hdjs/fonts/captcha.ttf
-A	resource/hdjs/fonts/fontawesome-webfont.eot
-A	resource/hdjs/fonts/fontawesome-webfont.svg
-A	resource/hdjs/fonts/fontawesome-webfont.ttf
-A	resource/hdjs/fonts/fontawesome-webfont.woff
-A	resource/hdjs/fonts/fontawesome-webfont.woff2
-A	resource/hdjs/fonts/glyphicons-halflings-regular.eot
-A	resource/hdjs/fonts/glyphicons-halflings-regular.svg
-A	resource/hdjs/fonts/glyphicons-halflings-regular.ttf
-A	resource/hdjs/fonts/glyphicons-halflings-regular.woff
-A	resource/hdjs/fonts/glyphicons-halflings-regular.woff2
-A	resource/hdjs/js/jquery-ui.min.js
-A	resource/hdjs/js/jquery.mobile-1.4.5.min.js
-A	resource/hdjs/js/moment-with-locales.min.js
 
     ]]>
     </files>
