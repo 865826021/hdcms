@@ -77,6 +77,10 @@ class Cloud {
 		View::with( 'data', $data );
 		switch ( q( 'get.action' ) ) {
 			case 'downloadLists':
+				//处理文件的编号
+				$data['downloadId'] = 0;
+				sort( $data['data']['files'] );
+				D( '_upgrade_', $data );
 				//显示更新列表,准备执行更新
 				$data = D( '_upgrade_' );
 				if ( empty( $data['data']['files'] ) ) {
@@ -106,11 +110,14 @@ class Cloud {
 						//下载文件
 						$postData = [ 'file' => $file, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
 						$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
-						if ( file_put_contents( $file, $content ) ) {
+						is_dir( dirname( $file ) ) or mkdir( dirname( $file ), 0755, TRUE );
+						$res = json_decode( $content, TRUE );
+						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
+							$res = [ 'valid' => 0 ];
+						} else {
+							file_put_contents( $file, $content );
 							unset( $data['data']['files'][ $i ] );
 							$res = [ 'valid' => 1 ];
-						} else {
-							$res = [ 'valid' => 0 ];
 						}
 					}
 				}
@@ -170,8 +177,6 @@ class Cloud {
 					if ( $data['valid'] == 1 ) {
 						//本次更新的多个版本中的最新版本
 						$data['lastVersion'] = array_pop( $tmp['lists'] );
-						//处理文件的编号
-						$data['downloadId'] = 0;
 						D( '_upgrade_', $data );
 					}
 				}
