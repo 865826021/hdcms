@@ -207,11 +207,8 @@ class Template {
 			message( "模板安装成功", u( 'installed' ) );
 		}
 		$xmlFile = 'theme/' . $_GET['name'] . '/manifest.xml';
-		if ( is_file( $xmlFile ) ) {
-			//本地应用
-			$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
-		} else {
-			//下载模块目录
+		if ( !is_file( $xmlFile ) ) {
+			//下载模块
 			go( u( 'download', [ 'name' => $_GET['name'] ] ) );
 		}
 		$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
