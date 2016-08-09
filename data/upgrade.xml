@@ -6,7 +6,8 @@
     </sql>
     <files>
         <![CDATA[
-        A	resource/hdjs/component/clockpicker/bootstrap-clockpicker.min.css
+      M	index.php
+A	resource/hdjs/component/clockpicker/bootstrap-clockpicker.min.css
 A	resource/hdjs/component/clockpicker/bootstrap-clockpicker.min.js
 A	resource/hdjs/component/emotion/emotion.css
 A	resource/hdjs/component/ueditor/dialogs/anchor/anchor.html
@@ -290,6 +291,7 @@ A	resource/hdjs/component/webuploader/upload.js
 A	resource/hdjs/component/webuploader/webuploader.css
 A	resource/hdjs/component/webuploader/webuploader.min.js
 A	resource/hdjs/component/zclip/ZeroClipboard.swf
+
 
     ]]>
     </files>
