@@ -172,6 +172,12 @@ class Cloud {
 					$this->db->save( $data );
 					//删除更新缓存
 					D( '_upgrade_', '[del]' );
+					\Dir::del( 'install' );
+					foreach ( glob( 'data/*' ) as $f ) {
+						if ( basename( $f ) != 'database.php' ) {
+							@unlink( $f );
+						}
+					}
 					message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				}
 				message( '部分文件下载失败,请重新运行更新程序', 'upgrade', 'error' );
