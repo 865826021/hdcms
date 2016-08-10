@@ -72,7 +72,7 @@ class Nav {
 			//从模块动作中移除已经在菜单中有值的菜单
 			$modulesBindings = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', q( 'get.entry' ) )->get();
 			foreach ( $modulesBindings as $k => $v ) {
-				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&t=web&siteid=" . SITEID.'&m='.v( 'module.name' );
+				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&t=web&siteid=" . SITEID . '&m=' . v( 'module.name' );
 				foreach ( $nav as $n ) {
 					if ( strstr( $n['url'], $modulesBindings[ $k ]['url'] ) ) {
 						unset( $modulesBindings[ $k ] );
@@ -140,7 +140,7 @@ class Nav {
 		//站点列表
 		$web          = Db::table( 'web' )
 		                  ->field( 'web.id,web.title,template.tid,template.position' )
-		                  ->join( 'template', 'template.tid', '=', 'web.template_tid' )
+		                  ->join( 'template', 'template.name', '=', 'web.template_name' )
 		                  ->where( 'siteid', SITEID )
 		                  ->get();
 		$field        = $this->webNav->where( 'id', $this->id )->first();
@@ -154,8 +154,7 @@ class Nav {
 			$field['orderby']  = 0;
 			$field['entry']    = 'home';
 			$field['css']      = [ 'icon' => 'fa fa-external-link', 'image' => '', 'color' => '#333333', 'size' => 35 ];
-			$cur               = current( $web );
-			$field['web_id']   = $cur['id'];
+			$field['web_id']   = $_GET['webid'];
 		}
 		View::with( 'web', Arr::string_to_int( $web ) );
 		View::with( 'field', Arr::string_to_int( $field ) );

@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="?a=article/manage/site&t=site">返回站点列表</a></li>
+		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表</a></li>
 		<li><a href="javascript:history.back();">导航菜单列表</a></li>
 		<li class="active"><a href="javascript:;">添加导航菜单</a></li>
 	</ul>
