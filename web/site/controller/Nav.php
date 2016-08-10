@@ -28,7 +28,7 @@ class Nav {
 
 	public function __construct() {
 		if ( ! Session::get( 'user.uid' ) ) {
-			message( '请登录后操作', 'system/entry/login', 'error' );
+			message( '请登录后操作', 'system/entry/login', 'error' ); 
 		}
 		//分配菜单
 		( new Menu() )->getMenus( TRUE );
