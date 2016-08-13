@@ -12,7 +12,10 @@
     </files>
     <logs>
         <![CDATA[
-系统文章模块可以选择模板文件
+M       data/upgrade.xml
+M       web/system/controller/Article.php
+M       web/system/view/article/articlePost.php
+M       web/system/view/article/categoryPost.php
     ]]>
     </logs>
 </manifest>
