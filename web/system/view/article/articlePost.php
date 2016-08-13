@@ -44,6 +44,21 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="col-sm-2 control-label">模板</label>
+					<div class="col-sm-10">
+						<select name="" class="form-control">
+							<option value="">使用默认模板</option>
+							<foreach from="$template" value="$v">
+								<if value="$v==$field['template']">
+									<option value="{{$v}}" selected="selected">{{$v}}</option>
+									<else/>
+									<option value="{{$v}}">{{$v}}</option>
+								</if>
+							</foreach>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="col-sm-2 control-label">点击数</label>
 					<div class="col-sm-10">
 						<input type="text" class="form-control" name="click" value="{{$field['click']}}">

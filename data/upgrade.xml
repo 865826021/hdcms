@@ -2,6 +2,7 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
+            ALTER TABLE hd_article_category ADD template varchar(200);
         ]]>
     </sql>
     <files>

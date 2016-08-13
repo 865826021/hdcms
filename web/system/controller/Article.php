@@ -45,6 +45,9 @@ class Article {
 			}
 			message( $Model->getError(), 'back', 'error' );
 		}
+		//查找模板
+		$template = glob('theme/article/*.html');
+		View::with('template',$template);
 		$field = $Model->find( $id );
 		View::with( 'field', $field );
 		View::make();
@@ -77,6 +80,9 @@ class Article {
 			}
 			message( $Model->getError(), 'back', 'error' );
 		}
+		//查找模板
+		$template = glob('theme/article/*.html');
+		View::with('template',$template);
 		$field = $Model->find( $id );
 		View::with( 'field', $field );
 		View::with( 'category', $Category->get() );
