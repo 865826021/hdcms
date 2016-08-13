@@ -9,7 +9,7 @@
     ]]>
     </files>
     <logs>
-        <![CDATA[
+<![CDATA[
 M       data/upgrade.xml
 M       web/system/controller/Article.php
 M       web/system/view/article/articlePost.php
