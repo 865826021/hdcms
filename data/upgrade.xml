@@ -6,14 +6,15 @@
     </sql>
     <files>
         <![CDATA[
+        M       data/upgrade.xml
+M       web/system/controller/Article.php
+M       web/system/view/article/articlePost.php
+M       web/system/view/article/categoryPost.php
     ]]>
     </files>
     <logs>
 <![CDATA[
-M       data/upgrade.xml
-M       web/system/controller/Article.php
-M       web/system/view/article/articlePost.php
-M       web/system/view/article/categoryPost.php
+
     ]]>
     </logs>
 </manifest>
