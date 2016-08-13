@@ -2,14 +2,15 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
+            ALTER TABLE ADD template varchar(200) NOT NULL DEFAULT '';
         ]]>
     </sql>
     <files>
         <![CDATA[
-        M       data/upgrade.xml
-M       web/system/controller/Article.php
-M       web/system/view/article/articlePost.php
-M       web/system/view/article/categoryPost.php
+ M       data/upgrade.xml
+    M       web/system/controller/Article.php
+    M       web/system/view/article/articlePost.php
+    M       web/system/view/article/categoryPost.php
     ]]>
     </files>
     <logs>
