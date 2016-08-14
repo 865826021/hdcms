@@ -19,7 +19,7 @@ class Article extends Model {
 	protected $auto
 	                 = [
 			[ 'orderby', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
-			[ 'createtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
+			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'click', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'thumb', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'content', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
