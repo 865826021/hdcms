@@ -2,7 +2,7 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            ALTER TABLE ADD template varchar(200) NOT NULL DEFAULT '';
+            ALTER TABLE hd_article ADD template varchar(200) NOT NULL DEFAULT '';
         ]]>
     </sql>
     <files>
