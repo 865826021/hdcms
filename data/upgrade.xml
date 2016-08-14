@@ -6,10 +6,7 @@
     </sql>
     <files>
         <![CDATA[
-M       module/article/template/manage/site.php
-M       module/article/template/manage/sitePost.php
-M       web/site/view/nav/lists.php
-M       web/site/view/nav/post.php
+
     ]]>
     </files>
     <logs>
