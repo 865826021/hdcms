@@ -2,21 +2,14 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            ALTER TABLE hd_article ADD template varchar(200) NOT NULL DEFAULT '';
         ]]>
     </sql>
     <files>
         <![CDATA[
-    M       data/upgrade.xml
-    M       web/system/controller/Article.php
-    M       web/system/view/article/articlePost.php
-    M       web/system/view/article/categoryPost.php
     ]]>
     </files>
     <logs>
 <![CDATA[
-发布更新程序时添加更新日志，同时在前台应用页面显示更新日志列表
-开发者中心上传模块、模板时解析XML文件格式
     ]]>
     </logs>
 </manifest>
