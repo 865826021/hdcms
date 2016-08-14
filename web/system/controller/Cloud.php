@@ -27,7 +27,8 @@ class Cloud {
 		if ( ! $this->user->isSuperUser() ) {
 			message( '只有系统管理员可以执行操作', 'back', 'error' );
 		}
-		$this->url = c( 'api.cloud' );
+		$user      = Db::table( 'cloud' )->find( 1 );
+		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}";
 		$this->db  = new \system\model\Cloud();
 	}
 
@@ -72,7 +73,7 @@ class Cloud {
 	//检测有没有新版本
 	public function checkUpgrade() {
 		$hdcms = $this->db->find( 1 );
-		echo \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+		echo \Curl::get( $this->url . '&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 		exit;
 	}
 
@@ -116,7 +117,7 @@ class Cloud {
 					} else {
 						//下载文件
 						$postData = [ 'file' => $file, 'releaseCode' => $data['lastVersion']['releaseCode'] ];
-						$content  = \Curl::post( $this->url . '?a=cloud/download&t=web&siteid=1&m=store', $postData );
+						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
 						is_dir( dirname( $file ) ) or mkdir( dirname( $file ), 0755, TRUE );
 						$res = json_decode( $content, TRUE );
 						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
@@ -185,7 +186,7 @@ class Cloud {
 			default:
 				if ( empty( $data ) ) {
 					$hdcms = $this->db->find( 1 );
-					$data  = \Curl::get( $this->url . '?a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+					$data  = \Curl::get( $this->url . '&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
 					$tmp   = $data = json_decode( $data, TRUE );
 					if ( $data['valid'] == 1 ) {
 						//本次更新的多个版本中的最新版本
