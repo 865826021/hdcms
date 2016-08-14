@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2016-08-08 18:11:48 +0000
+# Generation Time: 2016-08-14 02:45:01 +0000
 # ************************************************************
 
 
@@ -35,6 +35,7 @@ CREATE TABLE `hd_article` (
   `click` mediumint(9) unsigned NOT NULL COMMENT '阅读次数',
   `createtime` int(10) unsigned NOT NULL COMMENT '发表时间',
   `url` varchar(300) NOT NULL DEFAULT '' COMMENT '跳转链接',
+  `template` varchar(200) NOT NULL DEFAULT '' COMMENT '模板文件',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -49,6 +50,7 @@ CREATE TABLE `hd_article_category` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL DEFAULT '' COMMENT '栏目名称',
   `orderby` tinyint(4) unsigned NOT NULL COMMENT '排序',
+  `template` varchar(200) NOT NULL DEFAULT '' COMMENT '模板',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文章栏目';
 

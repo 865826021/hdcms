@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{site_url('manage/site')}}">微站管理</a></li>
+		<li><a href="{{site_url('manage/site')}}">微站管理 </a></li>
 		<if value="q('get.webid')">
 			<li><a href="?a=article/manage/SitePost&t=site">添加站点</a></li>
 			<li class="active"><a href="#">编辑站点</a></li>

@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表</a></li>
+		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表 </a></li>
 		<li class="active">
 			<a href="javascript:;"><?php echo m( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
 		</li>
