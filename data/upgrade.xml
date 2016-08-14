@@ -14,6 +14,9 @@ M       web/site/view/nav/post.php
     </files>
     <logs>
 <![CDATA[
+开发者中心上传模块、模板时解析XML文件格式
+发布更新程序时添加更新日志，同时在前台应用页面显示更新日志列表
+风格模板支持发布更新版本，但不支持更新
     ]]>
     </logs>
 </manifest>

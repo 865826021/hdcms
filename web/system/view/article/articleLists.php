@@ -25,7 +25,7 @@
 						<th>排序</th>
 						<th>点击数</th>
 						<th>创建时间</th>
-						<th width="120">操作</th>
+						<th width="160">操作</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -41,6 +41,7 @@
 								<div class="btn-group" role="group" aria-label="...">
 									<a href="{{u('articlePost',['id'=>$d['id']])}}" class="btn btn-success btn-sm">编辑</a>
 									<a href="javascript:del({{$d['id']}})" class="btn btn-default btn-sm">删除</a>
+									<a href="{{u('system/article/show',['id'=>$d['id']])}}" target="_blank" class="btn btn-default btn-sm">预览</a>
 								</div>
 							</td>
 						</tr>

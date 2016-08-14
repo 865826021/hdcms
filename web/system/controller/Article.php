@@ -20,6 +20,11 @@ use system\model\User;
 class Article {
 
 	public function __construct() {
+
+	}
+
+	//权限验证
+	public function auth() {
 		$this->user = new User();
 		if ( ! $this->user->isSuperUser() ) {
 			message( '只有系统管理员可以执行操作', 'back', 'error' );
@@ -28,6 +33,7 @@ class Article {
 
 	//分类列表
 	public function lists() {
+		$this->auth();
 		$Model = new ArticleCategory();
 		$data  = $Model->get();
 		View::with( 'data', $data );
@@ -36,6 +42,7 @@ class Article {
 
 	//添加分类
 	public function categoryPost() {
+		$this->auth();
 		$Model = new ArticleCategory();
 		$id    = q( 'get.id' );
 		if ( IS_POST ) {
@@ -46,8 +53,8 @@ class Article {
 			message( $Model->getError(), 'back', 'error' );
 		}
 		//查找模板
-		$template = glob('theme/article/*.html');
-		View::with('template',$template);
+		$template = glob( 'theme/article/*.html' );
+		View::with( 'template', $template );
 		$field = $Model->find( $id );
 		View::with( 'field', $field );
 		View::make();
@@ -55,6 +62,7 @@ class Article {
 
 	//删除栏目
 	public function delCategory() {
+		$this->auth();
 		$Model = new ArticleCategory();
 		$Model->remove( q( 'get.id' ) );
 		message( '文章删除成功', 'back', 'success' );
@@ -62,6 +70,7 @@ class Article {
 
 	//新闻列表
 	public function articleLists() {
+		$this->auth();
 		$Model = new \system\model\Article();
 		$data  = $Model->lists();
 		View::with( 'data', $data );
@@ -70,6 +79,7 @@ class Article {
 
 	//文章管理
 	public function articlePost() {
+		$this->auth();
 		$Category = new ArticleCategory();
 		$Model    = new \system\model\Article();
 		$id       = q( 'get.id' );
@@ -81,8 +91,8 @@ class Article {
 			message( $Model->getError(), 'back', 'error' );
 		}
 		//查找模板
-		$template = glob('theme/article/*.html');
-		View::with('template',$template);
+		$template = glob( 'theme/article/*.html' );
+		View::with( 'template', $template );
 		$field = $Model->find( $id );
 		View::with( 'field', $field );
 		View::with( 'category', $Category->get() );
@@ -91,9 +101,28 @@ class Article {
 
 	//删除文章
 	public function delArticle() {
+		$this->auth();
 		$Model = new \system\model\Article();
 		$Model->where( 'id', q( 'get.id' ) )->delete();
 		message( '文章删除成功', 'back', 'success' );
+	}
+
+	public function show() {
+		$id       = q( 'get.id', 0, 'intval' );
+		$data     = Db::table( 'article' )->find( $id );
+		$category = Db::table( 'article_category' )->find( $data['cid'] );
+		if ( ! empty( $data['url'] ) ) {
+			//有链接时跳转
+			go( $data['url'] );
+		} else {
+			$template = empty( $data['template'] ) ? ( empty( $category['template'] ) ? 'theme/article/article.html' : $category['template'] ) : $data['template'];
+			//相关文章
+			$relation = Db::table( 'article' )->limit( 10 )->where('cid',$data['cid'])->get();
+			View::with('relation',$relation);
+			View::with( 'article', $data );
+			View::with( 'category', $category );
+			View::make( $template );
+		}
 	}
 }
 

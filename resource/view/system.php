@@ -137,7 +137,7 @@
     <script>
         require(['bootstrap','util'], function ($,util) {
             var n = Math.floor(Math.random()*10);
-            if(n>0){
+            if(n>5){
                 $.get('{{u("cloud/checkUpgrade")}}',function(res){
                     if(res.valid==1){
                         //有新版本
