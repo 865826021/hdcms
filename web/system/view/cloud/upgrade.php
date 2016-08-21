@@ -70,26 +70,13 @@
 					</div>
 				</div>
 			</if>
-			<if value="!empty($data['data']['tables'])">
+			<if value="!empty($data['data']['sql'])">
 				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">数据表</label>
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新数据</label>
 					<div class="col-sm-10 ">
 						<div class="alert alert-success form-control-static">
-							<foreach from="$data['data']['tables']" value="$f">
-								table:{{$f['table']}} <br/>
-							</foreach>
-						</div>
-					</div>
-				</div>
-			</if>
-			<if value="!empty($data['data']['fields'])">
-				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">表字段</label>
-					<div class="col-sm-10 ">
-						<div class="alert alert-success form-control-static">
-							<foreach from="$data['data']['fields']" value="$f">
-								<span class="text-info">[{{$f['do']}}]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table:{{$f['table']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fields::{{$f['field']}} </span>
-								<br/>
+							<foreach from="$data['data']['sql']" value="$f">
+								{{$f}} <hr/>
 							</foreach>
 						</div>
 					</div>

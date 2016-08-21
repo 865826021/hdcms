@@ -136,26 +136,24 @@ class Cloud {
 			case 'sql':
 				if ( IS_POST ) {
 					//执行表操作的SQL
-					if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
+					if ( empty( $data['data']['sql'] ) ) {
 						//全部下载完成
 						$res = [ 'valid' => 2 ];
 					} else {
-						if ( ! empty( $data['data']['tables'] ) ) {
-							$t = array_shift( $data['data']['tables'] );
-						} else {
-							$t = array_shift( $data['data']['fields'] );
-						}
-						if ( Db::sql( $t['sql'] ) ) {
-							D( '_upgrade_', $data );
-							$res = [ 'valid' => 1, 'sql' => $t['sql'] ];
-						} else {
-							$res = [ 'valid' => 0, 'sql' => $t['sql'] ];
+						if ( ! empty( $data['data']['sql'] ) ) {
+							$t = array_shift( $data['data']['sql'] );
+							if ( Db::sql( $t ) ) {
+								D( '_upgrade_', $data );
+								$res = [ 'valid' => 1, 'sql' => $t ];
+							} else {
+								$res = [ 'valid' => 0, 'sql' => $t ];
+							}
 						}
 					}
 					echo json_encode( $res );
 					exit;
 				}
-				if ( empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
+				if ( empty( $data['data']['sql'] ) ) {
 					//没有更新数据时执行文件更新
 					go( u( 'upgrade', [ 'action' => 'downloadLists' ] ) );
 				}
