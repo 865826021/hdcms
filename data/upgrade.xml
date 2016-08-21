@@ -29,6 +29,45 @@ CREATE TABLE `hd_material` (
     </sql>
     <files>
         <![CDATA[
+        M	data/init_data.sql
+M	data/install.sql
+M	data/upgrade.xml
+D	hdphp/cli/Api/Api.php
+D	hdphp/cli/Api/Command.php
+M	hdphp/cli/Cli.php
+M	hdphp/cli/Controller/Command.php
+M	hdphp/cli/Controller/Controller.tpl
+M	hdphp/cli/Controller/Resource.tpl
+M	hdphp/cli/Model/Command.php
+M	hdphp/cli/Model/Model.tpl
+M	hdphp/config/Config.php
+M	hdphp/hdphp.php
+M	hdphp/kernel/App.php
+M	hdphp/model/Model.php
+M	hdphp/route/Controller.php
+M	hdphp/view/HdphpTag.php
+M	hdphp/weixin/Error.php
+M	hdphp/weixin/build/Material.php
+M	hdphp/weixin/build/Message.php
+M	module/button/template/lists.html
+A	module/material/cover.jpg
+A	module/material/model/Material.php
+A	module/material/site.php
+A	module/material/template/css.css
+A	module/material/template/css.less
+A	module/material/template/image.html
+A	module/material/template/news.html
+A	module/material/template/post_news.html
+A	module/material/template/users.html
+A	module/material/template/video.html
+A	module/material/template/voice.html
+A	module/material/thumb.jpg
+M	resource/hdjs/app/fileUploader.js
+M	resource/hdjs/app/util.js
+A	resource/images/loading.gif
+M	system/model/Article.php
+M	web/system/controller/Component.php
+
     ]]>
     </files>
     <logs>
