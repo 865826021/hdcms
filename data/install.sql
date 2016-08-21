@@ -1,25 +1,3 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4541
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
-# Database: dev
-# Generation Time: 2016-08-14 18:12:37 +0000
-# ************************************************************
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
 # Dump of table hd_article
 # ------------------------------------------------------------
 
@@ -145,8 +123,12 @@ CREATE TABLE `hd_core_attachment` (
   `size` mediumint(9) NOT NULL COMMENT '文件大小',
   `is_member` tinyint(1) NOT NULL COMMENT '1 前台 2 后台',
   `data` varchar(100) NOT NULL DEFAULT '' COMMENT '辅助信息',
+  `hash` char(50) NOT NULL DEFAULT '' COMMENT '标识用于区分资源',
   PRIMARY KEY (`id`),
-  KEY `uid` (`uid`)
+  KEY `uid` (`uid`),
+  KEY `data` (`data`),
+  KEY `extension` (`extension`),
+  KEY `hash` (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='附件';
 
 
@@ -211,6 +193,26 @@ CREATE TABLE `hd_credits_record` (
   KEY `uid` (`uid`),
   KEY `operator` (`operator`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='积分变动记录';
+
+
+
+# Dump of table hd_material
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_material`;
+
+CREATE TABLE `hd_material` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` char(10) NOT NULL DEFAULT '' COMMENT '图片（image）、语音（voice）、视频（video）news (图文)',
+  `file` varchar(300) NOT NULL DEFAULT '' COMMENT '文件',
+  `media_id` varchar(200) NOT NULL DEFAULT '',
+  `url` varchar(300) NOT NULL DEFAULT '' COMMENT '微信url',
+  `siteid` int(11) NOT NULL COMMENT '站点编号',
+  `createtime` int(10) NOT NULL COMMENT '创建时间',
+  `status` tinyint(1) NOT NULL COMMENT '是否推送到微信',
+  `data` text NOT NULL COMMENT '图文等JSON数据',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信素材';
 
 
 

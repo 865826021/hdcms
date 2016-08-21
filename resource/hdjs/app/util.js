@@ -382,6 +382,8 @@
                                     type: 'image',
                                     multiple: true,
                                     extensions: 'gif,jpg,jpeg,bmp,png',
+                                    data: opt.data ? opt.data : '',
+                                    hash: opt.hash ? opt.hash : ''
                                 };
                                 fileUploader.show(function (imgs) {
                                     if (imgs.length == 0) {
@@ -443,7 +445,7 @@
                 html =
                     '<div class="modal-dialog">' +
                     '	<div style="text-align:center; background-color: transparent;">' +
-                    '		<img style="width:48px; height:48px; margin-top:100px;" src="../images/loading.gif" title="正在努力加载...">' +
+                    '		<img style="width:48px; height:48px; margin-top:100px;" src="resource/images/loading.gif" title="正在努力加载...">' +
                     '	</div>' +
                     '</div>';
                 modalobj.html(html);
@@ -773,7 +775,8 @@
                 type: 'image',
                 extensions: 'gif,jpg,jpeg,bmp,png',
                 multiple: false,
-                data: ''
+                data: '',
+                hash: ''
             }, options);
 
             require(['bootstrap', 'fileUploader'], function ($, fileUploader) {

@@ -60,16 +60,17 @@ class Component {
 		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
 		if ( $file ) {
 			$data = [
-				'uid'        => $uid,
-				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
+				'uid'        => $uid,
 				'filename'   => $file[0]['filename'],
 				'path'       => $file[0]['path'],
 				'extension'  => strtolower( $file[0]['ext'] ),
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
+				'siteid'     => SITEID,
+				'data'       => q( 'post.data', '' ),
+				'hash'       => q( 'post.hash', '' ),
 				'is_member'  => Session::get( 'is_member' ) ? 1 : 0,
-				'data'       => q( 'post.data', '' )
 			];
 			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
@@ -80,20 +81,25 @@ class Component {
 
 	//获取文件列表webuploader
 	public function filesLists() {
-		$uid       = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		$uid = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
+		if ( empty( $uid ) ) {
+			message( '没有操作权限', 'back', 'error' );
+		}
 		$is_member = Session::get( 'is_member' ) ? 1 : 0;
 		$count     = Db::table( 'core_attachment' )
 		               ->where( 'uid', $uid )
 		               ->where( 'is_member', $is_member )
 		               ->where( 'siteid', SITEID )
-		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
+		               ->where( 'hash', q( 'post.hash', '' ) )
+		               ->whereIn( 'extension', explode( ',', strtolower( $_POST['extensions'] ) ) )
 		               ->count();
 		$page      = Page::row( 32 )->pageNum( 8 )->make( $count );
 		$data      = Db::table( 'core_attachment' )
 		               ->where( 'uid', $uid )
-		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
 		               ->where( 'is_member', $is_member )
 		               ->where( 'siteid', SITEID )
+		               ->where( 'hash', q( 'post.hash', '' ) )
+		               ->whereIn( 'extension', explode( ',', strtolower( $_POST['extensions'] ) ) )
 		               ->limit( Page::limit() )
 		               ->orderBy( 'id', 'DESC' )
 		               ->get();
@@ -110,11 +116,11 @@ class Component {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db   = Db::table( 'core_attachment' );
-		$file = $db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->first();
+		$file = $db->where( 'id', $_POST['id'] )->first();
 		if ( is_file( $file['path'] ) ) {
 			unlink( $file['path'] );
 		}
-		$db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->delete();
+		$db->where( 'id', $_POST['id'] )->delete();
 	}
 
 	//选择用户
