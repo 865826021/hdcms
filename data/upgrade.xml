@@ -2,76 +2,17 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-INSERT INTO `hd_menu` ( `id`,`pid`, `title`, `permission`, `url`, `append_url`, `icon`, `orderby`, `is_display`, `is_system`, `mark`)
-VALUES (1000,1,'微信素材','','','','fa fa-cubes',0,1,0,'platform'),
-(1001,1000,'素材&群发','material','?a=site/image&t=site&m=material','','fa fa-cubes',0,1,0,'platform');
 
-INSERT INTO `hd_modules` (`name`, `industry`, `title`, `version`, `resume`, `detail`, `author`, `url`, `is_system`, `subscribes`, `processors`, `setting`, `rule`, `permissions`, `thumb`, `cover`, `locality`, `releaseCode`)
-VALUES ('material','business','微信素材','1.0','微信素材','公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,'');
-
-ALTER TABLE hd_core_attachment ADD hash char(50) NOT NULL DEFAULT '' COMMENT '标识用于区分资源';
-ALTER TABLE `hd_core_attachment` ADD INDEX hash ( `hash` );
-ALTER TABLE `hd_core_attachment` ADD INDEX data ( `data` );
-
-CREATE TABLE `hd_material` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `type` char(10) NOT NULL DEFAULT '' COMMENT '图片（image）、语音（voice）、视频（video）news (图文)',
-  `file` varchar(300) NOT NULL DEFAULT '' COMMENT '文件',
-  `media_id` varchar(200) NOT NULL DEFAULT '',
-  `url` varchar(300) NOT NULL DEFAULT '' COMMENT '微信url',
-  `siteid` int(11) NOT NULL COMMENT '站点编号',
-  `createtime` int(10) NOT NULL COMMENT '创建时间',
-  `status` tinyint(1) NOT NULL COMMENT '是否推送到微信',
-  `data` text NOT NULL COMMENT '图文等JSON数据',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信素材';
         ]]>
     </sql>
     <files>
         <![CDATA[
-M	data/init_data.sql
-M	data/install.sql
-M	data/upgrade.xml
-D	hdphp/cli/Api/Api.php
-D	hdphp/cli/Api/Command.php
-M	hdphp/cli/Cli.php
-M	hdphp/cli/Controller/Command.php
-M	hdphp/cli/Controller/Controller.tpl
-M	hdphp/cli/Controller/Resource.tpl
-M	hdphp/cli/Model/Command.php
-M	hdphp/cli/Model/Model.tpl
-M	hdphp/config/Config.php
-M	hdphp/hdphp.php
-M	hdphp/kernel/App.php
-M	hdphp/model/Model.php
-M	hdphp/route/Controller.php
-M	hdphp/view/HdphpTag.php
-M	hdphp/weixin/Error.php
-M	hdphp/weixin/build/Material.php
-M	hdphp/weixin/build/Message.php
-M	module/button/template/lists.html
-A	module/material/cover.jpg
-A	module/material/model/Material.php
-A	module/material/site.php
-A	module/material/template/css.css
-A	module/material/template/css.less
-A	module/material/template/image.html
-A	module/material/template/news.html
-A	module/material/template/post_news.html
-A	module/material/template/users.html
-A	module/material/template/video.html
-A	module/material/template/voice.html
-A	module/material/thumb.jpg
-M	resource/hdjs/app/fileUploader.js
-M	resource/hdjs/app/util.js
-A	resource/images/loading.gif
-M	system/model/Article.php
-M	web/system/controller/Component.php
+
     ]]>
     </files>
     <logs>
 <![CDATA[
-添加微信素材与群发模块
+
     ]]>
     </logs>
 </manifest>
