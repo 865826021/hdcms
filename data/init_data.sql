@@ -3,7 +3,7 @@ VALUES
 	(1,0,'admin','3df440190ae5c0397d8dd7dd99e59047','e489322ee5',1,1465771582,'123.119.83.235',1470217059,'124.205.39.82',1465771582,1465771582,'','','',0,0,'系统管理员帐号');
 
 INSERT INTO `hd_config` (`id`, `site`, `upload`, `register`)
-VALUES (1,'{\"is_open\":\"1\",\"enable_code\":0,\"close_message\":\"网站维护中,请稍候访问\"}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":1}');
+VALUES (1,'{"is_open":1,"enable_code":0,"close_message":"网站维护中,请稍候访问","upload":{"size":20000,"type":"jpg,jpeg,gif,png,zip,rar,doc,txt,pem"}}','','{\"is_open\":1,\"audit\":\"1\",\"enable_code\":0,\"groupid\":1}');
 
 INSERT INTO `hd_member_group` (`id`, `siteid`, `title`, `credit`, `rank`, `isdefault`, `is_system`)
 VALUES (1,1,'普通会员',0,0,1,1);
