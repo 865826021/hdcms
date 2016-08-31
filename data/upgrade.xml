@@ -2,7 +2,7 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-
+            create table hd_a int(10) charset utf8;
         ]]>
     </sql>
     <files>
@@ -13,12 +13,12 @@ M	hdphp/crypt/CryptFacade.php
 M	resource/hdjs/app/fileUploader.js
 M	web/system/view/module/design.php
 M	web/system/view/site/post_weixin.php
-
     ]]>
     </files>
     <logs>
 <![CDATA[
-
+        修复更新系统
+        更新核心框架
     ]]>
     </logs>
 </manifest>
