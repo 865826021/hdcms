@@ -2,7 +2,6 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            create table hd_a (id int(10)) charset utf8;
         ]]>
     </sql>
     <files>

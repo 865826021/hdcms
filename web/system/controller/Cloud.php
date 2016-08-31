@@ -73,15 +73,19 @@ class Cloud {
 	//检测有没有新版本
 	public function checkUpgrade() {
 		$hdcms = $this->db->find( 1 );
-		echo \Curl::get( $this->url . '&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
-		exit;
+		$d     = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode={$hdcms['releaseCode']}&AppSecret={$hdcms['AppSecret']}" );
+
+		return json_decode( $d, TRUE );
 	}
 
-	/**
-	 * 更新HDCMS
-	 */
+	//更新HDCMS
 	public function upgrade() {
-		$data = D( '_upgrade_' );
+		//		$upgrade          = $this->checkUpgrade();
+		//		if ( $upgrade['valid'] == 0 ) {
+		//			$hdcms = $this->db->find( 1 );
+		//			View::with( 'data', $upgrade )->with('hdcms',$hdcms)->make();
+		//		}
+		$data = d( '_upgrade_' );
 		View::with( 'data', $data );
 		switch ( q( 'get.action' ) ) {
 			case 'downloadLists':
@@ -196,6 +200,11 @@ class Cloud {
 				View::with( 'hdcms', $hdcms );
 				View::make();
 		}
+	}
 
+	//清除更新日志
+	public function clear() {
+		D( '_upgrade_', '[del]' );
+		echo '清除更新缓存成功';
 	}
 }

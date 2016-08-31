@@ -632,7 +632,6 @@
 					function upImage(obj) {
 						require(['util'], function (util) {
 							util.image(function (images) { 
-								console.log(images);
 								$("[name='thumb']").val(images[0]);
 								$(".img-thumb").attr('src', images[0]);
 							})
@@ -701,6 +700,7 @@
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
+
 				<div class="col-sm-10 col-xs-12">
 					<input name="method" type="hidden" value="download">
 					<input name="token" type="hidden" value="6708fa25">

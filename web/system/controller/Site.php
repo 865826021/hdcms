@@ -258,6 +258,7 @@ class Site {
 		}
 		if ( IS_POST ) {
 			$_POST['siteid'] = $this->siteid;
+			$this->db->updateSiteCache( $this->siteid );
 			if ( ! $this->db->save( $_POST ) ) {
 				message( $this->db->getError(), 'back', 'error' );
 			}
@@ -269,9 +270,9 @@ class Site {
 			$wechat = Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->first();
 			c( "weixin", $wechat );
 			//与微信官网通信绑定验证
+
 			$status = \Weixin::getAccessToken('',true);
 			Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->update( [ 'is_connect' => $status ? 1 : 0 ] );
-			$this->db->updateSiteCache( $this->siteid );
 			if ( $status ) {
 				message( '恭喜, 公众号连接成功', 'lists', 'success' );
 			} else {

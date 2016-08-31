@@ -45,7 +45,6 @@
 		</div>
 	</div>
 	<if value="$data['valid']==1">
-
 		<form action="" class="form-horizontal">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新版本</label>
