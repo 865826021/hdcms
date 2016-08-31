@@ -2,7 +2,7 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            create table hd_a int(10) charset utf8;
+            create table hd_a (id int(10)) charset utf8;
         ]]>
     </sql>
     <files>
@@ -16,7 +16,7 @@ M	web/system/view/site/post_weixin.php
     ]]>
     </files>
     <logs>
-<![CDATA[
+        <![CDATA[
         修复更新系统
         更新核心框架
     ]]>
