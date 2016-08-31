@@ -86,27 +86,8 @@ class Member extends Model {
 		return Session::get( 'member' ) ? TRUE : FALSE;
 	}
 
-	//会员登录
-	public function login() {
-		$user = Db::table( 'member' )->where( 'email', $_POST['username'] )->orWhere( 'mobile', $_POST['username'] )->first();
-		if ( empty( $user ) ) {
-			$this->error = '帐号不存在';
-
-			return FALSE;
-		}
-		if ( md5( $_POST['password'] . $user['security'] ) != $user['password'] ) {
-			$this->error = '密码输入错误';
-
-			return FALSE;
-		}
-		Session::set( 'member', $user );
-
-		return TRUE;
-	}
-
-
 	/**
-	 * 使用openid自动登录
+	 * 使用微信openid自动登录
 	 */
 	public function loginByOpenid() {
 		//认证订阅号或服务号,并且开启自动登录时获取微信帐户openid自动登录

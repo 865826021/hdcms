@@ -22,6 +22,7 @@ class reg extends hdSite {
 
 	//注册页面
 	public function doWebRegister() {
+
 		if ( IS_POST ) {
 			$data['mobile'] = $data['email'] = '';
 			switch ( v( 'setting.register.item' ) ) {
@@ -56,17 +57,19 @@ class reg extends hdSite {
 			if ( ! $this->member->add() ) {
 				message( $this->member->getError(), 'back', 'error' );
 			}
-			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success' );
+			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success' ,3);
 		}
+
 		View::with( 'placeholder', v( 'setting.register.item' ) == 1 ? '手机号' : ( v( 'setting.register.item' ) == 2 ? '邮箱' : '手机号/邮箱' ) );
-		View::make( $this->ucenter_template .'/register.html' );
+		View::make( $this->ucenter_template . '/register.html' );
 	}
 
 	//登录
 	public function doWebLogin() {
 		if ( IS_POST ) {
-			if ( ! $this->member->login() ) {
-				message( $this->member->getError(), 'back', 'error' );
+			$res = Util::instance( 'member' )->login( $_POST );
+			if ( !$res['valid'] ) {
+				message( $res['message'], 'back', 'error' );
 			}
 			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ), 'htmlentities' );
 			message( '登录成功', $backurl, 'success' );
@@ -78,19 +81,17 @@ class reg extends hdSite {
 				go( $url );
 			}
 		}
-		View::make( $this->ucenter_template .'/login.html' );
+		View::make( $this->ucenter_template . '/login.html' );
 	}
 
 	//使用微信openid登录
 	public function doWEbOpenidLogin() {
 		//微信自动登录
-		if ( IS_WEIXIN && v( 'wechat.level' ) >= 3) {
-			if ( $this->member->loginByOpenid() ) {
-				$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
-				go( $url );
-			}
+		if ( Util::instance( 'member' )->weixinLogin() ) {
+			$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
+			go( $url );
 		}
-		message( '微信登录失败', 'back', 'error' );
+		message( '微信登录失败,请检查微信公众号是否验证', 'back', 'error' );
 	}
 
 	//退出

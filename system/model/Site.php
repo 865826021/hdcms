@@ -29,10 +29,7 @@ class Site extends Model {
 
 	//加载站点缓存
 	public function loadSite() {
-		$siteid = \Session::get( 'siteid' );
-		if ( empty( $siteid ) ) {
-			return FALSE;
-		}
+		$siteid = SITEID;
 		//缓存存在时不进行获取
 		if ( v( 'site' ) ) {
 			return TRUE;
@@ -71,13 +68,13 @@ class Site extends Model {
 	 * @return bool
 	 */
 	public function updateSiteCache( $siteid = NULL ) {
-		$siteid = $siteid ?: Session::get( 'siteid' );
+		$siteid = $siteid ?: SITEID;
 		//站点微信信息缓存
-		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid', '=', $siteid )->first();
+		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid',  $siteid )->first();
 		//站点信息缓存
-		$data['site'] = Db::table( 'site' )->where( 'siteid', '=', $siteid )->first();
+		$data['site'] = Db::table( 'site' )->where( 'siteid', $siteid )->first();
 		//站点设置缓存
-		$setting                     = Db::table( 'site_setting' )->where( 'siteid', '=', $siteid )->first() ?: [ ];
+		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteid )->first() ?: [ ];
 		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
 		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
 		$setting ['register']        = unserialize( $setting['register'] );
@@ -89,7 +86,6 @@ class Site extends Model {
 		foreach ( $data as $key => $value ) {
 			d( "{$key}:{$siteid}", $value );
 		}
-
 		return TRUE;
 	}
 

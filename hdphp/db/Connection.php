@@ -157,9 +157,9 @@ abstract class Connection implements ArrayAccess, Iterator {
 			$sth->execute();
 			$this->affectedRow = $sth->rowCount();
 			//记录查询日志
-			if ( DEBUG ) {
+//			if ( DEBUG ) {
 				self::$queryLog[] = $sql . var_export( $params, TRUE );
-			}
+//			}
 			//触发钩子
 			Hook::listen( 'database_query', [
 				'sql'    => $sql,
@@ -222,9 +222,9 @@ abstract class Connection implements ArrayAccess, Iterator {
 			$sth->execute();
 			$this->affectedRow = $sth->rowCount();
 			//记录日志
-			if ( DEBUG ) {
+//			if ( DEBUG ) {
 				self::$queryLog[] = $sql . var_export( $params, TRUE );
-			}
+//			}
 			//触发钩子
 			Hook::listen( 'database_query', [
 				'sql'    => $sql,

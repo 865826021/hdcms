@@ -18,10 +18,20 @@ class hook {
 		IS_AJAX and c( 'view.blade', FALSE );
 		//前台访问
 		Session::set( 'is_member', isset( $_GET['t'] ) && $_GET['t'] == 'web' );
+		//加载系统配置项,对是系统配置不是站点配置
+		$this->loadConfig();
 		//域名检测
 		$this->checkDomain();
 		$this->moduleInitialize();
 		$this->siteInitialize();
+	}
+
+	//加载系统配置项
+	protected function loadConfig() {
+		$config = Db::table( 'config' )->find( 1 );
+		$site   = json_decode( $config['site'], TRUE );
+		//设置上传配置
+		c( 'upload', array_merge( c( 'upload' ), $site['upload'] ) );
 	}
 
 	//域名检测
