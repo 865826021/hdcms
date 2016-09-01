@@ -43,6 +43,7 @@ class Member extends Model {
 			[ 'resideprovince', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'residecity', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'residedist', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'access_token', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 
 	//获取默认组

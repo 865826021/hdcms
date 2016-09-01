@@ -1,4 +1,3 @@
-
 # Dump of table hd_article
 # ------------------------------------------------------------
 
@@ -230,6 +229,7 @@ CREATE TABLE `hd_member` (
   `password` varchar(45) NOT NULL COMMENT '密码',
   `openid` varchar(80) NOT NULL DEFAULT '' COMMENT '微信openid',
   `security` varchar(15) NOT NULL COMMENT '安装密钥',
+  `access_token` char(100) NOT NULL DEFAULT '' COMMENT '登录授权的access_token',
   `group_id` int(10) unsigned NOT NULL COMMENT '会员组编号',
   `icon` varchar(300) NOT NULL DEFAULT '' COMMENT '头像',
   `credit1` decimal(10,2) NOT NULL COMMENT '积分',
