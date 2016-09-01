@@ -2,7 +2,6 @@
 <manifest versionCode="2.0">
     <sql>
         <![CDATA[
-            alter table hd_member add access_token varchar(100) not null ;
         ]]>
     </sql>
     <files>
@@ -343,7 +342,7 @@ M	web/system/view/config/site.php
     <logs>
         <![CDATA[
         添加会员登录服务
-        优化微信自动服务
+        添加微信自动登录服务
     ]]>
     </logs>
 </manifest>

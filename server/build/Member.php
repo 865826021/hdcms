@@ -65,7 +65,7 @@ class Member {
 				$this->db->where( 'uid', $user['uid'] )->update( [ 'access_token' => $user['access_token'] ] );
 				Session::set( 'member', $user );
 
-				return TRUE;
+				return [ 'valid' => 1, 'data' => $user ];
 			}
 		}
 	}
@@ -88,6 +88,51 @@ class Member {
 		}
 		Session::set( 'member', $user );
 
-		return [ 'valid' => 1, 'data' => $user ];;
+		return [ 'valid' => 1, 'data' => $user ];
+	}
+
+	//注册页面
+	public function register( $data ) {
+		switch ( v( 'setting.register.item' ) ) {
+			case 1:
+				//手机号注册
+				if ( ! preg_match( '/^\d{11}$/', $data['username'] ) ) {
+					message( '请输入手机号', 'back', 'error' );
+				}
+				$data['mobile'] = $data['username'];
+				break;
+			case 2:
+				//邮箱注册
+				if ( ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
+					message( '请输入邮箱', 'back', 'error' );
+				}
+				$data['email'] = $data['username'];
+				break;
+			case 3:
+				//二者都行
+				if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) && ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
+					message( '请输入邮箱或手机号', 'back', 'error' );
+				} else if ( preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
+					$data['mobile'] = $data['username'];
+				} else {
+					$data['email'] = $data['username'];
+				}
+		}
+		if ( ! empty( $data['mobile'] ) ) {
+			if ( $this->db->Where( 'mobile', $data['mobile'] )->get() ) {
+				return [ 'valid' => 0, 'message' => '手机号已经存在' ];
+			}
+		}
+		if ( ! empty( $data['email'] ) ) {
+			if ( $this->db->Where( 'mobile', $data['email'] )->get() ) {
+				return [ 'valid' => 0, 'message' => '邮箱已经存在' ];
+			}
+		}
+
+		if ( ! $uid = $this->db->add( $data ) ) {
+			return [ 'valid' => 0, 'message' => $this->db->getError() ];
+		}
+
+		return [ 'valid' => 1, 'data' => $this->db->find( $uid ) ];
 	}
 }

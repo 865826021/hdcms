@@ -24,40 +24,11 @@ class reg extends hdSite {
 	public function doWebRegister() {
 
 		if ( IS_POST ) {
-			$data['mobile'] = $data['email'] = '';
-			switch ( v( 'setting.register.item' ) ) {
-				case 1:
-					//手机号注册
-					if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
-						message( '请输入手机号', 'back', 'error' );
-					}
-					$_POST['mobile'] = $_POST['username'];
-					break;
-				case 2:
-					//邮箱注册
-					if ( ! preg_match( '/\w+@\w+/', $_POST['username'] ) ) {
-						message( '请输入邮箱', 'back', 'error' );
-					}
-					$_POST['email'] = $_POST['username'];
-					break;
-				case 3:
-					//二者都行
-					if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) && ! preg_match( '/\w+@\w+/', $_POST['username'] ) ) {
-						message( '请输入邮箱或手机号', 'back', 'error' );
-					} else if ( preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
-						$_POST['mobile'] = $_POST['username'];
-					} else {
-						$_POST['email'] = $_POST['username'];
-					}
+			$res = Util::instance( 'member' )->register( $_POST );
+			if ( ! $res['valid'] ) {
+				message( $res['message'], 'back', 'error' );
 			}
-
-			if ( $this->member->where( 'email', $_POST['username'] )->orWhere( 'mobile', $_POST['username'] )->get() ) {
-				message( '用户名已经存在', 'back', 'error' );
-			}
-			if ( ! $this->member->add() ) {
-				message( $this->member->getError(), 'back', 'error' );
-			}
-			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success' ,3);
+			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success', 3 );
 		}
 
 		View::with( 'placeholder', v( 'setting.register.item' ) == 1 ? '手机号' : ( v( 'setting.register.item' ) == 2 ? '邮箱' : '手机号/邮箱' ) );
@@ -68,7 +39,7 @@ class reg extends hdSite {
 	public function doWebLogin() {
 		if ( IS_POST ) {
 			$res = Util::instance( 'member' )->login( $_POST );
-			if ( !$res['valid'] ) {
+			if ( ! $res['valid'] ) {
 				message( $res['message'], 'back', 'error' );
 			}
 			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ), 'htmlentities' );
