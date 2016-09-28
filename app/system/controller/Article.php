@@ -1,4 +1,4 @@
-<?php namespace web\system\controller;
+<?php namespace app\system\controller;
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]

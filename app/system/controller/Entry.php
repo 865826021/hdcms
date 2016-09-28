@@ -7,7 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace web\system\controller;
+namespace app\system\controller;
 
 use system\model\Config;
 use system\model\User;
@@ -18,17 +18,12 @@ use system\model\User;
  * @package system\controller
  */
 class Entry {
-	protected $db;
-
-	public function __construct() {
-		$this->db = new User();
-	}
-
 	//注册
 	public function register() {
 		//站点关闭检测
 		checkSiteClose();
 		$config         = new Config();
+		$User           = new User();
 		$registerConfig = $config->getByName( 'register' );
 		if ( $registerConfig['is_open'] == 0 ) {
 			message( '网站暂时关闭注册', 'back', 'error' );
@@ -40,33 +35,38 @@ class Entry {
 			//默认用户组
 			$_POST['groupid'] = $registerConfig['groupid'];
 			$_POST['status']  = $registerConfig['audit'] == 1 ? 0 : 1;
-			if ( ! $this->db->add() ) {
-				message( $this->db->getError(), 'back', 'error' );
+			if ( ! $User->add() ) {
+				message( $User->getError(), 'back', 'error' );
 			}
 			message( '注册成功,请登录系统', u( 'login', [ 'from' => $_GET['from'] ] ) );
 		}
-		View::with( 'registerConfig', $registerConfig );
-		View::make();
+
+		return view()->with( 'registerConfig', $registerConfig );
 	}
 
-	//登录
+	/**
+	 * 后台帐号登录
+	 * @return mixed
+	 */
 	public function login() {
-		$Config = new Config();
+		$User = new User();
 		if ( IS_POST ) {
-			if ( ! $this->db->login( q( 'post.' ) ) ) {
-				message( $this->db->getError(), 'back', 'error' );
+			if ( ! $User->login( q( 'post.' ) ) ) {
+				message( $User->getError(), 'back', 'error' );
 			}
-			//站点关闭检测/系统管理员忽略网站关闭检测
-			if ( Session::get( 'user.uid' ) != 1 ) {
+			//系统管理员忽略网站关闭检测
+			if ( ! $User->isSuperUser() ) {
 				checkSiteClose();
 			}
+
 			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
 		}
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );
 		}
-		View::with( 'siteConfig', $Config->getByName( 'site' ) );
-		View::make();
+		$Config = new Config();
+
+		return view()->with( 'siteConfig', $Config->getByName( 'site' ) );
 	}
 
 	//验证码
@@ -76,8 +76,7 @@ class Entry {
 
 	//退出
 	public function quit() {
-		session_unset();
-		session_destroy();
-		message( '退出系统成功,系统将自动进行跳转', q('get.from',u( 'login' )) );
+		Session::flush();
+		message( '退出系统成功,系统将自动进行跳转', q( 'get.from', u( 'login' ) ) );
 	}
 }

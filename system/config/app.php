@@ -1,5 +1,7 @@
 <?php
 return [
+	//调试模式
+	'debug'              => TRUE,
 	//应用目录
 	'path'               => 'app',
 	//加密key

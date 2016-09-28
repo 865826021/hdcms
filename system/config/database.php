@@ -20,4 +20,4 @@ $database = [
 	'prefix'   => 'hd_'
 ];
 
-return array_merge( $database, include 'data/database.php' );
+return array_merge( $database, include __DIR__ . '/../../data/database.php' );

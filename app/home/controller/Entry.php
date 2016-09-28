@@ -11,6 +11,6 @@
 class Entry {
 	//首页
 	public function index() {
-		View::make( 'theme/article/index.html' );
+		return view( 'theme/article/index.html' );
 	}
 }

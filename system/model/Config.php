@@ -30,6 +30,7 @@ class Config extends Model {
 	 * 获取配置项
 	 *
 	 * @param string $name 名称
+	 *
 	 * @template m('Config')->getByName('site');
 	 * @source m('Config')->getByName('site');
 	 * @return array|string

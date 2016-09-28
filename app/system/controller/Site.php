@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -75,8 +76,8 @@ class Site {
 
 			$sites[ $k ] = $v;
 		}
-		View::with( 'sites', $sites );
-		View::make();
+
+		return view()->with( 'sites', $sites );
 	}
 
 	//网站列表页面,获取站点包信息
@@ -270,7 +271,7 @@ class Site {
 			c( "weixin", $wechat );
 			//与微信官网通信绑定验证
 
-			$status = \Weixin::getAccessToken('',true);
+			$status = \Weixin::getAccessToken( '', TRUE );
 			Db::table( 'site_wechat' )->where( 'siteid', $this->siteid )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 			if ( $status ) {
 				message( '恭喜, 公众号连接成功', 'lists', 'success' );

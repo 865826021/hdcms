@@ -7,7 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace web\system\controller;
+namespace app\system\controller;
 
 use system\model\Package;
 use system\model\User;

@@ -339,11 +339,6 @@ class User extends Model {
 	}
 
 	/**
-	 *
-	 *
-	 * @param string $identify 标识
-	 */
-	/**
 	 * 根据标识验证模块的访问权限
 	 *
 	 * @param string $identify 权限标识

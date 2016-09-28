@@ -60,7 +60,7 @@ function site_url( $do, $params = [ ], $module = NULL ) {
 }
 
 /**
- * 检测产点是否临时关闭(日常维护)
+ * 检测站点是否临时关闭(日常维护)
  * @return bool
  */
 function checkSiteClose() {
