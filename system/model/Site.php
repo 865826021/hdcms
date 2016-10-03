@@ -29,19 +29,16 @@ class Site extends Model {
 
 	//加载站点缓存
 	public function loadSite() {
-		$siteid = SITEID;
-		//缓存存在时不进行获取
+		//缓存存在时不获取
 		if ( v( 'site' ) ) {
 			return TRUE;
 		}
-		//微信帐号
-		v( 'wechat', d( "wechat:{$siteid}" ) );
 		//站点信息
-		v( 'site', d( "site:{$siteid}" ) );
+		v( 'site.info', d( "site:" . SITEID ) );
 		//站点设置
-		v( 'setting', d( "setting:{$siteid}" ) );
-		//加载模块
-		v( 'modules', d( "modules:{$siteid}" ) );
+		v( 'site.setting', d( "setting:" . SITEID ) );
+		//微信帐号
+		v( 'site.wechat', d( "wechat:" . SITEID ) );
 		//设置微信配置
 		$config = [
 			"token"          => v( 'wechat.token' ),
@@ -55,7 +52,10 @@ class Site extends Model {
 			"rootca"         => v( 'setting.pay.weichat.rootca' ),
 			"back_url"       => '',
 		];
+		//设置微信通信数据配置
 		c( 'weixin', array_merge( c( 'weixin' ), $config ) );
+		//设置邮箱配置
+		c( 'mail', v( 'setting.smtp' ) );
 
 		return TRUE;
 	}
@@ -70,7 +70,7 @@ class Site extends Model {
 	public function updateSiteCache( $siteid = NULL ) {
 		$siteid = $siteid ?: SITEID;
 		//站点微信信息缓存
-		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid',  $siteid )->first();
+		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid', $siteid )->first();
 		//站点信息缓存
 		$data['site'] = Db::table( 'site' )->where( 'siteid', $siteid )->first();
 		//站点设置缓存
@@ -86,6 +86,7 @@ class Site extends Model {
 		foreach ( $data as $key => $value ) {
 			d( "{$key}:{$siteid}", $value );
 		}
+
 		return TRUE;
 	}
 

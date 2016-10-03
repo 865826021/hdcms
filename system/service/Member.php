@@ -7,7 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace server\build;
+namespace system\service\build;
 /**
  * 会员接口
  * Class Member

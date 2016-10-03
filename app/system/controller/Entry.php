@@ -51,11 +51,17 @@ class Entry {
 	public function login() {
 		$User = new User();
 		if ( IS_POST ) {
-			if ( ! $User->login( q( 'post.' ) ) ) {
+			Validate::make( [
+				[ 'username', 'required', '用户名不能为空', 3 ],
+				[ 'password', 'required', '请输入帐号密码', 3 ],
+				[ 'code', 'captcha', '验证码输入错误', 3 ],
+			] );
+
+			if ( ! $User->login( Request::post() ) ) {
 				message( $User->getError(), 'back', 'error' );
 			}
 			//系统管理员忽略网站关闭检测
-			if ( ! $User->isSuperUser() ) {
+			if ( ! $User->isSuperUser( NULL, 'return' ) ) {
 				checkSiteClose();
 			}
 

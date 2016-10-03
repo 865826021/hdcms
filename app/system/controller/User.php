@@ -16,7 +16,7 @@ use system\model\UserGroup;
 /**
  * 用户管理
  * Class User
- * @package core\controller
+ * \ * @package core\controller
  * @author 向军
  */
 class User {
@@ -24,15 +24,14 @@ class User {
 	protected $user;
 
 	public function __construct() {
-		$this->user = new \system\model\User();
-		if ( ! $this->user->isLogin() ) {
-			message( '请登录后进行操作', 'back', 'error' );
-		}
+		$User = new \system\model\User();
+		$User->isLogin();
 	}
 
 	//用户列表
 	public function lists() {
-		if ( ! $this->user->isSuperUser() ) {
+		$User = new \system\model\User();
+		if ( ! $User->isSuperUser() ) {
 			message( '只有系统管理员可以进行操作', 'back', 'error' );
 		}
 		$count = Db::table( 'user' )->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '<>', '0' )->count();
@@ -42,8 +41,8 @@ class User {
 		           ->where( 'groupid', '<>', '0' )
 		           ->limit( Page::limit() )
 		           ->get();
-		View::with( 'users', $users )->with( 'page', $page );
-		View::make();
+
+		return view()->with( 'users', $users )->with( 'page', $page );
 	}
 
 	//添加用户
@@ -70,26 +69,35 @@ class User {
 
 	//编辑
 	public function edit() {
-		if ( ! $this->user->isSuperUser() ) {
+		$User = ( new \system\model\User() )->find( q( 'get.uid' ) );
+		if ( ! $User->isSuperUser() ) {
 			message( '只有系统管理员可以进行操作', 'back', 'error' );
 		}
-
+		Validate::make( [
+			[ 'enadtime', 'required', '到期时间不能为空', 3 ]
+		] );
 		if ( IS_POST ) {
-			if ( ! $this->user->save( $_POST ) ) {
-				message( $this->user->getError(), 'back', 'error' );
+
+			$User->uid       = Request::get( 'uid' );
+			$User->password  = Request::post( 'password' );
+			$User->password2 = Request::post( 'password2' );
+			$User->endtime   = Request::post( 'endtime' );
+			$User->groupid   = Request::post( 'groupid' );
+			$User->remark    = Request::post( 'remark' );
+			$User->qq        = Request::post( 'qq' );
+			$User->mobile    = Request::post( 'mobile' );
+			if ( $User->save() ) {
+				message( '编辑新用户成功', 'refresh' );
 			}
-			message( '编辑新用户成功', 'refresh' );
+			message( $User->getError(), 'back', 'error' );
 		}
-		$profile = Db::table( 'user_profile' )->where( 'uid', $_GET['uid'] )->first();
-		//会员数据
-		$user = Db::table( 'user' )->where( 'uid', $_GET['uid'] )->first();
 		//会员组
 		$groups = Db::table( 'user_group' )->get();
-		View::with( [
-			'groups'  => $groups,
-			'user'    => $user,
-			'profile' => $profile
-		] )->make();
+
+		return view()->with( [
+			'groups' => $groups,
+			'user'   => $User
+		] );
 	}
 
 	//锁定或解锁用户
@@ -103,10 +111,11 @@ class User {
 
 	//删除用户
 	public function remove() {
-		if ( ! $this->user->isSuperUser() ) {
+		$User = new \system\model\User();
+		if ( ! $User->isSuperUser() ) {
 			message( '只有系统管理员可以删除用户', 'back', 'error' );
 		}
-		$this->user->remove( $_POST['uid'] );
+		$User->remove( $_POST['uid'] );
 		message( '删除用户成功', 'back', 'success' );
 	}
 
@@ -119,11 +128,12 @@ class User {
 		$sites = ( new Site() )->getUserAllSite( $_GET['uid'] );
 		//用户套餐
 		$packages = ( new Package() )->getUserGroupPackageLists( $user['groupid'] );
-		View::with( [
+
+		return make()->with( [
 			'group'    => $group,
 			'packages' => $packages,
 			'sites'    => $sites
-		] )->make();
+		] );
 	}
 
 	/**
@@ -131,14 +141,18 @@ class User {
 	 * @return mixed
 	 */
 	public function myPassword() {
+		$User = ( new \system\model\User() )->find( v( 'user.uid' ) );
 		if ( IS_POST ) {
-			$_POST['uid'] = Session::get( 'user.uid' );
-			if ( $this->user->save( $_POST ) ) {
-				session_unset();
-				session_destroy();
+			Validate::make( [
+				[ 'password', 'required', '密码不能为空' ],
+				[ 'password', 'confirm:password2', '两次密码输入不一致' ]
+			] );
+			$User->password = Request::post( 'password' );
+			if ( $User->save() ) {
+				\Session::flush();
 				message( '我的资料修改成功', 'system/entry/login', 'success' );
 			}
-			message( $this->user->getError(), 'back', 'error' );
+			message( $User->getError(), 'back', 'error' );
 		}
 
 		return view();

@@ -28,6 +28,11 @@
 <div class="container logo">
 	<div style="background: url('resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
 </div>
+<if value="$errors">
+	<foreach from="$errors" value="$v">
+		{{$v}}<br/>
+	</foreach>
+</if>
 <div class="container well">
 	<div class="row ">
 		<div class="col-md-6">

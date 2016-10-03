@@ -13,18 +13,7 @@ use hdphp\model\Model;
 
 class Config extends Model {
 	protected $table = 'config';
-	protected $auto
-	                 = [
-			[ 'id', 'autoId', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
-		];
-
-	protected function autoId() {
-		if ( ! $this->where( 'id', 1 )->get() ) {
-			$this->insert( [ 'site' => '', 'upload' => '', 'register' => '' ] );
-		}
-
-		return 1;
-	}
+	protected $auto  = [ ];
 
 	/**
 	 * 获取配置项

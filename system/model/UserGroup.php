@@ -19,7 +19,7 @@ class UserGroup extends Model {
 	/**
 	 * 获取默认组
 	 */
-	protected function getDefaultGroup() {
+	public function getDefaultGroup() {
 		return 1;
 	}
 

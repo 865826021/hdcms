@@ -13,7 +13,7 @@
             <label class="col-sm-2 control-label">用户名</label>
 
             <div class="col-sm-10">
-                <input type="text" disabled="disabled" value="{{Session::get('user.username')}}" class="form-control">
+                <input type="text" disabled="disabled" value="{{v('user.username')}}" class="form-control">
             </div>
         </div>
         <div class="form-group">

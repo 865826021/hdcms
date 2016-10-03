@@ -34,7 +34,7 @@ class Group {
 	//用户组列表
 	public function lists() {
 		$groups = Db::table( 'user_group' )->get();
-		View::with( 'groups', $groups )->make();
+		return view()->with( 'groups', $groups );
 	}
 
 	//删除

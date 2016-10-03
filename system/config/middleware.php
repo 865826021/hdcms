@@ -2,14 +2,22 @@
 //中间件配置
 return [
 	/**
-	 * 全局中间件指在所有请求均会执行
+	 * 控制器中间件指在控制器中执行的中间件
 	 */
-	'global'     => [ 'system\middleware\Initialize' ],
+	'controller' => [ ],
 
 	/**
-	 * 普通中间件,可以在路由与控制器中开发者自行调用
+	 * 中间件列表
 	 */
 	'middleware' => [
-
-	],
+		//应用开始时执行的中间件
+		'app_start' => [
+			'system\middleware\Initialize',
+			'hdphp\middleware\build\AppStart'
+		],
+		//应用结束后执行的中间件
+		'app_end'   => [
+			'hdphp\middleware\build\AppEnd'
+		]
+	]
 ];

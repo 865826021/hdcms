@@ -23,18 +23,17 @@ class User extends Model {
 			[ 'groupid', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 			[ 'password', 'required', '密码不能为空', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
 			[ 'password', 'minlen:6', '请输入不少于6位的密码', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-			[ 'password', 'confirm:password2', '两次密码输入不一致', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'qq', 'regexp:/^\d+$/', '请输入正确的QQ号', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
 			[ 'qq', 'unique', 'QQ号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
 			[ 'email', 'unique', '邮箱已经被注册', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
-			[ 'mobile', 'regexp:/^\d{11}$/', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
-			[ 'mobile', 'unique', '手机号已经被其他用户注册', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
+			[ 'mobile', 'regexp:/^\d{11}$/', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+			[ 'mobile', 'unique', '手机号已经被其他用户注册', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		];
 
 	protected $auto
 		= [
-			[ 'groupid', 'autoGroupId', 'method', self::EMPTY_AUTO, self::MODEL_INSERT ],
+			[ 'groupid', 'autoGroupId', 'method', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'password', 'autoPassword', 'method', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
 			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'regtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
@@ -51,9 +50,12 @@ class User extends Model {
 		];
 	protected $filter
 		= [
-			[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ]
+			[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
 		];
-	//删除用户时关联删除数据的表
+	/**
+	 * 删除用户时关联删除数据的表
+	 * @var array
+	 */
 	protected $relationDeleteTable
 		= [
 			'user',//用户表
@@ -62,100 +64,29 @@ class User extends Model {
 			'user_profile',//用户字段信息
 		];
 
-	//获取默认组
+	/**
+	 * 获取默认组
+	 *
+	 * @param $val
+	 * @param $data
+	 *
+	 * @return array|mixed|string
+	 */
 	protected function autoGroupId( $val, $data ) {
-		return m( 'UserGroup' )->getDefaultGroup();
+		return v( "system.register.groupid" );
 	}
 
-	//密码自动完成处理
+	/**
+	 * 密码自动完成处理
+	 *
+	 * @param $val
+	 * @param $data
+	 *
+	 * @return string
+	 */
 	protected function autoPassword( $val, &$data ) {
 		$data['security']  = substr( md5( time() ), 0, 10 );
-		$data['password2'] = md5( $data['password2'] . $data['security'] );
-
 		return md5( $val . $data['security'] );
-	}
-
-	/**
-	 * 用户登录
-	 *
-	 * @param array $data 登录数据
-	 *
-	 * @return bool
-	 */
-	public function login( array $data ) {
-		$validRule = [
-			[ 'username', 'required', '用户名不能为空' ],
-			[ 'password', 'required', '请输入帐号密码' ]
-		];
-
-		if ( Validate::make( $validRule, $data )->fail() ) {
-			$this->error = Validate::getError();
-
-			return FALSE;
-		}
-		if ( isset( $_POST['code'] ) && strtoupper( $_POST['code'] ) != Code::get() ) {
-			$this->error = '验证码输入错误';
-
-			return FALSE;
-		}
-		$user = Db::table( 'user' )->where( 'username', $_POST['username'] )->first();
-		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
-			$this->error = '密码输入错误';
-
-			return FALSE;
-		}
-
-		if ( ! $user['status'] ) {
-			$this->error = '您的帐号正在审核中';
-
-			return FALSE;
-		}
-		//更新登录状态
-		$data             = [ ];
-		$data['lastip']   = Request::ip();
-		$data['lasttime'] = time();
-		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
-		Session::set( "user", $user );
-
-		return TRUE;
-	}
-
-	/**
-	 * 后台管理用户登录检测
-	 * @return bool
-	 */
-	public function isLogin() {
-		return Session::get( 'user.uid' ) ? TRUE : FALSE;
-	}
-
-	/**
-	 * 更新管理员SESSION数据
-	 */
-	public function updateUserSessionData() {
-		$user = Db::table( 'user' )->where( 'uid', Session::get( 'user.uid' ) )->first();
-		Session::set( 'user', $user );
-	}
-
-	/**
-	 * 根据用户SESSION数据获取用户所在站点角色
-	 * 系统管理员和网站所有者返回owner
-	 * @return bool
-	 */
-	public function role() {
-		$siteid = Session::get( 'siteid' );
-		$uid    = Session::get( 'user.uid' );
-		if ( empty( $siteid ) || empty( $uid ) ) {
-			return FALSE;
-		}
-		//系统管理员拥有同站长一样的角色
-		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ) {
-			return 'owner';
-		} else {
-			$sql = "SELECT su.role FROM " . tablename( 'user' ) . " u " . "JOIN " . tablename( 'site_user' ) . " su ON u.uid=su.uid " . "WHERE u.uid={$uid} AND su.siteid={$siteid}";
-			$res = Db::select( $sql );
-
-			return $res ? $res[0]['role'] : FALSE;
-		}
 	}
 
 	/**
@@ -174,6 +105,36 @@ class User extends Model {
 	}
 
 	/**
+	 * 用户登录
+	 *
+	 * @param array $data 登录数据
+	 *
+	 * @return bool
+	 */
+	public function login( array $data ) {
+		$user = Db::table( 'user' )->where( 'username', $data['username'] )->find();
+		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
+			$this->error = '密码输入错误';
+
+			return FALSE;
+		}
+
+		if ( ! $user['status'] ) {
+			$this->error = '您的帐号正在审核中';
+
+			return FALSE;
+		}
+		//更新登录状态
+		$data             = [ ];
+		$data['lastip']   = Request::ip();
+		$data['lasttime'] = time();
+		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
+		Session::set( "admin_uid", $user['uid'] );
+
+		return TRUE;
+	}
+
+	/**
 	 * 验证密码是否正确
 	 *
 	 * @param $password 登录密码
@@ -182,9 +143,101 @@ class User extends Model {
 	 * @return bool
 	 */
 	public function checkPassword( $password, $username ) {
-		$user = Db::table( 'user' )->where( 'username', $username )->first();
+		$user = Db::table( 'user' )->where( 'username', $username )->find();
 
 		return $user['password'] == md5( $password . $user['security'] );
+	}
+
+	/**
+	 * 更新管理员SESSION数据
+	 */
+	public function updateUserSessionData() {
+		$user = Db::table( 'user' )->where( 'uid', Session::get( 'user.uid' ) )->find();
+		Session::set( 'user', $user );
+	}
+
+	/**
+	 * 后台管理用户登录检测
+	 * @return bool
+	 */
+	public function isLogin( $type = 'deal' ) {
+		if ( ! Session::get( 'admin_uid' ) ) {
+			if ( $type == 'deal' ) {
+				message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
+			} else {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * 是否为系统管理员
+	 * @return bool
+	 */
+	public function isSuperUser( $uid = NULL, $type = 'deal' ) {
+		$uid = $uid ?: Session::get( 'admin_uid' );
+		if ( empty( $uid ) || Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) <> 0 ) {
+			if ( $type == 'deal' ) {
+				message( '你不是系统管理员,无法执行该功能', 'back', 'error' );
+			} else {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
+
+	/**
+	 * 根据标识验证模块的访问权限
+	 *
+	 * @param string $identify 权限标识
+	 * @param string $type system 系统模块 / 插件模块的名称
+	 *
+	 * @return bool
+	 */
+	public function auth( $identify, $type ) {
+		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->get();
+		if ( empty( $permission ) ) {
+			return TRUE;
+		}
+		foreach ( $permission as $v ) {
+			if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * 验证当前用户在当前站点
+	 * 能否使用当前模块
+	 * 具体模块动作需要使用权限标识独立验证
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function verifyModuleAccess() {
+		//操作员验证
+		if ( ! $this->isOperate() ) {
+			return FALSE;
+		}
+		if ( v( "module.is_system" ) == 1 ) {
+			return TRUE;
+		} else {
+			//站点是否含有模块
+			if ( ! ( new Site() )->hasModule( SITEID, v( 'module.name' ) ) ) {
+				return FALSE;
+			}
+			//插件模块
+			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
+			if ( ! empty( $allowModules ) ) {
+				return in_array( v( 'module.name' ), $allowModules );
+			}
+
+			return TRUE;
+		}
 	}
 
 	/**
@@ -198,19 +251,6 @@ class User extends Model {
 		$uid = Db::table( 'site_user' )->where( 'siteid', $siteid )->where( 'role', 'owner' )->pluck( 'uid' );
 
 		return Db::table( 'user' )->find( $uid );
-	}
-
-	/**
-	 * 当前登录用户是否为系统管理员
-	 * @return bool
-	 */
-	public function isSuperUser( $uid = NULL ) {
-		$uid = $uid ?: Session::get( 'user.uid' );
-		if ( empty( $uid ) ) {
-			return FALSE;
-		}
-
-		return Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ? TRUE : FALSE;
 	}
 
 	/**
@@ -310,53 +350,24 @@ class User extends Model {
 	}
 
 	/**
-	 * 验证当前用户在当前站点
-	 * 能否使用当前模块
-	 * 具体模块动作需要使用权限标识独立验证
+	 * 根据用户SESSION数据获取用户所在站点角色
+	 * 系统管理员和网站所有者返回owner
 	 * @return bool
-	 * @throws \Exception
 	 */
-	public function verifyModuleAccess() {
-		//操作员验证
-		if ( ! $this->isOperate() ) {
+	public function role() {
+		$siteid = Session::get( 'siteid' );
+		$uid    = Session::get( 'user.uid' );
+		if ( empty( $siteid ) || empty( $uid ) ) {
 			return FALSE;
 		}
-		if ( v( "module.is_system" ) == 1 ) {
-			return TRUE;
+		//系统管理员拥有同站长一样的角色
+		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ) {
+			return 'owner';
 		} else {
-			//站点是否含有模块
-			if ( ! ( new Site() )->hasModule( SITEID, v( 'module.name' ) ) ) {
-				return FALSE;
-			}
-			//插件模块
-			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
-			if ( ! empty( $allowModules ) ) {
-				return in_array( v( 'module.name' ), $allowModules );
-			}
+			$sql = "SELECT su.role FROM " . tablename( 'user' ) . " u " . "JOIN " . tablename( 'site_user' ) . " su ON u.uid=su.uid " . "WHERE u.uid={$uid} AND su.siteid={$siteid}";
+			$res = Db::select( $sql );
 
-			return TRUE;
+			return $res ? $res[0]['role'] : FALSE;
 		}
-	}
-
-	/**
-	 * 根据标识验证模块的访问权限
-	 *
-	 * @param string $identify 权限标识
-	 * @param string $type system 系统模块 / 插件模块的名称
-	 *
-	 * @return bool
-	 */
-	public function auth( $identify, $type ) {
-		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->get();
-		if ( empty( $permission ) ) {
-			return TRUE;
-		}
-		foreach ( $permission as $v ) {
-			if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
-				return TRUE;
-			}
-		}
-
-		return FALSE;
 	}
 }

@@ -1,4 +1,5 @@
 <extend file="resource/view/system"/>
+
 <block name="content">
     <ol class="breadcrumb">
         <li><i class="fa fa-home"></i></li>
@@ -111,7 +112,7 @@
             <label class="col-sm-2 control-label">手机</label>
 
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="telephone" value="{{$user['mobile']}}">
+                <input type="text" class="form-control" name="mobile" value="{{$user['mobile']}}">
             </div>
         </div>
         <button class="btn btn-primary col-sm-offset-2">提交保存</button>

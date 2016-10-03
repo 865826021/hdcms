@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -16,33 +17,38 @@ use system\model\User;
  * @package system\controller
  */
 class Config {
-	protected $db;
-
 	public function __construct() {
 		if ( ! ( new User() )->isSuperUser() ) {
 			message( '只有系统管理员可以操作', 'back', 'error' );
 		}
-		$this->db = new \system\model\Config();
 	}
 
 	//注册配置管理
 	public function register() {
+		$Config = new \system\model\Config();
+
 		if ( IS_POST ) {
-			$this->db->save();
+			$Config->id       = 1;
+			$Config->register = Request::post( 'register' );
+			$Config->save();
 			message( '保存成功', 'back', 'success' );
 		}
 		View::with( 'group', Arr::string_to_int( Db::table( 'user_group' )->get() ) );
-		View::with( 'field', Arr::string_to_int( $this->db->getByName( 'register' ) ) );
-		View::make();
+		View::with( 'field', Arr::string_to_int( $Config->getByName( 'register' ) ) );
+
+		return view();
 	}
 
 	//站点开/关设置
 	public function site() {
+		$Config = new \system\model\Config();
 		if ( IS_POST ) {
-			$this->db->save();
+			$Config->id   = 1;
+			$Config->site = Request::post( 'site' );
+			$Config->save();
 			message( '保存成功', 'back', 'success' );
 		}
-		View::with( 'field', Arr::string_to_int( $this->db->getByName( 'site' ) ) );
-		View::make();
+
+		return view()->with( 'field', Arr::string_to_int( $this->db->getByName( 'site' ) ) );
 	}
 }
