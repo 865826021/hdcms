@@ -41,10 +41,10 @@ class Site {
 		//加载当前操作的站点缓存
 		$Site->loadSite();
 		$Site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
-		           ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
-		           ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
-		           ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
-		           ->groupBy( 'site.siteid' );
+		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
+		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
+		     ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
+		     ->groupBy( 'site.siteid' );
 		//按网站名称搜索
 		if ( $sitename = q( 'post.sitename' ) ) {
 			$Site->where( 'site.name', 'like', "%{$sitename}%" );
@@ -54,7 +54,7 @@ class Site {
 			$Site->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
-		if ( ! $User->isSuperUser( NULL, 'return' ) ) {
+		if ( ! $User->isSuperUser( v( 'user.uid' ), 'return' ) ) {
 			$Site->where( 'user.uid', Session::get( 'user.uid' ) );
 		}
 		$sites        = $Site->get();

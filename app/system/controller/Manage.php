@@ -24,11 +24,9 @@ class Manage {
 	 */
 	public function menu() {
 		$User = new User();
-		if ( ! $User->isLogin() ) {
-			message( '请登录后进行操作', 'system/entry/login', 'error' );
-		}
+		$User->isLogin();
 
-		return view()->with( 'isSuperUser', $User->isSuperUser() );
+		return view()->with( 'isSuperUser', $User->isSuperUser( v( 'user.uid' ), 'return' ) );
 	}
 
 	/**

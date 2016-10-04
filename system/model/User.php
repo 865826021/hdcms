@@ -85,7 +85,8 @@ class User extends Model {
 	 * @return string
 	 */
 	protected function autoPassword( $val, &$data ) {
-		$data['security']  = substr( md5( time() ), 0, 10 );
+		$data['security'] = substr( md5( time() ), 0, 10 );
+
 		return md5( $val . $data['security'] );
 	}
 
@@ -176,9 +177,8 @@ class User extends Model {
 	 * 是否为系统管理员
 	 * @return bool
 	 */
-	public function isSuperUser( $uid = NULL, $type = 'deal' ) {
-		$uid = $uid ?: Session::get( 'admin_uid' );
-		if ( empty( $uid ) || Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) <> 0 ) {
+	public function isSuperUser( $uid, $type = 'deal' ) {
+		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) >= 0 ) {
 			if ( $type == 'deal' ) {
 				message( '你不是系统管理员,无法执行该功能', 'back', 'error' );
 			} else {

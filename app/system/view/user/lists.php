@@ -90,6 +90,7 @@
         </div>
         <button class="btn btn-primary">提交</button>
     </form>
+    {{$users->links()}}
 </block>
 
 <script>

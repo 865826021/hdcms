@@ -113,7 +113,7 @@
 							<?php } ?>
 						</div>
 						<div class="col-xs-6 text-right">
-							<?php if ( m( "User" )->isSuperUser() ) { ?>
+							<?php if ( m( "User" )->isSuperUser(v('user.uid')) ) { ?>
 								<a href="?s=system/site/post&step=access_setting&siteid={{$s['siteid']}}&from=lists">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;

@@ -31,18 +31,19 @@ class User {
 	//用户列表
 	public function lists() {
 		$User = new \system\model\User();
-		if ( ! $User->isSuperUser() ) {
-			message( '只有系统管理员可以进行操作', 'back', 'error' );
-		}
-		$count = Db::table( 'user' )->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '<>', '0' )->count();
-		$page  = Page::make( $count );
-		$users = Db::table( 'user' )
-		           ->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )
-		           ->where( 'groupid', '<>', '0' )
-		           ->limit( Page::limit() )
-		           ->get();
 
-		return view()->with( 'users', $users )->with( 'page', $page );
+		$users = $User->paginate( 2 );
+		foreach ( $users as $f ) {
+			p( $f['username'] );
+		}
+		echo $users->links();
+		exit;
+
+		$User->isSuperUser( v( 'user.uid' ) );
+		$users = Db::table( 'user' )->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '<>', '0' )->paginate( 2 );
+		p( $users );
+
+		return view()->with( 'users', $users );
 	}
 
 	//添加用户
@@ -73,19 +74,18 @@ class User {
 		if ( ! $User->isSuperUser() ) {
 			message( '只有系统管理员可以进行操作', 'back', 'error' );
 		}
-		Validate::make( [
-			[ 'enadtime', 'required', '到期时间不能为空', 3 ]
-		] );
 		if ( IS_POST ) {
-
-			$User->uid       = Request::get( 'uid' );
-			$User->password  = Request::post( 'password' );
-			$User->password2 = Request::post( 'password2' );
-			$User->endtime   = Request::post( 'endtime' );
-			$User->groupid   = Request::post( 'groupid' );
-			$User->remark    = Request::post( 'remark' );
-			$User->qq        = Request::post( 'qq' );
-			$User->mobile    = Request::post( 'mobile' );
+			Validate::make( [
+				[ 'endtime', 'required', '到期时间不能为空', 3 ],
+				[ 'password', 'confirm:password2', '两次密码输入不一致', 3 ]
+			] );
+			$User->uid      = Request::get( 'uid' );
+			$User->password = Request::post( 'password' );
+			$User->endtime  = Request::post( 'endtime' );
+			$User->groupid  = Request::post( 'groupid' );
+			$User->remark   = Request::post( 'remark' );
+			$User->qq       = Request::post( 'qq' );
+			$User->mobile   = Request::post( 'mobile' );
 			if ( $User->save() ) {
 				message( '编辑新用户成功', 'refresh' );
 			}
