@@ -19,6 +19,4 @@ use hdphp\model\Model;
 class SiteTemplate extends Model {
 	protected $table    = 'site_template';
 	protected $validate = [ ];
-
-
 }

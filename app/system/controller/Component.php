@@ -8,7 +8,6 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
-use system\model\User;
 
 /**
  * 前端组件处理
@@ -57,10 +56,10 @@ class Component {
 		if ( ! v( 'user' ) ) {
 			message( '没有操作权限', 'back', 'error' );
 		}
-		$file = Upload::path( \Config::get( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
+		$file = Upload::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
 		if ( $file ) {
 			$data = [
-				'uid'        => v( 'user.uid' ),
+				'uid'        => v( 'user.info.uid' ),
 				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
@@ -68,8 +67,8 @@ class Component {
 				'extension'  => strtolower( $file[0]['ext'] ),
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
-				'is_member'  => Session::get( 'is_member' ) ? 1 : 0,
-				'data'       => q( 'post.data', '' )
+				'user_type'  => v( 'user.system.user_type' ),
+				'data'       => Request::post( 'data', '' )
 			];
 			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
@@ -80,28 +79,23 @@ class Component {
 
 	//获取文件列表webuploader
 	public function filesLists() {
-		$uid       = Session::get( 'is_member' ) ? Session::get( 'member.uid' ) : Session::get( 'user.uid' );
-		$is_member = Session::get( 'is_member' ) ? 1 : 0;
-		$count     = Db::table( 'core_attachment' )
-		               ->where( 'uid', $uid )
-		               ->where( 'is_member', $is_member )
-		               ->where( 'siteid', SITEID )
-		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
-		               ->count();
-		$page      = Page::row( 32 )->pageNum( 8 )->make( $count );
-		$data      = Db::table( 'core_attachment' )
-		               ->where( 'uid', $uid )
-		               ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
-		               ->where( 'is_member', $is_member )
-		               ->where( 'siteid', SITEID )
-		               ->limit( Page::limit() )
-		               ->orderBy( 'id', 'DESC' )
-		               ->get();
-		foreach ( $data as $k => $v ) {
-			$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );
-			$data[ $k ]['size']       = get_size( $v['size'] );
+		$db = Db::table( 'core_attachment' )
+		        ->where( 'uid', v( 'user.info.uid' ) )
+		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
+		        ->where( 'user_type', v( 'user.system.user_type' ) )
+		        ->orderBy( 'id', 'DESC' );
+		if ( v( 'user.system.user_type' ) == 'member' ) {
+			//前台会员根据站点编号读取数据
+			$db->where( 'siteid', SITEID );
 		}
-		ajax( [ 'data' => $data, 'page' => $page ] );
+		$data = $db->get();
+		if ( $data ) {
+			foreach ( $data as $k => $v ) {
+				$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );
+				$data[ $k ]['size']       = Tool::getSize( $v['size'] );
+			}
+		}
+		ajax( [ 'data' => $data ?: [ ], 'page' => $db->links() ] );
 	}
 
 	//删除图片delWebuploader
@@ -110,11 +104,11 @@ class Component {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db   = Db::table( 'core_attachment' );
-		$file = $db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->first();
+		$file = $db->where( 'id', $_POST['id'] )->where( 'uid', v( 'user.info.uid' ) )->first();
 		if ( is_file( $file['path'] ) ) {
 			unlink( $file['path'] );
 		}
-		$db->where( 'id', $_POST['id'] )->where( 'siteid', SITEID )->delete();
+		$db->where( 'id', $_POST['id'] )->where( 'uid', v( 'user.info.uid' ) )->delete();
 	}
 
 	//选择用户
@@ -136,8 +130,9 @@ class Component {
 			} else {
 				$users = $db->where( "username LIKE '%{$_GET['username']}%'" )->get();
 			}
-			ajax( $users->toArray() );
+			ajax( $users);
 		}
+
 		return view();
 	}
 
@@ -148,6 +143,7 @@ class Component {
 		}
 		$modules   = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		$templates = Db::table( 'template' )->where( 'is_system', 0 )->get();
+
 		return view()->with( [
 			'modules'   => $modules,
 			'templates' => $templates
@@ -156,10 +152,11 @@ class Component {
 
 	//百度编辑器
 	public function ueditor() {
-		if ( ! v( "user.uid" ) ) {
+		if ( ! v( "user.info.uid" ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
-		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( "config.json" ) ), TRUE );
+		$path= ROOT_PATH.'/resource/hdjs/component/ueditor';
+		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( $path."/php/config.json" ) ), TRUE );
 		$action = $_GET['action'];
 		switch ( $action ) {
 			case 'config':
@@ -173,21 +170,21 @@ class Component {
 			case 'uploadvideo':
 				/* 上传文件 */
 			case 'uploadfile':
-				$result = include( "action_upload.php" );
+				$result = include( $path."/php/action_upload.php" );
 				break;
 
 			/* 列出图片 */
 			case 'listimage':
-				$result = include( "action_list.php" );
+				$result = include( $path."/php/action_list.php" );
 				break;
 			/* 列出文件 */
 			case 'listfile':
-				$result = include( "action_list.php" );
+				$result = include( $path."/php/action_list.php" );
 				break;
 
 			/* 抓取远程文件 */
 			case 'catchimage':
-				$result = include( "action_crawler.php" );
+				$result = include( $path."/php/action_crawler.php" );
 				break;
 
 			default:

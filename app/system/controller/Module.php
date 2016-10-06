@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -9,8 +10,6 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\Modules;
-use system\model\Site;
-use system\model\User;
 
 /**
  * 模块管理
@@ -22,13 +21,11 @@ class Module {
 	protected $module;
 
 	public function __construct() {
-		if ( ! ( new User() )->isSuperUser() ) {
-			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
-		}
+		service( 'user' )->superUserAuth();
 		$this->module = new Modules();
 	}
 
-	//发布模块到应用商店
+	//打开本地开发的模块
 	public function createZip() {
 		$name = q( 'get.name' );
 		Zip::PclZip( "app.zip" );//设置压缩文件名
@@ -63,7 +60,8 @@ class Module {
 			//本地模块
 			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
 		}
-		View::with( 'modules', $modules )->make();
+
+		return view()->with( [ 'modules' => $modules ] );
 	}
 
 	//安装新模块列表
@@ -89,7 +87,8 @@ class Module {
 				}
 			}
 		}
-		View::with( 'locality', $locality )->make();
+
+		return view()->with( 'locality', $locality );
 	}
 
 	//设置新模块
@@ -109,10 +108,6 @@ class Module {
 				[ 'thumb', 'required', '模块缩略图不能为空' ],
 				[ 'cover', 'required', '模块封面图不能为空' ],
 			] );
-			//验证失败
-			if ( Validate::fail() ) {
-				message( Validate::getError(), 'back', 'error' );
-			};
 			//模块标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
 			//检查插件是否存在
@@ -141,7 +136,7 @@ class Module {
 			$this->createManifestFile();
 			message( '模块创建成功', 'prepared', 'success' );
 		} else {
-			View::make();
+			return view();
 		}
 	}
 
@@ -507,7 +502,7 @@ str;
 					}
 					require $file;
 				} else {
-					Db::sql( $installSql );
+					\Schema::sql( $installSql );
 				}
 			}
 			//不需要对用户关键词进行响应的消息类型
@@ -544,13 +539,13 @@ str;
 				'resume'      => $manifest['manifest']['application']['resume']['@cdata'],
 				'detail'      => $manifest['manifest']['application']['detail']['@cdata'],
 				'author'      => $manifest['manifest']['application']['author']['@cdata'],
-				'rule'        => $manifest['manifest']['application']['rule']['@attributes']['embed'] =='true'? 1 : 0,
+				'rule'        => $manifest['manifest']['application']['rule']['@attributes']['embed'] == 'true' ? 1 : 0,
 				'thumb'       => $manifest['manifest']['application']['thumb']['@cdata'],
 				'cover'       => $manifest['manifest']['application']['cover']['@cdata'],
 				'is_system'   => 0,
 				'subscribes'  => serialize( $subscribes ),
 				'processors'  => serialize( $processors ),
-				'setting'     => $manifest['manifest']['application']['@attributes']['setting']=='true' ? 1 : 0,
+				'setting'     => $manifest['manifest']['application']['@attributes']['setting'] == 'true' ? 1 : 0,
 				'permissions' => serialize( preg_split( '/\n/', $manifest['manifest']['permission']['@cdata'] ) ),
 			];
 			$moduleData['locality'] = ! is_file( 'addons/' . $_POST['module'] . '/cloud.hd' ) ? 1 : 0;
@@ -601,7 +596,7 @@ str;
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
-			( new Site() )->updateAllSiteCache();
+			service('site')->updateAllCache();
 			message( "模块安装成功", u( 'installed' ) );
 		}
 		$xmlFile = 'addons/' . $_GET['module'] . '/manifest.xml';
@@ -613,7 +608,7 @@ str;
 			go( u( 'download', [ 'module' => $_GET['module'] ] ) );
 		}
 		$package = Db::table( 'package' )->get();
-		View::with( 'module', $manifest['manifest'] )->with( 'package', $package )->make();
+		return view()->with( 'module', $manifest['manifest'] )->with( 'package', $package );
 	}
 
 	//下载远程模块
@@ -621,14 +616,14 @@ str;
 		if ( IS_POST ) {
 			$module = q( 'get.module' );
 			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=addons&module=' . $module );
-			$app = json_decode($app,true);
+			$app    = json_decode( $app, TRUE );
 			if ( $app ) {
 				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=addons', [ 'file' => $app['data']['package'] ] );
 				file_put_contents( 'tmp.zip', $package );
 				//释放压缩包
 				Zip::PclZip( 'tmp.zip' );//设置压缩文件名
 				Zip::extract( "." );//解压缩
-				file_put_contents( 'addons/' . $module . '/cloud.hd', json_encode($app['data'],JSON_UNESCAPED_UNICODE) );
+				file_put_contents( 'addons/' . $module . '/cloud.hd', json_encode( $app['data'], JSON_UNESCAPED_UNICODE ) );
 				message( '模块下载成功,准备安装', '', 'success' );
 			}
 			message( '应用商店不存在模块', '', 'error' );

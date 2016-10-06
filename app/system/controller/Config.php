@@ -18,7 +18,7 @@ use system\model\User;
  */
 class Config {
 	public function __construct() {
-		( new User() )->isSuperUser( v( 'user.uid' ) );
+		service( 'user' )->superUserAuth();
 	}
 
 	//注册配置管理
@@ -32,7 +32,7 @@ class Config {
 			message( '保存成功', 'back', 'success' );
 		}
 		View::with( 'group', Db::table( 'user_group' )->get() );
-		View::with( 'field', $Config->getByName( 'register' ) );
+		View::with( 'field', v('config.register') );
 
 		return view();
 	}
@@ -46,7 +46,6 @@ class Config {
 			$Config->save();
 			message( '保存成功', 'back', 'success' );
 		}
-
-		return view()->with( 'field', Arr::string_to_int( $this->db->getByName( 'site' ) ) );
+		return view()->with( 'field', v('config.site'));
 	}
 }

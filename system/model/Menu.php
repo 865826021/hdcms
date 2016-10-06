@@ -32,7 +32,7 @@ class Menu extends Model {
 		= [
 			[ 'is_display', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'mark', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'icon', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'append_url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

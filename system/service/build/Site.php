@@ -1,6 +1,8 @@
 <?php namespace system\service\build;
 
 use system\model\MemberFields;
+use system\model\MemberGroup;
+use system\model\SiteSetting;
 
 /**
  * 站点管理服务
@@ -20,6 +22,8 @@ class Site extends \system\model\Site {
 		v( 'site.setting', d( "setting:" . SITEID ) );
 		//微信帐号
 		v( 'site.wechat', d( "wechat:" . SITEID ) );
+		//加载模块
+		v( 'modules', d( "modules:" . SITEID ) );
 		//设置微信配置
 		$config = [
 			"token"          => v( 'wechat.token' ),
@@ -55,21 +59,48 @@ class Site extends \system\model\Site {
 	/**
 	 * 初始化站点的会员字段信息数据
 	 *
-	 * @param int $siteid 站点编号
+	 * @param int $siteId 站点编号
 	 *
 	 * @return bool
 	 */
-	public function InitializationSiteTableData( $siteid ) {
+	public function InitializationSiteTableData( $siteId ) {
+		$SiteSetting                    = new SiteSetting();
+		$SiteSetting['siteid']          = $siteId;
+		$SiteSetting['creditnames']     = [
+			'credit1' => [ 'title' => '积分', 'status' => 1 ],
+			'credit2' => [ 'title' => '余额', 'status' => 1 ],
+			'credit3' => [ 'title' => '', 'status' => 0 ],
+			'credit4' => [ 'title' => '', 'status' => 0 ],
+			'credit5' => [ 'title' => '', 'status' => 0 ],
+		];
+		$SiteSetting['register']        = [
+			'focusreg' => 0,
+			'item'     => 2
+		];
+		$SiteSetting['creditbehaviors'] = [
+			'activity' => 'credit1',
+			'currency' => 'credit2'
+		];
+		$SiteSetting->save();
+		//添加默认会员组
+		$MemberGroup              = new MemberGroup();
+		$MemberGroup['siteid']    = $siteId;
+		$MemberGroup['title']     = '会员';
+		$MemberGroup['isdefault'] = 1;
+		$MemberGroup['is_system'] = 1;
+		$MemberGroup->save();
+
+		//创建用户字段表数据
 		$memberField = new MemberFields();
-		$memberField->where( 'siteid', $siteid )->delete();
+		$memberField->where( 'siteid', $siteId )->delete();
 		$profile_fields = Db::table( 'profile_fields' )->get();
 		foreach ( $profile_fields as $f ) {
-			$d['siteid']  = $siteid;
+			$d['siteid']  = $siteId;
 			$d['field']   = $f['field'];
 			$d['title']   = $f['title'];
 			$d['orderby'] = $f['orderby'];
 			$d['status']  = $f['status'];
-			$memberField->add( $d );
+			$memberField->insertGetId( $d );
 		}
 
 		return TRUE;
@@ -93,17 +124,17 @@ class Site extends \system\model\Site {
 	 *
 	 * @return bool
 	 */
-	public function updateCache( $siteId = NULL ) {
+	public function updateCache( $siteId = 0 ) {
 		$siteId = $siteId ?: SITEID;
 		//站点微信信息缓存
 		$wechat         = Db::table( 'site_wechat' )->where( 'siteid', $siteId )->first();
-		$data['wechat'] = $wechat ? $wechat->toArray() : [ ];
+		$data['wechat'] = $wechat ?: [ ];
 		//站点信息缓存
 		$site         = Db::table( 'site' )->where( 'siteid', $siteId )->first();
-		$data['site'] = $site ? $site->toArray() : [ ];
+		$data['site'] = $site ?: [ ];
 		//站点设置缓存
 		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteId )->first();
-		$setting                     = $setting ? $setting->toArray() : [ ];
+		$setting                     = $setting ?: [ ];
 		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
 		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
 		$setting ['register']        = unserialize( $setting['register'] );

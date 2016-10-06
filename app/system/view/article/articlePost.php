@@ -6,9 +6,9 @@
 		<li class="active">文章管理</li>
 	</ol>
 	<ul class="nav nav-tabs">
-		<li role="presentation" class="active"><a href="{{u('lists')}}">新闻分类</a></li>
+		<li role="presentation"><a href="{{u('lists')}}">新闻分类</a></li>
 		<li role="presentation"><a href="{{u('articleLists')}}">新闻列表</a></li>
-		<li role="presentation"><a href="{{u('addArticle')}}">添加文章</a></li>
+		<li role="presentation" class="active"><a href="{{u('articlePost')}}">添加文章</a></li>
 	</ul>
 	<h5 class="page-header">用户组管理</h5>
 

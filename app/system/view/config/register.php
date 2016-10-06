@@ -54,7 +54,6 @@
 
 					<div class="col-sm-6">
 						<select class="form-control" ng-options="a.id as a.name for a in group" ng-model="field.groupid">
-							<option value="">请选择用户组</option>
 						</select>
 						<span class="help-block">当开启用户注册后，新注册用户将会分配到该用户组里，并直接拥有该组的模块操作权限。</span>
 					</div>
@@ -68,10 +67,9 @@
 
 <script>
 	require(['angular', 'util'], function (angular, util) {
-		$
 		angular.module('myApp', []).controller('myController', ['$scope', function ($scope) {
 			$scope.field =<?php echo $field ? json_encode( $field ) : '{"is_open":0,"audit":0,"enable_code":1}';?>;
-			$scope.group =<?php echo json_encode( $group->toArray() );?>;
+			$scope.group =<?php echo json_encode( $group );?>;
 			$('form').submit(function () {
 				$('[name="register"]').val(angular.toJson($scope.field));
 			})

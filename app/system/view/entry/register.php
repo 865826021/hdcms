@@ -39,11 +39,11 @@
 				</div>
 				<div class="form-group">
 					<label class="star">密码</label>
-					<input type="password" name="password" class="form-control" placeholder="请输入不少于6位的密码" required="required">
+					<input type="password" name="password" class="form-control" placeholder="请输入不少于5位的密码" required="required">
 				</div>
 				<div class="form-group">
 					<label class="star">确认密码</label>
-					<input type="password" name="password2" class="form-control" placeholder="请再次输入不少于6位的密码" required="required">
+					<input type="password" name="password2" class="form-control" placeholder="请再次输入不少于5位的密码" required="required">
 				</div>
 				<div class="form-group">
 					<label class="star">邮箱</label>
@@ -57,7 +57,7 @@
 					<label class="star">手机号</label>
 					<input type="text" name="mobile" class="form-control" placeholder="请输入手机号" required="required">
 				</div>
-				<if value="$registerConfig['enable_code']==1">
+				<if value="v('config.register.enable_code')==1">
 					<div class="form-group">
 						<label style="display: block" class="star">验证码</label>
 						<input type="text" name="code" class="form-control" placeholder="请输入验证码" required="required"

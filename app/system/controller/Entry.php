@@ -9,7 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
 
-use system\model\Config;
 use system\model\User;
 
 /**
@@ -20,28 +19,35 @@ use system\model\User;
 class Entry {
 	//注册
 	public function register() {
-		//站点关闭检测
-		checkSiteClose();
-		$config         = new Config();
-		$User           = new User();
-		$registerConfig = $config->getByName( 'register' );
-		if ( v( 'system.site.is_open' ) == 0 ) {
-			message( '网站暂时关闭注册', 'back', 'error' );
-		}
+		//系统维护检测
+		service( 'user' )->checkSystemClose();
 		if ( IS_POST ) {
-			if ( ! Code::auth( 'code' ) ) {
-				message( '验证码输入错误', 'back', 'error' );
-			}
+			Validate::make( [
+				[ 'code', 'captcha', '验证码输入错误', 1 ],
+				[ 'password', 'confirm:password2', '两次密码输入不一致', 3 ]
+			] );
 			//默认用户组
-			$User['groupid'] = v( 'system.register.groupid' );
-			$User['status']  = v( 'system.register.audit' );
+			$User             = new User();
+			$User['username'] = Request::post( 'username' );
+			//用户组过期时间
+			$daylimit        = Db::table( 'user_group' )->where( 'id', v( 'config.register.groupid' ) )->pluck( 'daylimit' );
+			$User['endtime'] = time() + $daylimit * 3600 * 24;
+			//获取密码与加密密钥
+			$info              = $User->getPasswordAndSecurity();
+			$User['password']  = $info['password'];
+			$User['security']  = $info['security'];
+			$User['email']     = Request::post( 'email' );
+			$User['qq']        = Request::post( 'qq' );
+			$User['mobile']    = Request::post( 'mobile' );
+			$User['groupid']   = v( 'config.register.groupid' );
+			$User['status']    = v( 'config.register.audit' );
 			if ( ! $User->save() ) {
 				message( $User->getError(), 'back', 'error' );
 			}
 			message( '注册成功,请登录系统', u( 'login', [ 'from' => $_GET['from'] ] ) );
 		}
 
-		return view()->with( 'registerConfig', $registerConfig );
+		return view();
 	}
 
 	/**
@@ -54,25 +60,22 @@ class Entry {
 			Validate::make( [
 				[ 'username', 'required', '用户名不能为空', 3 ],
 				[ 'password', 'required', '请输入帐号密码', 3 ],
-				[ 'code', 'captcha', '验证码输入错误', 3 ],
+				[ 'code', 'captcha', '验证码输入错误', 1 ],
 			] );
 
-			if ( ! $User->login( Request::post() ) ) {
+			if ( ! service( 'user' )->login( Request::post() ) ) {
 				message( $User->getError(), 'back', 'error' );
 			}
-			//系统管理员忽略网站关闭检测
-			if ( ! $User->isSuperUser( NULL, 'return' ) ) {
-				checkSiteClose();
-			}
+			//系统维护检测
+			service( 'user' )->checkSystemClose();
 
 			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
 		}
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );
 		}
-		$Config = new Config();
 
-		return view()->with( 'siteConfig', $Config->getByName( 'site' ) );
+		return view();
 	}
 
 	//验证码

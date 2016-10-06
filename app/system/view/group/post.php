@@ -73,7 +73,7 @@
 							<td>
 								<if value="$p['id']==0">
 									<input type="checkbox" disabled="disabled" checked="checked">
-									<elseif value="in_array($p['id'],$group['package'])">
+									<elseif value="$group && in_array($p['id'],$group['package'])">
 										<input type="checkbox" name="package[]" value="{{$p['id']}}" checked="checked">
 										<else/>
 										<input type="checkbox" name="package[]" value="{{$p['id']}}">

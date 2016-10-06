@@ -1,6 +1,3 @@
-<?php if ( ! defined( 'APP_PATH' ) ) {
-	exit;
-} ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,14 +13,10 @@
 	<script src="{{__ROOT__}}/resource/hdjs/app/config.js"></script>
 	<script src="{{__ROOT__}}/resource/js/common.js"></script>
 	<link href="{{__ROOT__}}/resource/css/site.css" rel="stylesheet">
-	<!--[if lt IE 9]>
-	<script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-	<script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-	<![endif]-->
 	<script>
 		window.sys = {
 			attachment: 'attachment',
-			uid: <?php echo Session::get( 'user.uid' );?>,
+			uid: <?php echo v( 'user.info.uid' );?>,
 			siteid: <?php echo SITEID;?>,
 			root: "<?php echo __ROOT__;?>",
 			module: "<?php echo v( 'module.name' );?>"
@@ -68,9 +61,9 @@
 						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
 						   style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
 						   aria-expanded="false">
-							<i class="fa fa-group"></i> {{v('site.name')}} <b class="caret"></b></a>
+							<i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="?s=system/site/edit&siteid={{$_SESSION['siteid']}}"><i class="fa fa-weixin fa-fw"></i> 编辑当前账号资料</a>
+							<li><a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i> 编辑当前账号资料</a>
 							</li>
 							<li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
 						</ul>
@@ -78,7 +71,7 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
 							<i class="fa fa-w fa-user"></i>
-							<?php echo Session::get( 'user.username' ) ?>
+							{{v('user.info.username')}}
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">

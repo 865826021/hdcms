@@ -44,6 +44,7 @@ class Modules extends Model {
 			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'locality', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		];
+
 	/**
 	 * 删除模块
 	 *
@@ -71,7 +72,7 @@ class Modules extends Model {
 						}
 						require $file;
 					} else {
-						Db::sql( $installSql );
+						\Schema::sql( $installSql );
 					}
 				}
 			}
@@ -97,17 +98,18 @@ class Modules extends Model {
 		Db::table( 'modules_bindings' )->where( 'module', $module )->delete();
 		//更新套餐数据
 		$package = Db::table( 'package' )->get();
-		foreach ( $package as $p ) {
-			$p['modules'] = unserialize( $p['modules'] );
-			if ( $k = array_search( $_GET['module'], $p['modules'] ) ) {
-				unset( $p['modules'][ $k ] );
+		if ( $package ) {
+			foreach ( $package as $p ) {
+				$p['modules'] = unserialize( $p['modules'] ) ?: [ ];
+				if ( $k = array_search( $_GET['module'], $p['modules'] ) ) {
+					unset( $p['modules'][ $k ] );
+				}
+				$p['modules'] = serialize( $p['modules'] );
+				Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
 			}
-			$p['modules'] = serialize( $p['modules'] );
-			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
 		}
 		//更新所有站点缓存
-		$siteModel = new Site();
-		$siteModel->updateAllSiteCache();
+		service( 'site' )->updateAllCache();
 
 		return TRUE;
 	}

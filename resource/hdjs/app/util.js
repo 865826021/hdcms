@@ -319,40 +319,6 @@
                 }
             );
         },
-        //编辑器
-        keditor: function (opt, callback) {
-            require(['kindeditor'], function () {
-                    var options = {
-                        width: '100%',
-                        height: '300px',
-                        allowFileManager: true,
-                        uploadJson: '?s=system/component/kindUpload',
-                        fileManagerJson: '?s=system/component/kindFileManagerJson',
-                        items: ['source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
-                            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
-                            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-                            'superscript', 'clearhtml', 'quickformat', 'fullscreen', '/',
-                            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
-                            'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
-                            'anchor', 'link', 'unlink'
-                        ],
-                        afterCreate: function () {
-                            this.sync();
-                        },
-                        //下面这行代码就是关键的所在，当失去焦点时执行 this.sync();
-                        afterBlur: function () {
-                            this.sync();
-                        }
-                    };
-                    options = $.extend(options, opt);
-                    editor = KindEditor.create("#" + options.id, options);
-                    if ($.isFunction(callback)) {
-                        callback(editor);
-                    }
-                }
-            );
-        },
         //百度编辑器
         ueditor: function (id, opt, callback) {
             require(['ueditor', 'ZeroClipboard'], function (ueditor, ZeroClipboard) {
@@ -366,10 +332,10 @@
                     'maximumWords': 9999999999999,
                     'autoClearinitialContent': false,
                     'toolbars': [['fullscreen', 'source', 'preview', '|', 'bold', 'italic', 'underline', 'strikethrough', 'forecolor', 'backcolor', '|',
-                        'justifyleft', 'justifycenter', 'justifyright', '|', 'insertorderedlist', 'insertunorderedlist', 'blockquote', 'emotion', 'insertvideo',
+                        'justifyleft', 'justifycenter', 'justifyright', '|', 'insertorderedlist', 'insertunorderedlist', 'blockquote', 'emotion',
                         'link', 'removeformat', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', 'indent', 'paragraph', 'fontsize', '|',
                         'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol',
-                        'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|', 'anchor', 'map', 'print', 'drafts']],
+                        'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|',  'map', 'print', 'drafts']],
                     autoHeightEnabled: false,//自动增高
                     autoFloatEnabled: false,
                 }, opt);

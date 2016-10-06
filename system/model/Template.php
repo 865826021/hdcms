@@ -44,7 +44,7 @@ class Template extends Model {
 		$siteids   = Db::table( 'site' )->lists( 'siteid' );
 		$siteModel = new Site();
 		foreach ( $siteids as $siteid ) {
-			$siteModel->updateSiteCache( $siteid );
+			service('site')->updateCache( $siteid );
 		}
 
 		return TRUE;

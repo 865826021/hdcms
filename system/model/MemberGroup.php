@@ -23,14 +23,10 @@ class MemberGroup extends Model {
 		];
 	protected $auto
 	                 = [
-			[ 'siteid', 'autoSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'credit', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'isdefault', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'is_system', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
-
-	protected function autoSiteid() {
-		return v( "site.siteid" );
-	}
 }

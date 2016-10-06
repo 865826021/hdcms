@@ -6,19 +6,19 @@
 		<blade name="title"/>
 	</title>
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-	<link href="resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
 	<if value="IS_WEIXIN">
 		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 	</if>
-	<script src="resource/hdjs/js/jquery.min.js"></script>
-	<script src="resource/hdjs/app/util.js"></script>
-	<script src="resource/hdjs/require.js"></script>
-	<script src="resource/hdjs/app/config.js"></script>
-	<script src="resource/js/common.js"></script>
-	<script src="ucenter/mobile/js/mobile.js"></script>
-	<script src="ucenter/mobile/js/quickmenu.js"></script>
-	<link rel="stylesheet" href="ucenter/mobile/css/mobile.css">
+	<script src="{{__ROOT__}}/resource/hdjs/js/jquery.min.js"></script>
+	<script src="{{__ROOT__}}/resource/hdjs/app/util.js"></script>
+	<script src="{{__ROOT__}}/resource/hdjs/require.js"></script>
+	<script src="{{__ROOT__}}/resource/hdjs/app/config.js"></script>
+	<script src="{{__ROOT__}}/resource/js/common.js"></script>
+	<script src="{{__ROOT__}}/ucenter/mobile/js/mobile.js"></script>
+	<script src="{{__ROOT__}}/ucenter/mobile/js/quickmenu.js"></script>
+	<link rel="stylesheet" href="{{__ROOT__}}/ucenter/mobile/css/mobile.css">
 </head>
 <body>
 <blade name="content"/>

@@ -165,7 +165,7 @@
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="{{$wechat['qrcode']}}" class="img-responsive img-thumbnail" width="150">
+                            <img src="{{$wechat['qrcode']?:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail" width="150">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="{{$wechat['icon']}}" class="img-responsive img-thumbnail" width="150">
+                            <img src="{{$wechat['icon']?:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail" width="150">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>

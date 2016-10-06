@@ -173,9 +173,13 @@
             //删除菜单
             $scope.delMenu = function (item) {
                 util.confirm('删除菜单将删除当前菜单及所有子菜单,确定删除吗?',function(){
-                    $.post("{{u('delMenu')}}", {id: item.id}, function () {
-                        location.reload(true);
-                    })
+                    $.post("{{u('delMenu')}}", {id: item.id}, function (res) {
+                        if(res.valid==1){
+                            util.message(res.message,'refresh','success');
+                        }else{
+                            util.message(res.message,'','error');
+                        }
+                    },'json')
                 })
             }
 

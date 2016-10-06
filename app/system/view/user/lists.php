@@ -74,14 +74,13 @@
 									<if value="$u['status']">
 										<a href="javascript:;" onclick="updateStatus({{$u['uid']}},0)">禁止用户</a>
 										<else/>
-										<a href="javascript:;" onclick="updateStatus({{$u['uid']}},1)" class="text-muted">启用用户</a>
+										<a href="javascript:;" onclick="updateStatus({{$u['uid']}},1)" class="text-danger">启用用户</a>
 									</if>
 								</td>
 								<td>
 									<a href="javascript:;" onclick="removeUser('{{$u['username']}}',{{$u['uid']}})">删除用户</a>
 								</td>
 							</if>
-
 						</tr>
 					</foreach>
 					</tbody>
@@ -98,8 +97,8 @@
 		require(['util'], function (util) {
 			util.confirm('确认要禁用/解禁此用户吗? ', function () {
 				url = "{{u('updateStatus')}}&uid=" + uid + "&status=" + status;
-				$.get(url, function () {
-					util.message('状态更新成功', 'refresh');
+				$.get(url, function (res) {
+					util.message('状态更新成功', 'refresh', 'success');
 				}, 'json')
 			});
 		});

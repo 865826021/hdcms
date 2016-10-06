@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -9,7 +10,6 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\Site;
-use system\model\User;
 
 /**
  * 文章模板管理
@@ -21,9 +21,7 @@ class Template {
 	protected $db;
 
 	public function __construct() {
-		if ( ! ( new User() )->isSuperUser() ) {
-			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
-		}
+		service( 'user' )->superUserAuth();
 		$this->db = new \system\model\Template();
 	}
 
@@ -42,10 +40,6 @@ class Template {
 				[ 'thumb', 'required', '模板缩略图不能为空' ],
 				[ 'position', 'regexp:/^\d+$/', '微站导航菜单数量必须为数字' ],
 			] );
-			//验证失败
-			if ( Validate::fail() ) {
-				message( Validate::getError(), 'back', 'error' );
-			};
 			//模板标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
 			//模板缩略图
@@ -68,7 +62,7 @@ class Template {
 			$this->createManifestFile();
 			message( '模板创建成功', 'prepared', 'success' );
 		} else {
-			View::make();
+			return view();
 		}
 	}
 
@@ -113,13 +107,13 @@ class Template {
 
 	//已经安装模板
 	public function installed() {
-		$template = $this->db->get();
+		$template = Db::table( 'template' )->get();
 		foreach ( $template as $k => $m ) {
 			$template[ $k ]['thumb']    = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
 			$template[ $k ]['locality'] = ! is_file( "theme/{$m['name']}/cloud.hd" ) ? 1 : 0;
 		}
-		View::with( 'template', $template );
-		View::make();
+
+		return view()->with( 'template', $template );
 	}
 
 	//生成压缩包
@@ -156,7 +150,8 @@ class Template {
 				}
 			}
 		}
-		View::with( 'locality', $locality )->make();
+
+		return view()->with( 'locality', $locality );
 	}
 
 	//安装模板
@@ -202,17 +197,18 @@ class Template {
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
-			( new Site() )->updateAllSiteCache();
+			service('site')->updateAllCache();
 			message( "模板安装成功", u( 'installed' ) );
 		}
 		$xmlFile = 'theme/' . $_GET['name'] . '/manifest.xml';
-		if ( !is_file( $xmlFile ) ) {
+		if ( ! is_file( $xmlFile ) ) {
 			//下载模块
 			go( u( 'download', [ 'name' => $_GET['name'] ] ) );
 		}
 		$manifest = Xml::toArray( file_get_contents( $xmlFile ) );
 		$package  = Db::table( 'package' )->get();
-		View::with( 'template', $manifest['manifest']['application'] )->with( 'package', $package )->make();
+
+		return view()->with( 'template', $manifest['manifest']['application'] )->with( 'package', $package );
 	}
 
 	//下载远程模块
@@ -232,13 +228,14 @@ class Template {
 			}
 			message( '应用商店不存在模板', '', 'error' );
 		}
-		View::make();
+
+		return view();
 	}
 
 	//卸载模板
 	public function uninstall() {
 		$this->db->remove( $_GET['name'], $_GET['confirm'] );
-		( new Site() )->updateAllSiteCache();
+		service('site')->updateAllCache();
 		message( '模板卸载成功', u( 'installed' ) );
 	}
 }

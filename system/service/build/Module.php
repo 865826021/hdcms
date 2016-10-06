@@ -116,12 +116,11 @@ class Module extends Modules {
 			}
 		}
 		//获取站点可使用的所有套餐
-		$package =service('package')->getSiteAllPackageData( $siteId );
+		$package = service( 'package' )->getSiteAllPackageData( $siteId );
 		$modules = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐
-			$res     = $this->get();
-			$modules = $res ? $res->toArray() : [ ];
+			$modules = Db::table( 'modules' )->get() ?: [ ];
 		} else {
 			$moduleNames = [ ];
 			foreach ( $package as $p ) {
@@ -129,18 +128,18 @@ class Module extends Modules {
 			}
 			$moduleNames = array_merge( $moduleNames, $this->getSiteExtModulesName( $siteId ) );
 			if ( ! empty( $moduleNames ) ) {
-				$res     = $this->whereIn( 'name', $moduleNames )->get();
-				$modules = $res ? $res->toArray() : [ ];
+				$res     = Db::table( 'modules' )->whereIn( 'name', $moduleNames )->get();
+				$modules = $res ?: [ ];
 			}
 		}
 		//加入系统模块
-		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get()->toArray() );
+		$modules = array_merge( $modules, Db::table( 'modules' )->where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = unserialize( $m['subscribes'] ) ?: [ ];
 			$m['processors']  = unserialize( $m['processors'] ) ?: [ ];
-			$m['permissions'] = unserialize( $m['permissions'] ) ?: [ ];
+			$m['permissions'] = array_filter( unserialize( $m['permissions'] ) ?: [ ] );
 			$res              = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get();
-			$binds            = $res ? $res->toArray() : [ ];
+			$binds            = $res ?: [ ];
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
 			}
@@ -210,7 +209,7 @@ class Module extends Modules {
 	 * @return array
 	 */
 	public function getSiteExtModules( $siteid ) {
-		$module = Db::table('site_modules')->where( 'siteid', $siteid )->lists( 'module' );
+		$module = Db::table( 'site_modules' )->where( 'siteid', $siteid )->lists( 'module' );
 
 		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
 	}
@@ -223,6 +222,6 @@ class Module extends Modules {
 	 * @return array
 	 */
 	public function getSiteExtModulesName( $siteId ) {
-		return Db::table('site_modules')->where( 'siteid', $siteId )->lists( 'module' ) ?: [ ];
+		return Db::table( 'site_modules' )->where( 'siteid', $siteId )->lists( 'module' ) ?: [ ];
 	}
 }

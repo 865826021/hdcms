@@ -24,11 +24,9 @@ class Package extends \system\model\Package {
 		if ( ! empty( $ids ) ) {
 			if ( in_array( - 1, $ids ) ) {
 				//拥有所有套餐权限
-				$res      = $this->get();
-				$packages = $res ? $res->toArray() : [ ];
+				$packages = Db::table( 'package' )->get() ?: [ ];
 			} else {
-				$res      = $this->whereIn( 'id', $ids )->get();
-				$packages = $res ? $res->toArray() : [ ];
+				$packages = Db::table( 'package' )->whereIn( 'id', $ids )->get() ?: [ ];
 			}
 		}
 		foreach ( $packages as $k => $v ) {
@@ -112,15 +110,15 @@ class Package extends \system\model\Package {
 		if ( ! empty( $cache ) ) {
 			return $cache;
 		}
-		$packages = $this->get()->toArray() ?: [ ];
+		$packages = Db::table( 'package' )->get() ?: [ ];
 		foreach ( $packages as $k => $v ) {
 			$packages[ $k ]['modules'] = $packages[ $k ]['template'] = [ ];
 			if ( $modules = unserialize( $v['modules'] ) ) {
-				$packages[ $k ]['modules'] = Db::table( 'modules' )->whereIn( 'name', $modules )->get()->toArray();
+				$packages[ $k ]['modules'] = Db::table( 'modules' )->whereIn( 'name', $modules )->get();
 			}
 
 			if ( $template = unserialize( $v['template'] ) ) {
-				$packages[ $k ]['template'] = Db::table( 'template' )->whereIn( 'name', $template )->get()->toArray();
+				$packages[ $k ]['template'] = Db::table( 'template' )->whereIn( 'name', $template )->get();
 			}
 		}
 		array_unshift( $packages, [ 'id' => - 1, 'name' => '所有服务', 'modules' => [ ], 'template' => [ ] ] );
@@ -137,13 +135,19 @@ class Package extends \system\model\Package {
 	 * @return array
 	 */
 	public function getUserGroupPackageLists( $groupId ) {
-		$group = Db::table( 'user_group' )->where( 'id', $groupId )->find();
+		$group = Db::table( 'user_group' )->find( $groupId );
 		//用户套餐
-		$packageIds = unserialize( $group['package'] );
-		$packages   = $group['package'] ? ( $this->whereIn( 'id', $packageIds )->get() ?: [ ] ) : [ ];
-		foreach ( (array) $packages as $k => $p ) {
-			$packages[ $k ]['modules']  = $p['modules'] ? Db::table( 'modules' )->whereIn( 'name', unserialize( $p['modules'] ) )->get() : [ ];
-			$packages[ $k ]['template'] = $p['template'] ? Db::table( 'template' )->whereIn( 'name', unserialize( $p['template'] ) )->get() : [ ];
+		$packageIds = unserialize( $group['package'] ) ?: [ ];
+		//套餐数据
+		$packages = $packageIds ? Db::table( 'package' )->whereIn( 'id', $packageIds )->get() : [ ];
+		foreach ( $packages as $k => $p ) {
+			$packages[ $k ]['modules'] = $packages[ $k ]['template'] = [ ];
+			if ( $names = unserialize( $p['modules'] ) ) {
+				$packages[ $k ]['modules'] = Db::table( 'modules' )->whereIn( 'name', $names )->get() ?: [ ];
+			}
+			if ( $names = unserialize( $p['template'] ) ) {
+				$packages[ $k ]['template'] = Db::table( 'template' )->whereIn( 'name', $names )->get() ?: [ ];
+			}
 		}
 		if ( in_array( - 1, $packageIds ) ) {
 			array_unshift( $packages, [ 'id' => - 1, 'name' => '所有服务', 'modules' => '', 'template' => '' ] );

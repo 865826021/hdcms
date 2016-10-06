@@ -14,7 +14,22 @@ namespace system\service\build;
  * Class User
  * @package system\service\build
  */
-class User {
+class User extends \system\model\User {
+	/**
+	 * 系统临时关闭显示提示信息
+	 * @return mixed
+	 */
+	public function checkSystemClose() {
+		/**
+		 * 站点关闭检测,系统管理员忽略检测
+		 */
+		if ( ! $this->isSuperUser() && v( 'config.site.is_open' ) == 0 ) {
+			\Session::flush();
+
+			die( view( 'resource/view/site_close.php' ) );
+		}
+	}
+
 	/**
 	 * 超级管理员检测
 	 *
@@ -22,7 +37,7 @@ class User {
 	 *
 	 * @return bool
 	 */
-	function isSuperUser( $uid = 0 ) {
+	public function isSuperUser( $uid = 0 ) {
 		$uid  = $uid ?: v( "user.info.uid" );
 		$user = Db::table( 'user' )->find( $uid );
 
@@ -126,7 +141,6 @@ class User {
 	 */
 	public function checkPassword( $password, $username ) {
 		$user = Db::table( 'user' )->where( 'username', $username )->first();
-
 		return $user && $user['password'] == md5( $password . $user['security'] );
 	}
 
@@ -140,6 +154,22 @@ class User {
 			return TRUE;
 		}
 		message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
+	}
+
+	/**
+	 * 超级管理员验证
+	 * 异步请求会返回json数据否则直接回调页面
+	 *
+	 * @param int $uid
+	 *
+	 * @return bool
+	 */
+	public function superUserAuth( $uid = 0 ) {
+		if ( ! $this->isSuperUser( $uid ) ) {
+			message( '您不是管理员,无法进行操作!', 'back', 'error' );
+		}
+
+		return TRUE;
 	}
 
 	/**
@@ -197,12 +227,13 @@ class User {
 	/**
 	 * 获取站长信息
 	 *
-	 * @param $siteId 站点编号
+	 * @param int $siteId 站点编号
 	 *
 	 * @return mixed
 	 */
-	public function getSiteOwner( $siteId ) {
-		$uid = Db::table( 'site_user' )->where( 'siteid', $siteId )->where( 'role', 'owner' )->pluck( 'uid' );
+	public function getSiteOwner( $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
+		$uid    = Db::table( 'site_user' )->where( 'siteid', $siteId )->where( 'role', 'owner' )->pluck( 'uid' );
 		if ( $uid ) {
 			return Db::table( 'user' )->find( $uid );
 		}
@@ -210,26 +241,26 @@ class User {
 
 
 	/**
-	 * 根据用户SESSION数据获取用户所在站点角色
+	 * 获取用户所在站点角色
 	 * 系统管理员和网站所有者返回owner
 	 * @return bool
 	 */
-	public function role() {
-		$siteid = Session::get( 'siteid' );
-		$uid    = Session::get( 'user.uid' );
-		if ( empty( $siteid ) || empty( $uid ) ) {
-			return FALSE;
-		}
-		//系统管理员拥有同站长一样的角色
-		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ) {
-			return 'owner';
-		} else {
-			$sql = "SELECT su.role FROM " . tablename( 'user' ) . " u " . "JOIN " . tablename( 'site_user' ) . " su ON u.uid=su.uid " . "WHERE u.uid={$uid} AND su.siteid={$siteid}";
-			$res = Db::select( $sql );
-
-			return $res ? $res[0]['role'] : FALSE;
-		}
-	}
+	//	public function role() {
+	//		$siteid = SITEID;
+	//		$uid    = v( 'user.info.uid' );
+	//		if ( empty( $siteid ) || empty( $uid ) ) {
+	//			return FALSE;
+	//		}
+	//		//系统管理员拥有同站长一样的角色
+	//		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) == 0 ) {
+	//			return 'owner';
+	//		} else {
+	//			$sql = "SELECT su.role FROM " . tablename( 'user' ) . " u " . "JOIN " . tablename( 'site_user' ) . " su ON u.uid=su.uid " . "WHERE u.uid={$uid} AND su.siteid={$siteid}";
+	//			$res = Db::select( $sql );
+	//
+	//			return $res ? $res[0]['role'] : FALSE;
+	//		}
+	//	}
 
 	/**
 	 * 获取用户拥有的站点数量
@@ -238,7 +269,9 @@ class User {
 	 *
 	 * @return mixed
 	 */
-	public function siteNums( $uid ) {
+	public function siteNums( $uid = 0 ) {
+		$uid = $uid ?: v( "user.uid" );
+
 		return Db::table( 'site_user' )->where( 'uid', $uid )->where( 'role', 'owner' )->count();
 	}
 
@@ -283,20 +316,14 @@ class User {
 	}
 
 	/**
-	 * 获取默认组
-	 */
-	public function getDefaultGroup() {
-		return 1;
-	}
-
-	/**
 	 * 获取用户的用户组信息
 	 *
 	 * @param int $uid 用户编号
 	 *
 	 * @return mixed
 	 */
-	public function getUserGroup( $uid ) {
+	public function getUserGroup( $uid = 0 ) {
+		$uid      = $uid ?: v( 'user.info.uid' );
 		$group_id = Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' );
 
 		return $this->find( $group_id );
@@ -305,15 +332,15 @@ class User {
 	/**
 	 * 获取用户在站点的权限分配
 	 *
-	 * @param int $siteid 站点编号
+	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
 	 *
 	 * @return mixed
 	 */
-	public function getUserAtSiteAccess( $siteid = NULL, $uid = NULL ) {
-		$siteid     = $siteid ?: Session::get( 'siteid' );
-		$uid        = $uid ?: Session::get( "user.uid" );
-		$permission = $this->where( 'siteid', $siteid )->where( 'uid', $uid )->lists( 'type,permission' );
+	public function getUserAtSiteAccess( $siteId = 0, $uid = 0 ) {
+		$siteId     = $siteId ?: SITEID;
+		$uid        = $uid ?: v( 'user.info.uid' );
+		$permission = model( 'UserPermission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [ ];
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}

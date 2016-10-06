@@ -9,8 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
 
-use system\model\User;
-
 /**
  * 菜单管理
  * Class Menu
@@ -18,10 +16,7 @@ use system\model\User;
  * @author 向军
  */
 class Menu {
-	protected $menu;
-
 	public function __construct() {
-		$this->menu = new \system\model\Menu();
 		if ( ! service( 'user' )->isSuperUser() ) {
 			message( '您不是系统管理员无法进行操作', 'back', 'error' );
 		}
@@ -29,9 +24,10 @@ class Menu {
 
 	//编辑菜单
 	public function edit() {
+		$menu = new \system\model\Menu();
 		if ( IS_POST ) {
-			$menu = json_decode( Request::post( 'menu' ) );
-			foreach ( $menu as $m ) {
+			$data = json_decode( Request::post( 'menu' ) );
+			foreach ( $data as $m ) {
 				$d = [ ];
 				if ( ! empty( $m->id ) ) {
 					$d['id'] = $m->id;
@@ -45,13 +41,14 @@ class Menu {
 				$d['orderby']    = intval( $m->orderby );
 				$d['is_display'] = $m->is_display;
 				$d['mark']       = $m->mark;
+				$d['is_system']  = $m->is_system;
 				if ( $d['mark'] && $d['title'] ) {
-					$this->menu->replace( $d );
+					$menu->replace( $d );
 				}
 			}
 			message( '菜单更改成功' );
 		}
-		$data  = $this->menu->get()->toArray();
+		$data  = $menu->get()->toArray();
 		$menus = Data::tree( $data, 'title', 'id', 'pid' );
 
 		return view()->with( 'menus', json_encode( $menus, JSON_UNESCAPED_UNICODE ) );
@@ -61,9 +58,10 @@ class Menu {
 	 * 更改显示状态
 	 */
 	public function changeDisplayState() {
-		$this->menu->id         = Request::post( 'id' );
-		$this->menu->is_display = Request::post( 'is_display' );
-		$this->menu->save();
+		$menu             = new \system\model\Menu();
+		$menu->id         = Request::post( 'id' );
+		$menu->is_display = Request::post( 'is_display' );
+		$menu->save();
 		ajax( [ 'valid' => TRUE, 'message' => '菜单更改成功' ] );
 	}
 
@@ -71,11 +69,16 @@ class Menu {
 	 * 删除菜单
 	 */
 	public function delMenu() {
-		$data         = $this->menu->get();
+		$db = new \system\model\Menu();
+		$id = Request::post( 'id' );
+		if ( $db->where( 'id', $id )->where( 'is_system', 1 )->get() ) {
+			message( '系统菜单不允许删除', 'back', 'error' );
+		}
+		$data         = Db::table( 'menu' )->get();
 		$menu         = Data::channelList( $data, $_POST['id'], "&nbsp;", 'id', 'pid' );
-		$menu[]['id'] = $_POST['id'];
+		$menu[]['id'] = $id;
 		foreach ( $menu as $m ) {
-			$this->menu->where( 'id', $m['id'] )->delete();
+			$db->where( 'id', $m['id'] )->delete();
 		}
 		ajax( [ 'valid' => TRUE, 'message' => '删除成功' ] );
 	}

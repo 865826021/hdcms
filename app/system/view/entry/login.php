@@ -12,10 +12,6 @@
 	<script src="resource/hdjs/app/config.js"></script>
 	<link href="resource/css/common.css" rel="stylesheet">
 	<link rel="stylesheet" href="{{__VIEW__}}/entry/css/css.css">
-	<!--[if lt IE 9]>
-	<script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-	<script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-	<![endif]-->
 	<script>
 		if (navigator.appName == 'Microsoft Internet Explorer') {
 			if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
@@ -55,7 +51,7 @@
 						       class="form-control input-lg" placeholder="请输入密码">
 					</div>
 				</div>
-				<if value="$siteConfig['enable_code']">
+				<if value="v('config.site.enable_code')==1">
 					<div class="form-group">
 						<label>验证码</label>
 

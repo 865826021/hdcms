@@ -62,7 +62,7 @@
 							</label>
 						</td>
 						<td>
-							<?php if ( m( 'User' )->isSuperUser() ): ?>
+							<?php if ( service('user')->isSuperUser() ): ?>
 								<a href="?s=system/user/edit&uid={{$u['uid']}}">编辑用户</a>&nbsp;|&nbsp;
 								<a href="?s=system/permission/menu&siteid={{$_GET['siteid']}}&fromuid={{$u['uid']}}">设置权限</a>&nbsp;|&nbsp;
 							<?php endif; ?>

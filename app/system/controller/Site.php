@@ -10,16 +10,10 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\MemberFields;
-use system\model\MemberGroup;
 use system\model\Modules;
 use system\model\Package;
-use system\model\SiteModules;
-use system\model\SiteSetting;
-use system\model\SiteTemplate;
-use system\model\SiteUser;
 use system\model\SiteWechat;
 use system\model\User;
-use system\model\UserPermission;
 
 /**
  * 站点管理
@@ -29,14 +23,13 @@ use system\model\UserPermission;
 class Site {
 	public function __construct() {
 		//登录检测
-		Util::instance( 'user' )->isLogin();
+		service( 'user' )->loginAuth();
 	}
 
 	//站点列表
 	public function lists() {
-		$site    = new \system\model\Site();
-		$user    = ( new User() )->find( v( "user.uid" ) );
-		$package = new Package();
+		$site = new \system\model\Site();
+		$user = ( new User() )->find( v( "user.uid" ) );
 		$site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
 		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
 		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
@@ -54,16 +47,16 @@ class Site {
 		if ( ! $isSuperUser = Util::instance( 'user' )->isSuperUser() ) {
 			$site->where( 'user.uid', v( 'user.uid' ) );
 		}
-		$sites = $site->get();
-		//获取站点套餐与所有者数据
-		foreach ( $sites as $k => $v ) {
-			$v['package'] = Util::instance( 'package' )->getSiteAllPackageData( $v['siteid'] );
-			$v['owner']   = Util::instance( 'user' )->getSiteOwner( $v['siteid'] );
-			if ( ! empty( $v['owner'] ) ) {
-				$v['owner']['group_name'] = Db::table( 'user_group' )->where( 'id', $v['owner']['groupid'] )->pluck( 'name' );
+		if ( $sites = $site->get() ) {
+			//获取站点套餐与所有者数据
+			foreach ( $sites as $k => $v ) {
+				$v['package'] = service( 'package' )->getSiteAllPackageData( $v['siteid'] );
+				$v['owner']   = service( 'user' )->getSiteOwner( $v['siteid'] );
+				if ( ! empty( $v['owner'] ) ) {
+					$v['owner']['group_name'] = Db::table( 'user_group' )->where( 'id', $v['owner']['groupid'] )->pluck( 'name' );
+				}
+				$sites[ $k ] = $v;
 			}
-
-			$sites[ $k ] = $v;
 		}
 
 		return view()->with( [ 'sites' => $sites, 'user' => $user ] );
@@ -73,7 +66,7 @@ class Site {
 	public function package() {
 		//根据站长所在会员组获取套餐
 		$packageModel = new Package();
-		$pids         = $packageModel->getSiteAllPackageIds( SITEID );
+		$pids         = $packageModel->getSiteAllPackageIds();
 		$package      = [ ];
 		if ( in_array( - 1, $pids ) ) {
 			$package[] = "所有服务";
@@ -82,75 +75,59 @@ class Site {
 		}
 		//获取模块
 		$modulesModel = new Modules();
-		$modules      = $modulesModel->getSiteAllModules( SITEID );
+		$modules      = $modulesModel->getSiteAllModules();
 		ajax( [ 'package' => $package, 'modules' => $modules ] );
 	}
 
 	//添加站点
 	public function post() {
-		$User = new User;
-		$Site = new \system\model\Site();
 		switch ( $_GET['step'] ) {
 			//设置站点
 			case 'site_setting':
+				$Site = new \system\model\Site();
 				if ( IS_POST ) {
 					//添加站点信息
-					if ( ! $siteid = $Site->add( $_POST ) ) {
-						message( $Site->getError(), 'back', 'error' );
-					}
+					$Site->name        = Request::post( 'name' );
+					$Site->description = Request::post( 'description' );
+					$siteId            = $Site->save();
 					//添加站长数据,系统管理员不添加数据
-					( new SiteUser() )->setSiteOwner( $siteid, Session::get( 'user.uid' ) );
+					service( 'user' )->setSiteOwner( $siteId, Session::get( 'user.uid' ) );
 					//初始站点配置
-					$setting = [
-						'siteid'          => $siteid,
-						'creditnames'     => [
-							'credit1' => [ 'title' => '积分', 'status' => 1 ],
-							'credit2' => [ 'title' => '余额', 'status' => 1 ],
-							'credit3' => [ 'title' => '', 'status' => 0 ],
-							'credit4' => [ 'title' => '', 'status' => 0 ],
-							'credit5' => [ 'title' => '', 'status' => 0 ],
-						],
-						'register'        => [
-							'focusreg' => 0,
-							'item'     => 2
-						],
-						'creditbehaviors' => [
-							'activity' => 'credit1',
-							'currency' => 'credit2'
-						]
-					];
-					( new SiteSetting() )->add( $setting );
-					//添加默认会员组
-					( new MemberGroup() )->add( [ 'siteid' => $siteid, 'title' => '会员', 'isdefault' => 1, 'is_system' => 1 ] );
+
 					//创建用户字段表数据
-					( new MemberFields() )->InitializationSiteTableData( $siteid );
+					( new MemberFields() )->InitializationSiteTableData( $siteId );
 					//更新站点缓存
-					$Site->updateSiteCache( $siteid );
-					go( u( 'post', [ 'step' => 'wechat', 'siteid' => $siteid ] ) );
+					service( 'site' )->updateCache( $siteId );
+					go( u( 'post', [ 'step' => 'wechat', 'siteid' => $siteId ] ) );
 				}
 
 				return view( 'site_setting' );
 			//设置公众号
 			case 'wechat':
-				$UserPermissionModel = new UserPermission();
 				//验证当前用户站点权限
-				if ( ! $User->isOwner( SITEID ) ) {
+				if ( ! service( 'user' )->isOwner() ) {
 					message( '您不是网站管理员无法操作' );
 				}
 				//微信帐号管理
 				if ( IS_POST ) {
-					$SiteWechatModel = new SiteWechat();
-					$_POST['siteid'] = SITEID;
-					if ( ! $weid = $SiteWechatModel->add( $_POST ) ) {
-						message( $SiteWechatModel->getError(), 'back', 'error' );
-					}
+					$SiteWechatModel              = new SiteWechat();
+					$SiteWechatModel['siteid']    = SITEID;
+					$SiteWechatModel['wename']    = Request::post( 'wename' );
+					$SiteWechatModel['account']   = Request::post( 'account' );
+					$SiteWechatModel['original']  = Request::post( 'original' );
+					$SiteWechatModel['level']     = Request::post( 'level' );
+					$SiteWechatModel['appid']     = Request::post( 'appid' );
+					$SiteWechatModel['appsecret'] = Request::post( 'appsecret' );
+					$SiteWechatModel['qrcode']    = Request::post( 'qrcode' );
+					$SiteWechatModel['icon']      = Request::post( 'icon' );
+					$weid                         = $SiteWechatModel->save();
 					//设置站点微信记录编号
-					$data = [ 'siteid' => SITEID, 'weid' => $weid ];
-					if ( ! $Site->save( $data ) ) {
-						message( $Site->getError(), 'back', 'error' );
-					}
+					$Site           = new \system\model\Site();
+					$Site['siteid'] = SITEID;
+					$Site['weid']   = $weid;
+					$Site->save();
 					//更新站点缓存
-					$Site->updateSiteCache( SITEID );
+					service( 'site' )->updateCache();
 					go( u( 'post', [ 'step' => 'access_setting', 'siteid' => SITEID ] ) );
 				}
 
@@ -158,7 +135,8 @@ class Site {
 			//设置权限,只有系统管理员可以操作
 			case 'access_setting':
 				//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
-				$User->isSuperUser( v( 'user.uid' ), 'return' );
+				service( 'user' )->superUserAuth();
+				$Site = new \system\model\Site();
 				if ( IS_POST ) {
 					//站点允许使用的空间大小
 					Db::table( 'site' )->where( 'siteid', SITEID )->update( [ 'allfilesize' => q( 'post.allfilesize', 200, 'intval' ) ] );
@@ -190,7 +168,7 @@ class Site {
 						//设置站点管理员
 						Db::table( 'site_user' )->insert( [ 'siteid' => SITEID, 'uid' => $manage_id, 'role' => 'owner' ] );
 					}
-					$Site->updateSiteCache( SITEID );
+					service( 'site' )->updateCache();
 					if ( $from_url = q( 'get.from' ) ) {
 						//有来源地址,比如从站点列表进入
 						message( '站点信息修改成功', $from_url, 'success' );
@@ -199,18 +177,17 @@ class Site {
 					}
 				}
 				//获取站长信息
-				$user         = ( new SiteUser() )->getSiteOwner( SITEID );
-				$packageModel = new Package();
+				$user = service( 'user' )->getSiteOwner( SITEID );
 				//获取系统所有套餐
-				$systemAllPackages = $packageModel->getSystemAllPackageData();
+				$systemAllPackages = service( 'package' )->getSystemAllPackageData();
 				//扩展模块
-				$extModule   = ( new SiteModules() )->getSiteExtModules( SITEID );
-				$extTemplate = ( new SiteTemplate() )->getSiteExtTemplates( SITEID );
+				$extModule   = service( 'module' )->getSiteExtModules( SITEID );
+				$extTemplate = service( 'template' )->getSiteExtTemplates( SITEID );
 
 				return view( 'access_setting' )->with( [
 					'systemAllPackages' => $systemAllPackages,
-					'extPackage'        => $packageModel->getSiteExtPackageIds( SITEID ),
-					'defaultPackage'    => $packageModel->getSiteDefaultPackageIds( SITEID ),
+					'extPackage'        => service( 'package' )->getSiteExtPackageIds( SITEID ),
+					'defaultPackage'    => service( 'package' )->getSiteDefaultPackageIds( SITEID ),
 					'extModule'         => $extModule,
 					'extTemplate'       => $extTemplate,
 					'user'              => $user,
@@ -218,13 +195,13 @@ class Site {
 				] );
 			case 'explain':
 				//验证当前用户站点权限
-				if ( ! $User->isOwner( SITEID ) ) {
+				if ( ! service( 'user' )->isOwner( SITEID ) ) {
 					message( '你没有管理该站点的权限' );
 				}
 				//更新站点缓存
-				$Site->updateSiteCache( SITEID );
+				service( 'site' )->updateCache( SITEID );
 				//引导页面
-				$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
+				$wechat = model( 'SiteWechat' )->where( 'siteid', SITEID )->first();
 
 				return view( 'explain' )->with( [ 'wechat' => $wechat ] );
 		}
@@ -232,9 +209,8 @@ class Site {
 
 	//删除站点
 	public function remove() {
-		$User = new User();
 		$Site = new \system\model\Site();
-		if ( $User->isManage( SITEID ) ) {
+		if ( service( 'user' )->isManage() ) {
 			$Site->remove( SITEID );
 			message( '网站删除成功', 'back', 'success' );
 		}
@@ -243,26 +219,22 @@ class Site {
 
 	//编辑站点
 	public function edit() {
-		$User = new User();
-		$Site = new \system\model\Site();
-		if ( ! $User->isManage( SITEID ) ) {
+		if ( ! service( 'user' )->isManage() ) {
 			message( '你没有编辑站点的权限', 'back', 'success' );
 		}
+
 		if ( IS_POST ) {
-			$_POST['siteid'] = SITEID;
-			$Site->updateSiteCache( SITEID );
-			if ( ! $Site->save( $_POST ) ) {
-				message( $Site->getError(), 'back', 'error' );
-			}
 			//更新站点数据
-			$Site->save( $_POST );
+			$site              = ( new \system\model\Site() )->find( SITEID );
+			$site->name        = Request::post( 'name' );
+			$site->description = Request::post( 'description' );
+			$site->save();
 			//更新微信数据
-			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( $_POST );
+			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( Request::post() );
 			//测试连接
 			$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
 			c( "weixin", $wechat );
 			//与微信官网通信绑定验证
-
 			$status = \Weixin::getAccessToken( '', TRUE );
 			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 			if ( $status ) {
@@ -273,7 +245,8 @@ class Site {
 		}
 		$site   = Db::table( 'site' )->where( 'siteid', SITEID )->first();
 		$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
-		View::with( [ 'site' => $site, 'wechat' => $wechat ] )->make();
+
+		return view()->with( [ 'site' => $site, 'wechat' => $wechat ] );
 	}
 
 	//公众号连接测试
@@ -290,12 +263,10 @@ class Site {
 		}
 	}
 
+	//移除站长
 	public function delOwner() {
-		$User = new User;
-		if ( ! $User->isSuperUser() ) {
-			message( '没有操作权限', 'back', 'error' );
-		}
-		( new SiteUser() )->delOwner( SITEID );
+		service( 'user' )->superUserAuth();
+		model( 'SiteUser' )->remove( SITEID );
 		message( '删除站长成功', 'back', 'success' );
 	}
 }

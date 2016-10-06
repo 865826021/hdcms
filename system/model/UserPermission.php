@@ -26,12 +26,4 @@ class UserPermission extends Model {
 			[ 'type', 'required', '模块类型不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'permission', 'required', '权限内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		];
-	protected $auto
-	                 = [
-			[ 'permission', 'autoPermission', 'method', self::MUST_AUTO, self::MODEL_BOTH ]
-		];
-
-	protected function autoPermission( $val ) {
-		return implode( '|', $val );
-	}
 }

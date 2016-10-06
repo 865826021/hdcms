@@ -9,7 +9,6 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 use system\model\ArticleCategory;
-use system\model\User;
 
 /**
  * 文章管理
@@ -23,85 +22,72 @@ class Article {
 
 	}
 
-	//权限验证
-	public function auth() {
-		$this->user = new User();
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以执行操作', 'back', 'error' );
-		}
-	}
-
 	//分类列表
 	public function lists() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Model = new ArticleCategory();
 		$data  = $Model->get();
-		View::with( 'data', $data );
-		View::make();
+
+		return view()->with( 'data', $data );
 	}
 
 	//添加分类
 	public function categoryPost() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Model = new ArticleCategory();
-		$id    = q( 'get.id' );
+
 		if ( IS_POST ) {
-			$action = $id ? 'save' : 'add';
-			if ( $Model->$action() ) {
-				message( '栏目保存成功', 'lists', 'success' );
-			}
-			message( $Model->getError(), 'back', 'error' );
+			$Model->id       = Request::post( 'id' );
+			$Model->title    = Request::post( 'title' );
+			$Model->orderby  = Request::post( 'orderby' );
+			$Model->template = Request::post( 'template' );
+			$Model->save();
+			message( '栏目保存成功', 'lists', 'success' );
 		}
 		//查找模板
+		$category = $Model->find( Request::get( 'id' ) ) ?: [ ];
 		$template = glob( 'theme/article/*.html' );
-		View::with( 'template', $template );
-		$field = $Model->find( $id );
-		View::with( 'field', $field );
-		View::make();
+
+		return view()->with( [ 'field' => $category, 'template' => $template ] );
 	}
 
 	//删除栏目
 	public function delCategory() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Model = new ArticleCategory();
-		$Model->remove( q( 'get.id' ) );
-		message( '文章删除成功', 'back', 'success' );
+		$Model->remove( Request::get( 'id' ) );
+		message( '栏目删除成功', 'back', 'success' );
 	}
 
 	//新闻列表
 	public function articleLists() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Model = new \system\model\Article();
 		$data  = $Model->lists();
-		View::with( 'data', $data );
-		View::make();
+
+		return view()->with( 'data', $data );
 	}
 
 	//文章管理
 	public function articlePost() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Category = new ArticleCategory();
 		$Model    = new \system\model\Article();
 		$id       = q( 'get.id' );
 		if ( IS_POST ) {
-			$action = $id ? 'save' : 'add';
-			if ( $Model->$action() ) {
-				message( '文章保存成功', 'articleLists', 'success' );
-			}
-			message( $Model->getError(), 'back', 'error' );
+			$Model->save(Request::post());
+			message( '文章保存成功', 'articleLists', 'success' );
 		}
 		//查找模板
 		$template = glob( 'theme/article/*.html' );
-		View::with( 'template', $template );
-		$field = $Model->find( $id );
-		View::with( 'field', $field );
-		View::with( 'category', $Category->get() );
-		View::make();
+		$field    = $Model->find( $id ) ?: [ ];
+
+		return view()->with( [ 'field' => $field, 'category' => $Category->get(), 'template' => $template ] );
 	}
 
 	//删除文章
 	public function delArticle() {
-		$this->auth();
+		service( 'user' )->superUserAuth();
 		$Model = new \system\model\Article();
 		$Model->where( 'id', q( 'get.id' ) )->delete();
 		message( '文章删除成功', 'back', 'success' );
@@ -117,11 +103,12 @@ class Article {
 		} else {
 			$template = empty( $data['template'] ) ? ( empty( $category['template'] ) ? 'theme/article/article.html' : $category['template'] ) : $data['template'];
 			//相关文章
-			$relation = Db::table( 'article' )->limit( 10 )->where('cid',$data['cid'])->get();
-			View::with('relation',$relation);
+			$relation = Db::table( 'article' )->limit( 10 )->where( 'cid', $data['cid'] )->get();
+			View::with( 'relation', $relation );
 			View::with( 'article', $data );
 			View::with( 'category', $category );
-			View::make( $template );
+
+			return view( $template );
 		}
 	}
 }

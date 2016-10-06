@@ -9,8 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
 
-use system\model\User;
-
 /**
  * 套餐
  * Class Package
@@ -18,12 +16,10 @@ use system\model\User;
  * @author 向军
  */
 class Package {
-	protected $user;
 	protected $package;
 
 	public function __construct() {
-		$this->user = new User();
-		$this->user->isSuperUser( v( 'user.uid' ) );
+		service( 'user' )->superUserAuth();
 		$this->package = new \system\model\Package();
 	}
 

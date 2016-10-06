@@ -13,9 +13,9 @@ class Template {
 	 * @return array
 	 */
 	public function getSiteExtTemplates( $siteid ) {
-		$template = $this->where( 'siteid', $siteid )->lists( 'template' );
+		$template = model( 'SiteTemplate' )->where( 'siteid', $siteid )->lists( 'template' );
 
-		return $template ? Db::table( 'template' )->whereIn( 'name', $template )->get() : [ ];
+		return $template ? model( 'template' )->whereIn( 'name', $template )->get() : [ ];
 	}
 
 	/**

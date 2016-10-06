@@ -5,17 +5,13 @@
     <title>HDCMS - 免费开源多站点管理系统</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link href="resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
-    <script src="resource/hdjs/js/jquery.min.js"></script>
-    <script src="resource/hdjs/app/util.js"></script>
-    <script src="resource/hdjs/require.js"></script>
-    <script src="resource/hdjs/app/config.js"></script>
-    <link href="resource/css/system.css" rel="stylesheet">
-    <!--[if lt IE 9]>
-    <script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link href="{{__ROOT__}}/resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{__ROOT__}}/resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
+    <script src="{{__ROOT__}}/resource/hdjs/js/jquery.min.js"></script>
+    <script src="{{__ROOT__}}/resource/hdjs/app/util.js"></script>
+    <script src="{{__ROOT__}}/resource/hdjs/require.js"></script>
+    <script src="{{__ROOT__}}/resource/hdjs/app/config.js"></script>
+    <link href="{{__ROOT__}}/resource/css/system.css" rel="stylesheet">
     <script>
         window.system = {
             attachment: "{{__ROOT__}}/attachment",
@@ -43,9 +39,9 @@
                         <li>
                             <a href="?s=system/manage/menu"><i class="fa fa-w fa-cogs"></i> 系统管理</a>
                         </li>
-                        <if value="v('site')">
+                        <if value="SITEID">
                             <li>
-                                <a href="?s=site/entry/refer&siteid={{v('site.siteid')}}" target="_blank"><i class="fa fa-share"></i> 继续管理公众号 ({{v('site.name')}})</a>
+                                <a href="?s=site/entry/refer&siteid={{SITEID}}" target="_blank"><i class="fa fa-share"></i> 继续管理公众号 ({{v('site.info.name')}})</a>
                             </li>
                         </if>
                         <li>
@@ -58,12 +54,12 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <if value="v('site')">
+                        <if value="SITEID">
                             <li class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; " aria-expanded="false">
-                                    <i class="fa fa-group"></i> {{v('site.name')}} <b class="caret"></b></a>
+                                    <i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="?s=system/site/edit&siteid={{v('site.siteid')}}"><i class="fa fa-weixin fa-fw"></i> 编辑当前账号资料</a></li>
+                                    <li><a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i> 编辑当前账号资料</a></li>
                                     <li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
                                 </ul>
                             </li>
@@ -71,7 +67,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                                 <i class="fa fa-w fa-user"></i>
-                                {{v('user.username')}}
+                                {{v('user.info.username')}}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">

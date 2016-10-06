@@ -6,15 +6,15 @@
 		<li><a href="#">首页</a></li>
 		<li>网站列表</li>
 	</ol>
-	<if value="v('user.groupid') gte 1">
+	<if value="v('user.info.groupid') gte 1">
 		<div class="alert alert-warning">
 			温馨提示：
 			<i class="fa fa-info-circle"></i>
-			Hi，<span class="text-strong">{{v('user.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.group.name')}}</span>，
+			Hi，<span class="text-strong">{{v('user.info.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.info.group.name')}}</span>，
 			账号有效期限：
-			<span class="text-strong">{{date('Y-m-d',v('user.starttime'))}} ~~ {{v('user.endtime')?date('Y-m-d',v('user.endtime')):'无限制'}}</span>，
+			<span class="text-strong">{{date('Y-m-d',v('user.info.starttime'))}} ~~ {{v('user.info.endtime')?date('Y-m-d',v('user.info.endtime')):'无限制'}}</span>，
 			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，已添加<span class="text-strong">
-            </span>个，还可添加 <span class="text-strong">{{v('user.group.maxsite')-$user->siteNums(v('user.uid'))}} </span>个公众号。
+            </span>个，还可添加 <span class="text-strong">{{v('user.group.maxsite')-service('user')->siteNums(v('user.info.uid'))}} </span>个公众号。
 		</div>
 	</if>
 	<div class="clearfix">
@@ -102,9 +102,9 @@
 							服务有效期 :
 							<?php if ( empty( $s['owner'] ) ) { ?>
 								无限制
-							<?php } else if ( $s['endtime'] == 0 ) { ?>
+							<?php } else if ( $s['owner']['endtime'] == 0 ) { ?>
 								无限制
-							<?php } else if ( $s['endtime'] < time() ) { ?>
+							<?php } else if ( $s['owner']['endtime'] < time() ) { ?>
 								<span class="label label-danger">已到期</span>
 							<?php } else { ?>
 								{{date("Y-m-d", $s['starttime'])}}~{{$s['endtime']==0?'无限制':date("Y-m-d", $s['endtime'])}}
@@ -114,15 +114,15 @@
 							</if>
 						</div>
 						<div class="col-xs-6 text-right">
-							<?php if ( Util::instance( 'user' )->isSuperUser( v( 'user.uid' ), 'return' ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isSuperUser( v( 'user.info.uid' ), 'return' ) ) { ?>
 								<a href="?s=system/site/post&step=access_setting&siteid={{$s['siteid']}}&from=lists">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.uid' ) ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( Util::instance( 'user' )->isManage( $s['siteid'], v( 'user.uid' ) ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>

@@ -10,7 +10,9 @@ class Menu extends \system\model\Menu {
 	 * @return mixed
 	 */
 	public function getLevelMenuLists() {
-		return Data::channelLevel( $this->get(), 0, '', 'id', 'pid' );
+		$menu = Db::table('menu')->get();
+
+		return Data::channelLevel( $menu ? : [ ], 0, '', 'id', 'pid' );
 	}
 
 	/**
@@ -21,7 +23,7 @@ class Menu extends \system\model\Menu {
 		//移除用户没有使用权限的菜单
 		$permission = Db::table( 'user_permission' )
 		                ->where( 'siteid', SITEID )
-		                ->where( 'uid', Session::get( 'user.uid' ) )
+		                ->where( 'uid', v('user.info.uid') )
 		                ->where( 'type', 'system' )
 		                ->pluck( 'permission' );
 		$menus      = $this->get();
@@ -48,9 +50,9 @@ class Menu extends \system\model\Menu {
 			}
 		}
 		//插件模块列表
-		$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
+		$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v('user.info.uid') )->lists( 'type' );
 		//获取模块按行业类型
-		$modules = ( new Modules() )->getModulesByIndustry( $allowModules );
+		$modules = service('module')->getModulesByIndustry( $allowModules );
 		//模块菜单
 		foreach ( v( 'modules' ) as $v ) {
 			if ( $v['name'] == v( 'module.name' ) ) {

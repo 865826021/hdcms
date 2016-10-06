@@ -1,4 +1,4 @@
-<?php namespace system\service;
+<?php namespace system\service\build;
 
 /**
  * 微信管理服务

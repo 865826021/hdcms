@@ -9,7 +9,6 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\Menu;
-use system\model\SiteUser;
 use system\model\User;
 
 /**
@@ -20,33 +19,34 @@ use system\model\User;
  */
 class Entry {
 	public function __construct() {
-		if ( ! Session::get( 'user.uid' ) ) {
-			message( '请登录后操作', 'system/entry/login', 'error' );
-		}
+		service('user')->loginAuth();
 		//验证站点权限
-		if ( ! ( new User() )->isOperate() ) {
+		if ( ! service('user')->isOperate() ) {
 			message( '你没有管理站点的权限', 'system/site/lists', 'warning' );
 		}
-		//分配菜单
-		( new Menu() )->getMenus();
+
 	}
 
 	//进入后台站点管理入口
 	public function refer() {
 		//获取系统菜单
-		$menu = ( new Menu() )->getMenus( FALSE );
+		$menu = service('menu')->getMenus( FALSE );
 		$cur  = current( $menu );
 		go( __ROOT__ . $cur['url'] );
 	}
 
 	//顶级菜单主页
 	public function home() {
-		View::make( VIEW_PATH . '/home/' . q( 'get.p' ) . '.php' );
+		//分配菜单
+		service('menu')->getMenus();
+		return view( VIEW_PATH . '/home/' . q( 'get.p' ) . '.php' );
 	}
 
 	//返回模块列表功能
 	public function package() {
 		//分配菜单
-		View::make();
+		service('menu')->getMenus();
+		//分配菜单
+		return view();
 	}
 }
