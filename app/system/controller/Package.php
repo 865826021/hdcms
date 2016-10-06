@@ -1,4 +1,4 @@
-<?php namespace app\system\controller;
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace app\system\controller;
 
 use system\model\User;
 
@@ -21,16 +22,14 @@ class Package {
 	protected $package;
 
 	public function __construct() {
+		$this->user = new User();
+		$this->user->isSuperUser( v( 'user.uid' ) );
 		$this->package = new \system\model\Package();
-		$this->user    = new User();
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
-		}
 	}
 
 	//套餐列表
 	public function lists() {
-		$packages = Db::table( 'package' )->get();
+		$packages = $this->package->get() ?: [ ];
 		foreach ( $packages as $k => $v ) {
 			//套餐模块
 			$modules                   = unserialize( $v['modules'] ) ?: [ ];
@@ -39,33 +38,39 @@ class Package {
 			$templates                  = unserialize( $v['template'] ) ?: [ ];
 			$packages[ $k ]['template'] = $templates ? Db::table( 'template' )->whereIn( 'name', $templates )->lists( 'title' ) : [ ];
 		}
-		View::with( 'data', $packages )->make();
+
+		return view()->with( 'data', $packages );
 	}
 
 	//编辑&添加套餐
 	public function post() {
 		if ( IS_POST ) {
-			$action = q( 'post.id' ) ? 'save' : 'add';
-			if ( ! $this->package->$action() ) {
-				message( $this->package->getError(), 'back', 'error' );
-			}
-			message( '套餐更新成功', 'system/package/lists', 'success' );
+			$this->package->id       = Request::post( 'id' );
+			$this->package->name     = Request::post( 'name' );
+			$this->package->modules  = Request::post( 'modules' );
+			$this->package->template = Request::post( 'template' );
+			$this->package->save();
+			message( '套餐更新成功', 'lists', 'success' );
 		}
-		$field             = Db::table( 'package' )->where( 'id', q( 'get.id' ) )->first();
-		$field['modules']  = unserialize( $field['modules'] ) ?: [ ];
-		$field['template'] = unserialize( $field['template'] ) ?: [ ];
-		$modules           = Db::table( 'modules' )->orderBy('is_system','DESC')->get();
-		$templates           = Db::table( 'template' )->get();
-		View::with( 'modules', $modules );
-		View::with( 'templates', $templates );
-		View::with( 'field', $field );
-		View::make();
+		//编辑时获取套餐
+		if ( $Package = $this->package->find( Request::get( 'id' ) ) ) {
+			$Package['modules']  = unserialize( $Package['modules'] ) ?: [ ];
+			$Package['template'] = unserialize( $Package['template'] ) ?: [ ];
+		}
+		$modules   = Db::table( 'modules' )->orderBy( 'is_system', 'DESC' )->get();
+		$templates = Db::table( 'template' )->orderBy( 'is_system', 'DESC' )->get();
+
+		return view()->with( [
+			'modules'   => $modules,
+			'templates' => $templates,
+			'package'   => $Package,
+		] );
 	}
 
 	//删除套餐
 	public function remove() {
-		foreach ( (array) $_POST['id'] as $id ) {
-			$this->package->delete( $id );
+		foreach ( (array) Request::post( 'id' ) as $id ) {
+			$this->package->remove( $id );
 		}
 		message( '删除套餐成功', 'back', 'success' );
 	}

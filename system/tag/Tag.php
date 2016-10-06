@@ -1,8 +1,8 @@
-<?php namespace app;
+<?php namespace system\tag;
 
 use hdphp\view\TagBase;
 
-class tag extends TagBase {
+class Tag extends TagBase {
 	/**
 	 * 标签声明
 	 * @var array
@@ -23,7 +23,7 @@ class tag extends TagBase {
 				$instance[ $class ] = new $class;
 			}
 
-			return $instance[ $class ]->$action( $attr);
+			return $instance[ $class ]->$action( $attr );
 		}
 	}
 

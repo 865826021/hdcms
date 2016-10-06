@@ -58,7 +58,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <if value="isset($_SESSION['siteid'])">
+                        <if value="v('site')">
                             <li class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; " aria-expanded="false">
                                     <i class="fa fa-group"></i> {{v('site.name')}} <b class="caret"></b></a>
@@ -71,7 +71,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                                 <i class="fa fa-w fa-user"></i>
-                                {{Session::get('user.username')}}
+                                {{v('user.username')}}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">

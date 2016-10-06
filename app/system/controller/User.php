@@ -31,55 +31,45 @@ class User {
 	//用户列表
 	public function lists() {
 		$User = new \system\model\User();
-
-		$users = $User->paginate( 2 );
-		foreach ( $users as $f ) {
-			p( $f['username'] );
-		}
-		echo $users->links();
-		exit;
-
 		$User->isSuperUser( v( 'user.uid' ) );
-		$users = Db::table( 'user' )->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '<>', '0' )->paginate( 2 );
-		p( $users );
+		$users = $User->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '>=', '0' )->paginate( 8 );
 
 		return view()->with( 'users', $users );
 	}
 
 	//添加用户
 	public function add() {
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以进行操作', 'back', 'error' );
-		}
+		$User = new \system\model\User();
+		$User->isSuperUser( v( 'user.uid' ) );
 		if ( IS_POST ) {
+			Validate::make( [
+				[ 'password', 'confirm:password2', '两次密码输入不一致' ]
+			] );
 			//用户组过期时间
 			$daylimit         = Db::table( 'user_group' )->where( 'id', $_POST['groupid'] )->pluck( 'daylimit' );
-			$_POST['groupid'] = intval( $_POST['groupid'] );
-			$_POST['regtime'] = time();
-			$_POST['endtime'] = $daylimit ? time() + $daylimit * 3600 * 24 : 0;
-			if ( $this->user->add() ) {
+			$User['username'] = Request::post( 'username' );
+			$User['remark']   = Request::post( 'remark' );
+			$User['endtime']  = time() + $daylimit * 3600 * 24;
+			if ( $User->save() ) {
 				message( '添加新用户成功', 'lists', 'success' );
 			}
-			message( $this->user->getError(), 'back', 'error' );
+			message( $User->getError(), 'back', 'error' );
 
 		}
 		$groups = Db::table( 'user_group' )->get();
-		View::with( 'groups', $groups );
-		View::make();
+
+		return view()->with( 'groups', $groups );
 	}
 
 	//编辑
 	public function edit() {
-		$User = ( new \system\model\User() )->find( q( 'get.uid' ) );
-		if ( ! $User->isSuperUser() ) {
-			message( '只有系统管理员可以进行操作', 'back', 'error' );
-		}
+		$User = ( new \system\model\User() )->find( Request::get( 'uid' ) );
+		$User->isSuperUser( v( 'user.uid' ) );
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'endtime', 'required', '到期时间不能为空', 3 ],
 				[ 'password', 'confirm:password2', '两次密码输入不一致', 3 ]
 			] );
-			$User->uid      = Request::get( 'uid' );
 			$User->password = Request::post( 'password' );
 			$User->endtime  = Request::post( 'endtime' );
 			$User->groupid  = Request::post( 'groupid' );
@@ -87,7 +77,7 @@ class User {
 			$User->qq       = Request::post( 'qq' );
 			$User->mobile   = Request::post( 'mobile' );
 			if ( $User->save() ) {
-				message( '编辑新用户成功', 'refresh' );
+				message( '编辑新用户成功', 'lists' );
 			}
 			message( $User->getError(), 'back', 'error' );
 		}
@@ -102,34 +92,44 @@ class User {
 
 	//锁定或解锁用户
 	public function updateStatus() {
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以进行操作', 'back', 'error' );
+		$User = ( new \system\model\User() )->find( Request::get( 'uid' ) );
+		$User->isSuperUser( v( 'user.uid' ) );
+
+		if ( $User->isSuperUser( $User->uid, 'return' ) ) {
+			message( '管理员帐号不允许操作', 'back', 'error' );
 		}
-		Db::table( 'user' )->where( 'uid', $_GET['uid'] )->update( [ 'status' => $_GET['status'] ] );
+		$User->status = Request::get( 'status' );
+		$User->save();
 		message( '操作成功', 'back', 'success' );
 	}
 
 	//删除用户
 	public function remove() {
-		$User = new \system\model\User();
-		if ( ! $User->isSuperUser() ) {
-			message( '只有系统管理员可以删除用户', 'back', 'error' );
+		$User = ( new \system\model\User() )->find( Request::post( 'uid' ) );
+		$User->isSuperUser( v( 'user.uid' ) );
+
+		if ( $User->isSuperUser( $User->uid, 'return' ) ) {
+			message( '管理员帐号不允许删除', 'back', 'error' );
 		}
-		$User->remove( $_POST['uid'] );
+		$User->remove();
 		message( '删除用户成功', 'back', 'success' );
 	}
 
-	//查看用户权限
+	/**
+	 * 查看用户权限
+	 * @return mixed
+	 */
 	public function permission() {
-		$user = $this->user->find( $_GET['uid'] );
+		$User    = \system\model\User::find( Request::get( 'uid' ) );
+		$Site    = new Site();
+		$Package = new Package();
 		//获取用户组信息
-		$group = ( new UserGroup() )->getUserGroup( $user['uid'] );
+		$group = $User->userGroup();
 		//获取用户站点信息
-		$sites = ( new Site() )->getUserAllSite( $_GET['uid'] );
+		$sites = $Site->getUserAllSite( $User['uid'] );
 		//用户套餐
-		$packages = ( new Package() )->getUserGroupPackageLists( $user['groupid'] );
-
-		return make()->with( [
+		$packages = $Package->getUserGroupPackageLists( $User['groupid'] );
+		return view()->with( [
 			'group'    => $group,
 			'packages' => $packages,
 			'sites'    => $sites

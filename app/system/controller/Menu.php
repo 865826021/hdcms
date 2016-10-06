@@ -1,4 +1,4 @@
-<?php namespace app\system\controller;
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace app\system\controller;
 
 use system\model\User;
 
@@ -23,16 +24,13 @@ class Menu {
 	public function __construct() {
 		$this->user = new User();
 		$this->menu = new \system\model\Menu();
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以操作', 'back', 'error' );
-		}
+		$this->user->isSuperUser( v( "user.uid" ) );
 	}
 
 	//编辑菜单
 	public function edit() {
 		if ( IS_POST ) {
-			$menu = json_decode( $_POST['menu'] );
-			$this->menu->delete();
+			$menu = json_decode( Request::post( 'menu' ) );
 			foreach ( $menu as $m ) {
 				$d = [ ];
 				if ( ! empty( $m->id ) ) {
@@ -48,19 +46,22 @@ class Menu {
 				$d['is_display'] = $m->is_display;
 				$d['mark']       = $m->mark;
 				if ( $d['mark'] && $d['title'] ) {
-					$this->menu->insertGetId( $d );
+					$this->menu->replace( $d );
 				}
 			}
 			message( '菜单更改成功' );
 		}
-		$data  = $this->menu->get();
+		$data  = $this->menu->get()->toArray();
 		$menus = Data::tree( $data, 'title', 'id', 'pid' );
-		View::with( 'menus', json_encode( $menus ) )->make();
+
+		return view()->with( 'menus', json_encode( $menus, JSON_UNESCAPED_UNICODE ) );
 	}
 
 	//更改显示状态
 	public function changeDisplayState() {
-		$this->menu->save( $_POST );
+		$this->menu->id         = Request::post( 'id' );
+		$this->menu->is_display = Request::post( 'is_display' );
+		$this->menu->save();
 		ajax( [ 'valid' => TRUE, 'message' => '菜单更改成功' ] );
 	}
 

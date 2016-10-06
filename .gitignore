@@ -5,5 +5,4 @@ storage
 .DS_Store
 attachment
 .htaccess
-/vendor/
 /composer.lock

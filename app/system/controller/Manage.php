@@ -36,9 +36,7 @@ class Manage {
 	public function updateCache() {
 		$User = new User();
 		$Site = new Site();
-		if ( ! $User->isSuperUser() ) {
-			message( '只有系统管理员可以执行更新操作', 'back', 'error' );
-		}
+		$User->isSuperUser( v( 'user.uid' ) );
 		if ( IS_POST ) {
 			//更新数据缓存
 			if ( isset( $_POST['data'] ) ) {

@@ -55,7 +55,7 @@
 				<table class="table table-hover">
 					<thead>
 					<tr>
-						<th>&nbsp;</th>
+						<th>选择</th>
 						<th>公众服务套餐</th>
 						<th>模块权限</th>
 						<th>模板权限</th>
@@ -65,19 +65,20 @@
 					<foreach from="$systemAllPackages" value="$p">
 						<tr>
 							<td>
-								<if value="in_array($p['id'],$defaultPackage)">
+								<if value="$p['id']==0">
+									<input type="checkbox" checked="checked" disabled="disabled">
+								<elseif value="in_array($p['id'],$defaultPackage)">
 									<input type="checkbox" name="package_id[]" value="{{$p['id']}}" checked="checked" disabled="disabled">
 									<elseif value="in_array($p['id'],$extPackage)">
 										<input type="checkbox" name="package_id[]" value="{{$p['id']}}" checked="checked">
 										<else/>
 										<input type="checkbox" name="package_id[]" value="{{$p['id']}}">
 								</if>
-
 							</td>
 							<td>{{$p['name']}}</td>
 							<td>
 								<if value="$p['id']==-1">
-									<span class="label label-danger">系统所有模块</span>
+									<span class="label label-danger">所有模块</span>
 									<else/>
 									<span class="label label-success">系统模块</span>
 									<foreach from="$p['modules']" value="$m">
@@ -87,9 +88,9 @@
 							</td>
 							<td>
 								<if value="$p['id']==-1">
-									<span class="label label-danger">系统所有模板</span>
+									<span class="label label-danger">所有模板</span>
 									<else/>
-									<span class="label label-success">微站默认模板</span>
+									<span class="label label-success">系统模板</span>
 									<foreach from="$p['template']" value="$t">
 										<span class="label label-info">{{$t['title']}}</span>
 									</foreach>

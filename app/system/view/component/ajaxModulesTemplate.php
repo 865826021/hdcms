@@ -49,7 +49,7 @@
 	</div>
 </div>
 <script>
-	$("button").click(function () {
+	$("#ajaxModulesTemplate button").click(function () {
 		if ($(this).hasClass('btn-default')) {
 			$(this).attr('class', 'btn btn-primary pull-right');
 		} else {

@@ -70,11 +70,14 @@ class Site extends Model {
 	public function updateSiteCache( $siteid = NULL ) {
 		$siteid = $siteid ?: SITEID;
 		//站点微信信息缓存
-		$data['wechat'] = Db::table( 'site_wechat' )->where( 'siteid', $siteid )->first();
+		$wechat         = Db::table( 'site_wechat' )->where( 'siteid', $siteid )->first();
+		$data['wechat'] = $wechat ? $wechat->toArray() : [ ];
 		//站点信息缓存
-		$data['site'] = Db::table( 'site' )->where( 'siteid', $siteid )->first();
+		$site         = Db::table( 'site' )->where( 'siteid', $siteid )->first();
+		$data['site'] = $site ? $site->toArray() : [ ];
 		//站点设置缓存
-		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteid )->first() ?: [ ];
+		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteid )->first();
+		$setting                     = $setting ? $setting->toArray() : [ ];
 		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
 		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
 		$setting ['register']        = unserialize( $setting['register'] );

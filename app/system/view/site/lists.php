@@ -10,12 +10,11 @@
 		<div class="alert alert-warning">
 			温馨提示：
 			<i class="fa fa-info-circle"></i>
-			Hi，<span class="text-strong">{{v('user.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.name')}}</span>，
+			Hi，<span class="text-strong">{{v('user.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.group.name')}}</span>，
 			账号有效期限：
 			<span class="text-strong">{{date('Y-m-d',v('user.starttime'))}} ~~ {{v('user.endtime')?date('Y-m-d',v('user.endtime')):'无限制'}}</span>，
-			可添加 <span class="text-strong">{{v('group.maxsite')}} </span>个站点，已添加<span class="text-strong">
-                <?php echo $siteNum = Db::table( 'site_user' )->where( 'uid', v( 'user.uid' ) )->where( 'role', 'owner' )->count(); ?>
-            </span>个，还可添加 <span class="text-strong">{{v('group.maxsite')-$siteNum}} </span>个公众号。
+			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，已添加<span class="text-strong">
+            </span>个，还可添加 <span class="text-strong">{{v('user.group.maxsite')-$user->siteNums(v('user.uid'))}} </span>个公众号。
 		</div>
 	</if>
 	<div class="clearfix">
@@ -24,7 +23,6 @@
 		</div>
 	</div>
 	<br/>
-
 	<div class="panel panel-info">
 		<div class="panel-heading">
 			<h3 class="panel-title">筛选</h3>
@@ -32,7 +30,7 @@
 		<div class="panel-body">
 			<form action="?s=system/site/lists" method="post" class="form-horizontal" role="form">
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">搜索</label>
+					<label class="col-sm-2 control-label">搜索</label>
 					<div class="col-sm-10">
 						<div class="input-group">
 							<input type="text" class="form-control" id="sitename" name="sitename" placeholder="请输入网站名称">
@@ -111,17 +109,20 @@
 							<?php } else { ?>
 								{{date("Y-m-d", $s['starttime'])}}~{{$s['endtime']==0?'无限制':date("Y-m-d", $s['endtime'])}}
 							<?php } ?>
+							<if value="$s['owner']">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;站长 : {{$s['owner']['username']}}
+							</if>
 						</div>
 						<div class="col-xs-6 text-right">
-							<?php if ( m( "User" )->isSuperUser(v('user.uid')) ) { ?>
+							<?php if ( $user->isSuperUser( v( 'user.uid' ), 'return' ) ) { ?>
 								<a href="?s=system/site/post&step=access_setting&siteid={{$s['siteid']}}&from=lists">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( m( "User" )->isOwner( $s['siteid'] ) ) { ?>
+							<?php if ( $user->isOwner( $s['siteid'], v( 'user.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( m( "User" )->isManage( $s['siteid'] ) ) { ?>
+							<?php if ( $user->isManage( $s['siteid'], v( 'user.uid' ) ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>
@@ -183,7 +184,7 @@
 				util.confirm('删除站点将删除所有站点数据, 确定删除吗?', function () {
 					$.get('?s=system/site/remove&siteid=' + siteid, function (res) {
 						if (res.valid) {
-							util.message(res.message,'refresh','success');
+							util.message(res.message, 'refresh', 'success');
 						} else {
 							util.message(res.message, '', 'error');
 						}

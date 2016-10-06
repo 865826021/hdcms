@@ -7,11 +7,19 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace system\model;
+namespace server;
 
-use hdphp\model\Model;
+class UtilProvider extends \hdphp\kernel\ServiceProvider {
 
-class Config extends Model {
-	protected $table = 'config';
-	protected $auto  = [ ];
+	//延迟加载
+	public $defer = TRUE;
+
+	public function boot() {
+	}
+
+	public function register() {
+		$this->app->single( 'Util', function ( $app ) {
+			return new Util( $app );
+		} );
+	}
 }

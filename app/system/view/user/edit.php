@@ -61,14 +61,12 @@
 
             <div class="col-sm-10">
                 <select class="js-example-basic-single form-control" name="groupid">
-                    <option value="0">请选择所属用户组</option>
                     <foreach from="$groups" value="$g">
                         <if value="$g['id']==$user['groupid']">
                             <option value="{{$g['id']}}" selected="selected">{{$g['name']}}</option>
                             <else/>
                             <option value="{{$g['id']}}">{{$g['name']}}</option>
                         </if>
-
                     </foreach>
                 </select>
                 <span class="help-block">分配用户所属用户组后，该用户会自动拥有此用户组内的模块操作权限</span>

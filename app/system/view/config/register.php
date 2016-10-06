@@ -71,7 +71,7 @@
 		$
 		angular.module('myApp', []).controller('myController', ['$scope', function ($scope) {
 			$scope.field =<?php echo $field ? json_encode( $field ) : '{"is_open":0,"audit":0,"enable_code":1}';?>;
-			$scope.group =<?php echo json_encode( $group );?>;
+			$scope.group =<?php echo json_encode( $group->toArray() );?>;
 			$('form').submit(function () {
 				$('[name="register"]').val(angular.toJson($scope.field));
 			})

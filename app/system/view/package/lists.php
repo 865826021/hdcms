@@ -9,7 +9,7 @@
 		<li role="presentation" class="active"><a href="?s=system/package/lists">服务套餐列表</a></li>
 		<li role="presentation"><a href="?s=system/package/post">添加套餐</a></li>
 	</ul>
-	<form action="?s=system/package/remove" method="post" id="form">
+	<form action="" method="post" id="form" onsubmit="return false;">
 		<div class="panel">
 			<div class="panel-body">
 				<table class="table">
@@ -26,15 +26,8 @@
 					<tr>
 						<td><input type="checkbox" disabled="disabled"></td>
 						<td>基础服务 <span class="label label-info">系统</span></td>
-						<td>
-							<ul class="module-list">
-								<li>基本文字回复</li>
-								<li>基本混合图文回复</li>
-								<li>基本图片回复</li>
-								<li>基本语音回复</li>
-							</ul>
-						</td>
-						<td>微站默认模板</td>
+						<td>系统模块</td>
+						<td>系统模板</td>
 						<td></td>
 					</tr>
 					<tr>
@@ -53,22 +46,24 @@
 							<td><input type="checkbox" name="id[]" value="{{$d['id']}}"></td>
 							<td>{{$d['name']}}</td>
 							<td>
-								<if value="!empty($d['modules'])">
-									<ul class="module-list">
+								<ul class="module-list">
+									<li>系统模块</li>
+									<if value="!empty($d['modules'])">
 										<foreach from="$d['modules']" value="$m">
 											<li>{{$m}}</li>
 										</foreach>
-									</ul>
-								</if>
+									</if>
+								</ul>
 							</td>
 							<td>
-								<if value="!empty($d['template'])">
-									<ul class="module-list">
+								<ul class="module-list">
+									<li>系统模板</li>
+									<if value="!empty($d['template'])">
 										<foreach from="$d['template']" value="$t">
 											<li>{{$t}}</li>
 										</foreach>
-									</ul>
-								</if>
+									</if>
+								</ul>
 							</td>
 							<td>
 								<a href="?s=system/package/post&id={{$d['id']}}">编辑</a>
@@ -79,19 +74,21 @@
 				</table>
 			</div>
 		</div>
-		<button type="submit" class="btn btn-primary">删除选中套餐</button>
+		<button type="button" class="btn btn-primary" onclick="del()">删除选中套餐</button>
 	</form>
 </block>
 <script>
-	$("#form").submit(function () {
-		if ($(":checked").length == 0) {
-			util.message('请选择删除的套餐');
-			return false;
-		}
-		if (!confirm('确定删除选中的套餐吗?')) {
-			return false;
-		}
-	})
+	function del() {
+		require(['util'], function (util) {
+			util.confirm('确定删除所选套餐吗?', function () {
+				$.post('?s=system/package/remove', $('form').serialize(), function (res) {
+					if (res.valid == 1) {
+						util.message('删除成功', 'refresh');
+					}
+				}, 'json');
+			})
+		})
+	}
 </script>
 <style>
 	ul.module-list {

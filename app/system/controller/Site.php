@@ -36,33 +36,33 @@ class Site {
 
 	//站点列表
 	public function lists() {
-		$Site = new \system\model\Site();
-		$User = new User();
+		$site    = new \system\model\Site();
+		$user    = ( new User() )->find( v( "user.uid" ) );
+		$package = new Package();
 		//加载当前操作的站点缓存
-		$Site->loadSite();
-		$Site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
+		$site->loadSite();
+		$site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
 		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
 		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
 		     ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
 		     ->groupBy( 'site.siteid' );
 		//按网站名称搜索
 		if ( $sitename = q( 'post.sitename' ) ) {
-			$Site->where( 'site.name', 'like', "%{$sitename}%" );
+			$site->where( 'site.name', 'like', "%{$sitename}%" );
 		}
 		//按网站域名搜索
 		if ( $domain = q( 'post.domain' ) ) {
-			$Site->where( 'site.domain', 'like', "%{$domain}%" );
+			$site->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
-		if ( ! $User->isSuperUser( v( 'user.uid' ), 'return' ) ) {
-			$Site->where( 'user.uid', Session::get( 'user.uid' ) );
+		if ( ! $isSuperUser = $user->isSuperUser( v( 'user.uid' ), 'return' ) ) {
+			$site->where( 'user.uid', v( 'user.uid' ) );
 		}
-		$sites        = $Site->get();
-		$packageModel = new Package();
-		$userModel    = new User();
+		$sites = $site->get()->toArray();
+		//获取站点套餐与所有者数据
 		foreach ( $sites as $k => $v ) {
-			$v['package'] = $packageModel->getSiteAllPackageData( $v['siteid'] );
-			$v['owner']   = $userModel->getSiteOwner( $v['siteid'] );
+			$v['package'] = $package->getSiteAllPackageData( $v['siteid'] );
+			$v['owner']   = $user->getSiteOwner( $v['siteid'] );
 			if ( ! empty( $v['owner'] ) ) {
 				$v['owner']['group_name'] = Db::table( 'user_group' )->where( 'id', $v['owner']['groupid'] )->pluck( 'name' );
 			}
@@ -70,7 +70,7 @@ class Site {
 			$sites[ $k ] = $v;
 		}
 
-		return view()->with( 'sites', $sites );
+		return view()->with( [ 'sites' => $sites, 'user' => $user ] );
 	}
 
 	//网站列表页面,获取站点包信息
@@ -132,7 +132,8 @@ class Site {
 					$Site->updateSiteCache( $siteid );
 					go( u( 'post', [ 'step' => 'wechat', 'siteid' => $siteid ] ) );
 				}
-				View::make( 'site_setting' );
+
+				return view( 'site_setting' );
 			//设置公众号
 			case 'wechat':
 				$UserPermissionModel = new UserPermission();
@@ -156,13 +157,12 @@ class Site {
 					$Site->updateSiteCache( SITEID );
 					go( u( 'post', [ 'step' => 'access_setting', 'siteid' => SITEID ] ) );
 				}
-				View::make( 'post_weixin' );
+
+				return view( 'post_weixin' );
 			//设置权限,只有系统管理员可以操作
 			case 'access_setting':
 				//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
-				if ( ! $User->isSuperUser() ) {
-					go( u( 'post', [ 'step' => 'explain', 'siteid' => SITEID ] ) );
-				}
+				$User->isSuperUser( v( 'user.uid' ), 'return' );
 				if ( IS_POST ) {
 					//站点允许使用的空间大小
 					Db::table( 'site' )->where( 'siteid', SITEID )->update( [ 'allfilesize' => q( 'post.allfilesize', 200, 'intval' ) ] );
@@ -210,16 +210,15 @@ class Site {
 				//扩展模块
 				$extModule   = ( new SiteModules() )->getSiteExtModules( SITEID );
 				$extTemplate = ( new SiteTemplate() )->getSiteExtTemplates( SITEID );
-				View::with( [
+				return view( 'access_setting' )->with( [
 					'systemAllPackages' => $systemAllPackages,
-					'extPackage'        => ( new SitePackage() )->getSiteExtPackageIds( SITEID ),
-					'defaultPackage'    => ( new Package() )->getSiteDefaultPackageIds( SITEID ),
+					'extPackage'        => $packageModel->getSiteExtPackageIds( SITEID ),
+					'defaultPackage'    => $packageModel->getSiteDefaultPackageIds( SITEID ),
 					'extModule'         => $extModule,
 					'extTemplate'       => $extTemplate,
 					'user'              => $user,
 					'site'              => $Site->find( SITEID )
 				] );
-				View::make( 'access_setting' );
 			case 'explain':
 				//验证当前用户站点权限
 				if ( ! $User->isOwner( SITEID ) ) {
@@ -229,7 +228,8 @@ class Site {
 				$Site->updateSiteCache( SITEID );
 				//引导页面
 				$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
-				View::with( 'wechat', $wechat )->make( 'explain' );
+
+				return view( 'explain' )->with( [ 'wechat' => $wechat ] );
 		}
 	}
 

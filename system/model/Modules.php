@@ -53,12 +53,13 @@ class Modules extends Model {
 	 * 获取站点模块数据
 	 * 包括站点套餐内模块和为站点独立添加的模块
 	 *
-	 * @param int $siteid 站点编号
+	 * @param null $siteid 站点编号
+	 * @param bool $readFromCache
 	 *
-	 * @return array
+	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function getSiteAllModules( $siteid = NULL, $cache = TRUE ) {
+	public function getSiteAllModules( $siteid = NULL, $readFromCache = TRUE ) {
 		$siteid = $siteid ?: SITEID;
 		if ( empty( $siteid ) ) {
 			throw new \Exception( '$siteid 参数错误' );
@@ -68,7 +69,7 @@ class Modules extends Model {
 			return $cache[ $siteid ];
 		}
 		//读取缓存
-		if ( $cache ) {
+		if ( $readFromCache ) {
 			if ( $data = d( "modules:{$siteid}" ) ) {
 				return $data;
 			}
@@ -78,7 +79,7 @@ class Modules extends Model {
 		$modules = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐
-			$modules = $this->get();
+			$modules = $this->get()->toArray();
 		} else {
 			$moduleNames = [ ];
 			foreach ( $package as $p ) {
@@ -86,15 +87,15 @@ class Modules extends Model {
 			}
 			$moduleNames = array_merge( $moduleNames, ( new SiteModules() )->getSiteExtModulesName( $siteid ) );
 			if ( ! empty( $moduleNames ) ) {
-				$modules = $this->whereIn( 'name', $moduleNames )->get();
+				$modules = $this->whereIn( 'name', $moduleNames )->get()->toArray();
 			}
 		}
 		//加入系统模块
-		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get() );
+		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get()->toArray() );
 		foreach ( $modules as $k => $m ) {
-			$m['subscribes']  = unserialize( $m['subscribes'] )?:[];
-			$m['processors']  = unserialize( $m['processors'] )?:[];
-			$m['permissions'] = unserialize( $m['permissions'] )?:[];
+			$m['subscribes']  = unserialize( $m['subscribes'] ) ?: [ ];
+			$m['processors']  = unserialize( $m['processors'] ) ?: [ ];
+			$m['permissions'] = unserialize( $m['permissions'] ) ?: [ ];
 			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get();
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;

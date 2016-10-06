@@ -21,7 +21,7 @@
                     <thead>
                     <tr>
                         <th width="80">排序</th>
-                        <th>名称</th>
+                        <th width="300">名称</th>
                         <th width="120">标识</th>
                         <th width="180">图标</th>
                         <th width="180">链接地址</th>
@@ -119,6 +119,7 @@
 
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
             $scope.menus = {{$menus}};
+            //更改菜单的显示状态
             $scope.changeDisplayStatus = function (id, state) {
                 $.post("{{u('changeDisplayState')}}", {id: id, is_display: state}, function () {
                     location.reload(true);

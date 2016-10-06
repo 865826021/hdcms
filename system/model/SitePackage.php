@@ -24,16 +24,4 @@ class SitePackage extends Model {
 			[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'package_id', 'required', '套餐编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 		];
-
-	/**
-	 * 获取为站点自定义扩展套餐编号
-	 * 套餐由用户组套餐+站点扩展套餐构成
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return array
-	 */
-	public function getSiteExtPackageIds( $siteid ) {
-		return $this->where( 'siteid', '=', $siteid )->lists( 'package_id' ) ?: [ ];
-	}
 }

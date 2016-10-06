@@ -17,16 +17,16 @@ class User extends Model {
 	protected $denyInsertFields = [ 'uid' ];
 	protected $validate
 	                            = [
-			[ 'username', 'required', '用户名不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'username', 'required', '用户名不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 			[ 'username', 'regexp:/^[a-z][\w@]+$/i', '用户名必须是字母,数字,下划线或 @ 符号,并且必须以字母开始', self::EXIST_VALIDATE, self::MODEL_INSERT ],
-			[ 'username', 'unique', '帐号已经存在,请重新注册', self::EXIST_VALIDATE, self::MODEL_INSERT ],
-			[ 'groupid', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'username', 'unique', '用户名已经存在', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'groupid', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'password', 'required', '密码不能为空', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
 			[ 'password', 'minlen:6', '请输入不少于6位的密码', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-			[ 'qq', 'regexp:/^\d+$/', '请输入正确的QQ号', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
+			[ 'qq', 'regexp:/^\d+$/', '请输入正确的QQ号', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'qq', 'unique', 'QQ号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
-			[ 'email', 'unique', '邮箱已经被注册', self::NOT_EMPTY_VALIDATE, self::MODEL_INSERT ],
+			[ 'email', 'unique', '邮箱已经被注册', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'mobile', 'regexp:/^\d{11}$/', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'mobile', 'unique', '手机号已经被其他用户注册', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		];
@@ -65,18 +65,6 @@ class User extends Model {
 		];
 
 	/**
-	 * 获取默认组
-	 *
-	 * @param $val
-	 * @param $data
-	 *
-	 * @return array|mixed|string
-	 */
-	protected function autoGroupId( $val, $data ) {
-		return v( "system.register.groupid" );
-	}
-
-	/**
 	 * 密码自动完成处理
 	 *
 	 * @param $val
@@ -92,14 +80,11 @@ class User extends Model {
 
 	/**
 	 * 删除用户
-	 *
-	 * @param $uid
-	 *
 	 * @return bool
 	 */
-	public function remove( $uid ) {
+	public function remove() {
 		foreach ( $this->relationDeleteTable as $t ) {
-			Db::table( $t )->where( 'uid', $uid )->delete();
+			Db::table( $t )->where( 'uid', $this->uid )->delete();
 		}
 
 		return TRUE;
@@ -113,7 +98,7 @@ class User extends Model {
 	 * @return bool
 	 */
 	public function login( array $data ) {
-		$user = Db::table( 'user' )->where( 'username', $data['username'] )->find();
+		$user = Db::table( 'user' )->where( 'username', $data['username'] )->first();
 		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
 			$this->error = '密码输入错误';
 
@@ -144,7 +129,7 @@ class User extends Model {
 	 * @return bool
 	 */
 	public function checkPassword( $password, $username ) {
-		$user = Db::table( 'user' )->where( 'username', $username )->find();
+		$user = Db::table( 'user' )->where( 'username', $username )->first();
 
 		return $user['password'] == md5( $password . $user['security'] );
 	}
@@ -174,19 +159,11 @@ class User extends Model {
 	}
 
 	/**
-	 * 是否为系统管理员
-	 * @return bool
+	 * 会员组表关联
+	 * @return mixed
 	 */
-	public function isSuperUser( $uid, $type = 'deal' ) {
-		if ( Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' ) >= 0 ) {
-			if ( $type == 'deal' ) {
-				message( '你不是系统管理员,无法执行该功能', 'back', 'error' );
-			} else {
-				return FALSE;
-			}
-		}
-
-		return TRUE;
+	public function userGroup() {
+		return $this->belongsTo( 'system\model\UserGroup', 'groupid' );
 	}
 
 	/**
@@ -268,7 +245,7 @@ class User extends Model {
 		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
 			return FALSE;
 		}
-		if ( $this->isSuperUser( $uid ) ) {
+		if ( $this->isSuperUser( $uid, 'return' ) ) {
 			return TRUE;
 		}
 
@@ -286,11 +263,11 @@ class User extends Model {
 	 */
 	public function isManage( $siteid = NULL, $uid = NULL ) {
 		$siteid = $siteid ?: SITEID;
-		$uid    = $uid ?: Session::get( "user.uid" );
+		$uid    = $uid ?: v( "user.uid" );
 		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
 			return FALSE;
 		}
-		if ( $this->isSuperUser( $uid ) ) {
+		if ( $this->isSuperUser( $uid, 'return' ) ) {
 			return TRUE;
 		}
 
@@ -316,7 +293,7 @@ class User extends Model {
 		if ( ! ( new Site() )->isSite( $siteid ) || empty( $uid ) ) {
 			return FALSE;
 		}
-		if ( ( new User() )->isSuperUser( $uid ) ) {
+		if ( ( new User() )->isSuperUser( $uid, 'return' ) ) {
 			return TRUE;
 		}
 
@@ -369,5 +346,16 @@ class User extends Model {
 
 			return $res ? $res[0]['role'] : FALSE;
 		}
+	}
+
+	/**
+	 * 获取用户拥有的站点数量
+	 *
+	 * @param $uid
+	 *
+	 * @return mixed
+	 */
+	public function siteNums( $uid ) {
+		return Db::table( 'site_user' )->where( 'uid', $uid )->where( 'role', 'owner' )->count();
 	}
 }

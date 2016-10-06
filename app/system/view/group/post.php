@@ -68,31 +68,16 @@
 					</tr>
 					</thead>
 					<tbody>
-					<tr>
-						<td>
-							<if value="in_array(-1,$group['package'])">
-								<input type="checkbox" name="package[]" value="-1" checked="checked">
-								<else/>
-								<input type="checkbox" name="package[]" value="-1">
-							</if>
-						</td>
-						<td>所有服务</td>
-						<td>
-							<span class="label label-danger">系统所有服务</span>
-						</td>
-						<td>
-							<span class="label label-danger">系统所有模板</span>
-						</td>
-					</tr>
 					<foreach from="$packages" value="$p">
 						<tr>
 							<td>
-								<if value="in_array($p['id'],$group['package'])">
-									<input type="checkbox" name="package[]" value="{{$p['id']}}" checked="checked">
-									<else/>
-									<input type="checkbox" name="package[]" value="{{$p['id']}}">
+								<if value="$p['id']==0">
+									<input type="checkbox" disabled="disabled" checked="checked">
+									<elseif value="in_array($p['id'],$group['package'])">
+										<input type="checkbox" name="package[]" value="{{$p['id']}}" checked="checked">
+										<else/>
+										<input type="checkbox" name="package[]" value="{{$p['id']}}">
 								</if>
-
 							</td>
 							<td>{{$p['name']}}</td>
 							<td>
@@ -102,7 +87,10 @@
 								</foreach>
 							</td>
 							<td>
-								&nbsp;
+								<span class="label label-success">系统模板</span>
+								<foreach from="$p['template']" value="$v">
+									<span class="label label-info">{{$v['title']}}</span>
+								</foreach>
 							</td>
 						</tr>
 					</foreach>

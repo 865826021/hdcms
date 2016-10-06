@@ -25,17 +25,17 @@ class Entry {
 		$config         = new Config();
 		$User           = new User();
 		$registerConfig = $config->getByName( 'register' );
-		if ( $registerConfig['is_open'] == 0 ) {
+		if ( v( 'system.site.is_open' ) == 0 ) {
 			message( '网站暂时关闭注册', 'back', 'error' );
 		}
 		if ( IS_POST ) {
-			if ( isset( $_POST['code'] ) && strtoupper( $_POST['code'] ) != Code::get() ) {
+			if ( ! Code::auth( 'code' ) ) {
 				message( '验证码输入错误', 'back', 'error' );
 			}
 			//默认用户组
-			$_POST['groupid'] = $registerConfig['groupid'];
-			$_POST['status']  = $registerConfig['audit'] == 1 ? 0 : 1;
-			if ( ! $User->add() ) {
+			$User['groupid'] = v( 'system.register.groupid' );
+			$User['status']  = v( 'system.register.audit' );
+			if ( ! $User->save() ) {
 				message( $User->getError(), 'back', 'error' );
 			}
 			message( '注册成功,请登录系统', u( 'login', [ 'from' => $_GET['from'] ] ) );

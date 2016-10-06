@@ -43,7 +43,6 @@
 
 			<div class="col-sm-10">
 				<select class="js-example-basic-single form-control" name="groupid">
-					<option value="0">请选择所属用户组</option>
 					<foreach from="$groups" value="$g">
 						<option value="{{$g['id']}}">{{$g['name']}}</option>
 					</foreach>

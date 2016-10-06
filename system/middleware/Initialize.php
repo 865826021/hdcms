@@ -1,4 +1,5 @@
-<?php namespace system\middleware;
+<?php
+namespace system\middleware;
 
 use system\model\Site;
 
@@ -16,55 +17,44 @@ class Initialize {
 		$this->initUserInfo();
 		//加载系统配置项,对是系统配置不是站点配置
 		$this->loadConfig();
-		//域名检测
-		$this->checkDomain();
-		$this->moduleInitialize();
+		//初始站点数据
 		$this->siteInitialize();
+		//初始模块数据
+		$this->moduleInitialize();
 	}
 
 	//初始用户信息
 	protected function initUserInfo() {
 		//前台访问
-		$user['user_type'] = isset( $_GET['t'] ) && $_GET['t'] == 'web' ? 'member' : 'admin';
-		switch ( $user['user_type'] ) {
+		$user                        = [ ];
+		$user['system']['user_type'] = isset( $_GET['t'] ) && $_GET['t'] == 'web' ? 'member' : 'admin';
+		switch ( $user['system']['user_type'] ) {
 			case 'member':
 				//前台用户
 				if ( isset( $_SESSION['member_uid'] ) ) {
-					$user = array_merge( $user, Db::table( 'member' )->find( $_SESSION['member_uid'] ) );
+					$user['user'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
 					v( 'user', $user );
 				}
 				break;
 			case 'admin':
 				//后台用户
 				if ( isset( $_SESSION['admin_uid'] ) ) {
-					$user = array_merge( $user, Db::table( 'user' )->find( $_SESSION['admin_uid'] ) );
+					$user['user']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] )->toArray();
+					$group                        = Db::table( 'user_group' )->where( 'id', $user['groupid'] )->first();
+					$user['group']                = $group ? $group->toArray() : [ ];
+					$user['system']['super_user'] = $user['group']['id'] == 0;
 					v( 'user', $user );
 				}
 				break;
 		}
-		v( 'user', $user );
 	}
 
 	//加载系统配置项
 	protected function loadConfig() {
-		$config             = Db::table( 'config' )->field( 'site,register' )->find( 1 );
+		$config             = Db::table( 'config' )->field( 'site,register' )->find( 1 )->toArray();
 		$config['site']     = json_decode( $config['site'], TRUE );
 		$config['register'] = json_decode( $config['register'], TRUE );
-		v( 'system', $config );
-	}
-
-	//域名检测
-	protected function checkDomain() {
-		//		if ( empty( $_SERVER['QUERY_STRING'] ) ) {
-		//			$domain = 'http://' . trim( $_SERVER['HTTP_HOST'], '/' );
-		//			if ( $web = Db::table( 'web' )->where( 'domain', $domain )->first() ) {
-		//				$_GET['siteid'] = $web['siteid'];
-		//				$_GET['webid']  = $web['id'];
-		//				$_GET['a']      = 'entry/home';
-		//				$_GET['m']      = 'article';
-		//				$_GET['t']      = 'web';
-		//			}
-		//		}
+		v( 'config', $config );
 	}
 
 	//模块初始化

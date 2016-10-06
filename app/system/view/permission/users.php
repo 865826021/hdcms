@@ -112,7 +112,6 @@
 						})
 						if (uid) {
 							$.post("?s=system/permission/addOperator&siteid={{$_GET['siteid']}}", {uid: uid}, function (res) {
-								console.log(res);
 								if (res.valid == 1) {
 									util.message(res.message, 'refresh', 'success');
 								} else {

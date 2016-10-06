@@ -1,4 +1,4 @@
-<?php namespace app\system\controller;
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace app\system\controller;
 
 use system\model\Menu;
 use system\model\Modules;
@@ -22,38 +23,34 @@ use web\auth;
  * @author 向军
  */
 class Permission {
-	protected $db;
 
 	public function __construct() {
-		if ( ! m( "User" )->isLogin() ) {
-			message( '请登录后进行操作', 'back', 'error' );
+		if ( ! ( new User )->isLogin() ) {
+			message( '请登录后进行操作', 'system/entry/login', 'error' );
 		}
-		$this->db = new Site();
 	}
 
 	//站点管理员设置
 	public function users() {
-		if ( ! ( new User() )->isManage( v( 'site.siteid' ) ) ) {
+		$User = new User();
+		if ( ! $User->isManage( SITEID ) ) {
 			message( '你没有站点的管理权限', 'back', 'error' );
 		}
 		//获取除站长外的站点操作员
-		$users = Db::table( 'user' )
-		           ->join( 'site_user', 'user.uid', '=', 'site_user.uid' )
-		           ->where( 'role', '<>', 'owner' )
-		           ->andWhere( 'siteid', v( 'site.siteid' ) )
-		           ->get();
-		$owner = ( new User() )->getSiteOwner( v( 'site.siteid' ) );
-		View::with( [ 'users' => $users, 'owner' => $owner ] )->make();
+		$users = $User->join( 'site_user', 'user.uid', '=', 'site_user.uid' )->where( 'role', '<>', 'owner' )->andWhere( 'siteid', SITEID )->get();
+		//站长数据
+		$owner = $User->getSiteOwner( SITEID );
+
+		return view()->with( [ 'users' => $users, 'owner' => $owner ] );
 	}
 
 	//添加操作员
 	public function addOperator() {
-		$siteid = v( 'site.siteid' );
-		if ( ( new User() )->isManage( $siteid ) ) {
+		if ( ( new User() )->isManage( SITEID ) ) {
 			foreach ( q( 'post.uid', [ ] ) as $uid ) {
-				if ( ! Db::table( "site_user" )->where( "uid", $uid )->where( "siteid", $siteid )->get() ) {
+				if ( ! Db::table( "site_user" )->where( "uid", $uid )->where( "siteid", SITEID )->get() ) {
 					Db::table( 'site_user' )->insert( [
-						'siteid' => $siteid,
+						'siteid' => SITEID,
 						'uid'    => $uid,
 						'role'   => 'operate'
 					] );

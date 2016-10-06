@@ -1,4 +1,4 @@
-<?php namespace app\home\controller;
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,10 +7,12 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace server;
 
-class Entry {
-	//首页
-	public function index() {
-		return view( 'theme/article/index.html' );
+use hdphp\kernel\ServiceFacade;
+
+class UtilFacade extends ServiceFacade {
+	public static function getFacadeAccessor() {
+		return 'Server';
 	}
 }

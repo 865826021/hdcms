@@ -18,14 +18,14 @@
 	<div class="clearfix">
 		<div class="form-group">
 			<form class="form-horizontal" action="" method="post">
-				<input type="hidden" name="id" value="{{$field['id']}}">
+				<input type="hidden" name="id" value="{{$package['id']}}">
 				<h5 class="page-header">服务套餐管理</h5>
 
 				<div class="form-group">
 					<label for="name" class="col-sm-2 control-label">服务套餐名称</label>
 
 					<div class="col-sm-10">
-						<input type="text" name="name" class="form-control" value="{{Arr::get($field,'name','')}}">
+						<input type="text" name="name" class="form-control" value="{{$package->name}}">
 					</div>
 				</div>
 
@@ -36,7 +36,7 @@
 						<table class="table table-hover">
 							<thead>
 							<tr>
-								<th>
+								<th width="150">
 									<input type="checkbox" class="selectAll"> (全选)选择
 								</th>
 								<th>模块名称</th>
@@ -50,9 +50,9 @@
 								<tr>
 									<td>
 										<if value="$p['is_system']">
-											<input type="checkbox" name="name" checked="checked" disabled="disabled">
+											<input type="checkbox" checked="checked" disabled="disabled">
 											<else/>
-											<if value="in_array($p['name'], $field['modules'])">
+											<if value="$package && in_array($p['name'], $package['modules'])">
 												<input type="checkbox" name="modules[]" value="{{$p['name']}}" checked="checked">
 												<else/>
 												<input type="checkbox" name="modules[]" value="{{$p['name']}}">
@@ -80,7 +80,7 @@
 						<table class="table table-hover">
 							<thead>
 							<tr>
-								<th>
+								<th width="150">
 									<input type="checkbox" class="selectAll"> (全选)选择
 								</th>
 								<th>模板名称</th>
@@ -93,10 +93,12 @@
 							<foreach from="$templates" value="$t">
 								<tr>
 									<td>
-										<if value="in_array($t['name'], $field['template'])">
-											<input type="checkbox" name="template[]" value="{{$t['name']}}" checked="checked">
-											<else/>
-											<input type="checkbox" name="template[]" value="{{$t['name']}}">
+										<if value="$t['is_system']">
+											<input type="checkbox" checked="checked" disabled="disabled">
+											<elseif value="$package && in_array($t['name'], $package['template'])">
+												<input type="checkbox" name="template[]" value="{{$t['name']}}" checked="checked">
+												<else/>
+												<input type="checkbox" name="template[]" value="{{$t['name']}}">
 										</if>
 									</td>
 									<td>{{$t['title']}}</td>
@@ -125,7 +127,7 @@
 <script>
 	$(function () {
 		$('.selectAll').change(function () {
-			$(this).parents('table').eq(0).find("[type='checkbox']").not(":disabled").prop('checked', $( this).prop('checked'));
+			$(this).parents('table').eq(0).find("[type='checkbox']").not(":disabled").prop('checked', $(this).prop('checked'));
 		})
 	})
 </script>

@@ -1,5 +1,4 @@
-<?php namespace app\system\controller;
-
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -8,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace app\system\controller;
 
 use system\model\User;
 
@@ -18,9 +18,7 @@ use system\model\User;
  */
 class Config {
 	public function __construct() {
-		if ( ! ( new User() )->isSuperUser() ) {
-			message( '只有系统管理员可以操作', 'back', 'error' );
-		}
+		( new User() )->isSuperUser( v( 'user.uid' ) );
 	}
 
 	//注册配置管理
@@ -33,8 +31,8 @@ class Config {
 			$Config->save();
 			message( '保存成功', 'back', 'success' );
 		}
-		View::with( 'group', Arr::string_to_int( Db::table( 'user_group' )->get() ) );
-		View::with( 'field', Arr::string_to_int( $Config->getByName( 'register' ) ) );
+		View::with( 'group', Db::table( 'user_group' )->get() );
+		View::with( 'field', $Config->getByName( 'register' ) );
 
 		return view();
 	}

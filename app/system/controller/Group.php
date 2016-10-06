@@ -26,21 +26,22 @@ class Group {
 	public function __construct() {
 		$this->user      = new User();
 		$this->userGroup = new UserGroup();
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以执行套餐管理', 'back', 'error' );
-		}
+		$this->user->isSuperUser( v( 'user.uid' ) );
 	}
 
 	//用户组列表
 	public function lists() {
 		$groups = Db::table( 'user_group' )->get();
+
 		return view()->with( 'groups', $groups );
 	}
 
 	//删除
 	public function remove() {
-		foreach ( (array) $_POST['id'] as $id ) {
-			$this->userGroup->delete($id);
+		foreach ( (array) Request::post( 'id' ) as $id ) {
+			$this->userGroup->delete( $id );
+			//更改默认用户组
+			Db::table( 'user' )->where( 'groupid', $id )->update( [ 'groupid' => v( 'system.register.groupid' ) ] );
 		}
 		message( '更新用户组成功', 'lists', 'success' );
 	}
@@ -48,16 +49,19 @@ class Group {
 	//编辑用户组
 	public function post() {
 		if ( IS_POST ) {
-			$action = q( 'get.id' ) ? 'save' : 'add';
-			if ( ! $id = $this->userGroup->$action() ) {
-				message( $this->userGroup->getError(), 'back', 'error' );
-			}
-			message( '用户组数据更新成功', u( 'post', [ 'id' => $id ] ), 'success' );
+			$this->userGroup->id       = Request::post( 'id', 0 );
+			$this->userGroup->name     = Request::post( 'name' );
+			$this->userGroup->maxsite  = Request::post( 'maxsite', 1, 'intval' );
+			$this->userGroup->daylimit = Request::post( 'daylimit', 7, 'intval' );
+			$this->userGroup->package  = Request::post( 'package', [ ] );
+			$this->userGroup->save();
+			message( '用户组数据保存成功', 'lists', 'success' );
 		}
-		$group            = Db::table( 'user_group' )->where( 'id', q( 'get.id' ) )->first();
+		$group            = $this->userGroup->find( Request::get( 'id' ) );
 		$group['package'] = unserialize( $group['package'] ) ?: [ ];
-		//服务套餐
+		//系统所有套餐
 		$packages = ( new Package() )->getSystemAllPackageData();
-		View::with( [ 'packages' => $packages, 'group' => $group ] )->make();
+
+		return view()->with( [ 'packages' => $packages, 'group' => $group ] );
 	}
 }
