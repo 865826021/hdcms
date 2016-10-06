@@ -11,6 +11,11 @@ namespace system\model;
 
 use hdphp\model\Model;
 
+/**
+ * 模块管理模型
+ * Class Modules
+ * @package system\model
+ */
 class Modules extends Model {
 	protected $table            = 'modules';
 	protected $denyInsertFields = [ 'mid' ];
@@ -39,75 +44,6 @@ class Modules extends Model {
 			[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'locality', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		];
-	protected $industry
-	                            = [
-			'business'  => '主要业务',
-			'customer'  => '客户关系',
-			'marketing' => '营销与活动',
-			'tools'     => '常用服务与工具',
-			'industry'  => '行业解决方案',
-			'other'     => '其他'
-		];
-
-	/**
-	 * 获取站点模块数据
-	 * 包括站点套餐内模块和为站点独立添加的模块
-	 *
-	 * @param null $siteid 站点编号
-	 * @param bool $readFromCache
-	 *
-	 * @return array|mixed
-	 * @throws \Exception
-	 */
-	public function getSiteAllModules( $siteid = NULL, $readFromCache = TRUE ) {
-		$siteid = $siteid ?: SITEID;
-		if ( empty( $siteid ) ) {
-			throw new \Exception( '$siteid 参数错误' );
-		}
-		static $cache = [ ];
-		if ( isset( $cache[ $siteid ] ) ) {
-			return $cache[ $siteid ];
-		}
-		//读取缓存
-		if ( $readFromCache ) {
-			if ( $data = d( "modules:{$siteid}" ) ) {
-				return $data;
-			}
-		}
-		//获取站点可使用的所有套餐
-		$package = ( new Package() )->getSiteAllPackageData( $siteid );
-		$modules = [ ];
-		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
-			//拥有[所有服务]套餐
-			$modules = $this->get()->toArray();
-		} else {
-			$moduleNames = [ ];
-			foreach ( $package as $p ) {
-				$moduleNames = array_merge( $moduleNames, $p['modules'] );
-			}
-			$moduleNames = array_merge( $moduleNames, ( new SiteModules() )->getSiteExtModulesName( $siteid ) );
-			if ( ! empty( $moduleNames ) ) {
-				$modules = $this->whereIn( 'name', $moduleNames )->get()->toArray();
-			}
-		}
-		//加入系统模块
-		$modules = array_merge( $modules, $this->where( 'is_system', 1 )->get()->toArray() );
-		foreach ( $modules as $k => $m ) {
-			$m['subscribes']  = unserialize( $m['subscribes'] ) ?: [ ];
-			$m['processors']  = unserialize( $m['processors'] ) ?: [ ];
-			$m['permissions'] = unserialize( $m['permissions'] ) ?: [ ];
-			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get();
-			foreach ( $binds as $b ) {
-				$m['budings'][ $b['entry'] ][] = $b;
-			}
-			$modules[ $k ] = $m;
-		}
-
-		d( "modules:{$siteid}", $modules );
-
-		return $cache[ $siteid ] = $modules;
-	}
-
 	/**
 	 * 删除模块
 	 *
@@ -174,42 +110,5 @@ class Modules extends Model {
 		$siteModel->updateAllSiteCache();
 
 		return TRUE;
-	}
-
-	/**
-	 * 按行业获取模块列表
-	 *
-	 * @param array $modules 限定模块(只有这些模块获取)
-	 *
-	 * @return array
-	 */
-	public function getModulesByIndustry( $modules = [ ] ) {
-		$data = [ ];
-		foreach ( (array) v( 'modules' ) as $m ) {
-			if ( ! empty( $modules ) && ! in_array( $m['name'], $modules ) || $m['is_system'] == 1 ) {
-				continue;
-			}
-			$data[ $this->industry[ $m['industry'] ] ][] = [
-				'title' => $m['title'],
-				'name'  => $m['name']
-			];
-		}
-
-		return $data;
-	}
-
-	/**
-	 * 获取模块标题列表
-	 * @return array
-	 */
-	public function getTitleLists() {
-		return [
-			'business'  => '主要业务',
-			'customer'  => '客户关系',
-			'marketing' => '营销与活动',
-			'tools'     => '常用服务与工具',
-			'industry'  => '行业解决方案',
-			'other'     => '其他'
-		];
 	}
 }

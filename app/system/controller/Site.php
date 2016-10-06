@@ -14,7 +14,6 @@ use system\model\MemberGroup;
 use system\model\Modules;
 use system\model\Package;
 use system\model\SiteModules;
-use system\model\SitePackage;
 use system\model\SiteSetting;
 use system\model\SiteTemplate;
 use system\model\SiteUser;
@@ -28,10 +27,9 @@ use system\model\UserPermission;
  * @package system\controller
  */
 class Site {
-
 	public function __construct() {
 		//登录检测
-		( new User() )->isLogin();
+		Util::instance( 'user' )->isLogin();
 	}
 
 	//站点列表
@@ -39,8 +37,6 @@ class Site {
 		$site    = new \system\model\Site();
 		$user    = ( new User() )->find( v( "user.uid" ) );
 		$package = new Package();
-		//加载当前操作的站点缓存
-		$site->loadSite();
 		$site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
 		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
 		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
@@ -55,14 +51,14 @@ class Site {
 			$site->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
-		if ( ! $isSuperUser = $user->isSuperUser( v( 'user.uid' ), 'return' ) ) {
+		if ( ! $isSuperUser = Util::instance( 'user' )->isSuperUser() ) {
 			$site->where( 'user.uid', v( 'user.uid' ) );
 		}
-		$sites = $site->get()->toArray();
+		$sites = $site->get();
 		//获取站点套餐与所有者数据
 		foreach ( $sites as $k => $v ) {
-			$v['package'] = $package->getSiteAllPackageData( $v['siteid'] );
-			$v['owner']   = $user->getSiteOwner( $v['siteid'] );
+			$v['package'] = Util::instance( 'package' )->getSiteAllPackageData( $v['siteid'] );
+			$v['owner']   = Util::instance( 'user' )->getSiteOwner( $v['siteid'] );
 			if ( ! empty( $v['owner'] ) ) {
 				$v['owner']['group_name'] = Db::table( 'user_group' )->where( 'id', $v['owner']['groupid'] )->pluck( 'name' );
 			}
@@ -210,6 +206,7 @@ class Site {
 				//扩展模块
 				$extModule   = ( new SiteModules() )->getSiteExtModules( SITEID );
 				$extTemplate = ( new SiteTemplate() )->getSiteExtTemplates( SITEID );
+
 				return view( 'access_setting' )->with( [
 					'systemAllPackages' => $systemAllPackages,
 					'extPackage'        => $packageModel->getSiteExtPackageIds( SITEID ),

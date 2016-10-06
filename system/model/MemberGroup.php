@@ -33,25 +33,4 @@ class MemberGroup extends Model {
 	protected function autoSiteid() {
 		return v( "site.siteid" );
 	}
-
-	/**
-	 * 获取站点默认组
-	 * @return mixed
-	 */
-	public function getDefaultGroup() {
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
-	}
-
-	/**
-	 * 获取站点所有组
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return array
-	 */
-	public function getSiteGroups( $siteid = NULL ) {
-		$siteid = $siteid ?: SITEID;
-
-		return $this->where( 'siteid', $siteid )->get() ?: [ ];
-	}
 }

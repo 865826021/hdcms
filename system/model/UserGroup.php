@@ -16,23 +16,5 @@ class UserGroup extends Model {
 			[ 'package', 'serialize', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
 		];
 
-	/**
-	 * 获取默认组
-	 */
-	public function getDefaultGroup() {
-		return 1;
-	}
 
-	/**
-	 * 获取用户的用户组信息
-	 *
-	 * @param int $uid 用户编号
-	 *
-	 * @return mixed
-	 */
-	public function getUserGroup( $uid ) {
-		$group_id = Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' );
-
-		return $this->find( $group_id );
-	}
 }

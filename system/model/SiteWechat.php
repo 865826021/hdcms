@@ -41,28 +41,4 @@ class SiteWechat extends Model {
 	protected function autoEncodingaeskey() {
 		return substr( md5( time() ) . md5( time() ), 0, 43 );
 	}
-
-	/**
-	 * 初始化站点的微信
-	 *
-	 * @param $siteid
-	 *
-	 * @return 微信表新增主键编号
-	 */
-	public function initSiteWeChat( $siteid ) {
-		$data = [
-			'siteid'     => $siteid,
-			'wename'     => '',
-			'account'    => '',
-			'original'   => '',
-			'level'      => 1,
-			'appid'      => '',
-			'appsecret'  => '',
-			'qrcode'     => '',
-			'icon'       => '',
-			'is_connect' => 0,
-		];
-
-		return $this->insertGetId( $data );
-	}
 }

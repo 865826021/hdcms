@@ -18,13 +18,13 @@ use system\model\User;
  * @author 向军
  */
 class Menu {
-	protected $user;
 	protected $menu;
 
 	public function __construct() {
-		$this->user = new User();
 		$this->menu = new \system\model\Menu();
-		$this->user->isSuperUser( v( "user.uid" ) );
+		if ( ! service( 'user' )->isSuperUser() ) {
+			message( '您不是系统管理员无法进行操作', 'back', 'error' );
+		}
 	}
 
 	//编辑菜单
@@ -57,7 +57,9 @@ class Menu {
 		return view()->with( 'menus', json_encode( $menus, JSON_UNESCAPED_UNICODE ) );
 	}
 
-	//更改显示状态
+	/**
+	 * 更改显示状态
+	 */
 	public function changeDisplayState() {
 		$this->menu->id         = Request::post( 'id' );
 		$this->menu->is_display = Request::post( 'is_display' );
@@ -65,9 +67,11 @@ class Menu {
 		ajax( [ 'valid' => TRUE, 'message' => '菜单更改成功' ] );
 	}
 
-	//删除菜单
+	/**
+	 * 删除菜单
+	 */
 	public function delMenu() {
-		$data         = Db::table( 'menu' )->get();
+		$data         = $this->menu->get();
 		$menu         = Data::channelList( $data, $_POST['id'], "&nbsp;", 'id', 'pid' );
 		$menu[]['id'] = $_POST['id'];
 		foreach ( $menu as $m ) {

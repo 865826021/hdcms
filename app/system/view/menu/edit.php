@@ -69,7 +69,7 @@
                             <input type="text" ng-if="v.new_add && v._level==3" ng-model="v.append_url" class="form-control" placeholder="子链接地址">
                         </td>
                         <td>
-                            <span class="btn btn-danger system" ng-if="!v.new_add && !v.is_system" title="删除菜单">删除</span>&nbsp;
+                            <span class="btn btn-danger system" ng-if="!v.new_add && v.is_system==0" title="删除菜单" ng-click="delMenu(v)">删除</span>&nbsp;
                             <i class="fa fa-times-circle" ng-if="v.new_add" style="cursor: pointer" onclick="$(this).parents('tr').eq(0).remove();"></i>
                         </td>
                     </tr>
@@ -171,12 +171,12 @@
             };
 
             //删除菜单
-            $scope.delMenu = function (id) {
-                if (confirm('确定删除菜单吗?')) {
-                    $.post("{{u('delMenu')}}", {id: id}, function () {
+            $scope.delMenu = function (item) {
+                util.confirm('删除菜单将删除当前菜单及所有子菜单,确定删除吗?',function(){
+                    $.post("{{u('delMenu')}}", {id: item.id}, function () {
                         location.reload(true);
                     })
-                }
+                })
             }
 
             //提交表单

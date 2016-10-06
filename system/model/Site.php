@@ -9,9 +9,13 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-//站点服务
 use hdphp\model\Model;
 
+/**
+ * 站点模型
+ * Class Site
+ * @package system\model
+ */
 class Site extends Model {
 	protected $table = 'site';
 	protected $validate
@@ -26,104 +30,6 @@ class Site extends Model {
 			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'allfilesize', 200, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 		];
-
-	//加载站点缓存
-	public function loadSite() {
-		//缓存存在时不获取
-		if ( v( 'site' ) ) {
-			return TRUE;
-		}
-		//站点信息
-		v( 'site.info', d( "site:" . SITEID ) );
-		//站点设置
-		v( 'site.setting', d( "setting:" . SITEID ) );
-		//微信帐号
-		v( 'site.wechat', d( "wechat:" . SITEID ) );
-		//设置微信配置
-		$config = [
-			"token"          => v( 'wechat.token' ),
-			"encodingaeskey" => v( 'wechat.encodingaeskey' ),
-			"appid"          => v( 'wechat.appid' ),
-			"appsecret"      => v( 'wechat.appsecret' ),
-			"mch_id"         => v( 'setting.pay.weichat.mch_id' ),
-			"key"            => v( 'setting.pay.weichat.key' ),
-			"apiclient_cert" => v( 'setting.pay.weichat.apiclient_cert' ),
-			"apiclient_key"  => v( 'setting.pay.weichat.apiclient_key' ),
-			"rootca"         => v( 'setting.pay.weichat.rootca' ),
-			"back_url"       => '',
-		];
-		//设置微信通信数据配置
-		c( 'weixin', array_merge( c( 'weixin' ), $config ) );
-		//设置邮箱配置
-		c( 'mail', v( 'setting.smtp' ) );
-
-		return TRUE;
-	}
-
-	/**
-	 * 更新站点数据缓存
-	 *
-	 * @param int $siteid 网站编号
-	 *
-	 * @return bool
-	 */
-	public function updateSiteCache( $siteid = NULL ) {
-		$siteid = $siteid ?: SITEID;
-		//站点微信信息缓存
-		$wechat         = Db::table( 'site_wechat' )->where( 'siteid', $siteid )->first();
-		$data['wechat'] = $wechat ? $wechat->toArray() : [ ];
-		//站点信息缓存
-		$site         = Db::table( 'site' )->where( 'siteid', $siteid )->first();
-		$data['site'] = $site ? $site->toArray() : [ ];
-		//站点设置缓存
-		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteid )->first();
-		$setting                     = $setting ? $setting->toArray() : [ ];
-		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
-		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
-		$setting ['register']        = unserialize( $setting['register'] );
-		$setting ['smtp']            = unserialize( $setting['smtp'] );
-		$setting ['pay']             = unserialize( $setting['pay'] );
-		$data['setting']             = $setting;
-		//站点模块
-		$data['modules'] = ( new Modules() )->getSiteAllModules( $siteid, FALSE );
-		foreach ( $data as $key => $value ) {
-			d( "{$key}:{$siteid}", $value );
-		}
-
-		return TRUE;
-	}
-
-	/**
-	 * 更新所有站点缓存
-	 */
-	public function updateAllSiteCache() {
-		foreach ( $this->lists( 'siteid' ) as $siteid ) {
-			$this->updateSiteCache( $siteid );
-		}
-
-		return TRUE;
-	}
-
-	/**
-	 * 站点是否存在
-	 *
-	 * @param $siteid
-	 *
-	 * @return bool
-	 */
-	public function isSite( $siteid ) {
-		return $this->where( 'siteid', $siteid )->get() ? TRUE : FALSE;
-	}
-
-	/**
-	 * 获取站点关联表
-	 *
-	 * @param int $siteid 站点编号
-	 */
-	public function getSiteRelationTables() {
-		$tables = Db::getAllTableInfo();
-		p( $tables );
-	}
 
 	/**
 	 * 删除(注销)站点
@@ -181,39 +87,5 @@ class Site extends Model {
 		\Session::del( 'siteid' );
 
 		return TRUE;
-	}
-
-	/**
-	 * 获取用户管理的所有站点信息
-	 *
-	 * @param int $uid 用户编号
-	 *
-	 * @return array 站点列表
-	 */
-	public function getUserAllSite( $uid ) {
-		return $this->join( 'site_user', 'site.siteid', '=', 'site_user.siteid' )->where( 'site_user.uid', $uid )->get();
-	}
-
-	/**
-	 * 验证站点是否拥有模块
-	 *
-	 * @param string $siteid 站点编号
-	 * @param string $module 模块名称
-	 *
-	 * @return bool
-	 * @throws \Exception
-	 */
-	public function hasModule( $siteid = NULL, $module = NULL ) {
-		$siteid = $siteid ?: SITEID;
-		$module = $module ?: v( 'module.name' );
-		if ( empty( $siteid ) || empty( $module ) ) {
-			return FALSE;
-		}
-		$modules = ( new Modules() )->getSiteAllModules( $siteid );
-		foreach ( $modules as $m ) {
-			if ( strtolower( $module ) == strtolower( $m['name'] ) ) {
-				return TRUE;
-			}
-		}
 	}
 }

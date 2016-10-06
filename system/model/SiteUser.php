@@ -31,68 +31,13 @@ class SiteUser extends Model {
 	}
 
 	/**
-	 * 获取用户在站点角色中文描述
-	 *
-	 * @param $siteid
-	 * @param $uid
-	 *
-	 * @return string
-	 */
-	public function getRoleTitle( $siteid, $uid ) {
-		if ( ( new User() )->isSuperUser() ) {
-			return '系统管理员';
-		}
-		$role = $this->where( 'siteid', $siteid )->where( 'uid', $uid )->pluck( 'role' );
-		$data = [ 'owner' => '所有者', 'manage' => '管理员', 'operate' => '操作员' ];
-
-		return $role ? $data[ $role ] : '';
-	}
-
-	/**
-	 * 设置站点的站长
-	 *
-	 * @param int $siteid 站点编号
-	 * @param int $uid 用户编号
-	 *
-	 * @return int 自增主键
-	 */
-	public function setSiteOwner( $siteid, $uid ) {
-		//系统管理员不添加数据
-		if ( ( new User() )->isSuperUser( $uid ) ) {
-			return TRUE;
-		}
-		$data = [
-			'siteid' => $siteid,
-			'role'   => 'owner',
-			'uid'    => $uid
-		];
-
-		return $this->add( $data );
-	}
-
-	/**
-	 * 获取站长用户信息
-	 *
-	 * @param int $siteid
-	 *
-	 * @return array
-	 */
-	public function getSiteOwner( $siteid ) {
-		//站长编号,没有站长时为系统管理员创建
-		$uid = $this->where( 'siteid', $siteid )->where( 'role', 'owner' )->pluck( 'uid' );
-		if ( $uid ) {
-			return Db::table( 'user' )->find( $uid ) ?: [ ];
-		}
-	}
-
-	/**
 	 * 删除站长
 	 *
 	 * @param $siteid
 	 *
 	 * @return bool
 	 */
-	public function delOwner( $siteid ) {
+	public function remove( $siteid ) {
 		return $this->where( 'siteid', $siteid )->where( 'role', 'owner' )->delete();
 	}
 }

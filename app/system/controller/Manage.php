@@ -10,7 +10,6 @@
 namespace app\system\controller;
 
 use system\model\Site;
-use system\model\User;
 
 /**
  * 模块菜单和菜单组欢迎页
@@ -23,10 +22,9 @@ class Manage {
 	 * @return mixed
 	 */
 	public function menu() {
-		$User = new User();
-		$User->isLogin();
+		service( 'user' )->loginAuth();
 
-		return view()->with( 'isSuperUser', $User->isSuperUser( v( 'user.uid' ), 'return' ) );
+		return view()->with( [ 'isSuperUser' => Util::instance( 'user' )->isSuperUser() ] );
 	}
 
 	/**
@@ -34,9 +32,9 @@ class Manage {
 	 * @return mixed
 	 */
 	public function updateCache() {
-		$User = new User();
-		$Site = new Site();
-		$User->isSuperUser( v( 'user.uid' ) );
+		if ( ! service( 'user' )->isSuperUser() ) {
+			message( '您不是系统管理员,无法进行操作', 'back', 'error' );
+		}
 		if ( IS_POST ) {
 			//更新数据缓存
 			if ( isset( $_POST['data'] ) ) {
@@ -51,8 +49,8 @@ class Manage {
 				Dir::del( ROOT_PATH . '/storage/weixin' );
 			}
 			//更新所有站点缓存
-			$Site->updateAllSiteCache();
-			message( '缓存更新成功', 'back', 'success' );
+			service( 'site' )->updateAllCache();
+			message( '缓存更新成功', 'menu', 'success' );
 		}
 
 		return view();

@@ -13,7 +13,7 @@ return [
 	//语言包
 	'lang'               => '',
 	//自动加载文件
-	'auto_load_file'     => [ ],
+	'auto_load_file'     => [ 'system/helper.php'],
 	//令牌验证
 	'token_on'           => TRUE,
 	//令牌验证的表单隐藏字段名称

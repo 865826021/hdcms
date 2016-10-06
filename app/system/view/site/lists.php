@@ -114,15 +114,15 @@
 							</if>
 						</div>
 						<div class="col-xs-6 text-right">
-							<?php if ( $user->isSuperUser( v( 'user.uid' ), 'return' ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isSuperUser( v( 'user.uid' ), 'return' ) ) { ?>
 								<a href="?s=system/site/post&step=access_setting&siteid={{$s['siteid']}}&from=lists">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( $user->isOwner( $s['siteid'], v( 'user.uid' ) ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( $user->isManage( $s['siteid'], v( 'user.uid' ) ) ) { ?>
+							<?php if ( Util::instance( 'user' )->isManage( $s['siteid'], v( 'user.uid' ) ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>

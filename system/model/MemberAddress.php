@@ -50,12 +50,4 @@ class MemberAddress extends Model {
 	protected function autoGetUid() {
 		return Session::get( 'member.uid' );
 	}
-
-	/**
-	 * 获取当前登录会员默认地址
-	 * @return mixed
-	 */
-	public function getMemberDefaultAddress() {
-		return $this->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->first();
-	}
 }

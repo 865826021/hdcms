@@ -6,20 +6,20 @@
         "source": {
             "type": "git",
             "url": "https://github.com/houdunwang/framework.git",
-            "reference": "01d08e588fcaa79558ed419f4419aea0d74b030b"
+            "reference": "b2f80a7de93e448923f1bf584c2fcf90e575cc48"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/framework/zipball/01d08e588fcaa79558ed419f4419aea0d74b030b",
-            "reference": "01d08e588fcaa79558ed419f4419aea0d74b030b",
+            "url": "https://api.github.com/repos/houdunwang/framework/zipball/b2f80a7de93e448923f1bf584c2fcf90e575cc48",
+            "reference": "b2f80a7de93e448923f1bf584c2fcf90e575cc48",
             "shasum": ""
         },
-        "time": "2016-09-27 17:51:32",
+        "time": "2016-10-06 03:13:25",
         "type": "project",
         "installation-source": "source",
         "autoload": {
             "files": [
-                "src/kernel/Functions.php"
+                "src/kernel/helper.php"
             ],
             "psr-4": {
                 "hdphp\\": "src/"

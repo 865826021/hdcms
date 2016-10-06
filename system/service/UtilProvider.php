@@ -7,12 +7,12 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace server;
+namespace system\service;
 
 class UtilProvider extends \hdphp\kernel\ServiceProvider {
 
 	//延迟加载
-	public $defer = TRUE;
+	public $defer = FALSE;
 
 	public function boot() {
 	}

@@ -32,14 +32,14 @@ class Initialize {
 			case 'member':
 				//前台用户
 				if ( isset( $_SESSION['member_uid'] ) ) {
-					$user['user'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
+					$user['info'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
 					v( 'user', $user );
 				}
 				break;
 			case 'admin':
 				//后台用户
 				if ( isset( $_SESSION['admin_uid'] ) ) {
-					$user['user']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] )->toArray();
+					$user['info']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] )->toArray();
 					$group                        = Db::table( 'user_group' )->where( 'id', $user['groupid'] )->first();
 					$user['group']                = $group ? $group->toArray() : [ ];
 					$user['system']['super_user'] = $user['group']['id'] == 0;
@@ -72,13 +72,12 @@ class Initialize {
 	protected function siteInitialize() {
 		$siteModel = new Site();
 		//缓存站点数据
-		$siteid = q( 'get.siteid', Session::get( 'siteid' ), 'intval' );
-		if ( $siteid ) {
-			if ( $siteModel->find( $siteid )->toArray() ) {
-				Session::set( 'siteid', $siteid );
-				define( 'SITEID', $siteid );
+		$siteId = q( 'get.siteid', Session::get( 'siteid' ), 'intval' );
+		if ( $siteId ) {
+			if ( Util::instance( 'site' )->find( $siteId ) ) {
+				define( 'SITEID', $siteId );
 				//加载站点缓存
-				$siteModel->loadSite();
+				Util::instance( 'site' )->loadSite();
 			} else {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}

@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'c26a7d54a1646e5114ba99da62e1d4a5' => $vendorDir . '/houdunwang/framework/src/kernel/Functions.php',
+    'e27462e627a88b1c7e8df9acd31610f4' => $vendorDir . '/houdunwang/framework/src/kernel/helper.php',
 );

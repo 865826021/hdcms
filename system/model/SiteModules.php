@@ -23,28 +23,4 @@ class SiteModules extends Model {
 			[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'module', 'required', '模块编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 		];
-
-	/**
-	 * 获取站点扩展模块数据
-	 *
-	 * @param $siteid 网站编号
-	 *
-	 * @return array
-	 */
-	public function getSiteExtModules( $siteid ) {
-		$module = $this->where( 'siteid', $siteid )->lists( 'module' );
-
-		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
-	}
-
-	/**
-	 * 获取站点扩展模块名称列表
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return array
-	 */
-	public function getSiteExtModulesName( $siteid ) {
-		return $this->where( 'siteid', $siteid )->lists( 'module' );
-	}
 }

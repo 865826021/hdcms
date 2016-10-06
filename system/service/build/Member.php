@@ -29,19 +29,23 @@ class Member {
 
 		return TRUE;
 	}
+	//获取会员组
+	public function getGroupName( $uid ) {
+		$sql = "SELECT title,id FROM " . tablename( 'member' ) . " m JOIN " . tablename( 'member_group' ) . " g ON m.group_id = g.id WHERE m.uid={$uid}";
+		$d   = Db::query( $sql );
 
-	//更改会员SESSION数据
-	public function updateSession() {
-		return $this->db->updateUserSessionData();
+		return $d ? $d[0] : NULL;
 	}
 
-	//积分修改
-	public function changeCredit( $data ) {
-		if ( ! $this->db->changeCredit( $data ) ) {
-			return $this->db->getError();
-		}
-
-		return TRUE;
+	/**
+	 * 判断当前uid的用户是否在当前站点中存在
+	 *
+	 * @param $uid 会员编号
+	 *
+	 * @return bool
+	 */
+	public function hasUser( $uid ) {
+		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'uid', $uid )->get() ? TRUE : FALSE;
 	}
 
 	//微信自动登录
@@ -134,5 +138,13 @@ class Member {
 		}
 
 		return [ 'valid' => 1, 'data' => $this->db->find( $uid ) ];
+	}
+
+	/**
+	 * 获取当前登录会员默认地址
+	 * @return mixed
+	 */
+	public function getDefaultAddress() {
+		return $this->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->first();
 	}
 }

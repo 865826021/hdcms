@@ -28,49 +28,6 @@ class Web extends Model {
 			[ 'domain', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 
-	/**
-	 * 获取站点的模板数据
-	 *
-	 * @param int $webid 站点编号
-	 *
-	 * @return array 模板数据
-	 */
-	public function getTemplateData( $webid ) {
-		$template_tid = $this->where( 'siteid', SITEID )->where( 'id', $webid )->pluck( 'template_tid' );
-
-		return Db::table( 'template' )->where( 'tid', $template_tid )->first();
-	}
-
-	/**
-	 * 获取站点的所有官网数据
-	 * @return array
-	 */
-	public function getSiteWebs() {
-		$web = $this->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->get();
-
-		return Arr::string_to_int( $web );
-	}
-
-	/**
-	 * 检测当前站点中是否存在官网
-	 *
-	 * @param int $id 站点编号
-	 *
-	 * @return bool
-	 */
-	public function has( $id ) {
-		return $this->where( 'siteid', SITEID )->where( 'id', $id )->first() ? TRUE : FALSE;
-	}
-
-
-	/**
-	 * 获取默认站点
-	 * @return array
-	 */
-	public function getDefaultWeb() {
-		return $this->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->first();
-	}
-
 	//删除站点
 	public function remove( $webid ) {
 		//删除栏目

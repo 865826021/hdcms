@@ -4,10 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc50209d839d338d70edff5f9596e6e3c
+class ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409
 {
     public static $files = array (
-        'c26a7d54a1646e5114ba99da62e1d4a5' => __DIR__ . '/..' . '/houdunwang/framework/src/kernel/Functions.php',
+        'e27462e627a88b1c7e8df9acd31610f4' => __DIR__ . '/..' . '/houdunwang/framework/src/kernel/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -43,8 +43,8 @@ class ComposerStaticInitc50209d839d338d70edff5f9596e6e3c
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc50209d839d338d70edff5f9596e6e3c::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc50209d839d338d70edff5f9596e6e3c::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }
