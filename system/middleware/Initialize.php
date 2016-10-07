@@ -61,8 +61,8 @@ class Initialize {
 			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
 		}
 		//扩展模块访问
-		if ( ! empty( $_GET['a'] ) ) {
-			$_GET['s'] = 'site/module/entry';
+		if ( ! empty( Request::get( 'a' ) ) ) {
+			Request::get( 's', 'site/module/entry' );
 		}
 	}
 

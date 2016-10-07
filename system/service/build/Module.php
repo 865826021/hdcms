@@ -27,14 +27,14 @@ class Module extends Modules {
 	 */
 	public function verifyModuleAccess() {
 		//操作员验证
-		if ( ! $this->isOperate() ) {
+		if ( ! service( 'user' )->isOperate() ) {
 			return FALSE;
 		}
 		if ( v( "module.is_system" ) == 1 ) {
 			return TRUE;
 		} else {
 			//站点是否含有模块
-			if ( ! ( new Site() )->hasModule( SITEID, v( 'module.name' ) ) ) {
+			if ( ! $this->hasModule( SITEID, v( 'module.name' ) ) ) {
 				return FALSE;
 			}
 			//插件模块
@@ -151,7 +151,49 @@ class Module extends Modules {
 	}
 
 	/**
-	 * 按行业获取模块列表
+	 * 当前使用的非系统模块
+	 * @return array
+	 */
+	public function currentUseModule() {
+		$menus = [ ];
+		foreach ( v( 'site.modules' ) as $v ) {
+			if ( $v['name'] == v( 'module.name' ) ) {
+				$menus = $v;
+				break;
+			}
+		}
+
+		return $menus;
+	}
+
+	/**
+	 * 用户在站点使用的模块列表
+	 *
+	 * @param int $siteId 站点编号
+	 * @param int $uid 用户编号
+	 *
+	 * @return mixed
+	 */
+	public function getBySiteUser( $siteId = 0, $uid = 0 ) {
+		$siteId = $siteId ?: SITEID;
+		$uid    = $uid ?: v( 'user.info.uid' );
+		/**
+		 * 插件模块列表
+		 */
+		$modules = Db::table( 'user_permission' )
+		             ->where( 'type', '<>', 'system' )
+		             ->where( 'siteid', $siteId )
+		             ->where( 'uid', $uid )
+		             ->lists( 'type' ) ?: [ ];
+
+		//获取模块按行业类型
+		return $this->getModulesByIndustry( $modules );
+	}
+
+	/**
+	 * 按行业获取当前站点的模块列表
+	 * 根据当前使用站点拥有的模块获取
+	 * 系统管理员获取所有模块
 	 *
 	 * @param array $modules 限定模块(只有这些模块获取)
 	 *
@@ -159,14 +201,13 @@ class Module extends Modules {
 	 */
 	public function getModulesByIndustry( $modules = [ ] ) {
 		$data = [ ];
-		foreach ( (array) v( 'modules' ) as $m ) {
-			if ( ! empty( $modules ) && ! in_array( $m['name'], $modules ) || $m['is_system'] == 1 ) {
-				continue;
+		foreach ( (array) v( 'site.modules' ) as $m ) {
+			if ( ( empty( $modules ) || in_array( $m['name'], $modules ) ) && $m['is_system'] == 0 ) {
+				$data[ $this->industry[ $m['industry'] ] ][] = [
+					'title' => $m['title'],
+					'name'  => $m['name']
+				];
 			}
-			$data[ $this->industry[ $m['industry'] ] ][] = [
-				'title' => $m['title'],
-				'name'  => $m['name']
-			];
 		}
 
 		return $data;
@@ -194,9 +235,9 @@ class Module extends Modules {
 	 *
 	 * @return array
 	 */
-	public function getModuleConfig( $module = NULL ) {
+	public function getModuleConfig( $module = 0 ) {
 		$module  = $module ?: v( 'module.name' );
-		$setting = $this->where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
+		$setting = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
 
 		return $setting ? unserialize( $setting ) : [ ];
 	}

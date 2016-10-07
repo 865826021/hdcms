@@ -23,7 +23,7 @@ class Site extends \system\model\Site {
 		//微信帐号
 		v( 'site.wechat', d( "wechat:" . SITEID ) );
 		//加载模块
-		v( 'modules', d( "modules:" . SITEID ) );
+		v( 'site.modules', d( "modules:" . SITEID ) );
 		//设置微信配置
 		$config = [
 			"token"          => v( 'wechat.token' ),

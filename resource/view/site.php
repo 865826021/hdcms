@@ -40,7 +40,7 @@
 					<li>
 						<a href="?s=system/site/lists"><i class="fa fa-reply-all"></i> 返回系统</a>
 					</li>
-					<foreach from="$_site_menu_" value="$m">
+					<foreach from="$_LINKS_['menus']" value="$m">
 						<li class="top_menu" id="top_menu_{{$m['id']}}">
 							<a href="javascript:;" dataHref="{{$m['url']}}" menuid="{{$m['id']}}">
 								<i class="'fa-w {{$m['icon']}}"></i> {{$m['title']}}
@@ -119,9 +119,10 @@
 				}
 			</style>
 			<!--扩展模块动作 end-->
+
 			<div class="panel panel-default" id="menus">
 				<!--系统菜单-->
-				<foreach from="$_site_menu_" value="$m">
+				<foreach from="$_LINKS_['menus']" value="$m">
 					<foreach from="$m['_data']" value="$d">
 						<div class="panel-heading hide" menuid="{{$m['id']}}">
 							<h4 class="panel-title">{{$d['title']}}</h4>
@@ -144,7 +145,7 @@
 				<!--系统菜单 end-->
 
 				<!----------返回模块列表 start------------>
-				<if value="$_site_modules_menu_">
+				<if value="$_LINKS_['module']">
 					<div class="panel-heading hide module_back">
 						<h4 class="panel-title">模块列表</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
@@ -155,85 +156,85 @@
 						<li class="list-group-item" dataHref="?s=site/entry/home&p=package&menuid=21">
 							<i class="fa fa-reply-all"></i> 返回模块列表
 						</li>
-						<li class="list-group-item" dataHref="?s=site/module/home&m=hd&m={{$_site_modules_menu_['name']}}">
-							<i class="fa fa-reply-all"></i> {{$_site_modules_menu_['title']}}
+						<li class="list-group-item" dataHref="?s=site/module/home&m=hd&m={{$_LINKS_['module']['name']}}">
+							<i class="fa fa-reply-all"></i> {{$_LINKS_['module']['title']}}
 						</li>
 					</ul>
 				</if>
 				<!----------返回模块列表 end------------>
 
 				<!------------------------模块菜单 start------------------------>
-				<if value="!empty($_site_modules_menu_['rule'])||!empty($_site_modules_menu_['setting'])">
+				<if value="!empty($_LINKS_['module']['rule'])||!empty($_LINKS_['module']['setting'])">
 					<div class="panel-heading hide module_active">
-						<h4 class="panel-title">{{$_site_modules_menu_['title']}}回复规则</h4>
+						<h4 class="panel-title">{{$_LINKS_['module']['title']}}回复规则</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-						<if value="$_site_modules_menu_['rule']">
-							<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_site_modules_menu_['name']}}">
+						<if value="$_LINKS_['module']['rule']">
+							<li class="list-group-item" dataHref="?s=site/reply/lists&m={{$_LINKS_['module']['name']}}">
 								<i class="fa fa-comments"></i> 回复规则列表
 							</li>
 						</if>
-						<if value="$_site_modules_menu_['setting']">
-							<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_site_modules_menu_['name']}}">
+						<if value="$_LINKS_['module']['setting']">
+							<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_LINKS_['module']['name']}}">
 								<i class="fa fa-cog"></i> 参数设置
 							</li>
 						</if>
 					</ul>
 				</if>
-				<if value="!empty($_site_modules_menu_['budings']['home'])||!empty($_site_modules_menu_['budings']['profile'])||!empty($_site_modules_menu_['budings']['member'])">
+				<if value="!empty($_LINKS_['module']['budings']['home'])||!empty($_LINKS_['module']['budings']['profile'])||!empty($_LINKS_['module']['budings']['member'])">
 					<div class="panel-heading hide module_active">
-						<h4 class="panel-title">{{$_site_modules_menu_['title']}}导航菜单</h4>
+						<h4 class="panel-title">{{$_LINKS_['module']['title']}}导航菜单</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#module_nav" aria-expanded="true">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
 				</if>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-					<if value="!empty($_site_modules_menu_['budings']['home'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=home&m={{$_site_modules_menu_['name']}}">
+					<if value="!empty($_LINKS_['module']['budings']['home'])">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=home&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-home"></i> 微站首页导航
 						</li>
 					</if>
-					<if value="!empty($_site_modules_menu_['budings']['profile'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=profile&m={{$_site_modules_menu_['name']}}">
+					<if value="!empty($_LINKS_['module']['budings']['profile'])">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=profile&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-user"></i> 手机个人中心导航
 						</li>
 					</if>
-					<if value="!empty($_site_modules_menu_['budings']['member'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=member&m={{$_site_modules_menu_['name']}}">
+					<if value="!empty($_LINKS_['module']['budings']['member'])">
+						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=member&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-user"></i> 桌面个人中心导航
 						</li>
 					</if>
 				</ul>
-				<if value="$_site_modules_menu_['budings']['cover']">
+				<if value="$_LINKS_['module']['budings']['cover']">
 					<div class="panel-heading hide module_active">
-						<h4 class="panel-title">{{$_site_modules_menu_['title']}}封面入口</h4>
+						<h4 class="panel-title">{{$_LINKS_['module']['title']}}封面入口</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
 
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-						<foreach from="$_site_modules_menu_['budings']['cover']" value="$f">
-							<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
+						<foreach from="$_LINKS_['module']['budings']['cover']" value="$f">
+							<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
 								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 							</li>
 						</foreach>
 					</ul>
 				</if>
-				<if value="$_site_modules_menu_['budings']['business']">
+				<if value="$_LINKS_['module']['budings']['business']">
 					<div class="panel-heading hide module_active">
-						<h4 class="panel-title">{{$_site_modules_menu_['title']}}业务菜单</h4>
+						<h4 class="panel-title">{{$_LINKS_['module']['title']}}业务菜单</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
-						<foreach from="$_site_modules_menu_['budings']['business']" value="$f">
-							<li class="list-group-item" dataHref="?s=site/module/business&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
+						<foreach from="$_LINKS_['module']['budings']['business']" value="$f">
+							<li class="list-group-item" dataHref="?s=site/module/business&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
 								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 							</li>
 						</foreach>
@@ -241,7 +242,7 @@
 				</if>
 				<!------------------------模块菜单 end------------------------>
 				<!--模块列表-->
-				<foreach from="$_site_menu_modules_" key="$t" value="$d">
+				<foreach from="$_LINKS_['moduleLists']" key="$t" value="$d">
 					<div class="panel-heading hide module_lists">
 						<h4 class="panel-title">{{$t}}</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#moudus{{$d['mid']}}">
@@ -301,7 +302,7 @@
 	});
 	//记录顶级菜单编号
 	if (!sessionStorage.getItem('menuid')) {
-		sessionStorage.setItem('menuid', "{{key($_site_menu_)}}");
+		sessionStorage.setItem('menuid', "{{key($_LINKS_['menus'])}}");
 	}
 	//设置顶级菜单为选中样式
 	if (sessionStorage.getItem('menuid')) {

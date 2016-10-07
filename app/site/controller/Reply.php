@@ -1,4 +1,5 @@
 <?php namespace app\site\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -8,10 +9,8 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-use system\model\Menu;
 use system\model\Rule;
 use system\model\RuleKeyword;
-use system\model\User;
 
 /**
  * 关键词回复处理
@@ -19,29 +18,28 @@ use system\model\User;
  * @package site\controller
  */
 class Reply {
+	//模型
 	protected $rule;
 	//回复模块处理类
 	protected $moduleClass;
 
 	public function __construct() {
 		$this->rule = new Rule();
-		$module     = Db::table( 'modules' )->where( 'name', q( 'get.m' ) )->first();
-		v( 'module', $module );
-		if ( ! ( new User() )->verifyModuleAccess() ) {
+		if ( ! service( 'module' )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		$this->moduleClass = ( $module['is_system'] ? '\module\\' : 'addons\\' ) . $module['name'] . '\module';
+		$this->moduleClass = ( v( 'module.is_system' ) ? '\module\\' : 'addons\\' ) . v( 'module.name' ) . '\module';
 		//分配菜单
-		( new Menu() )->getMenus();
+		service( 'menu' )->assign();
 	}
 
 	//回复列表
 	public function lists() {
-		$db = Db::table( 'rule' )->where( 'siteid', v( 'site.siteid' ) )->where( 'module', v( 'module.name' ) );
+		$db = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) );
 		if ( $status = q( 'get.status' ) ) {
 			$db->where( 'status', $status == 'close' ? 0 : 1 );
 		}
-		$rules = $db->get();
+		$rules = $db->get() ?: [ ];
 		$data  = [ ];
 		//回复关键词
 		foreach ( $rules as $k => $v ) {
@@ -54,10 +52,11 @@ class Reply {
 			}
 			$data[ $k ] = $v;
 		}
-		View::with( [
+
+		return view()->with( [
 			'module' => v( 'module.name' ),
 			'data'   => $data
-		] )->make();
+		] );
 	}
 
 	//添加/修改回复
@@ -85,7 +84,7 @@ class Reply {
 			//调用模块的执行方法
 			$module = new $this->moduleClass();
 			//字段验证
-			if ($msg = $module->fieldsValidate( $rid ) ) {
+			if ( $msg = $module->fieldsValidate( $rid ) ) {
 				message( $msg, 'back', 'error' );
 			}
 			//使模块保存回复内容

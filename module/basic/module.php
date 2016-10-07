@@ -7,7 +7,7 @@ use module\hdModule;
  * Class Module
  * @package module\basic
  */
-class Module extends hdModule {
+class Module extends HdModule {
 
 	public function __construct() {
 		parent::__construct();

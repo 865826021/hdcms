@@ -10,23 +10,28 @@ class Menu extends \system\model\Menu {
 	 * @return mixed
 	 */
 	public function getLevelMenuLists() {
-		$menu = Db::table('menu')->get();
+		$menu = Db::table( 'menu' )->get() ?: [ ];
 
-		return Data::channelLevel( $menu ? : [ ], 0, '', 'id', 'pid' );
+		return Data::channelLevel( $menu ?: [ ], 0, '', 'id', 'pid' );
 	}
 
 	/**
-	 * 获取当前帐号后台访问菜单
+	 * 获取当前用户在站点后台可以使用的系统菜单
 	 * @return mixed
 	 */
-	public function getMenus( $show = TRUE ) {
-		//移除用户没有使用权限的菜单
+	public function menus() {
+		/**
+		 * 系统管理
+		 * 1 移除系统菜单
+		 * 2 将没有三级或二级菜单的菜单移除
+		 */
+		//移除用户没有使用权限的系统菜单
 		$permission = Db::table( 'user_permission' )
 		                ->where( 'siteid', SITEID )
-		                ->where( 'uid', v('user.info.uid') )
+		                ->where( 'uid', v( 'user.info.uid' ) )
 		                ->where( 'type', 'system' )
 		                ->pluck( 'permission' );
-		$menus      = $this->get();
+		$menus      = Db::table( 'menu' )->get();
 		if ( $permission ) {
 			$permission = explode( '|', $permission );
 			$tmp        = $menus;
@@ -40,33 +45,35 @@ class Menu extends \system\model\Menu {
 		//移除没有三级菜单的一级与二级菜单
 		$tmp = $menus;
 		foreach ( $tmp as $k => $t ) {
+			//二级菜单为空时删除些菜单
 			foreach ( $t['_data'] as $n => $d ) {
 				if ( empty( $d['_data'] ) ) {
 					unset( $menus[ $k ]['_data'][ $n ] );
 				}
 			}
+			//一级菜单没有子菜单时移除
 			if ( empty( $menus[ $k ]['_data'] ) ) {
 				unset( $menus[ $k ] );
 			}
 		}
-		//插件模块列表
-		$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v('user.info.uid') )->lists( 'type' );
-		//获取模块按行业类型
-		$modules = service('module')->getModulesByIndustry( $allowModules );
-		//模块菜单
-		foreach ( v( 'modules' ) as $v ) {
-			if ( $v['name'] == v( 'module.name' ) ) {
-				$moduleLinks = $v;
-				break;
-			}
-		}
-
-		if ( $show ) {
-			View::with( '_site_menu_', $menus );
-			View::with( '_site_menu_modules_', $modules );
-			View::with( '_site_modules_menu_', $moduleLinks );
-		}
 
 		return $menus;
+	}
+
+	/**
+	 * 分配菜单数据到模板
+	 * @return mixed
+	 */
+	public function assign() {
+
+		$links = [
+			//系统菜单数据
+			'menus'       => $this->menus(),
+			//当前模块
+			'module'      => service( 'module' )->currentUseModule(),
+			//用户在站点可以使用的模块列表
+			'moduleLists' => service( 'module' )->getBySiteUser()
+		];
+		View::with( [ '_LINKS_' => $links ] );
 	}
 }

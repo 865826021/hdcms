@@ -15,6 +15,10 @@ class ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409
         array (
             'system\\' => 7,
         ),
+        'm' => 
+        array (
+            'module\\' => 7,
+        ),
         'h' => 
         array (
             'hdphp\\' => 6,
@@ -22,6 +26,7 @@ class ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409
         'a' => 
         array (
             'app\\' => 4,
+            'addons\\' => 7,
         ),
     );
 
@@ -30,6 +35,10 @@ class ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409
         array (
             0 => __DIR__ . '/../..' . '/system',
         ),
+        'module\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/module',
+        ),
         'hdphp\\' => 
         array (
             0 => __DIR__ . '/..' . '/houdunwang/framework/src',
@@ -37,6 +46,10 @@ class ComposerStaticInit1e71f74c30cb34ef6c6cba91ee121409
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'addons\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/addons',
         ),
     );
 

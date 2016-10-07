@@ -16,7 +16,7 @@ abstract class HdModule {
 
 	//构造函数
 	public function __construct() {
-		$this->config   = ( new ModuleSetting() )->getModuleConfig();
+		$this->config   = service('module')->getModuleConfig();
 		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
 		define( '__TEMPLATE__', $this->template );
 	}

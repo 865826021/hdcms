@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'system\\' => array($baseDir . '/system'),
+    'module\\' => array($baseDir . '/module'),
     'hdphp\\' => array($vendorDir . '/houdunwang/framework/src'),
     'app\\' => array($baseDir . '/app'),
+    'addons\\' => array($baseDir . '/addons'),
 );

@@ -10,12 +10,12 @@
         <div class="panel-body">
             <div class="col-sm-7">
                 <p>
-                    <strong>{{v("wechat.wename")}}</strong>
+                    <strong>{{v("site.wechat.wename")}}</strong>
                     <span class="label label-success">
-                         <?php echo m('Wechat')->chatNameBylevel(v('wechat.level')) ?>
+                        <?php echo service('WeChat')->chatNameBylevel(v('site.wechat.level')) ?>
                     </span>
                     &nbsp;&nbsp;&nbsp;
-                    <if value="v('wechat.is_connect')">
+                    <if value="v('site.wechat.is_connect')">
                        <span class="text-success">
                             <i class="fa fa-check-circle"></i> 接入成功
                        </span>
@@ -27,7 +27,7 @@
                 </p>
                 <p>
                     <strong>Token:</strong>
-                    <span>{{v('wechat.token')}}</span>
+                    <span>{{v('site.wechat.token')}}</span>
                 </p>
             </div>
         </div>
