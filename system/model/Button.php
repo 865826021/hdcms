@@ -8,7 +8,7 @@ use hdphp\model\Model;
  * @package system\model
  * @author 向军
  */
-class  Button extends Model {
+class Button extends Model {
 	protected $table = 'button';
 	protected $validate
 	                 = [

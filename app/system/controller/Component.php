@@ -28,10 +28,9 @@ class Component {
 
 	//加载系统链接
 	public function linkBrowser() {
-		if ( ! Session::get( 'member_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		View::make();
+		service( 'user' )->loginAuth();
+
+		return view();
 	}
 
 	//模块&模板列表
@@ -130,7 +129,7 @@ class Component {
 			} else {
 				$users = $db->where( "username LIKE '%{$_GET['username']}%'" )->get();
 			}
-			ajax( $users);
+			ajax( $users );
 		}
 
 		return view();
@@ -155,8 +154,8 @@ class Component {
 		if ( ! v( "user.info.uid" ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
-		$path= ROOT_PATH.'/resource/hdjs/component/ueditor';
-		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( $path."/php/config.json" ) ), TRUE );
+		$path   = ROOT_PATH . '/resource/hdjs/component/ueditor';
+		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( $path . "/php/config.json" ) ), TRUE );
 		$action = $_GET['action'];
 		switch ( $action ) {
 			case 'config':
@@ -170,21 +169,21 @@ class Component {
 			case 'uploadvideo':
 				/* 上传文件 */
 			case 'uploadfile':
-				$result = include( $path."/php/action_upload.php" );
+				$result = include( $path . "/php/action_upload.php" );
 				break;
 
 			/* 列出图片 */
 			case 'listimage':
-				$result = include( $path."/php/action_list.php" );
+				$result = include( $path . "/php/action_list.php" );
 				break;
 			/* 列出文件 */
 			case 'listfile':
-				$result = include( $path."/php/action_list.php" );
+				$result = include( $path . "/php/action_list.php" );
 				break;
 
 			/* 抓取远程文件 */
 			case 'catchimage':
-				$result = include( $path."/php/action_crawler.php" );
+				$result = include( $path . "/php/action_crawler.php" );
 				break;
 
 			default:

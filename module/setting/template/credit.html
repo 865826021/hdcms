@@ -1,8 +1,8 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="?a=setting/site/credit&t=site">积分列表</a></li>
-        <li><a href="?a=setting/site/tactics&t=site">积分策略</a></li>
+        <li class="active"><a href="{{site_url('site/credit')}}">积分列表</a></li>
+        <li><a href="{{site_url('site/tactics')}}">积分策略</a></li>
     </ul>
     <form action="" method="post">
         <div class="panel panel-default">

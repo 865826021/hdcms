@@ -65,7 +65,6 @@ class Menu extends \system\model\Menu {
 	 * @return mixed
 	 */
 	public function assign() {
-
 		$links = [
 			//系统菜单数据
 			'menus'       => $this->menus(),

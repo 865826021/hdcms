@@ -1,5 +1,4 @@
 <?php
-
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -34,42 +33,45 @@ class site extends hdSite {
 				$_POST['creditnames'][ $credit ]['status'] = isset( $d['status'] ) ? intval( $d['status'] ) : 0;
 			}
 			$_POST['id'] = $this->id;
-			$this->db->save();
-			m( 'Site' )->updateSiteCache();
+			$this->db->save($_POST);
+			service( 'site' )->updateCache();
 			message( '积分设置成功', '', 'success' );
 		}
-		View::with( 'creditnames', v( 'setting.creditnames' ) );
-		View::make( $this->template . '/credit.html' );
+		View::with( 'creditnames', v( 'site.setting.creditnames' ) );
+
+		return view( $this->template . '/credit.html' );
 	}
 
 	//积分策略
 	public function doSiteTactics() {
 		if ( IS_POST ) {
 			$_POST['id'] = $this->id;
-			$this->db->save();
-			m( 'Site' )->updateSiteCache();
+			$this->db->save($_POST);
+			service( 'site' )->updateCache();
 			message( '积分策略更新成功', '', 'success' );
 		}
-		View::make( $this->template . '/tactics.html' );
+
+		return view( $this->template . '/tactics.html' );
 	}
 
 	//注册设置
 	public function doSiteRegister() {
 		if ( IS_POST ) {
 			$_POST['id'] = $this->id;
-			$this->db->save();
-			m( 'Site' )->updateSiteCache();
+			$this->db->save($_POST);
+			service( 'site' )->updateCache();
 			message( '修改会员注册设置成功', '', 'success' );
 		}
-		View::make( $this->template . '/register.html' );
+
+		return view( $this->template . '/register.html' );
 	}
 
 	//邮件通知设置
 	public function doSiteMail() {
 		if ( IS_POST ) {
 			$_POST['id'] = $this->id;
-			$this->db->save();
-			m( 'Site' )->updateSiteCache();
+			$this->db->save($_POST);
+			service( 'site' )->updateCache();
 			//发送测试邮件
 			if ( v( 'setting.smtp.testing' ) ) {
 				$d = Mail::send( v( 'setting.smtp.testusername' ), v( 'setting.smtp.testusername' ), "邮箱配置测试", '恭喜!邮箱配置成功' );
@@ -81,19 +83,21 @@ class site extends hdSite {
 			}
 			message( '邮箱设置成功', 'refresh', 'success' );
 		}
-		View::make( $this->template . '/mail.html' );
+
+		return view( $this->template . '/mail.html' );
 	}
 
 	//支付设置
 	public function doSitePay() {
 		if ( IS_POST ) {
 			$_POST['id'] = $this->id;
-			$this->db->save();
-			m( 'Site' )->updateSiteCache();
+			//批量插入
+			$this->db->save( $_POST );
+			service( 'site' )->updateCache();
 			message( '修改会员支付参数成功', 'back', 'success' );
 		}
 		$wechat = Db::table( 'site_wechat' )->where( 'siteid', v( 'site.siteid' ) )->first();
-		View::with( [ 'wechat' => $wechat ] );
-		View::make( $this->template . '/pay.html' );
+
+		return view( $this->template . '/pay.html' )->with( [ 'wechat' => $wechat ] );
 	}
 }

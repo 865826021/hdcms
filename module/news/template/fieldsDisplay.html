@@ -162,7 +162,7 @@
     function moduleController($scope, _, util) {
         $scope.contents={{$contents}};
         if ($scope.contents.length == 0) {
-            $scope.contents = [{content:'',son_news: [{content:''}]}];
+            $scope.contents = [{content:'',son_news: []}];
         }
         //当前操作的子新闻
         $scope.activeItem = $scope.contents[0];
@@ -173,7 +173,11 @@
             $(this).find('.mask').hide();
         });
 
-        //根据id查找左侧图文元素的位置来设置右侧编辑区域位置
+        /**
+         * 根据id查找左侧图文元素的位置来设置右侧编辑区域位置
+         * @param pPos 一级
+         * @param cPos 二级
+         */
         $scope.changeLeftDivPositon = function (pPos, cPos) {
             //左侧图文元素
             var id = 'news_' + pPos + (cPos === false ? '' : '_' + cPos );
@@ -184,7 +188,10 @@
             $scope.contents.push({son_news: [{content:''}]});
             $scope.activeItem = $scope.contents[$scope.contents.length-1];
             //更改编辑区域位置
-            $scope.changeLeftDivPositon($scope.contents.length-1,false);
+            setTimeout(function () {
+                $scope.changeLeftDivPositon($scope.contents.length-1,false);
+                $scope.$apply();
+            }, 50);
         }
         //添加二级图文
         $scope.addItem = function (pos) {
@@ -216,7 +223,7 @@
                 $scope.contents.splice(pPos, 1);
                 if ($scope.contents.length == 0) {
                     //没有一级图文时,设置默认图文
-                    $scope.contents = [{son_news: [{}]}];
+                    $scope.contents = [{son_news: []}];
                     $scope.activeItem = $scope.contents[0];
                 } else {
                     $scope.activeItem = $scope.contents[0];
@@ -283,24 +290,26 @@
         var val = [];
         var msg = '';
         angular.forEach($scope.contents, function (v, k) {
+            var pos =k+1;
             if ($.trim(v.title) == '') {
-                msg += "还有图文没有设置标题<br/>";
+                msg += "第"+pos+"个图文没有设置标题<br/>";
             }
             if ($.trim(v.thumb) == '') {
-                msg += "还有图文没有设置封面<br/>";
+                msg += "第"+pos+"个图文没有设置封面<br/>";
             }
             if ($.trim(v.description) == '') {
-                msg += "还有图文没有设置描述<br/>";
+                msg += "第"+pos+"个图文没有设置描述<br/>";
             }
             angular.forEach(v.son_news, function (b) {
+                pos++;
                 if ($.trim(b.title) == '') {
-                    msg += "还有图文没有设置标题<br/>";
+                    msg += "第"+pos+"个图文没有设置标题<br/>";
                 }
                 if ($.trim(b.thumb) == '') {
-                    msg += "还有图文没有设置封面<br/>";
+                    msg += "第"+pos+"个图文没有设置封面<br/>";
                 }
                 if ($.trim(b.description) == '') {
-                    msg += "还有图文没有设置描述<br/>";
+                    msg += "第"+pos+"个图文没有设置描述<br/>";
                 }
             })
         }, val);

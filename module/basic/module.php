@@ -11,7 +11,7 @@ class Module extends HdModule {
 
 	public function __construct() {
 		parent::__construct();
-		auth( 'reply_basic', 'system' );
+		service( 'user' )->auth( 'reply_basic', 'system' );
 	}
 
 	public function settingsDisplay( $settings ) {

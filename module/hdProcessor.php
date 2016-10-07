@@ -1,5 +1,4 @@
 <?php namespace module;
-use system\model\ModuleSetting;
 
 /**
  * 模块处理消息
@@ -12,7 +11,7 @@ abstract class hdProcessor {
 	protected $config;
 
 	public function __construct() {
-		$this->config = ( new ModuleSetting() )->getModuleConfig();
+		$this->config = service( 'module' )->getModuleConfig();
 	}
 
 	//回复方法

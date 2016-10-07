@@ -1,12 +1,12 @@
 <?php namespace app\site\controller;
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
+	/** .-------------------------------------------------------------------
+	 * |  Software: [HDCMS framework]
+	 * |      Site: www.hdcms.com
+	 * |-------------------------------------------------------------------
+	 * |    Author: 向军 <2300071698@qq.com>
+	 * |    WeChat: aihoudun
+	 * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+	 * '-------------------------------------------------------------------*/
 
 /**
  * 回复关键词处理
@@ -15,16 +15,14 @@
  */
 class Keyword {
 	public function __construct() {
-		if ( ! Session::get( 'user.uid' ) ) {
-			message( '请登录后操作', 'system/entry/login', 'error' );
-		}
+		service( 'user' )->loginAuth();
 	}
 
 	//检测微信关键词是否已经使用
 	public function checkWxKeyword() {
 		$db = Db::table( 'rule_keyword' )
 		        ->join( 'rule', 'rule.rid', '=', 'rule_keyword.rid' )
-		        ->where( 'rule_keyword.siteid', v( 'site.siteid' ) )
+		        ->where( 'rule_keyword.siteid', SITEID )
 		        ->where( 'rule_keyword.content', q( 'post.content' ) );
 		if ( $rid = q( 'post.rid' ) ) {
 			//编辑时当前规则拥有的词不检测

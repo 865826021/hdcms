@@ -52,6 +52,7 @@ function site_url( $do, $params = [ ], $module = NULL ) {
 	$do     = str_replace( '.', '/', $do );
 	$module = $module ?: v( 'module.name' );
 	$info   = explode( '/', q( 'get.a' ) );
+	$url    = '';
 	switch ( count( explode( '/', $do ) ) ) {
 		case 3:
 			$url = $do;

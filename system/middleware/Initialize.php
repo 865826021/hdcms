@@ -60,6 +60,7 @@ class Initialize {
 		if ( $name = q( 'get.m' ) ) {
 			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
 		}
+
 		//扩展模块访问
 		if ( ! empty( Request::get( 'a' ) ) ) {
 			Request::get( 's', 'site/module/entry' );

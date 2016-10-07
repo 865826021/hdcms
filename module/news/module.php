@@ -12,7 +12,7 @@ class Module extends hdModule {
 
 	public function __construct() {
 		parent::__construct();
-		auth( 'reply_news' , 'system' );
+		service( 'user' )->auth( 'reply_news', 'system' );
 	}
 
 	public function fieldsDisplay( $rid = 0 ) {
@@ -31,7 +31,7 @@ class Module extends hdModule {
 				$contents[ $k ]['son_news'] = $news ?: [ ];
 			}
 		}
-		View::with( 'contents', json_encode( $contents ?: [ ] ) );
+		View::with( 'contents', json_encode( $contents ?: [ ], TRUE ) );
 
 		return View::fetch( $this->template . '/fieldsDisplay.html' );
 	}
@@ -60,7 +60,7 @@ class Module extends hdModule {
 			$c['url']         = isset( $c['url'] ) ? $c['url'] : '';
 			$c['rank']        = isset( $c['rank'] ) ? $c['rank'] : 0;
 			$c['createtime']  = time();
-			$pid              = Db::table( 'reply_news' )->replaceGetId( $c );
+			$pid              = Db::table( 'reply_news' )->insertGetId( $c );
 			//添加二级图文
 			foreach ( $c['son_news'] as $d ) {
 				$d['rid']         = $rid;

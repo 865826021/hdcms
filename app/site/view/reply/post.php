@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-                <include file="web/site/view/reply/keyword.php"/>
+                <include file="app/site/view/reply/keyword.php"/>
             </div>
         </div>
 

@@ -22,8 +22,8 @@
             <div class="page-header">
                 <h4><i class="fa fa-folder-open-o"></i> 系统默认链接</h4>
             </div>
-            <div class="btn btn-default" onclick="selectLink('?a=entry/home&m=article&siteid={{$_SESSION['siteid']}}')">微站首页</div>
-            <div class="btn btn-default" onclick="selectLink('?a=entry/home&m=uc&t=web&siteid={{$_SESSION['siteid']}}')">个人中心</div>
+            <div class="btn btn-default" onclick="selectLink('?a=entry/home&m=article&siteid={{SITEID}}')">微站首页</div>
+            <div class="btn btn-default" onclick="selectLink('?a=entry/home&m=uc&t=web&siteid={{SITEID}}')">个人中心</div>
             <div class="btn btn-default" onclick="loadModal('#tel-modal')">一键拨号</div>
         </div>
 
@@ -31,10 +31,10 @@
             <div class="page-header">
                 <h4><i class="fa fa-folder-open-o"></i> 会员相关操作</h4>
             </div>
-            <div class="btn btn-default" onclick="selectLink('?a=ticket/lists&t=web&siteid={{$_SESSION['siteid']}}&m=uc&type=1&status=1">我的折扣券</div>
-            <div class="btn btn-default" onclick="selectLink('?a=ticket/lists&t=web&siteid={{$_SESSION['siteid']}}&m=uc&type=2&status=1">我的代金券</div>
-            <div class="btn btn-default" onclick="selectLink('?a=mobile/changeMobile&t=web&siteid={{$_SESSION['siteid']}}&m=uc">修改手机号</div>
-            <div class="btn btn-default" onclick="selectLink('?a=address/lists&t=web&siteid={{$_SESSION['siteid']}}&m=uc')">修改收货地址</div>
+            <div class="btn btn-default" onclick="selectLink('?a=ticket/lists&t=web&siteid={{SITEID}}&m=uc&type=1&status=1">我的折扣券</div>
+            <div class="btn btn-default" onclick="selectLink('?a=ticket/lists&t=web&siteid={{SITEID}}&m=uc&type=2&status=1">我的代金券</div>
+            <div class="btn btn-default" onclick="selectLink('?a=mobile/changeMobile&t=web&siteid={{SITEID}}&m=uc">修改手机号</div>
+            <div class="btn btn-default" onclick="selectLink('?a=address/lists&t=web&siteid={{SITEID}}&m=uc')">修改收货地址</div>
         </div>
     </div>
 </div>

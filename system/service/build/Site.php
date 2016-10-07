@@ -26,15 +26,15 @@ class Site extends \system\model\Site {
 		v( 'site.modules', d( "modules:" . SITEID ) );
 		//设置微信配置
 		$config = [
-			"token"          => v( 'wechat.token' ),
-			"encodingaeskey" => v( 'wechat.encodingaeskey' ),
-			"appid"          => v( 'wechat.appid' ),
-			"appsecret"      => v( 'wechat.appsecret' ),
-			"mch_id"         => v( 'setting.pay.weichat.mch_id' ),
-			"key"            => v( 'setting.pay.weichat.key' ),
-			"apiclient_cert" => v( 'setting.pay.weichat.apiclient_cert' ),
-			"apiclient_key"  => v( 'setting.pay.weichat.apiclient_key' ),
-			"rootca"         => v( 'setting.pay.weichat.rootca' ),
+			"token"          => v( 'site.wechat.token' ),
+			"encodingaeskey" => v( 'site.wechat.encodingaeskey' ),
+			"appid"          => v( 'site.wechat.appid' ),
+			"appsecret"      => v( 'site.wechat.appsecret' ),
+			"mch_id"         => v( 'site.setting.pay.weichat.mch_id' ),
+			"key"            => v( 'site.setting.pay.weichat.key' ),
+			"apiclient_cert" => v( 'site.setting.pay.weichat.apiclient_cert' ),
+			"apiclient_key"  => v( 'site.setting.pay.weichat.apiclient_key' ),
+			"rootca"         => v( 'site.setting.pay.weichat.rootca' ),
 			"back_url"       => '',
 		];
 		//设置微信通信数据配置

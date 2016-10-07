@@ -61,25 +61,27 @@ class Reply {
 
 	//添加/修改回复
 	public function post() {
+		$Rule        = new Rule();
+		$RuleKeyword = new RuleKeyword();
 		if ( IS_POST ) {
-			$data           = json_decode( $_POST['keyword'], TRUE );
-			$data['module'] = v( 'module.name' );
-			$data['rank']   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+			$data         = json_decode( Request::post( 'keyword' ), TRUE );
+			$Rule->rid    = $data['rid'];
+			$Rule->name   = $data['name'];
+			$Rule->rank   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+			$Rule->status = $data['status'];
+			$Rule->module = v( 'module.name' );
+			$Rule->siteid = SITEID;
 			//添加回复规则
-			$action = isset( $data['rid'] ) ? 'save' : 'add';
-			if ( ! $rid = $this->rule->$action( $data ) ) {
-				message( $this->rule->getError(), 'back', 'error' );
-			}
-			$rid = isset( $data['rid'] ) ? $data['rid'] : $rid;
+			$insertId = $Rule->save();
+			$rid      = isset( $data['rid'] ) ? $data['rid'] : $insertId;
 			//添加回复关键字
-			$keywordModel = new RuleKeyword();
-			$keywordModel->where( 'rid', $rid )->delete();
+			$RuleKeyword->where( 'rid', $rid )->delete();
 			foreach ( $data['keyword'] as $keyword ) {
-				$keyword['module'] = v( 'module.name' );
-				$keyword['rid']    = $rid;
-				if ( ! $keywordModel->add( $keyword ) ) {
-					message( $keywordModel->getError(), 'back', 'error' );
-				}
+				$RuleKeyword['module']  = v( 'module.name' );
+				$RuleKeyword['rid']     = $rid;
+				$RuleKeyword['content'] = $keyword['content'];
+				$RuleKeyword['type']    = $keyword['type'];
+				$RuleKeyword->save();
 			}
 			//调用模块的执行方法
 			$module = new $this->moduleClass();
@@ -92,17 +94,18 @@ class Reply {
 			message( '规则保存成功', u( 'post', [ 'rid' => $rid, 'm' => v( 'module.name' ) ] ) );
 		}
 		//获取关键词回复
-		if ( $rid = q( 'get.rid' ) ) {
-			$data = $this->rule->where( 'rid', $rid )->first();
+		if ( $rid = Request::get( 'rid' ) ) {
+			$data = Db::table( 'rule' )->find( $rid );
 			if ( empty( $data ) ) {
 				message( '回复规则不存在', 'back', 'error' );
 			}
-			$data['keyword'] = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
+			$data['keyword'] = Db::table( 'rule_keyword' )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
 			View::with( 'rule', $data );
 		}
 		$module     = new $this->moduleClass();
 		$moduleForm = $module->fieldsDisplay( $rid );
-		View::with( 'moduleForm', $moduleForm )->make();
+
+		return view()->with( 'moduleForm', $moduleForm );
 	}
 
 	//删除规则

@@ -22,8 +22,11 @@ use system\model\User;
  * @package site\controller
  */
 class Module {
+	//指控制器目录
 	protected $module;
+	//控制器
 	protected $controller;
+	//动作
 	protected $action;
 
 	public function __construct() {

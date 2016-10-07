@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">支付账号</label>
                         <div class="col-sm-10">
-                            <p class="form-control-static">后盾-{{m('Wechat')->chatNameBylevel($wechat['level'])}}</p>
+                            <p class="form-control-static">后盾-{{service('WeChat')->chatNameBylevel($wechat['level'])}}</p>
                             <if value="$wechat['level']!=4">
                                 <strong class="text-danger">微信支付要求公众号为“认证服务号”，该公众号没有微信支付的权限</strong>
                             </if>
@@ -157,7 +157,7 @@
     }
     require(['angular', 'util', 'md5'], function (angular, util, md5) {
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
-            $scope.pay = <?php echo json_encode(v('setting.pay'));?>;
+            $scope.pay = <?php echo json_encode(v('site.setting.pay'));?>;
             $scope.createWeichatApi = function () {
                 $scope.pay.weichat.api = md5(Math.random());
             }

@@ -37,11 +37,6 @@ class Rule extends Model {
 		return TRUE;
 	}
 
-	protected $filter
-		= [
-			[ 'rid', self::EMPTY_FILTER, self::MODEL_BOTH ],
-		];
-
 	protected $auto
 		= [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],

@@ -1,4 +1,4 @@
-<?php namespace app\site\controller;
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -7,9 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-
-use system\model\Site;
-
+namespace app\site\controller;
 /**
  * 微信请求接口
  * Class api
@@ -21,7 +19,7 @@ class Api {
 
 	public function __construct() {
 		//加载站点缓存
-		( new Site() )->loadSite();
+		service( 'site' )->loadSite();
 		//与微信官网通信绑定验证
 		\Weixin::valid();
 		$this->instance = \Weixin::instance( 'message' );
@@ -106,11 +104,12 @@ class Api {
 	 * @return array
 	 */
 	protected function moduleProcessing( $messageType, $moduleName = '', $rid = 0 ) {
-		foreach ( v( 'modules' ) as $module ) {
+		foreach ( v( 'site.modules' ) as $module ) {
 			//有模块名时,只对该模块进行处理,没有时全部模块都进行操作
 			if ( $moduleName !== '' && $module['name'] != $moduleName ) {
 				continue;
 			}
+			//模块可以处理该消息类型时
 			if ( in_array( $messageType, $module['processors'] ) ) {
 				$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\processor';
 				if ( class_exists( $class ) ) {
@@ -156,12 +155,12 @@ class Api {
 			//消息定阅处理
 			$this->moduleSubscribe( 'subscribe' );
 			//消息回复处理
-			$info = $this->text( v( 'setting.welcome' ) );
+			$info = $this->text( v( 'site.setting.welcome' ) );
 			if ( ! is_null( $info ) ) {
 				$this->moduleProcessing( 'text', $info['module'], $info['rid'] );
 			}
 			//没有匹配的时,使用系统默认回复
-			$this->defaultMessage( v( 'setting.welcome' ) );
+			$this->defaultMessage( v( 'site.setting.welcome' ) );
 		}
 		//取消关注
 		if ( $this->instance->isUnSubscribeEvent() ) {
@@ -198,7 +197,6 @@ class Api {
 	 */
 	protected function message() {
 		$message = $this->instance->getMessage();
-
 		//文本消息
 		if ( $this->instance->isTextMsg() ) {
 			//消息定阅处理
@@ -209,7 +207,7 @@ class Api {
 				$this->moduleProcessing( 'text', $info['module'], $info['rid'] );
 			}
 			//没有匹配的时,使用系统默认回复
-			$this->defaultMessage( v( 'setting.default_message' ) );
+			$this->defaultMessage( v( 'site.setting.default_message' ) );
 		}
 		//图片消息
 		if ( $this->instance->isImageMsg() ) {

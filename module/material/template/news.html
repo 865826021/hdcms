@@ -44,9 +44,9 @@
 <script>
     require(['angular', 'util', 'underscore'], function (angular, util, _) {
         angular.module(['myApp'], []).controller('ctrl', ['$scope', function ($scope) {
-            $scope.data = <?php echo $data;?>;
+            $scope.data = angular.fromJson('{{$data}}');
             //群发图文
-            $scope.send=function(id){
+            $scope.send = function (id) {
                 util.confirm('确定发送消息吗?', function () {
                     $.post('{{site_url("site/sendNews")}}', {id: id}, function (res) {
                         if (res.valid == 1) {
@@ -57,20 +57,19 @@
                     }, 'json');
                 });
             }
-
             //发送预览
-            $scope.preview=function(id){
+            $scope.preview = function (id) {
                 var modalobj = util.modal({
                     content: ['{{site_url("site/users")}}'],//加载的远程地址
                     title: '选择发送图文消息的粉丝',
                     width: 800,
                     show: true,
-                    id:"preview",
+                    id: "preview",
                     events: {
-                        'shown.bs.modal':function(){
-                            $("button.user").click(function(){
+                        'shown.bs.modal': function () {
+                            $("button.user").click(function () {
                                 var uid = $(this).attr('uid');
-                                $.post('{{site_url("site/preview")}}', {id: id,uid:uid}, function (res) {
+                                $.post('{{site_url("site/preview")}}', {id: id, uid: uid}, function (res) {
                                     if (res.valid == 1) {
                                         util.message(res.message, '', 'success');
                                     } else {
@@ -86,9 +85,8 @@
                     }
                 });
             }
-
             //删除图文
-            $scope.remove=function(id){
+            $scope.remove = function (id) {
                 util.confirm('确定删除吗?', function () {
                     $.post('{{site_url("site/delNews")}}', {id: id}, function (res) {
                         if (res.valid == 1) {
@@ -99,7 +97,7 @@
                     }, 'json');
                 });
             };
-            }]);
-            angular.bootstrap(document.getElementById('form'), ['myApp']);
+        }]);
+        angular.bootstrap(document.getElementById('form'), ['myApp']);
     });
 </script>

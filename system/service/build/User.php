@@ -141,6 +141,7 @@ class User extends \system\model\User {
 	 */
 	public function checkPassword( $password, $username ) {
 		$user = Db::table( 'user' )->where( 'username', $username )->first();
+
 		return $user && $user['password'] == md5( $password . $user['security'] );
 	}
 
@@ -189,7 +190,7 @@ class User extends \system\model\User {
 	 * @return bool
 	 */
 	public function auth( $identify, $type ) {
-		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->get();
+		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
 		if ( empty( $permission ) ) {
 			return TRUE;
 		}
