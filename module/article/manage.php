@@ -13,8 +13,6 @@ use module\hdSite;
 use system\model\ReplyCover;
 use system\model\Rule;
 use system\model\RuleKeyword;
-use system\model\Site;
-use system\model\Template;
 use system\model\Web;
 
 /**
@@ -37,19 +35,20 @@ class manage extends hdSite {
 
 	//选择模板
 	public function doSiteTemplate() {
-		$data = ( new Template() )->getSiteAllTemplate( SITEID, q( 'get.type' ) );
-		View::with( 'data', $data );
-		View::make( $this->template . '/manage/template.php' );
+		$data = service( 'template' )->getSiteAllTemplate( SITEID, q( 'get.type' ) );
+
+		return view( $this->template . '/manage/template.php' )->with( [ 'data' => $data ] );
 	}
 
 	//站点管理
 	public function doSiteSite() {
-		$data = Db::table( 'web' )->where( 'siteid', '=', SITEID )->get();
+		$data = Db::table( 'web' )->where( 'siteid', SITEID )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], TRUE );
 			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid=' . SITEID . '&webid=' . $v['id'];
 		}
-		View::with( 'data', $data )->make( $this->template . '/manage/site.php' );
+
+		return View::with( 'data', $data )->make( $this->template . '/manage/site.php' );
 	}
 
 	//添加站点
@@ -59,47 +58,37 @@ class manage extends hdSite {
 		if ( IS_POST ) {
 			$data = json_decode( $_POST['data'], TRUE );
 			//添加微站
-			$web                  = $data;
-			$web['id']            = empty( $web['web_id'] ) ? 0 : $web['web_id'];
-			$web['template_name'] = $data['template_name'];
-			$web['title']         = $data['name'];
-			$web['site_info']     = $_POST['data'];
-			$action               = $this->webid ? 'save' : 'add';
-			if ( ! $web_id = $this->web->$action( $web ) ) {
-				message( $this->web->getError(), 'back', 'error' );
-			}
+			$this->web['id']            = empty( $data['web_id'] ) ? 0 : $data['web_id'];
+			$this->web['template_name'] = $data['template_name'];
+			$this->web['title']         = $data['name'];
+			$this->web['site_info']     = $_POST['data'];
+			$this->web['thumb']         = $data['thumb'];
+			$this->web['template_tid']  = $data['template_tid'];
+			$insertId                   = $this->web->save();
 			//站点编号
-			$web['id'] = $web['id'] ?: $web_id;
+			$web['id'] = $this->web['id'] ?: $insertId;
 			//添加回复规则
-			$data['module'] = 'cover';
-			$ruleModel      = new Rule();
-			$action         = empty( $data['rid'] ) ? 'add' : 'save';
-			if ( ! $rid = $ruleModel->$action( $data ) ) {
-				message( $ruleModel->getError(), 'back', 'error' );
-			}
-			$rid = $data['rid'] ?: $rid;
+			$data['module']   = 'cover';
+			$ruleModel        = new Rule();
+			$ruleModel['rid'] = empty( $data['rid'] ) ? 0 : $data['rid'];
+			$insertRid        = $ruleModel->save();
+			$rid              = $ruleModel['rid'] ?: $insertRid;
 			//添加回复关键词
-			$keyword['id']      = empty( $data['keyword_id'] ) ? 0 : $data['keyword_id'];
-			$keyword['content'] = $data['keyword'];
-			$keyword['rid']     = $rid;
-			$keyword['module']  = 'cover';
-			$action             = empty( $keyword['id'] ) ? 'add' : 'save';
-			if ( ! $ruleKeyword->$action( $keyword ) ) {
-				message( $ruleKeyword->getError(), 'back', 'error' );
-			}
+			$ruleKeyword['id']      = empty( $data['keyword_id'] ) ? 0 : $data['keyword_id'];
+			$ruleKeyword['content'] = $data['keyword'];
+			$ruleKeyword['rid']     = $rid;
+			$ruleKeyword['module']  = 'cover';
+			$ruleKeyword->save();
 			//添加封面回复
-			$cover['id']          = empty( $data['reply_cover_id'] ) ? 0 : $data['reply_cover_id'];
-			$cover['web_id']      = $web['id'];
-			$cover['rid']         = $rid;
-			$cover['module']      = 'site';
-			$cover['title']       = $data['name'];
-			$cover['description'] = $data['description'];
-			$cover['thumb']       = $data['thumb'];
-			$cover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
-			$action               = $cover['id'] ? 'save' : 'add';
-			if ( ! $replyCover->$action( $cover ) ) {
-				message( $replyCover->getError(), 'back', 'error' );
-			}
+			$replyCover['id']          = empty( $data['reply_cover_id'] ) ? 0 : $data['reply_cover_id'];
+			$replyCover['web_id']      = $web['id'];
+			$replyCover['rid']         = $rid;
+			$replyCover['module']      = 'article';
+			$replyCover['title']       = $data['name'];
+			$replyCover['description'] = $data['description'];
+			$replyCover['thumb']       = $data['thumb'];
+			$replyCover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
+			$replyCover->save();
 			message( '保存站点数据成功', site_url( 'site' ), 'success' );
 		}
 		if ( $this->webid ) {
@@ -113,13 +102,15 @@ class manage extends hdSite {
 			$field['reply_cover_id'] = $reply_cover['id'];
 		}
 		View::with( 'field', isset( $field ) ? json_encode( $field ) : '' );
-		View::make( $this->template . '/manage/sitePost.php' );
+
+		return View::make( $this->template . '/manage/sitePost.php' );
 	}
 
 	//选择模板
 	public function doSiteLoadTpl() {
-		$data = ( new Template() )->getSiteAllTemplate();
-		View::with( 'data', $data )->make( $this->template . '/manage/loadTpl.php' );
+		$data = service( 'template' )->getSiteAllTemplate();
+
+		return view( $this->template . '/manage/loadTpl.php' )->with( 'data', $data );
 	}
 
 	//删除站点

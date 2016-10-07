@@ -10,9 +10,7 @@ class Web {
 	 * @return array
 	 */
 	public function getSiteWebs() {
-		$web = $this->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->get();
-
-		return Arr::string_to_int( $web );
+		return Db::table( 'web' )->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->get();
 	}
 
 	/**
@@ -23,7 +21,7 @@ class Web {
 	 * @return bool
 	 */
 	public function has( $id ) {
-		return $this->where( 'siteid', SITEID )->where( 'id', $id )->first() ? TRUE : FALSE;
+		return Db::table( 'web' )->where( 'siteid', SITEID )->where( 'id', $id )->first() ? TRUE : FALSE;
 	}
 
 
@@ -32,6 +30,6 @@ class Web {
 	 * @return array
 	 */
 	public function getDefaultWeb() {
-		return $this->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->first();
+		return Db::table( 'web' )->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->first();
 	}
 }

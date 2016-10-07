@@ -14,7 +14,8 @@ class Package extends \system\model\Package {
 	 *
 	 * @return array
 	 */
-	public function getSiteAllPackageData( $siteId ) {
+	public function getSiteAllPackageData( $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
 		static $cache = [ ];
 		if ( isset( $cache[ $siteId ] ) ) {
 			return $cache[ $siteId ];

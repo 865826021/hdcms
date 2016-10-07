@@ -68,9 +68,10 @@
                         <td>{{$t['usertotal']}} 张</td>
                         <td>{{date('Y-m-d',$t['starttime'])}} ~ {{date("Y-m-d",$t['endtime'])}}</td>
                         <td>
-                            <a href="{{site_url('site/post')}}&type={{$t['type']}}&tid={{$t['tid']}}">编辑</a> -
-                            <a href="javascript:;" onclick="del({{$t['type']}},{{$t['tid']}})">删除</a> -
-                            <a href="">兑换</a>
+                            <div class="btn-group">
+                                <a href="{{site_url('site/post')}}&type={{$t['type']}}&tid={{$t['tid']}}" class="btn btn-default">编辑</a>
+                                <a href="javascript:;" onclick="del({{$t['type']}},{{$t['tid']}})" class="btn btn-default">删除</a>
+                            </div>
                         </td>
                     </tr>
                 </foreach>
@@ -83,9 +84,13 @@
     function del(type, tid) {
         util.confirm('确定删除卡券吗?', function () {
             url = "{{site_url('site/del')}}&type=" + type + "&tid=" + tid;
-            $.get(url, function () {
-                location.reload(true);
-            })
+            $.get(url, function (res) {
+                if(res.valid==1){
+                    util.message(res.message,'refresh','success');
+                }else{
+                    util.message(res.message,'','error');
+                }
+            },'json')
         });
     }
 </script>

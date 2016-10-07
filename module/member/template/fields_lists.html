@@ -23,6 +23,7 @@
                     <foreach from="$data" value="$d">
                         <tr>
                             <td>
+                                <input type="hidden" name="member_fields[{{$d['id']}}][id]" class="form-control" value="{{$d['id']}}" >
                                 <input type="text" name="member_fields[{{$d['id']}}][orderby]" class="form-control" value="{{$d['orderby']}}" required="required">
                             </td>
                             <td>{{$d['field']}}</td>
@@ -31,7 +32,7 @@
                                 <input type="checkbox" name="member_fields[{{$d['id']}}][status]" value="1" {{$d['status']?'checked="checked"':''}}>
                             </td>
                             <td>
-                                <a href="?a=member/site/FieldPost&t=site&id={{$d['id']}}" class="btn btn-primary">编辑</a>
+                                <a href="{{site_url('FieldPost',['id'=>$d['id']])}}" class="btn btn-primary">编辑</a>
                             </td>
                         </tr>
                     </foreach>

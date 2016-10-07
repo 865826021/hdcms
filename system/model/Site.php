@@ -85,7 +85,6 @@ class Site extends Model {
 		foreach ( $keys as $key ) {
 			d( "{$key}:{$siteid}", '[del]' );
 		}
-		\Session::del( 'siteid' );
 
 		return TRUE;
 	}

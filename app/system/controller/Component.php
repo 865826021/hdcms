@@ -33,21 +33,18 @@ class Component {
 		return view();
 	}
 
-	//模块&模板列表
+	//模块列表
 	public function moduleList() {
-		if ( ! Session::get( 'member_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		$modules = Db::table( 'modules' )->where( 'is_system', 0 )->get();
-		View::with( 'modules', $modules )->make();
+		service( 'user' )->loginAuth();
+		$modules = Db::table( 'modules' )->get();
+
+		return view()->with( 'modules', $modules );
 	}
 
 	//字体列表
 	public function font() {
-		if ( ! Session::get( 'member_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		View::make();
+		service('user')->loginAuth();
+		return View::make();
 	}
 
 	//上传图片webuploader

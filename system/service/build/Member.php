@@ -29,6 +29,7 @@ class Member {
 
 		return TRUE;
 	}
+
 	//获取会员组
 	public function getGroupName( $uid ) {
 		$sql = "SELECT title,id FROM " . tablename( 'member' ) . " m JOIN " . tablename( 'member_group' ) . " g ON m.group_id = g.id WHERE m.uid={$uid}";
@@ -45,7 +46,11 @@ class Member {
 	 * @return bool
 	 */
 	public function hasUser( $uid ) {
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'uid', $uid )->get() ? TRUE : FALSE;
+		if ( ! Db::table('member')->where( 'siteid', SITEID )->where( 'uid', $uid )->get() ) {
+			message( '当前站点中不存在此用户', 'back', 'error' );
+		}
+
+		return TRUE;
 	}
 
 	//微信自动登录
@@ -146,5 +151,13 @@ class Member {
 	 */
 	public function getDefaultAddress() {
 		return $this->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->first();
+	}
+
+	/**
+	 * 默认会员组编号
+	 * @return mixed
+	 */
+	public function defaultGruopId() {
+		return Db::table( 'member_group' )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->pluck( 'id' );
 	}
 }

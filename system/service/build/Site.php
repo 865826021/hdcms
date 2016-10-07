@@ -180,7 +180,7 @@ class Site extends \system\model\Site {
 	public function getSiteGroups( $siteid = NULL ) {
 		$siteid = $siteid ?: SITEID;
 
-		return $this->where( 'siteid', $siteid )->get() ?: [ ];
+		return Db::table('member_group')->where( 'siteid', $siteid )->get() ?: [ ];
 	}
 
 	/**

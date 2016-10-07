@@ -32,7 +32,7 @@
 <script>
     $("#changeCreditForm").submit(function () {
         var data = $(this).serialize();
-        $.post("{{site_url('trade')}}", data, function (response) {
+        $.post("{{__URL__}}", data, function (response) {
             if (response.valid) {
                 util.message(response.message, 'refresh', 'success');
             } else {

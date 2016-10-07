@@ -42,18 +42,19 @@ class content extends hdSite {
 
 	//添加栏目
 	public function doSiteCategory() {
-		$data = $this->webCategory->where( 'siteid', SITEID )->orderBy( 'cid', 'ASC' )->get();
+		$data = Db::table( 'web_category' )->where( 'siteid', SITEID )->orderBy( 'cid', 'ASC' )->get();
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['url'] = __ROOT__ . '/index.php?s=content/home/category&siteid=' . v( 'site.siteid' ) . '&cid=' . $v['cid'];
 		}
 		$data = Data::tree( $data, 'title', 'cid', 'pid' );
 		View::with( 'data', $data );
-		View::make( $this->template . '/content/category.php' );
+
+		return View::make( $this->template . '/content/category.php' );
 	}
 
 	//栏目修改
 	public function doSiteCategoryPost() {
-		$cid = q( 'get.cid' );
+		$cid = Request::get( 'cid' );
 		if ( $cid && ! Db::table( 'web_category' )->find( $cid ) ) {
 			message( '栏目不存在', 'back', 'error' );
 		}
@@ -103,7 +104,7 @@ class content extends hdSite {
 			//栏目模板
 			$template = Db::table( 'template' )->where( 'name', $field['template_name'] )->first();
 		} else {
-			$defaultWeb = ( new Web() )->getDefaultWeb();
+			$defaultWeb = service('web')->getDefaultWeb();
 			$field      = [
 				'isnav'         => 0,
 				'ishomepage'    => 0,
@@ -124,7 +125,7 @@ class content extends hdSite {
 		View::with( 'field', Arr::string_to_int( $field ) );
 		View::with( 'category', Arr::string_to_int( $category ) );
 		View::with( 'template', Arr::string_to_int( $template ) );
-		View::make( $this->template . '/content/categoryPost.php' );
+		return View::make( $this->template . '/content/categoryPost.php' );
 	}
 
 	//删除栏目

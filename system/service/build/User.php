@@ -174,14 +174,6 @@ class User extends \system\model\User {
 	}
 
 	/**
-	 * 更新管理员SESSION数据
-	 */
-	public function updateUserSessionData() {
-		$user = Db::table( 'user' )->where( 'uid', Session::get( 'user.uid' ) )->find();
-		Session::set( 'user', $user );
-	}
-
-	/**
 	 * 根据标识验证模块的访问权限
 	 *
 	 * @param string $identify 权限标识

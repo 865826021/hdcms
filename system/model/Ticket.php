@@ -22,9 +22,10 @@ class Ticket extends Model {
 	protected $validate
 	                 = [
 			[ 'title', 'required', '名称不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'title', 'unique', '名称已经被使用', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'type', 'num:1,3', '卡券类型不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'condition', 'regexp:/^[0-9\.]+$/', '"满多少钱可使用"只能为数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'discount', 'regexp:/^[0-9\.]+$/', '"折扣" 请填写0-1的小数', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'condition', 'regexp:/^[0-9\.]+$/', '"满多少钱可打折或使用条件" 只能为数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'discount', 'regexp:/^[0-9\.]+$/', '"折扣或代金券面额" 只能为数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'thumb', 'required', '封面图片不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'credit', 'regexp:/^[0-9\.]+$/', '兑换方式的"积分数量"只能为数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'limit', 'regexp:/^\d+$/', '每人可使用的数量不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],

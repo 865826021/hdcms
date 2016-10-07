@@ -20,6 +20,7 @@ class Web extends Model {
 			[ 'template_tid', 'required', '请选择网站模板风格', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'domain', 'http', '域名格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'status', 'num:0,1', '网站状态只能为1或9', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+			[ 'thumb', 'required', '封面不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		];
 	protected $auto
 	                            = [

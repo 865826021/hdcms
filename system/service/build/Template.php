@@ -21,53 +21,59 @@ class Template {
 	/**
 	 * 获取站点扩展模板
 	 *
-	 * @param int $siteid 站点编号
+	 * @param int $siteId 站点编号
 	 *
 	 * @return array
 	 */
-	public function getSiteExtTemplateName( $siteid ) {
-		return $this->where( 'siteid', $siteid )->lists( 'template' );
+	public function getSiteExtTemplateName( $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
+
+		return Db::table( 'site_template' )->where( 'siteid', $siteId )->lists( 'template' );
 	}
 
 	/**
 	 * 获取站点所有模板
 	 *
-	 * @param int $siteid 站点编号
-	 * @param string $type 模板类型
+	 * @param int $siteId 站点编号
+	 * @param string $industry 模板类型
 	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function getSiteAllTemplate( $siteid = NULL, $type = NULL ) {
-		$siteid = $siteid ?: Session::get( 'siteid' );
-		if ( empty( $siteid ) ) {
+	public function getSiteAllTemplate( $siteId = 0, $industry = '' ) {
+		$siteId = $siteId ?: SITEID;
+		if ( empty( $siteId ) ) {
 			throw new \Exception( '$siteid 参数错误' );
 		}
 		static $cache = [ ];
-		if ( isset( $cache[ $siteid ] ) ) {
-			return $cache[ $siteid ];
+		if ( isset( $cache[ $siteId ] ) ) {
+			return $cache[ $siteId ];
 		}
+		$db = Db::table( 'template' );
 		//获取站点可使用的所有套餐
-		$package   = ( new Package() )->getSiteAllPackageData( $siteid );
+		$package   = service( 'package' )->getSiteAllPackageData( $siteId );
 		$templates = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
-			//拥有[所有服务]套餐
-			$templates = $this->get();
+			//拥有[所有服务]套餐时可以使用模板
+			if ( $industry ) {
+				$db->where( 'industry', $industry );
+			}
+			$templates = $db->get();
 		} else {
 			$templateNames = [ ];
 			foreach ( $package as $p ) {
 				$templateNames = array_merge( $templateNames, $p['template'] );
 			}
-			$templateNames = array_merge( $templateNames, ( new SiteTemplate() )->getSiteExtTemplateName( $siteid ) );
+			$templateNames = array_merge( $templateNames, $this->getSiteExtTemplateName( $siteId ) );
 			if ( ! empty( $templateNames ) ) {
-				if ( $type ) {
-					$this->where( 'type', $type );
+				if ( $industry ) {
+					$db->where( 'industry', $industry );
 				}
-				$templates = $this->whereIn( 'name', $templateNames )->get();
+				$templates = $db->whereIn( 'name', $templateNames )->get();
 			}
 		}
 
-		return $cache[ $siteid ] = $templates;
+		return $cache[ $siteId ] = $templates;
 	}
 
 	/**

@@ -4,7 +4,7 @@
         <li class="active"><a href="#">会员列表</a></li>
         <li><a href="{{site_url('site/MemberPost')}}">添加会员</a></li>
     </ul>
-    <form action="{{site_url('delete')}}" method="post" class="form-horizontal">
+    <form action="" method="post" class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">
             <div class="panel-body">
                 <table class="table table-hover">
@@ -12,7 +12,8 @@
                     <tr>
                         <th width="50">删除</th>
                         <th width="100">会员编号</th>
-                        <th>昵称/真实姓名
+                        <th>昵称/真实姓名</th>
+                        <th>会员组</th>
                         <th>手机</th>
                         <th>邮箱</th>
                         <th>余额/积分</th>
@@ -28,6 +29,7 @@
                             </td>
                             <td>{{$d['uid']}}</td>
                             <td>{{$d['nickname']}}<br/>{{$d['realname']}}</td>
+                            <td>{{$d['title']}}</td>
                             <td>{{$d['mobile']}}</td>
                             <td>{{$d['email']}}</td>
                             <td>
@@ -51,6 +53,29 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-primary col-lg-1">删除</button>
+        <ul class="pagination">
+            {{$data->links()}}
+        </ul>
+        <button class="btn btn-primary col-lg-1" onclick="del()">删除</button>
     </form>
 </block>
+<script>
+    function del() {
+        require(['util'], function (util) {
+            if ($("[name*='uid']:checked").length == 0) {
+                util.message('你还没有选择要删除的用户', '', 'warning');
+                return;
+            }
+            util.confirm('确定删除用户吗?', function () {
+                $.post("{{site_url('delete')}}", $("form").serialize(), function (res) {
+                    if (res.valid == 1) {
+                        util.message(res.message, 'refresh', 'success');
+                    } else {
+                        util.message(res.message, '', 'error');
+                    }
+                }, 'json');
+            });
+        });
+    }
+
+</script>

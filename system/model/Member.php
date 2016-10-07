@@ -10,8 +10,6 @@ class Member extends Model {
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'mobile', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'email', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'password', 'autoPassword', 'method', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
-			[ 'group_id', 'autoGroupId', 'method', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'icon', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'credit1', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 			[ 'credit2', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
@@ -45,32 +43,28 @@ class Member extends Model {
 			[ 'residedist', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'access_token', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
-
-	//获取默认组
-	public function autoGroupId() {
-		return Db::table( 'member_group' )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->pluck( 'id' );
-	}
-
-	//密码字段处理
-	public function autoPassword( $password, &$data ) {
-		$data['security']  = substr( md5( time() ), 0, 10 );
-		$data['password2'] = md5( $data['password2'] . $data['security'] );
-
-		return md5( $password . $data['security'] );
-	}
-
 	protected $validate
-		= [
-			[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
-			[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
-			[ 'mobile', 'unique', '手机号已经被使用', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
-			[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
+	                 = [
+			[ 'password', 'required', '密码不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+			[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+			[ 'mobile', 'unique', '手机号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+			[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'uid', 'checkUid', '当前用户不属于当前站点', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'password', 'confirm:password2', '两次密码不一致', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'group_id', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ]
 		];
 
 	public function checkUid( $field, $value, $params, $data ) {
 		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? TRUE : FALSE;
+	}
+
+	/**
+	 * 设置密码与加密密钥
+	 *
+	 * @return array
+	 */
+	public function setPasswordAndSecurity() {
+		$this->data['security'] = substr( md5( time() ), 0, 10 );
+		$this->data['password'] = md5( $this->data['password'] . $this->data['security'] );
 	}
 }

@@ -87,6 +87,7 @@ class Ticket {
 
 		return TRUE;
 	}
+
 	/**
 	 * 获取指定卡券允许使用的用户组
 	 *
@@ -99,8 +100,9 @@ class Ticket {
 			return [ ];
 		}
 
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'tid', $tid )->lists( 'group_id' );
+		return Db::table('ticket_groups')->where( 'siteid', SITEID )->where( 'tid', $tid )->lists( 'group_id' );
 	}
+
 	/**
 	 * 获取指定卡券允许使用的模块
 	 *
@@ -112,10 +114,11 @@ class Ticket {
 		if ( empty( $tid ) ) {
 			return [ ];
 		}
-		$module = $this->where( 'siteid', Session::get( 'siteid' ) )->where( 'tid', $tid )->lists( 'module' );
+		$module = Db::table( 'ticket_module' )->where( 'siteid', SITEID )->where( 'tid', $tid )->lists( 'module' );
 
 		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
 	}
+
 	/**
 	 * 核销卡券
 	 *
