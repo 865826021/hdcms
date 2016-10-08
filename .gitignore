@@ -1,4 +1,5 @@
-attachment
+attachment/
+!attachment/index.html
 storage
 addons/
 !addons/index.html

@@ -156,8 +156,8 @@ if ( $action == 'table' ) {
 	//更新系统版本号
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
-	$ver  = include 'data/version.php';
-	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET uid=0,username='',webname='',AppSecret='',versionCode='{$ver['versionCode']}',releaseCode='{$ver['releaseCode']}',createtime=0";
+	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
+		VALUES(0,'','','','{$ver['versionCode']}','{$ver['releaseCode']}',0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
