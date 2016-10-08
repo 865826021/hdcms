@@ -86,6 +86,8 @@ class Site {
 			//添加站点信息
 			$Site->name        = Request::post( 'name' );
 			$Site->description = Request::post( 'description' );
+			$Site->domain      = Request::post( 'domain' );
+			$Site->module      = Request::post( 'module' );
 			$siteId            = $Site->save();
 			define( 'SITEID', $siteId );
 			//添加站长数据,系统管理员不添加数据
@@ -228,6 +230,8 @@ class Site {
 			$site              = ( new \system\model\Site() )->find( SITEID );
 			$site->name        = Request::post( 'name' );
 			$site->description = Request::post( 'description' );
+			$site->domain      = Request::post( 'domain' );
+			$site->module      = Request::post( 'module' );
 			$site->save();
 			//更新微信数据
 			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( Request::post() );

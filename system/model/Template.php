@@ -31,7 +31,7 @@ class Template extends Model {
 		//删除模板数据
 		$this->where( 'name', $name )->delete();
 		//更新套餐数据
-		$package = Db::table( 'package' )->get();
+		$package = Db::table( 'package' )->get()?:[];
 		foreach ( $package as $p ) {
 			$p['template'] = unserialize( $p['template'] );
 			if ( $k = array_search( $name, $p['template'] ) ) {

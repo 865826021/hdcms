@@ -9,12 +9,13 @@ use hdphp\model\Model;
  * @author 向军
  */
 class Cloud extends Model {
-	protected $table = 'cloud';
+	protected $table     = 'cloud';
+	protected $allowFill = [ '*' ];
 	protected $validate
-	                 = [
+	                     = [
 		];
 	protected $auto
-	                 = [
+	                     = [
 			[ 'uid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'username', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'AppID', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

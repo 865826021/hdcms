@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest versionCode="2.0">
+<manifest versionCode="2.0" releaseCode="201610090101">
     <sql>
         <![CDATA[
         ]]>

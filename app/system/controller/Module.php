@@ -55,7 +55,7 @@ class Module {
 
 	//已经安装模块
 	public function installed() {
-		$modules = $this->module->where( 'is_system', 0 )->get();
+		$modules = $this->module->where( 'is_system', 0 )->get()?:[];
 		foreach ( $modules as $k => $m ) {
 			//本地模块
 			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";

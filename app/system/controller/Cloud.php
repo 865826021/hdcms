@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -23,9 +24,7 @@ class Cloud {
 
 	public function __construct() {
 		$this->user = new User();
-		if ( ! $this->user->isSuperUser() ) {
-			message( '只有系统管理员可以执行操作', 'back', 'error' );
-		}
+		service( 'user' )->superUserAuth();
 		$user      = Db::table( 'cloud' )->find( 1 );
 		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}";
 		$this->db  = new \system\model\Cloud();
@@ -52,7 +51,7 @@ class Cloud {
 			}
 			message( $res['message'], 'back', 'error' );
 		}
-		if ( ! $field = $this->db->find( 1 ) ) {
+		if ( ! $field = Db::table('cloud')->find( 1 ) ) {
 			$field = [
 				'uid'         => 0,
 				'username'    => '',
@@ -65,8 +64,7 @@ class Cloud {
 				'status'      => 0
 			];
 		}
-		View::with( 'field', $field );
-		View::make();
+		return view()->with( 'field', $field );
 	}
 
 	//检测有没有新版本
@@ -79,11 +77,6 @@ class Cloud {
 
 	//更新HDCMS
 	public function upgrade() {
-		//		$upgrade          = $this->checkUpgrade();
-		//		if ( $upgrade['valid'] == 0 ) {
-		//			$hdcms = $this->db->find( 1 );
-		//			View::with( 'data', $upgrade )->with('hdcms',$hdcms)->make();
-		//		}
 		$data = d( '_upgrade_' );
 		View::with( 'data', $data );
 		switch ( q( 'get.action' ) ) {
@@ -98,8 +91,8 @@ class Cloud {
 					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
 					go( u( 'upgrade', [ 'action' => 'finish' ] ) );
 				}
-				View::with( 'data', $data );
-				View::make( 'downloadLists' );
+
+				return view( 'downloadLists' )->with( 'data', $data );
 				break;
 			case 'download':
 				//处理文件的编号
@@ -195,9 +188,7 @@ class Cloud {
 						D( '_upgrade_', $data );
 					}
 				}
-				View::with( 'data', $data );
-				View::with( 'hdcms', $hdcms );
-				View::make();
+				return view()->with( [ 'data' => $data, 'hdcms' => $hdcms ] );
 		}
 	}
 

@@ -27,10 +27,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label star">域名</label>
+                    <label class="col-sm-2 control-label">网站域名</label>
                     <div class="col-sm-10">
                         <input type="text" name="domain" class="form-control" value="{{$site['domain']}}" placeholder="如: www.houdunwang.com">
                         <span class="help-block">站点使用的域名,不要添加http</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">默认模块</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="module" class="form-control" value="{{$site['module']}}">
+                        <span class="help-block">通过域名访问时运行的模块,需要设置 桌面入口导航</span>
                     </div>
                 </div>
             </div>

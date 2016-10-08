@@ -1,6 +1,3 @@
-# Dump of table hd_article
-# ------------------------------------------------------------
-
 DROP TABLE IF EXISTS `hd_article`;
 
 CREATE TABLE `hd_article` (
@@ -99,11 +96,19 @@ DROP TABLE IF EXISTS `hd_config`;
 CREATE TABLE `hd_config` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `site` text NOT NULL COMMENT '网站开启/登录等设置',
-  `upload` text NOT NULL COMMENT '上传设置',
   `register` text NOT NULL COMMENT '注册配置',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统配置';
 
+LOCK TABLES `hd_config` WRITE;
+/*!40000 ALTER TABLE `hd_config` DISABLE KEYS */;
+
+INSERT INTO `hd_config` (`id`, `site`, `register`)
+VALUES
+  (1,'{\"is_open\":\"1\",\"enable_code\":\"0\",\"close_message\":\"网站维护中,请稍候访问\",\"upload\":{\"size\":20000,\"type\":\"jpg,jpeg,gif,png,zip,rar,doc,txt,pem\"}}','{\"is_open\":\"0\",\"audit\":\"1\",\"enable_code\":\"0\",\"groupid\":\"1\"}');
+
+/*!40000 ALTER TABLE `hd_config` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_core_attachment
@@ -121,7 +126,7 @@ CREATE TABLE `hd_core_attachment` (
   `extension` varchar(10) NOT NULL DEFAULT '' COMMENT '类型',
   `createtime` int(10) NOT NULL COMMENT '上传时间',
   `size` mediumint(9) NOT NULL COMMENT '文件大小',
-  `is_member` tinyint(1) NOT NULL COMMENT '1 前台 2 后台',
+  `user_type` char(10) NOT NULL DEFAULT '' COMMENT '用户类型',
   `data` varchar(100) NOT NULL DEFAULT '' COMMENT '辅助信息',
   `hash` char(50) NOT NULL DEFAULT '' COMMENT '标识用于区分资源',
   PRIMARY KEY (`id`),
@@ -144,6 +149,18 @@ CREATE TABLE `hd_core_cache` (
   PRIMARY KEY (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='缓存';
 
+LOCK TABLES `hd_core_cache` WRITE;
+/*!40000 ALTER TABLE `hd_core_cache` DISABLE KEYS */;
+
+INSERT INTO `hd_core_cache` (`key`, `value`)
+VALUES
+  ('modules:1','a:22:{i:0;a:19:{s:3:\"mid\";s:1:\"1\";s:4:\"name\";s:5:\"basic\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:18:\"基本文字回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:24:\"和您进行简单对话\";s:6:\"detail\";s:156:\"一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:1;a:19:{s:3:\"mid\";s:1:\"2\";s:4:\"name\";s:4:\"news\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:24:\"基本混合图文回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:33:\"为你提供生动的图文资讯\";s:6:\"detail\";s:156:\"一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:2;a:19:{s:3:\"mid\";s:1:\"3\";s:4:\"name\";s:7:\"article\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"文章系统\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:33:\"发布文章与会员中心管理\";s:6:\"detail\";s:105:\"支持桌面、移动、微信三网的文章系统，同时具有移动、桌面会员中心管理功能\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:3;a:19:{s:3:\"mid\";s:1:\"4\";s:4:\"name\";s:7:\"setting\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"网站配置\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:24:\"网站运行整体配置\";s:6:\"detail\";s:81:\"网站运行配置项，如支付、邮箱、登录等等的全局配置项管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:4;a:19:{s:3:\"mid\";s:1:\"5\";s:4:\"name\";s:6:\"member\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"会员粉丝\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:12:\"会员管理\";s:6:\"detail\";s:75:\"会员与会员组管理，如会员字段，粉丝管理、会员卡设置\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:5;a:19:{s:3:\"mid\";s:1:\"6\";s:4:\"name\";s:7:\"special\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:18:\"微信默认消息\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"微信默认消息\";s:6:\"detail\";s:45:\"系统默认消息与关注微信消息处理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:6;a:19:{s:3:\"mid\";s:1:\"7\";s:4:\"name\";s:6:\"ticket\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"卡券管理\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"会员卡券管理\";s:6:\"detail\";s:45:\"会员优惠券、代金券、实物券管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:7;a:19:{s:3:\"mid\";s:1:\"8\";s:4:\"name\";s:5:\"cover\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"封面回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"封面消息回复\";s:6:\"detail\";s:33:\"用来处理模块的封面消息\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.png\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:8;a:19:{s:3:\"mid\";s:1:\"9\";s:4:\"name\";s:2:\"uc\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"会员中心\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:27:\"会员中心的管理操作\";s:6:\"detail\";s:81:\"会员信息的管理，包括收货地址、个人资料、会员卡券等管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.png\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:9;a:19:{s:3:\"mid\";s:2:\"10\";s:4:\"name\";s:6:\"button\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"微信菜单\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"微信菜单管理\";s:6:\"detail\";s:102:\"用于添加微信菜单，更新菜单后需要取消关注再关注或等微信更新缓存后有效\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:10;a:19:{s:3:\"mid\";s:2:\"11\";s:4:\"name\";s:8:\"material\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"微信素材\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:12:\"微信素材\";s:6:\"detail\";s:186:\"公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:11;a:19:{s:3:\"mid\";s:1:\"1\";s:4:\"name\";s:5:\"basic\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:18:\"基本文字回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:24:\"和您进行简单对话\";s:6:\"detail\";s:156:\"一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:12;a:19:{s:3:\"mid\";s:1:\"2\";s:4:\"name\";s:4:\"news\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:24:\"基本混合图文回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:33:\"为你提供生动的图文资讯\";s:6:\"detail\";s:156:\"一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:13;a:19:{s:3:\"mid\";s:1:\"3\";s:4:\"name\";s:7:\"article\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"文章系统\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:33:\"发布文章与会员中心管理\";s:6:\"detail\";s:105:\"支持桌面、移动、微信三网的文章系统，同时具有移动、桌面会员中心管理功能\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:14;a:19:{s:3:\"mid\";s:1:\"4\";s:4:\"name\";s:7:\"setting\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"网站配置\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:24:\"网站运行整体配置\";s:6:\"detail\";s:81:\"网站运行配置项，如支付、邮箱、登录等等的全局配置项管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:15;a:19:{s:3:\"mid\";s:1:\"5\";s:4:\"name\";s:6:\"member\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"会员粉丝\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:12:\"会员管理\";s:6:\"detail\";s:75:\"会员与会员组管理，如会员字段，粉丝管理、会员卡设置\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:16;a:19:{s:3:\"mid\";s:1:\"6\";s:4:\"name\";s:7:\"special\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:18:\"微信默认消息\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"微信默认消息\";s:6:\"detail\";s:45:\"系统默认消息与关注微信消息处理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:17;a:19:{s:3:\"mid\";s:1:\"7\";s:4:\"name\";s:6:\"ticket\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"卡券管理\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"会员卡券管理\";s:6:\"detail\";s:45:\"会员优惠券、代金券、实物券管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:18;a:19:{s:3:\"mid\";s:1:\"8\";s:4:\"name\";s:5:\"cover\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"封面回复\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"封面消息回复\";s:6:\"detail\";s:33:\"用来处理模块的封面消息\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:1:{i:0;s:4:\"text\";}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.png\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:19;a:19:{s:3:\"mid\";s:1:\"9\";s:4:\"name\";s:2:\"uc\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"会员中心\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:27:\"会员中心的管理操作\";s:6:\"detail\";s:81:\"会员信息的管理，包括收货地址、个人资料、会员卡券等管理\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.png\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:20;a:19:{s:3:\"mid\";s:2:\"10\";s:4:\"name\";s:6:\"button\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"微信菜单\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:18:\"微信菜单管理\";s:6:\"detail\";s:102:\"用于添加微信菜单，更新菜单后需要取消关注再关注或等微信更新缓存后有效\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}i:21;a:19:{s:3:\"mid\";s:2:\"11\";s:4:\"name\";s:8:\"material\";s:8:\"industry\";s:8:\"business\";s:5:\"title\";s:12:\"微信素材\";s:7:\"version\";s:3:\"1.0\";s:6:\"resume\";s:12:\"微信素材\";s:6:\"detail\";s:186:\"公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作\";s:6:\"author\";s:6:\"后盾\";s:3:\"url\";s:21:\"http://open.hdcms.com\";s:9:\"is_system\";s:1:\"1\";s:10:\"subscribes\";a:0:{}s:10:\"processors\";a:0:{}s:7:\"setting\";s:1:\"0\";s:4:\"rule\";s:1:\"0\";s:11:\"permissions\";a:0:{}s:5:\"thumb\";s:9:\"thumb.jpg\";s:5:\"cover\";s:9:\"cover.jpg\";s:8:\"locality\";s:1:\"1\";s:11:\"releaseCode\";s:0:\"\";}}'),
+  ('setting:1','a:5:{s:11:\"creditnames\";b:0;s:15:\"creditbehaviors\";b:0;s:8:\"register\";b:0;s:4:\"smtp\";b:0;s:3:\"pay\";b:0;}'),
+  ('site:1','a:8:{s:6:\"siteid\";s:1:\"1\";s:4:\"name\";s:12:\"测试站点\";s:4:\"weid\";s:1:\"9\";s:11:\"allfilesize\";s:3:\"200\";s:10:\"createtime\";s:10:\"1469001908\";s:11:\"description\";s:0:\"\";s:6:\"domain\";s:0:\"\";s:6:\"module\";s:0:\"\";}'),
+  ('wechat:1','a:13:{s:4:\"weid\";s:1:\"1\";s:6:\"siteid\";s:1:\"1\";s:6:\"wename\";s:6:\"后盾\";s:7:\"account\";s:8:\"aihoudun\";s:8:\"original\";s:15:\"gh_65598c47b2b9\";s:5:\"level\";s:1:\"4\";s:5:\"appid\";s:18:\"wxc47243ed572e273d\";s:9:\"appsecret\";s:32:\"1c72ad236f72c70e347343653410934b\";s:6:\"qrcode\";s:40:\"attachment/2016/10/07/13311475772067.jpg\";s:4:\"icon\";s:22:\"resource/images/hd.png\";s:10:\"is_connect\";s:1:\"1\";s:5:\"token\";s:30:\"d5cd6efca1ddb64ad5a264495270c3\";s:14:\"encodingaeskey\";s:43:\"73af4a950da79a735f763be1d26ec35e049453adfbc\";}');
+
+/*!40000 ALTER TABLE `hd_core_cache` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_core_config
@@ -171,6 +188,15 @@ CREATE TABLE `hd_core_session` (
   PRIMARY KEY (`sessid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='session';
 
+LOCK TABLES `hd_core_session` WRITE;
+/*!40000 ALTER TABLE `hd_core_session` DISABLE KEYS */;
+
+INSERT INTO `hd_core_session` (`sessid`, `data`, `atime`)
+VALUES
+  ('dta64ofh8fqhgmgm8a75fmjlf1','admin_uid|s:1:\"1\";',1475964912);
+
+/*!40000 ALTER TABLE `hd_core_session` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_credits_record
@@ -351,6 +377,53 @@ CREATE TABLE `hd_menu` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单';
 
+LOCK TABLES `hd_menu` WRITE;
+/*!40000 ALTER TABLE `hd_menu` DISABLE KEYS */;
+
+INSERT INTO `hd_menu` (`id`, `pid`, `title`, `permission`, `url`, `append_url`, `icon`, `orderby`, `is_display`, `is_system`, `mark`)
+VALUES
+  (1,0,'基础设置','','?s=site/entry/home&p=platform','','fa fa-comments-o',0,1,1,'platform'),
+  (2,1,'基本功能','','','','',0,1,1,'platform'),
+  (3,2,'文字回复','reply_basic','?s=site/reply/lists&m=basic','?s=site/reply/post&m=basic','fa fa-plus',0,1,1,'platform'),
+  (21,0,'扩展模块','','?s=site/entry/home&p=package','','fa fa-arrows',100,1,1,'package'),
+  (27,21,'管理','','','','',0,1,1,'package'),
+  (30,2,'图文回复','reply_news','?s=site/reply/lists&m=news','?s=site/reply/post&m=news','fa fa-plus',0,1,1,'platform'),
+  (31,0,'功能选项','','?s=site/entry/home&p=feature','','fa fa-comments-o',20,1,1,'feature'),
+  (32,0,'会员粉丝','','?s=site/entry/home&p=member','','fa fa-cubes',10,1,1,'member'),
+  (33,32,'会员中心','','','','fa fa-cubes',0,1,1,'member'),
+  (35,33,'会员','users','?a=site/MemberLists&t=site&m=member','?a=site/MemberPost&t=site&m=member','fa fa-cubes',0,1,1,'member'),
+  (36,33,'会员组','member_groups','?a=site/GroupLists&t=site&m=member','?a=site/GroupPost&t=site&m=member','fa fa-cubes',0,1,1,'member'),
+  (38,32,'积分兑换','','','','fa fa-cubes',0,1,1,'member'),
+  (39,38,'折扣券','member_coupons','?a=site/lists&t=site&type=1&m=ticket','?a=site/post&t=site&type=1&m=ticket','fa fa-cubes',0,1,1,'member'),
+  (40,38,'折扣券核销','member_coupons_charge','?a=site/charge&t=site&type=1&m=ticket','','fa fa-cubes',0,1,1,'member'),
+  (41,38,'代金券','member_cash','?a=site/lists&t=site&type=2&m=ticket','?a=site/post&t=site&type=2&m=ticket','fa fa-cubes',0,1,1,'member'),
+  (42,38,'代金券核销','member_cash_charge','?a=site/charge&t=site&type=2&m=ticket','','fa fa-cubes',0,1,1,'member'),
+  (55,2,'系统回复','reply_special','?a=site/post&t=site&m=special','','fa fa-cubes',0,1,1,'platform'),
+  (63,31,'公众号选项','','','','fa fa-cubes',0,1,1,'feature'),
+  (64,63,'支付参数','setting_pay','?a=site/pay&t=site&m=setting','','fa fa-cubes',0,1,1,'feature'),
+  (66,31,'会员与粉丝选项','','','','fa fa-cubes',0,1,1,'feature'),
+  (67,66,'积分设置','setting_credit','?a=site/credit&t=site&m=setting','','fa fa-cubes',0,1,1,'feature'),
+  (68,66,'注册设置','setting_register','?a=site/register&t=site&m=setting','','fa fa-cubes',0,1,1,'feature'),
+  (70,66,'邮件通知设置','setting_mail','?a=site/mail&t=site&m=setting','','fa fa-cubes',0,1,1,'feature'),
+  (71,0,'文章系统','','?s=site/entry/home&p=article','','fa fa-cubes',0,1,1,'article'),
+  (72,71,'官网管理','','?s=article/home/welcome','','fa fa-cubes',0,1,1,'article'),
+  (73,72,'官网模板','article_manage_template','?a=manage/template&t=site&m=article','','fa fa-cubes',0,1,1,'article'),
+  (74,71,'内容管理','','','','fa fa-cubes',0,1,1,'article'),
+  (75,74,'分类管理','article_content_category','?a=content/category&t=site&m=article','?a=content/categoryPost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+  (76,74,'文章管理','article_content_article','?a=content/article&t=site&m=article','?a=content/articlePost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+  (77,72,'站点管理','article_manage_site','?a=manage/site&t=site&m=article','?a=manage/SitePost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+  (78,71,'特殊页面管理','','','','fa fa-cubes',0,1,1,'article'),
+  (80,78,'会员中心','article_ucenter_post','?a=ucenter/post&t=site&m=article','','fa fa-cubes',0,1,1,'article'),
+  (81,27,'扩展功能管理','package_managa','?s=site/entry/package','','fa fa-cubes',0,1,1,'package'),
+  (82,1,'高级功能','','','','fa fa-cubes',0,1,1,'platform'),
+  (84,33,'会员字段管理','member_fields','?a=site/Fieldlists&t=site&m=member','','fa fa-cubes',0,1,1,'member'),
+  (85,78,'微站快捷导航','article_quick_menu','?a=quickmenu/post&t=site&m=article','','fa fa-cubes',0,1,1,'article'),
+  (86,82,'微信菜单','menus_lists','?a=site/lists&t=site&m=button','','fa fa-cubes',0,1,1,'platform'),
+  (87,1,'微信素材','','','','fa fa-cubes',0,1,1,'platform'),
+  (88,87,'素材&群发','material','?a=site/image&t=site&m=material','','fa fa-cubes',0,1,1,'platform');
+
+/*!40000 ALTER TABLE `hd_menu` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_module_setting
@@ -400,6 +473,25 @@ CREATE TABLE `hd_modules` (
   KEY `is_system` (`is_system`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块列表';
 
+LOCK TABLES `hd_modules` WRITE;
+/*!40000 ALTER TABLE `hd_modules` DISABLE KEYS */;
+
+INSERT INTO `hd_modules` (`mid`, `name`, `industry`, `title`, `version`, `resume`, `detail`, `author`, `url`, `is_system`, `subscribes`, `processors`, `setting`, `rule`, `permissions`, `thumb`, `cover`, `locality`, `releaseCode`)
+VALUES
+  (1,'basic','business','基本文字回复','1.0','和您进行简单对话','一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户','后盾','http://open.hdcms.com','1','','a:1:{i:0;s:4:\"text\";}',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (2,'news','business','基本混合图文回复','1.0','为你提供生动的图文资讯','一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户','后盾','http://open.hdcms.com','1','','a:1:{i:0;s:4:\"text\";}',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (3,'article','business','文章系统','1.0','发布文章与会员中心管理','支持桌面、移动、微信三网的文章系统，同时具有移动、桌面会员中心管理功能','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (4,'setting','business','网站配置','1.0','网站运行整体配置','网站运行配置项，如支付、邮箱、登录等等的全局配置项管理','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (5,'member','business','会员粉丝','1.0','会员管理','会员与会员组管理，如会员字段，粉丝管理、会员卡设置','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (6,'special','business','微信默认消息','1.0','微信默认消息','系统默认消息与关注微信消息处理','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (7,'ticket','business','卡券管理','1.0','会员卡券管理','会员优惠券、代金券、实物券管理','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (8,'cover','business','封面回复','1.0','封面消息回复','用来处理模块的封面消息','后盾','http://open.hdcms.com','1','','a:1:{i:0;s:4:\"text\";}',0,0,'','thumb.png','cover.jpg',1,''),
+  (9,'uc','business','会员中心','1.0','会员中心的管理操作','会员信息的管理，包括收货地址、个人资料、会员卡券等管理','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.png','cover.jpg',1,''),
+  (10,'button','business','微信菜单','1.0','微信菜单管理','用于添加微信菜单，更新菜单后需要取消关注再关注或等微信更新缓存后有效','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,''),
+  (11,'material','business','微信素材','1.0','微信素材','公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作','后盾','http://open.hdcms.com','1','','',0,0,'','thumb.jpg','cover.jpg',1,'');
+
+/*!40000 ALTER TABLE `hd_modules` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_modules_bindings
@@ -482,6 +574,35 @@ CREATE TABLE `hd_profile_fields` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='个人信息中文名称与状态';
 
+LOCK TABLES `hd_profile_fields` WRITE;
+/*!40000 ALTER TABLE `hd_profile_fields` DISABLE KEYS */;
+
+INSERT INTO `hd_profile_fields` (`id`, `field`, `title`, `orderby`, `required`, `showinregister`, `status`)
+VALUES
+  (1,'qq','QQ号',0,1,1,0),
+  (2,'realname','真实姓名',0,1,1,0),
+  (3,'nickname','昵称',0,1,1,1),
+  (4,'mobile','手机号码',0,1,1,1),
+  (5,'telephone','固定电话',0,0,0,1),
+  (6,'vip','VIP级别',0,0,0,1),
+  (7,'address','居住地址',0,0,0,1),
+  (8,'zipcode','邮编',0,0,0,1),
+  (9,'alipay','阿里帐号',0,0,0,1),
+  (10,'msn','msn帐号',0,0,0,1),
+  (11,'taobao','淘宝帐号',0,0,0,1),
+  (12,'email','邮箱',0,1,1,1),
+  (13,'site','个人站点',0,0,0,1),
+  (14,'nationality','国籍',0,0,0,1),
+  (15,'introduce','自我介绍',0,0,0,1),
+  (16,'gender','性别',0,0,0,1),
+  (17,'graduateschool','毕业学校',0,0,0,1),
+  (18,'height','身高',0,0,0,1),
+  (19,'weight','体重',0,0,0,1),
+  (20,'bloodtype','血型',0,0,0,1),
+  (21,'birthyear','出生日期',0,0,0,1);
+
+/*!40000 ALTER TABLE `hd_profile_fields` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_reply_basic
@@ -577,8 +698,8 @@ DROP TABLE IF EXISTS `hd_rule`;
 CREATE TABLE `hd_rule` (
   `rid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
-  `name` varchar(45) NOT NULL DEFAULT '' COMMENT '规则名称',
-  `module` varchar(45) NOT NULL DEFAULT '' COMMENT '模块名称',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '规则名称',
+  `module` varchar(80) NOT NULL DEFAULT '' COMMENT '模块名称',
   `rank` tinyint(3) unsigned NOT NULL COMMENT '排序',
   `status` tinyint(1) unsigned NOT NULL COMMENT '是否禁用',
   PRIMARY KEY (`rid`),
@@ -596,7 +717,6 @@ CREATE TABLE `hd_rule_keyword` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
-  `module` varchar(45) NOT NULL COMMENT '模块名称',
   `content` varchar(200) NOT NULL COMMENT '关键词内容',
   `type` varchar(45) NOT NULL COMMENT '关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
   `rank` tinyint(3) unsigned NOT NULL COMMENT '排序',
@@ -617,12 +737,24 @@ CREATE TABLE `hd_site` (
   `siteid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '站点名称',
   `weid` int(10) unsigned NOT NULL COMMENT '微信编号',
-  `allfilesize` int(11) DEFAULT NULL COMMENT '服务器可使用的空间大小',
-  `createtime` int(10) DEFAULT NULL COMMENT '站点创建时间',
+  `allfilesize` int(11) NOT NULL COMMENT '服务器可使用的空间大小',
+  `createtime` int(10) unsigned NOT NULL COMMENT '站点创建时间',
+  `description` varchar(300) NOT NULL DEFAULT '' COMMENT '描述',
+  `domain` varchar(100) NOT NULL DEFAULT '' COMMENT '域名',
+  `module` char(20) NOT NULL DEFAULT '' COMMENT '通过域名访问时的默认模块',
   PRIMARY KEY (`siteid`),
   KEY `weid` (`weid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点信息';
 
+LOCK TABLES `hd_site` WRITE;
+/*!40000 ALTER TABLE `hd_site` DISABLE KEYS */;
+
+INSERT INTO `hd_site` (`siteid`, `name`, `weid`, `allfilesize`, `createtime`, `description`, `domain`, `module`)
+VALUES
+  (1,'测试站点',9,200,1469001908,'','','');
+
+/*!40000 ALTER TABLE `hd_site` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_site_modules
@@ -733,6 +865,15 @@ CREATE TABLE `hd_site_wechat` (
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信帐号';
 
+LOCK TABLES `hd_site_wechat` WRITE;
+/*!40000 ALTER TABLE `hd_site_wechat` DISABLE KEYS */;
+
+INSERT INTO `hd_site_wechat` (`weid`, `siteid`, `wename`, `account`, `original`, `level`, `appid`, `appsecret`, `qrcode`, `icon`, `is_connect`, `token`, `encodingaeskey`)
+VALUES
+  (1,1,'后盾','aihoudun','gh_65598c47b2b9',4,'wxc47243ed572e273d','1c72ad236f72c70e347343653410934b','attachment/2016/10/07/13311475772067.jpg','resource/images/hd.png',1,'d5cd6efca1ddb64ad5a264495270c3','73af4a950da79a735f763be1d26ec35e049453adfbc');
+
+/*!40000 ALTER TABLE `hd_site_wechat` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_template
@@ -754,9 +895,19 @@ CREATE TABLE `hd_template` (
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模板缩略图',
   `is_default` tinyint(1) unsigned NOT NULL COMMENT '默认模板',
   `locality` tinyint(1) unsigned NOT NULL COMMENT '本地模板',
+  `module` char(20) DEFAULT NULL COMMENT '模块名称,只为指定模块指定',
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点模板';
 
+LOCK TABLES `hd_template` WRITE;
+/*!40000 ALTER TABLE `hd_template` DISABLE KEYS */;
+
+INSERT INTO `hd_template` (`tid`, `name`, `title`, `version`, `resume`, `author`, `url`, `industry`, `position`, `is_system`, `thumb`, `is_default`, `locality`, `module`)
+VALUES
+  (1,'default','默认模板','1.9','HDCMS 默认模板','后盾人','http://open.hdcms.com','other',10,1,'thumb.jpg',0,1,'article');
+
+/*!40000 ALTER TABLE `hd_template` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_ticket
@@ -875,6 +1026,15 @@ CREATE TABLE `hd_user` (
   KEY `groupid` (`groupid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户';
 
+LOCK TABLES `hd_user` WRITE;
+/*!40000 ALTER TABLE `hd_user` DISABLE KEYS */;
+
+INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `mobile_valid`, `email_valid`, `remark`)
+VALUES
+  (1,0,'admin','ef434868e24e53c7e078b623b8dcc546','a7f6d04db8',1,1465771582,'123.119.83.235',1475964351,'221.220.18.45',0,0,'232323','','',0,0,'');
+
+/*!40000 ALTER TABLE `hd_user` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_user_group
@@ -891,6 +1051,15 @@ CREATE TABLE `hd_user_group` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员组';
 
+LOCK TABLES `hd_user_group` WRITE;
+/*!40000 ALTER TABLE `hd_user_group` DISABLE KEYS */;
+
+INSERT INTO `hd_user_group` (`id`, `name`, `maxsite`, `daylimit`, `package`)
+VALUES
+  (1,'体验用户组',5,7,'s:0:\"\";');
+
+/*!40000 ALTER TABLE `hd_user_group` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_user_permission
@@ -960,7 +1129,6 @@ CREATE TABLE `hd_web` (
   `title` varchar(50) NOT NULL COMMENT '标题',
   `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
   `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
-  `domain` varchar(200) NOT NULL COMMENT '域名',
   `site_info` text NOT NULL COMMENT '序列化的数据',
   `is_default` tinyint(1) NOT NULL COMMENT '默认站点',
   PRIMARY KEY (`id`),
@@ -968,6 +1136,15 @@ CREATE TABLE `hd_web` (
   KEY `template_name` (`template_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点设置';
 
+LOCK TABLES `hd_web` WRITE;
+/*!40000 ALTER TABLE `hd_web` DISABLE KEYS */;
+
+INSERT INTO `hd_web` (`id`, `siteid`, `title`, `template_name`, `status`, `site_info`, `is_default`)
+VALUES
+  (1,1,'默认站点','default',1,'{\"rid\":0,\"status\":1,\"is_default\":0,\"title\":\"默认站点\",\"template_tid\":\"1\",\"template_title\":\"默认模板\",\"template_name\":\"default\",\"template_thumb\":\"thumb.jpg\",\"keyword\":\"a\",\"thumb\":\"attachment/2016/10/07/85811475772462.png\",\"description\":\"页面描述\"}',1);
+
+/*!40000 ALTER TABLE `hd_web` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_web_article
@@ -978,7 +1155,8 @@ DROP TABLE IF EXISTS `hd_web_article`;
 CREATE TABLE `hd_web_article` (
   `aid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL,
-  `rid` int(10) unsigned NOT NULL COMMENT '回复规则编号',
+  `rid` int(10) unsigned NOT NULL COMMENT '微信规则编号',
+  `keyword` varchar(30) NOT NULL COMMENT '微信回复关键词',
   `iscommend` tinyint(1) unsigned NOT NULL COMMENT '推荐',
   `ishot` tinyint(1) unsigned NOT NULL COMMENT '头条',
   `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
@@ -996,7 +1174,6 @@ CREATE TABLE `hd_web_article` (
   `web_id` int(10) NOT NULL COMMENT '站点编号',
   PRIMARY KEY (`aid`),
   KEY `siteid` (`siteid`),
-  KEY `rid` (`rid`),
   KEY `category_cid` (`category_cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点文章';
 
@@ -1020,7 +1197,6 @@ CREATE TABLE `hd_web_category` (
   `linkurl` varchar(300) NOT NULL COMMENT '外部链接',
   `ishomepage` tinyint(1) unsigned NOT NULL COMMENT '封面栏目',
   `css` varchar(500) NOT NULL COMMENT 'css样式',
-  `isnav` tinyint(1) NOT NULL COMMENT '导航栏目',
   `web_id` int(11) NOT NULL COMMENT '选择添加到站点首页导航时的站点编号，只对微站首页导航有效',
   PRIMARY KEY (`cid`),
   KEY `siteid` (`siteid`),

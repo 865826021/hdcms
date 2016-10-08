@@ -83,7 +83,7 @@ if ( $action == 'download' ) {
 
 //远程下载文件
 if ( $action == 'downloadFile' ) {
-	if ( is_dir( 'web' ) ) {
+	if ( is_dir( 'app' ) ) {
 		//完整版时
 		echo 1;
 		exit;
@@ -153,25 +153,6 @@ if ( $action == 'table' ) {
 			}
 		}
 	}
-
-	//添加表初始数据
-	if ( is_file( 'data/init_data.sql' ) ) {
-		$sql = file_get_contents( 'data/init_data.sql' );
-		$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
-		//替换表前缀
-		$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
-		$result = preg_split( '/;(\r|\n)/is', $sql );
-		foreach ( (array) $result as $r ) {
-			if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
-				try {
-					$pdo->exec( $r );
-				} catch ( PDOException $e ) {
-					die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
-				}
-			}
-		}
-	}
-
 	//更新系统版本号
 	$xml = file_get_contents( 'data/upgrade.xml' );
 	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
@@ -180,7 +161,7 @@ if ( $action == 'table' ) {
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
-		die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+		die( 'SQL执于失败:' . $sql . '. ' . $e->getMessage() );
 	}
 
 	//设置管理员帐号

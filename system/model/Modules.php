@@ -76,15 +76,11 @@ class Modules extends Model {
 					}
 				}
 			}
-			//删除模块封面数据
-			if ( $coverRids = Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->lists( 'rid' ) ) {
-				Db::table( 'rule' )->whereIn( 'rid', $coverRids )->delete();
-				Db::table( 'rule_keyword' )->whereIn( 'rid', $coverRids )->delete();
-				Db::table( 'reply_cover' )->where( 'module', $_GET['module'] )->delete();
-			}
 			//删除模块回复规则列表
-			Db::table( 'rule' )->where( 'module', $module )->delete();
-			Db::table( 'rule_keyword' )->where( 'module', $module )->delete();
+			$rids = Db::table( 'rule' )->where( 'module', $module )->lists( 'rid' ) ?: [ ];
+			foreach ( $rids as $rid ) {
+				service( 'WeChat' )->removeRule( $rid );
+			}
 			//删除站点模块
 			Db::table( 'site_modules' )->where( 'module', $module )->delete();
 			//模块设置
