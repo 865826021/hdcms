@@ -1,6 +1,6 @@
 attachment
 storage
-addons
+addons/
 !addons/index.html
 .idea
 .env
