@@ -69,7 +69,7 @@ class Module {
 		}
 		View::with( 'module_action_name', '参数设置' );
 		$obj     = new $class();
-		$setting = ( new ModuleSetting() )->getModuleConfig( v( 'module.name' ) );
+		$setting = service('module')->getModuleConfig( v( 'module.name' ) );
 
 		return $obj->settingsDisplay( $setting );
 	}
@@ -84,68 +84,38 @@ class Module {
 		if ( ! service( 'module' )->verifyModuleAccess() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		$bid        = q( 'get.bid', 0, 'intval' );
-		$replyCover = new ReplyCover();
-		$ruleModel  = new Rule();
-		if ( IS_POST ) {
-			if ( empty( $_POST['title'] ) || empty( $_POST['description'] ) || empty( $_POST['thumb'] ) ) {
-				message( '封面标题,描述,缩略图不能为空', 'back', 'error' );
-			}
-			$data           = json_decode( $_POST['keyword'], TRUE );
-			$data['module'] = 'cover';
-			$data['rank']   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
-			//添加回复规则
-			$action = isset( $data['rid'] ) ? 'save' : 'add';
-			if ( ! $rid = $ruleModel->$action( $data ) ) {
-				message( $ruleModel->getError(), 'back', 'error' );
-			}
-			$rid = isset( $data['rid'] ) ? $data['rid'] : $rid;
-			//添加回复关键字
-			$keywordModel = new RuleKeyword();
-			$keywordModel->where( 'rid', $rid )->delete();
-			foreach ( $data['keyword'] as $keyword ) {
-				$keyword['module'] = 'cover';
-				$keyword['rid']    = $rid;
-				if ( ! $keywordModel->add( $keyword ) ) {
-					message( $keywordModel->getError(), 'back', 'error' );
-				}
-			}
-			$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
-			$cover          = $replyCover->where( 'siteid', SITEID )
-			                             ->where( 'module', v( 'module.name' ) )
-			                             ->where( 'do', $moduleBindings['do'] )
-			                             ->first();
-			//添加封面回复
-			$data                = [ ];
-			$data['rid']         = $rid;
-			$data['do']          = $moduleBindings['do'];
-			$data['siteid']      = SITEID;
-			$data['module']      = v( 'module.name' );
-			$data['title']       = $_POST['title'];
-			$data['description'] = $_POST['description'];
-			$data['thumb']       = $_POST['thumb'];
-			$data['url']         = $_POST['url'];
-			if ( $cover ) {
-				$data['id'] = $cover['id'];;
-			}
-			$action = $cover ? 'save' : 'add';
-			if ( ! $replyCover->$action( $data ) ) {
-				message( $replyCover->getError(), 'back', 'error' );
-			}
-			message( '功能封面更新成功', 'refresh', 'success' );
-		}
+		$bid            = Request::get( 'bid' );
+		$replyCover     = new ReplyCover();
 		$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
-		$field          = $replyCover->where( 'siteid', SITEID )
-		                             ->where( 'module', v( 'module.name' ) )
-		                             ->where( 'do', $moduleBindings['do'] )
-		                             ->first();
+		if ( IS_POST ) {
+			Validate::make( [
+				[ 'title', 'required', '标题不能为空' ],
+				[ 'description', 'required', '描述不能为空' ],
+				[ 'thumb', 'required', '封面图片不能为空' ]
+			] );
+			$data             = json_decode( $_POST['keyword'], TRUE );
+			$data['rid']      = $replyCover->where( 'module', v( 'module.name' ) )->where( 'do', $moduleBindings['do'] )->pluck( 'rid' );
+			$data['module']   = 'cover';
+			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+			$data['keywords'] = $data['keyword'];
+			$rid              = service( 'WeChat' )->rule( $data );
+			//添加封面回复
+			$replyCover['id']          = $replyCover->where( 'rid', $rid )->pluck( 'id' );
+			$replyCover['do']          = $moduleBindings['do'];
+			$replyCover['rid']         = $rid;
+			$replyCover['title']       = $_POST['title'];
+			$replyCover['description'] = $_POST['description'];
+			$replyCover['thumb']       = $_POST['thumb'];
+			$replyCover['url']         = $_POST['url'];
+			$replyCover['module']      = v( 'module.name' );
+			$replyCover->save();
+			message( '功能封面更新成功', 'back', 'success' );
+		}
+		$field = $replyCover->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->where( 'do', $moduleBindings['do'] )->first();
 		//获取关键词回复
 		if ( $field ) {
-			$data = $ruleModel->where( 'rid', $field['rid'] )->first();
-			if ( empty( $data ) ) {
-				message( '回复规则不存在', 'back', 'error' );
-			}
-			$data['keyword'] = ( new RuleKeyword() )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get();
+			$data            = Db::table( 'rule' )->where( 'rid', $field['rid'] )->first();
+			$data['keyword'] = Db::table( 'rule_keyword' )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get() ?: [ ];
 			View::with( 'rule', $data );
 		}
 		$field['url']  = '?a=site/' . $moduleBindings['do'] . "&siteid=" . SITEID . "&t=web&m=" . v( 'module.name' );

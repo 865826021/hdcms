@@ -9,8 +9,6 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-use system\model\Menu;
-use system\model\Template;
 use system\model\Web;
 use system\model\WebNav;
 
@@ -66,17 +64,17 @@ class Nav {
 		//获取导航菜单,entry是导航类型 home 微站首页导航  profile 手机会员中心导航 member 桌面会员中心导航  profile本类不进行处理
 		if ( v( 'module.name' ) ) {
 			//模块菜单
-			$nav = Db::table( 'web_nav' )
+			$webNav = Db::table( 'web_nav' )
 			         ->where( 'web_id', $this->webid )
 			         ->where( 'entry', q( 'get.entry' ) )
 			         ->where( 'module', v( 'module.name' ) )
-			         ->get();
-			//从模块动作中移除已经在菜单中有值的菜单
+			         ->get()?:[];
+			//从模块动作中移除已经在菜单中存在的的菜单
 			$modulesBindings = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', q( 'get.entry' ) )->get();
 			foreach ( $modulesBindings as $k => $v ) {
 				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&t=web&siteid=" . SITEID . '&m=' . v( 'module.name' );
-				foreach ( $nav as $n ) {
-					if ( strstr( $n['url'], $modulesBindings[ $k ]['url'] ) ) {
+				foreach ( $webNav as $n ) {
+					if ( $n['url']==$modulesBindings[ $k ]['url']  ) {
 						unset( $modulesBindings[ $k ] );
 					}
 				}

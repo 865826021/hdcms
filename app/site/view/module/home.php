@@ -8,7 +8,7 @@
 		<div class="menuLists clearfix">
 			<if value="$_LINKS_['module']['budings']['cover']">
 				<foreach from="$_LINKS_['module']['budings']['cover']" value="$f">
-					<a href="?s=site/module/cover&m={{$_site_modules_menu_['name']}}&bid={{$f['bid']}}">
+					<a href="?s=site/module/cover&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
 						<i class="fa fa-comments"></i>
 						<span>{{$f['title']}}</span>
 					</a>
@@ -33,7 +33,7 @@
 				</a>
 			</if>
 			<if value="!empty($_site_modules_menu_['budings']['profile'])">
-				<a href="?s=site/nav/lists&entry=profile&m={{$_site_modules_menu_['name']}}">
+				<a href="?s=site/nav/lists&entry=profile&m={{$_LINKS_['module']['name']}}">
 					<i class="fa fa-github"></i>
 					<span>手机个人中心导航</span>
 				</a>

@@ -264,9 +264,9 @@
 			<!--有模块管理时显示的面包屑导航-->
 			<if value="v('module.title') && v('module.is_system')==0">
 				<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
-					<li><a href="?s=site/entry/package&menuid=21"><i class="fa fa-cogs"></i> 扩展模块管理</a></li>
+					<li><a href="?s=site/entry/home&p=package&menuid=21"><i class="fa fa-cogs"></i> 扩展模块管理</a></li>
 					<li class="active">
-						<a href="?s=site/module/home&m={{$_site_modules_menu_['name']}}">{{$_site_modules_menu_['title']}}模块</a>
+						<a href="?s=site/module/home&m={{$_LINKS_['module']['name']}}">{{$_LINKS_['module']['title']}}模块</a>
 					</li>
 					<if value="$module_action_name">
 						<li class="active">

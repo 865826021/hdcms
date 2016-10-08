@@ -235,7 +235,7 @@ class Module extends Modules {
 	 *
 	 * @return array
 	 */
-	public function getModuleConfig( $module = 0 ) {
+	public function getModuleConfig( $module = '' ) {
 		$module  = $module ?: v( 'module.name' );
 		$setting = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
 
