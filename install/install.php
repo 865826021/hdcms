@@ -23,7 +23,6 @@ if ( $action == 'environment' ) {
 		echo '请求HDCMS云主机失败';
 		exit;
 	}
-	$_SESSION['soft'] = json_decode( $soft, TRUE );
 	//系统信息
 	$data['PHP_OS']              = PHP_OS;
 	$data['SERVER_SOFTWARE']     = $_SERVER['SERVER_SOFTWARE'];
@@ -154,10 +153,9 @@ if ( $action == 'table' ) {
 		}
 	}
 	//更新系统版本号
-	$xml = file_get_contents( 'data/upgrade.xml' );
-	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
+	$version = include 'data/upgrade.php';
 	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
-		VALUES(0,'','','','{$ver['versionCode']}','{$ver['releaseCode']}',0)";
+		VALUES(0,'','','','{$version['versionCode']}','{$version['releaseCode']}',0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
