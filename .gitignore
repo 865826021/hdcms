@@ -9,4 +9,3 @@ vendor/houdunwang/framework/.gitignore
 .DS_Store
 .env
 .idea
-*.
