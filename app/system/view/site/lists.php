@@ -19,7 +19,7 @@
 	</if>
 	<div class="clearfix">
 		<div class="input-group">
-			<a href="?s=system/site/post&step=site_setting" class="btn btn-primary"><i class="fa fa-plus"></i> 添加网站</a>
+			<a href="?s=system/site/addSite" class="btn btn-primary"><i class="fa fa-plus"></i> 添加网站</a>
 		</div>
 	</div>
 	<br/>
@@ -115,9 +115,12 @@
 						</div>
 						<div class="col-xs-6 text-right">
 							<?php if ( Util::instance( 'user' )->isSuperUser( v( 'user.info.uid' ), 'return' ) ) { ?>
-								<a href="?s=system/site/post&step=access_setting&siteid={{$s['siteid']}}&from=lists">
+								<a href="?s=system/site/access_setting&siteid={{$s['siteid']}}">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
+							<?php } ?>
+							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+								<a href="?s=system/site/wechat&step=add&siteid={{$s['siteid']}}"><i class="fa fa-comment-o"></i> 微信公众号</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
 							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;

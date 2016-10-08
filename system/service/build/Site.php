@@ -100,7 +100,7 @@ class Site extends \system\model\Site {
 			$d['title']   = $f['title'];
 			$d['orderby'] = $f['orderby'];
 			$d['status']  = $f['status'];
-			$memberField->insertGetId( $d );
+			$memberField->insert( $d );
 		}
 
 		return TRUE;
@@ -180,7 +180,7 @@ class Site extends \system\model\Site {
 	public function getSiteGroups( $siteid = NULL ) {
 		$siteid = $siteid ?: SITEID;
 
-		return Db::table('member_group')->where( 'siteid', $siteid )->get() ?: [ ];
+		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get() ?: [ ];
 	}
 
 	/**

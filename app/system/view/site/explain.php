@@ -6,9 +6,7 @@
         <li class="active">接入到公众平台</li>
     </ol>
     <ul class="nav nav-tabs nav-justified">
-        <li role="presentation"><a href="javascript:;">设置网站信息</a></li>
         <li role="presentation"><a href="javascript:;">设置公众号信息</a></li>
-        <li role="presentation"><a href="javascript:;">设置权限</a></li>
         <li role="presentation" class="active"><a href="javascript:;">微信平台设置信息</a></li>
     </ul>
     <div class="panel panel-default">

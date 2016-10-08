@@ -80,30 +80,88 @@ class Site {
 	}
 
 	//添加站点
-	public function post() {
-		switch ( $_GET['step'] ) {
-			//设置站点
-			case 'site_setting':
-				$Site = new \system\model\Site();
-				if ( IS_POST ) {
-					//添加站点信息
-					$Site->name        = Request::post( 'name' );
-					$Site->description = Request::post( 'description' );
-					$siteId            = $Site->save();
-					//添加站长数据,系统管理员不添加数据
-					service( 'user' )->setSiteOwner( $siteId, Session::get( 'user.uid' ) );
-					//初始站点配置
+	public function addSite() {
+		$Site = new \system\model\Site();
+		if ( IS_POST ) {
+			//添加站点信息
+			$Site->name        = Request::post( 'name' );
+			$Site->description = Request::post( 'description' );
+			$siteId            = $Site->save();
+			define( 'SITEID', $siteId );
+			//添加站长数据,系统管理员不添加数据
+			service( 'user' )->setSiteOwner( $siteId, v( 'user.info.uid' ) );
+			//创建用户字段表数据
+			service( 'site' )->InitializationSiteTableData( $siteId );
+			//更新站点缓存
+			service( 'site' )->updateCache( $siteId );
+			message( '站点添加成功', 'lists', 'error' );
+		}
 
-					//创建用户字段表数据
-					( new MemberFields() )->InitializationSiteTableData( $siteId );
-					//更新站点缓存
-					service( 'site' )->updateCache( $siteId );
-					go( u( 'post', [ 'step' => 'wechat', 'siteid' => $siteId ] ) );
+		return view( 'site_setting' );
+	}
+
+	//权限设置
+	public function access_setting() {
+		//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
+		service( 'user' )->superUserAuth();
+		$Site = new \system\model\Site();
+		if ( IS_POST ) {
+			//站点允许使用的空间大小
+			Db::table( 'site' )->where( 'siteid', SITEID )->update( [ 'allfilesize' => q( 'post.allfilesize', 200, 'intval' ) ] );
+			//删除站点旧的套餐
+			Db::table( 'site_package' )->where( 'siteid', SITEID )->delete();
+			if ( $package_id = q( 'post.package_id', [ ] ) ) {
+				foreach ( $package_id as $id ) {
+					Db::table( 'site_package' )->insert( [ 'siteid' => SITEID, 'package_id' => $id, ] );
 				}
+			}
+			//添加扩展模块
+			Db::table( 'site_modules' )->where( 'siteid', SITEID )->delete();
+			if ( $modules = q( 'post.modules', [ ] ) ) {
+				foreach ( $modules as $name ) {
+					Db::table( 'site_modules' )->insert( [ 'siteid' => SITEID, 'module' => $name, ] );
+				}
+			}
+			//添加扩展模板
+			Db::table( 'site_template' )->where( 'siteid', SITEID )->delete();
+			if ( $templates = q( 'post.templates', [ ] ) ) {
+				foreach ( $templates as $name ) {
+					Db::table( 'site_template' )->insert( [ 'siteid' => SITEID, 'template' => $name, ] );
+				}
+			}
+			//设置站长
+			if ( $manage_id = q( 'post.uid', 0, 'intval' ) ) {
+				//删除站点用户信息
+				Db::table( 'site_user' )->where( 'siteid', SITEID )->where( 'role', 'owner' )->orWhere( 'uid', '=', $manage_id )->delete();
+				//设置站点管理员
+				Db::table( 'site_user' )->insert( [ 'siteid' => SITEID, 'uid' => $manage_id, 'role' => 'owner' ] );
+			}
+			service( 'site' )->updateCache();
+			message( '站点信息修改成功', 'lists', 'success' );
+		}
+		//获取站长信息
+		$user = service( 'user' )->getSiteOwner( SITEID );
+		//获取系统所有套餐
+		$systemAllPackages = service( 'package' )->getSystemAllPackageData();
+		//扩展模块
+		$extModule   = service( 'module' )->getSiteExtModules( SITEID );
+		$extTemplate = service( 'template' )->getSiteExtTemplates( SITEID );
 
-				return view( 'site_setting' );
-			//设置公众号
-			case 'wechat':
+		return view( 'access_setting' )->with( [
+			'systemAllPackages' => $systemAllPackages,
+			'extPackage'        => service( 'package' )->getSiteExtPackageIds( SITEID ),
+			'defaultPackage'    => service( 'package' )->getSiteDefaultPackageIds( SITEID ),
+			'extModule'         => $extModule,
+			'extTemplate'       => $extTemplate,
+			'user'              => $user,
+			'site'              => $Site->find( SITEID )
+		] );
+	}
+
+	//设置站点微信公众号
+	public function wechat() {
+		switch ( $_GET['step'] ) {
+			case 'add':
 				//验证当前用户站点权限
 				if ( ! service( 'user' )->isOwner() ) {
 					message( '您不是网站管理员无法操作' );
@@ -128,71 +186,12 @@ class Site {
 					$Site->save();
 					//更新站点缓存
 					service( 'site' )->updateCache();
-					go( u( 'post', [ 'step' => 'access_setting', 'siteid' => SITEID ] ) );
+					go( u( 'wechat', [ 'step' => 'explain', 'siteid' => SITEID ] ) );
 				}
+				$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
+				View::with( 'field', $wechat );
 
 				return view( 'post_weixin' );
-			//设置权限,只有系统管理员可以操作
-			case 'access_setting':
-				//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
-				service( 'user' )->superUserAuth();
-				$Site = new \system\model\Site();
-				if ( IS_POST ) {
-					//站点允许使用的空间大小
-					Db::table( 'site' )->where( 'siteid', SITEID )->update( [ 'allfilesize' => q( 'post.allfilesize', 200, 'intval' ) ] );
-					//删除站点旧的套餐
-					Db::table( 'site_package' )->where( 'siteid', SITEID )->delete();
-					if ( $package_id = q( 'post.package_id', [ ] ) ) {
-						foreach ( $package_id as $id ) {
-							Db::table( 'site_package' )->insert( [ 'siteid' => SITEID, 'package_id' => $id, ] );
-						}
-					}
-					//添加扩展模块
-					Db::table( 'site_modules' )->where( 'siteid', SITEID )->delete();
-					if ( $modules = q( 'post.modules', [ ] ) ) {
-						foreach ( $modules as $name ) {
-							Db::table( 'site_modules' )->insert( [ 'siteid' => SITEID, 'module' => $name, ] );
-						}
-					}
-					//添加扩展模板
-					Db::table( 'site_template' )->where( 'siteid', SITEID )->delete();
-					if ( $templates = q( 'post.templates', [ ] ) ) {
-						foreach ( $templates as $name ) {
-							Db::table( 'site_template' )->insert( [ 'siteid' => SITEID, 'template' => $name, ] );
-						}
-					}
-					//设置站长
-					if ( $manage_id = q( 'post.uid', 0, 'intval' ) ) {
-						//删除站点用户信息
-						Db::table( 'site_user' )->where( 'siteid', SITEID )->where( 'role', 'owner' )->orWhere( 'uid', '=', $manage_id )->delete();
-						//设置站点管理员
-						Db::table( 'site_user' )->insert( [ 'siteid' => SITEID, 'uid' => $manage_id, 'role' => 'owner' ] );
-					}
-					service( 'site' )->updateCache();
-					if ( $from_url = q( 'get.from' ) ) {
-						//有来源地址,比如从站点列表进入
-						message( '站点信息修改成功', $from_url, 'success' );
-					} else {
-						go( u( 'post', [ 'step' => 'explain', 'siteid' => SITEID ] ) );
-					}
-				}
-				//获取站长信息
-				$user = service( 'user' )->getSiteOwner( SITEID );
-				//获取系统所有套餐
-				$systemAllPackages = service( 'package' )->getSystemAllPackageData();
-				//扩展模块
-				$extModule   = service( 'module' )->getSiteExtModules( SITEID );
-				$extTemplate = service( 'template' )->getSiteExtTemplates( SITEID );
-
-				return view( 'access_setting' )->with( [
-					'systemAllPackages' => $systemAllPackages,
-					'extPackage'        => service( 'package' )->getSiteExtPackageIds( SITEID ),
-					'defaultPackage'    => service( 'package' )->getSiteDefaultPackageIds( SITEID ),
-					'extModule'         => $extModule,
-					'extTemplate'       => $extTemplate,
-					'user'              => $user,
-					'site'              => $Site->find( SITEID )
-				] );
 			case 'explain':
 				//验证当前用户站点权限
 				if ( ! service( 'user' )->isOwner( SITEID ) ) {
@@ -212,6 +211,7 @@ class Site {
 		$Site = new \system\model\Site();
 		if ( service( 'user' )->isManage() ) {
 			$Site->remove( SITEID );
+			Session::del( 'siteid' );
 			message( '网站删除成功', 'back', 'success' );
 		}
 		message( '你不是站长不可以删除网站', 'back', 'error' );

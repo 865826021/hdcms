@@ -22,6 +22,7 @@ class Site extends Model {
 	                 = [
 			[ 'name', 'required', '站点名称不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 			[ 'name', 'unique', '站点名称已经存在', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'description', 'required', '网站描述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		];
 	protected $auto
 	                 = [

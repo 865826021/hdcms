@@ -5,14 +5,6 @@
 		<li><a href="?s=system/manage/menu">系统</a></li>
 		<li class="active">设置站点权限</li>
 	</ol>
-	<if value="!isset($_GET['from'])">
-		<ul class="nav nav-tabs nav-justified">
-			<li role="presentation" class="normal"><a href="javascript:;">设置网站信息</a></li>
-			<li role="presentation" class="normal"><a href="javascript:;">设置公众号信息</a></li>
-			<li role="presentation" class="active"><a href="javascript:;">设置权限</a></li>
-			<li role="presentation" class="normal"><a href="javascript:;">微信平台设置信息</a></li>
-		</ul>
-	</if>
 	<form action="" method="post" role="form" class="form-horizontal">
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -118,7 +110,7 @@
 						<td></td>
 						<td></td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="extModules()">附加权限</button>
+							<button type="button" class="btn btn-default" onclick="extModules()">附加权限</button>
 						</td>
 						<td></td>
 					</tr>
@@ -126,11 +118,7 @@
 				</table>
 			</div>
 		</div>
-		<if value="isset($_GET['from'])">
 			<button type="submit" class="btn btn-primary">保存</button>
-			<else/>
-			<button type="submit" class="btn btn-primary">下一步</button>
-		</if>
 	</form>
 </block>
 

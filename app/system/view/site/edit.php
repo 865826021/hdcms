@@ -14,17 +14,23 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-2 control-label star">网站名称</label>
-
                     <div class="col-sm-10">
                         <input type="text" name="name" class="form-control" value="{{$site['name']}}">
                         <span class="help-block">网站中显示的网站名称,可以使用中文等任意字符</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="" class="col-sm-2 control-label">网站描述</label>
+                    <label for="" class="col-sm-2 control-label star">网站描述</label>
 
                     <div class="col-sm-10">
                         <textarea name="description" class="form-control" cols="30" rows="5">{{$site['description']}}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">域名</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="domain" class="form-control" value="{{$site['domain']}}" placeholder="如: www.houdunwang.com">
+                        <span class="help-block">站点使用的域名,不要添加http</span>
                     </div>
                 </div>
             </div>

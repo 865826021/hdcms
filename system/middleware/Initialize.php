@@ -85,6 +85,5 @@ class Initialize {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}
 		}
-		define( 'SITEID', 0 );
 	}
 }

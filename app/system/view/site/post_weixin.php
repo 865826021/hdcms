@@ -6,9 +6,7 @@
         <li class="active">设置公众号基本信息</li>
     </ol>
     <ul class="nav nav-tabs nav-justified">
-        <li role="presentation" class="normal"><a href="javascript:;">设置网站信息</a></li>
         <li role="presentation" class="active"><a href="javascript:;">设置公众号信息</a></li>
-        <li role="presentation" class="normal"><a href="javascript:;">设置权限</a></li>
         <li role="presentation" class="normal"><a href="javascript:;">微信平台设置信息</a></li>
     </ul>
     <form action="" method="post" role="form" class="form-horizontal">
@@ -21,7 +19,7 @@
                     <label class="col-sm-2 control-label star">公众号名称</label>
 
                     <div class="col-sm-10">
-                        <input type="text" name="wename" class="form-control">
+                        <input type="text" name="wename" class="form-control" value="{{$field['wename']}}">
                         <span class="help-block">填写公众号的帐号名称</span>
                     </div>
                 </div>
@@ -29,7 +27,7 @@
                     <label for="" class="col-sm-2 control-label star">微信号</label>
 
                     <div class="col-sm-10">
-                        <input type="text" name="account" class="form-control" required="required">
+                        <input type="text" name="account" class="form-control" value="{{$field['account']}}" required="required">
                         <span class="help-block">填写公众号的帐号，一般为英文帐号</span>
                     </div>
                 </div>
@@ -37,25 +35,25 @@
                     <label for="" class="col-sm-2 control-label star">原始ID</label>
 
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="original" required="required">
+                        <input type="text" class="form-control" name="original" value="{{$field['original']}}" required="required">
                         <span class="help-block">在给粉丝发送客服消息时,原始ID不能为空,以gh_开始的</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="" class="col-sm-2 control-label star">级别</label>
+                    <label for="" class="col-sm-2 control-label star">类型</label>
 
                     <div class="col-sm-10">
                         <label class="radio-inline">
-                            <input type="radio" name="level" value="1" checked> 普通订阅号
+                            <input type="radio" name="level" value="1" {{$field['level']==1?'checked="checked"':''}}> 普通订阅号
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="level" value="2"> 普通服务号
+                            <input type="radio" name="level" value="2" {{$field['level']==2?'checked="checked"':''}}> 普通服务号
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="level" value="3"> 认证订阅号
+                            <input type="radio" name="level" value="3" {{$field['level']==3?'checked="checked"':''}}> 认证订阅号
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="level" value="4"> 认证服务号/认证媒体/政府订阅号
+                            <input type="radio" name="level" value="4" {{$field['level']==4?'checked="checked"':''}}> 认证服务号/认证媒体/政府订阅号
                         </label>
                         <span class="help-block">注意：即使公众平台显示为“未认证”, 但只要【公众号设置】/【账号详情】下【认证情况】显示资质审核通过, 即可认定为认证号.</span>
                     </div>
@@ -64,7 +62,7 @@
                     <label for="" class="col-sm-2 control-label star">AppId</label>
 
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="appid" required="required">
+                        <input type="text" class="form-control" name="appid" value="{{$field['appid']}}" required="required">
                         <span class="help-block">请填写微信公众平台后台的AppId</span>
                     </div>
                 </div>
@@ -72,7 +70,7 @@
                     <label class="col-sm-2 control-label star">AppSecret</label>
 
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="appsecret" required="required">
+                        <input type="text" class="form-control" name="appsecret" value="{{$field['appsecret']}}" required="required">
                         <span class="help-block">请填写微信公众平台后台的AppSecret, 只有填写这两项才能管理自定义菜单</span>
                     </div>
                 </div>
@@ -88,14 +86,14 @@
 
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid" name="qrcode" readonly>
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid" name="qrcode" value="{{$field['qrcode']}}" readonly>
 
                             <div class="input-group-btn">
                                 <button onclick="upImage(this)" class="btn btn-default" type="button">选择图片</button>
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150" id="thumb">
+                            <img src="{{nopic($field['qrcode'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>
@@ -106,14 +104,14 @@
 
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid" name="icon" readonly>
+                            <input type="text" class="form-control ng-pristine ng-untouched ng-valid" name="icon" value="{{$field['icon']}}" readonly>
 
                             <div class="input-group-btn">
                                 <button onclick="upImage(this)" class="btn btn-default" type="button">选择图片</button>
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150" id="thumb">
+                            <img src="{{nopic($field['icon'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>

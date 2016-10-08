@@ -5,13 +5,8 @@
         <li><a href="?s=system/manage/menu">系统</a></li>
         <li class="active">设置网站基本信息</li>
     </ol>
-    <ul class="nav nav-tabs nav-justified">
-        <li role="presentation" class="active"><a href="javascript:;">设置网站信息</a></li>
-        <li role="presentation"><a href="javascript:;">设置公众号信息</a></li>
-        <li role="presentation"><a href="javascript:;">设置权限</a></li>
-        <li role="presentation"><a href="javascript:;">微信平台设置信息</a></li>
-    </ul>
-    <form action="?s=system/site/post&step=site_setting" method="post" role="form" class="form-horizontal">
+
+    <form action="" method="post" role="form" class="form-horizontal">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">设置网站基本信息</h4>
@@ -25,14 +20,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">网站描述</label>
+                    <label class="col-sm-2 control-label star">网站描述</label>
                     <div class="col-sm-10">
-                        <textarea name="description" class="form-control" cols="30" rows="5"></textarea>
+                        <textarea name="description" class="form-control" cols="30" rows="5" required="required"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">域名</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="domain" class="form-control" placeholder="如: www.houdunwang.com">
+                        <span class="help-block">站点使用的域名,不要添加http</span>
                     </div>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">下一步</button>
+        <button type="submit" class="btn btn-primary">保存</button>
     </form>
 </block>
 <style>
