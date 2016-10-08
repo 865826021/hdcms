@@ -1,6 +1,7 @@
 <?php namespace module\basic;
 
 use module\hdModule;
+use system\model\ReplyBasic;
 
 /**
  * 文本消息处理
@@ -48,19 +49,18 @@ class Module extends HdModule {
 
 	public function fieldsSubmit( $rid ) {
 		//规则验证无误保存入库时执行，这里应该进行自定义字段的保存。这里 $rid 为对应的规则编号
-		Db::table( 'reply_basic' )->where( 'rid', $rid )->delete();
-		$content = json_decode( $_POST['content'] );
+		$ReplyBasic = new ReplyBasic();
+		$ReplyBasic->where( 'rid', $rid )->delete();
+		$content = json_decode( Request::post( 'content' ), TRUE );
 		foreach ( (array) $content as $c ) {
-			if ( $rid ) {
-				$data['rid'] = $rid;
-			}
-			$data['content'] = $c->content;
-			Db::table( 'reply_basic' )->replace( $data );
+			$ReplyBasic['rid']     = $rid;
+			$ReplyBasic['content'] = $c['content'];
+			$ReplyBasic->save();
 		}
 	}
 
 	public function ruleDeleted( $rid ) {
 		//删除规则时调用，这里 $rid 为对应的规则编号
-		Db::table( 'reply_basic' )->where( 'rid', $rid )->delete();
+		model( 'ReplyBasic' )->where( 'rid', $rid )->delete();
 	}
 }

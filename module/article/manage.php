@@ -42,7 +42,7 @@ class manage extends hdSite {
 
 	//站点管理
 	public function doSiteSite() {
-		$data = Db::table( 'web' )->where( 'siteid', SITEID )->get();
+		$data = Db::table( 'web' )->where( 'siteid', SITEID )->get() ?: [ ];
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], TRUE );
 			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid=' . SITEID . '&webid=' . $v['id'];
@@ -53,55 +53,39 @@ class manage extends hdSite {
 
 	//添加站点
 	public function doSiteSitePost() {
-		$replyCover  = new ReplyCover();
-		$ruleKeyword = new RuleKeyword();
 		if ( IS_POST ) {
-			$data = json_decode( $_POST['data'], TRUE );
-			//添加微站
-			$this->web['id']            = empty( $data['web_id'] ) ? 0 : $data['web_id'];
-			$this->web['template_name'] = $data['template_name'];
-			$this->web['title']         = $data['name'];
-			$this->web['site_info']     = $_POST['data'];
-			$this->web['thumb']         = $data['thumb'];
-			$this->web['template_tid']  = $data['template_tid'];
-			$insertId                   = $this->web->save();
-			//站点编号
-			$web['id'] = $this->web['id'] ?: $insertId;
+			$data              = json_decode( $_POST['data'], TRUE );
+			$data['site_info'] = $_POST['data'];
+			$insertId          = $this->web->save( $data );
+			$web['id']         = $this->webid ?: $insertId;
 			//添加回复规则
-			$data['module']   = 'cover';
-			$ruleModel        = new Rule();
-			$ruleModel['rid'] = empty( $data['rid'] ) ? 0 : $data['rid'];
-			$insertRid        = $ruleModel->save();
-			$rid              = $ruleModel['rid'] ?: $insertRid;
-			//添加回复关键词
-			$ruleKeyword['id']      = empty( $data['keyword_id'] ) ? 0 : $data['keyword_id'];
-			$ruleKeyword['content'] = $data['keyword'];
-			$ruleKeyword['rid']     = $rid;
-			$ruleKeyword['module']  = 'cover';
-			$ruleKeyword->save();
+			$rule             = [ ];
+			$rule['rid']      = Db::table( 'reply_cover' )->where( 'web_id', $web['id'] )->pluck( 'rid' );
+			$rule['module']   = 'cover';
+			$rule['name']     = '微站:'.$data['title'];
+			$rule['keywords'] = [
+				[
+					'content' => $data['keyword'],
+				]
+			];
+			$rid              = service( 'WeChat' )->rule( $rule );
 			//添加封面回复
-			$replyCover['id']          = empty( $data['reply_cover_id'] ) ? 0 : $data['reply_cover_id'];
-			$replyCover['web_id']      = $web['id'];
-			$replyCover['rid']         = $rid;
-			$replyCover['module']      = 'article';
-			$replyCover['title']       = $data['name'];
-			$replyCover['description'] = $data['description'];
-			$replyCover['thumb']       = $data['thumb'];
-			$replyCover['url']         = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
-			$replyCover->save();
+			$replyCover = new ReplyCover();
+			$replyCover->where( 'rid', $rid )->delete();
+			$data['web_id'] = $web['id'];
+			$data['rid']    = $rid;
+			$data['module'] = 'article';
+			$data['url']    = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
+			$replyCover->save( $data );
 			message( '保存站点数据成功', site_url( 'site' ), 'success' );
 		}
 		if ( $this->webid ) {
 			//编辑数据时
-			$web                     = $this->web->find( $this->webid );
-			$field                   = json_decode( $web['site_info'], TRUE );
-			$reply_cover             = $replyCover->where( 'web_id', $this->webid )->first();
-			$field['rid']            = $reply_cover['rid'];
-			$field['web_id']         = $web['id'];
-			$field['keyword_id']     = $ruleKeyword->where( 'rid', $reply_cover['rid'] )->pluck( 'id' );
-			$field['reply_cover_id'] = $reply_cover['id'];
+			$web         = $this->web->find( $this->webid );
+			$field       = json_decode( $web['site_info'], TRUE );
+			$field['id'] = $this->webid;
 		}
-		View::with( 'field', isset( $field ) ? json_encode( $field ) : '' );
+		View::with( 'field', isset( $field ) ? json_encode( $field, JSON_UNESCAPED_UNICODE ) : '' );
 
 		return View::make( $this->template . '/manage/sitePost.php' );
 	}
@@ -113,12 +97,9 @@ class manage extends hdSite {
 		return view( $this->template . '/manage/loadTpl.php' )->with( 'data', $data );
 	}
 
-	//删除站点
+	//删除微站
 	public function doSiteDel() {
-		if ( ( new Web() )->remove( q( 'get.webid' ) ) ) {
-			message( '删除站点成功', '', 'success' );
-		} else {
-			message( '站点删除失败', '', 'error' );
-		}
+		service( 'web' )->del( Request::get( 'webid' ) );
+		message( '删除站点成功', '', 'success' );
 	}
 }

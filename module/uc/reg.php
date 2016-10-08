@@ -22,43 +22,42 @@ class reg extends hdSite {
 
 	//注册页面
 	public function doWebRegister() {
-
 		if ( IS_POST ) {
-			$res = Util::instance( 'member' )->register( $_POST );
-			if ( ! $res['valid'] ) {
-				message( $res['message'], 'back', 'error' );
-			}
+			service( 'member' )->register( $_POST );
 			message( '恭喜你,注册成功!系统将跳转到登录页面', web_url( 'login' ), 'success', 3 );
 		}
+		$placeholder = [
+			1 => '手机号',
+			2 => '邮箱',
+			3 => '手机号/邮箱',
+		];
+		View::with( 'placeholder', $placeholder[ v( 'site.setting.register.item' ) ] );
 
-		View::with( 'placeholder', v( 'setting.register.item' ) == 1 ? '手机号' : ( v( 'setting.register.item' ) == 2 ? '邮箱' : '手机号/邮箱' ) );
-		View::make( $this->ucenter_template . '/register.html' );
+		return View::make( $this->ucenter_template . '/register.html' );
 	}
 
 	//登录
 	public function doWebLogin() {
 		if ( IS_POST ) {
-			$res = Util::instance( 'member' )->login( $_POST );
-			if ( ! $res['valid'] ) {
-				message( $res['message'], 'back', 'error' );
-			}
+			service( 'member' )->login( Request::post() );
 			$backurl = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ), 'htmlentities' );
 			message( '登录成功', $backurl, 'success' );
 		}
 		//微信自动登录
-		if ( IS_WEIXIN && v( 'wechat.level' ) >= 3 && v( 'setting.register.focusreg' ) == 1 ) {
-			if ( $this->member->loginByOpenid() ) {
+		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {
+			if ( service( 'member' )->weixinLogin() ) {
 				$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
 				go( $url );
 			}
 		}
-		View::make( $this->ucenter_template . '/login.html' );
+
+		return View::make( $this->ucenter_template . '/login.html' );
 	}
 
 	//使用微信openid登录
 	public function doWEbOpenidLogin() {
 		//微信自动登录
-		if ( Util::instance( 'member' )->weixinLogin() ) {
+		if ( service( 'member' )->weixinLogin() ) {
 			$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
 			go( $url );
 		}

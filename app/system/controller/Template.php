@@ -61,9 +61,10 @@ class Template {
 			$_POST['thumb'] = 'thumb.' . $info['extension'];
 			$this->createManifestFile();
 			message( '模板创建成功', 'prepared', 'success' );
-		} else {
-			return view();
 		}
+		$modules = Db::table( 'modules' )->get() ?: [ ];
+
+		return view()->with( 'modules', $modules );
 	}
 
 	//获取云商店的模块
@@ -100,6 +101,7 @@ class Template {
 			'author'   => [ '@cdata' => $_POST['author'] ],
 			'position' => [ '@cdata' => $_POST['position'] ],
 			'thumb'    => [ '@cdata' => $_POST['thumb'] ],
+			'module'   => [ '@cdata' => $_POST['module'] ],
 		];
 		$manifest                = Xml::toXml( 'manifest', $xml_data );
 		file_put_contents( 'theme/' . $_POST['name'] . '/manifest.xml', $manifest );
@@ -179,6 +181,7 @@ class Template {
 				'rule'       => $manifest['manifest']['application']['rule']['@attributes']['embed'] ? 1 : 0,
 				'thumb'      => $manifest['manifest']['application']['thumb']['@cdata'],
 				'position'   => $manifest['manifest']['application']['position']['@cdata'],
+				'module'     => $manifest['manifest']['application']['module']['@cdata'],
 				'is_system'  => 0,
 				'is_default' => 0,
 				'locality'   => ! is_file( "theme/{$_GET['name']}/cloud.hd" ) ? 1 : 0,
@@ -197,7 +200,7 @@ class Template {
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
-			service('site')->updateAllCache();
+			service( 'site' )->updateAllCache();
 			message( "模板安装成功", u( 'installed' ) );
 		}
 		$xmlFile = 'theme/' . $_GET['name'] . '/manifest.xml';
@@ -235,7 +238,7 @@ class Template {
 	//卸载模板
 	public function uninstall() {
 		$this->db->remove( $_GET['name'], $_GET['confirm'] );
-		service('site')->updateAllCache();
+		service( 'site' )->updateAllCache();
 		message( '模板卸载成功', u( 'installed' ) );
 	}
 }

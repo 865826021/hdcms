@@ -61,28 +61,12 @@ class Reply {
 
 	//添加/修改回复
 	public function post() {
-		$Rule        = new Rule();
-		$RuleKeyword = new RuleKeyword();
 		if ( IS_POST ) {
-			$data         = json_decode( Request::post( 'keyword' ), TRUE );
-			$Rule->rid    = $data['rid'];
-			$Rule->name   = $data['name'];
-			$Rule->rank   = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
-			$Rule->status = $data['status'];
-			$Rule->module = v( 'module.name' );
-			$Rule->siteid = SITEID;
-			//添加回复规则
-			$insertId = $Rule->save();
-			$rid      = isset( $data['rid'] ) ? $data['rid'] : $insertId;
-			//添加回复关键字
-			$RuleKeyword->where( 'rid', $rid )->delete();
-			foreach ( $data['keyword'] as $keyword ) {
-				$RuleKeyword['module']  = v( 'module.name' );
-				$RuleKeyword['rid']     = $rid;
-				$RuleKeyword['content'] = $keyword['content'];
-				$RuleKeyword['type']    = $keyword['type'];
-				$RuleKeyword->save();
-			}
+			$data             = json_decode( Request::post( 'keyword' ), TRUE );
+			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+			$data['module']   = v( 'module.name' );
+			$data['keywords'] = $data['keyword'];
+			$rid              = service( 'WeChat' )->rule( $data );
 			//调用模块的执行方法
 			$module = new $this->moduleClass();
 			//字段验证
@@ -110,11 +94,10 @@ class Reply {
 
 	//删除规则
 	public function remove() {
-		$rid = q( 'get.rid', '', 'intval' );
-		Db::table( 'rule' )->where( 'rid', $rid )->delete();
-		Db::table( 'rule_keyword' )->where( 'rid', $rid )->delete();
-		$module = new $this->moduleClass( $_GET['m'] );
+		$rid = Request::get( 'rid' );
+		service( 'weChat' )->removeRule( $rid );
+		$module = new $this->moduleClass();
 		$module->ruleDeleted( $rid );
-		message( '删除成功', '', 'success' );
+		message( '删除成功', 'back', 'success' );
 	}
 }

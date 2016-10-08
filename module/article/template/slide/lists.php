@@ -25,7 +25,7 @@
 								<input type="text" class="form-control" name="slide[{{$d['id']}}]" value="{{$d['displayorder']}}">
 							</td>
 							<td>
-								<img src="{{$d['thumb']}}" style="width:150px;">
+								<img src="{{nopic($d['thumb'])}}" style="width:150px;">
 							</td>
 							<td>
 								{{$d['title']}}
@@ -47,14 +47,16 @@
 <script>
 	function del(id) {
 		util.confirm('确定幻灯图片吗,删除后将不可以恢复?', function () {
-			location.href = '{{site_url('
-			slide / remove
-			')}}&webid={{$_GET['
-			webid
-			']}}&id=' + id;
+			url = "{{site_url('slide/remove')}}&webid={{$_GET['webid']}}&id=" + id;
+			$.get(url, function (res) {
+				if (res.valid == 1) {
+					util.message(res.message, 'refresh', 'success');
+				} else {
+					util.message(res.message, '', 'error');
+				}
+			}, 'json');
 		})
 	}
-
 	require(['util'], function (util) {
 		$('.copy').each(function () {
 			var This = this;

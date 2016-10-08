@@ -91,7 +91,7 @@ class Api {
 					break;
 			}
 			if ( ! empty( $rid ) ) {
-				return [ 'rid' => $rid, 'module' => $key['module'] ];
+				return [ 'rid' => $rid, 'module' => Db::table( 'rule' )->pluck( 'module' ) ];
 			}
 		}
 	}

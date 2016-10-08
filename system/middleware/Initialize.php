@@ -31,6 +31,8 @@ class Initialize {
 				//前台用户
 				if ( isset( $_SESSION['member_uid'] ) ) {
 					$user['info'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
+					$group                        = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
+					$user['group']                = $group ?: [ ];
 					v( 'user', $user );
 				}
 				break;

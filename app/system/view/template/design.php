@@ -60,6 +60,17 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">应用模块</label>
+				<div class="col-sm-10 col-xs-12">
+					<select name="module" class="form-control">
+						<foreach from="$modules" value="$m">
+							<option value="{{$m['name']}}">{{$m['title']}}</option>
+						</foreach>
+					</select>
+					<span class="help-block">模板只能在该模块中使用 </span>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模板简述</label>
 
 				<div class="col-sm-10 col-xs-12">

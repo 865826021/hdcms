@@ -59,12 +59,15 @@ class Member extends Model {
 	}
 
 	/**
-	 * 设置密码与加密密钥
+	 * 根据密码获取密钥与加密后的密码数据及确认密码
 	 *
 	 * @return array
 	 */
-	public function setPasswordAndSecurity() {
-		$this->data['security'] = substr( md5( time() ), 0, 10 );
-		$this->data['password'] = md5( $this->data['password'] . $this->data['security'] );
+	public function getPasswordAndSecurity() {
+		$data             = [ ];
+		$data['security'] = substr( md5( time() ), 0, 10 );
+		$data['password'] = md5( Request::post( 'password' ) . $data['security'] );
+
+		return $data;
 	}
 }

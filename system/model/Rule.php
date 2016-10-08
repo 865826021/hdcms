@@ -22,9 +22,9 @@ class Rule extends Model {
 	protected $denyInsertFields = [ 'rid' ];
 	protected $validate
 	                            = [
-			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'name', 'required', '规则名称不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'module', 'required', 'module字段不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'name', 'required', '规则名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'module', 'required', '模块字段不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'rid', 'validateRid', '回复规则不属于本网站', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		];
 

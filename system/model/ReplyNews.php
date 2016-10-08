@@ -18,16 +18,16 @@ use hdphp\model\Model;
  * @author 向军
  */
 class ReplyNews extends Model {
-	protected $table            = 'reply_news';
-	protected $denyInsertFields = [ 'id' ];
+	protected $table     = 'reply_news';
+	protected $allowFill = [ '*' ];
 	protected $validate
-	                            = [
+	                     = [
 			[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'title', 'required', '标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'thumb', 'required', '图文消息图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		];
 	protected $auto
-	                            = [
+	                     = [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'author', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

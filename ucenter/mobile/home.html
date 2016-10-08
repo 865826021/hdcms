@@ -6,10 +6,10 @@
             <div class="header" style="background-image: url(resource/images/bg.jpg)">
                 <div class="col-xs-3 ico"><img src="{{Session::get('member.icon')?:'resource/images/user.jpg'}}"></div>
                 <div class="col-xs-7 user"><h2 class="col-xs-12">
-                    <a href="{{web_url('info/setting')}}">{{Session::get('member.nickname')?:'设置昵称'}}</a>
+                    <a href="{{web_url('info/setting')}}">{{v('user.info.nickname')?:'设置昵称'}}</a>
                 </h2>
-                    <div class="col-xs-6">{{$group['title']}} (uid:{{$user['uid']}})</div>
-                    <div class="col-xs-6">{{Session::get('member.credit1')}}积分</div>
+                    <div class="col-xs-6">{{v('user.group.title')}} (uid:{{v('user.info.uid')}})</div>
+                    <div class="col-xs-6">{{v('user.info.credit1')}}积分</div>
                 </div>
                 <div class="col-xs-2">
                     <a href="{{web_url('info/setting')}}" class="pull-right setting">

@@ -23,7 +23,7 @@ class Member {
 
 	//检测用户登录
 	public function isLogin() {
-		if ( ! Session::get( "member.uid" ) ) {
+		if ( ! Session::get( "member_uid" ) ) {
 			message( '请登录后操作', web_url( 'reg/login', [ ], 'uc' ), 'error' );
 		}
 
@@ -31,7 +31,8 @@ class Member {
 	}
 
 	//获取会员组
-	public function getGroupName( $uid ) {
+	public function getGroupName( $uid = 0 ) {
+		$uid = $uid ?: v( 'user.uid' );
 		$sql = "SELECT title,id FROM " . tablename( 'member' ) . " m JOIN " . tablename( 'member_group' ) . " g ON m.group_id = g.id WHERE m.uid={$uid}";
 		$d   = Db::query( $sql );
 
@@ -46,7 +47,7 @@ class Member {
 	 * @return bool
 	 */
 	public function hasUser( $uid ) {
-		if ( ! Db::table('member')->where( 'siteid', SITEID )->where( 'uid', $uid )->get() ) {
+		if ( ! Db::table( 'member' )->where( 'siteid', SITEID )->where( 'uid', $uid )->get() ) {
 			message( '当前站点中不存在此用户', 'back', 'error' );
 		}
 
@@ -55,26 +56,24 @@ class Member {
 
 	//微信自动登录
 	public function weixinLogin() {
-		if ( IS_WEIXIN && v( 'wechat.level' ) >= 3 ) {
+		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 ) {
 			//认证订阅号或服务号,并且开启自动登录时获取微信帐户openid自动登录
 			if ( $info = \Weixin::instance( 'oauth' )->snsapiUserinfo() ) {
 				$user = $this->db->where( 'openid', $info['openid'] )->first();
 				if ( ! $user ) {
 					//帐号不存在时使用openid添加帐号
-					$data['openid']   = $info['openid'];
-					$data['nickname'] = $info['nickname'];
-					$data['icon']     = $info['headimgurl'];
-					if ( ! $uid = $this->db->add( $data ) ) {
-						return [ 'valid' => 0, 'message' => $this->db->getError() ];
-					}
-					$user = $this->db->find( $uid );
+					$this->db['openid']   = $info['openid'];
+					$this->db['nickname'] = $info['nickname'];
+					$this->db['icon']     = $info['headimgurl'];
+					$uid                  = $this->db->save();
+					$user                 = $this->db->find( $uid );
 				}
 				//更新access_token
 				$user['access_token'] = md5( $user['username'] . $user['password'] . c( 'app.key' ) );
-				$this->db->where( 'uid', $user['uid'] )->update( [ 'access_token' => $user['access_token'] ] );
-				Session::set( 'member', $user );
+				$user->save();
+				Session::set( 'member_uid', $user['uid'] );
 
-				return [ 'valid' => 1, 'data' => $user ];
+				return TRUE;
 			}
 		}
 	}
@@ -88,61 +87,66 @@ class Member {
 
 	//会员登录
 	public function login( $data ) {
-		$user = $this->db->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
+		$member = new \system\model\Member();
+		$user   = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
 		if ( empty( $user ) ) {
-			return [ 'valid' => 0, 'message' => '帐号不存在' ];
+			message( '帐号不存在', 'back', 'error' );
 		}
 		if ( md5( $data['password'] . $user['security'] ) != $user['password'] ) {
-			return [ 'valid' => 0, 'message' => '密码输入错误' ];
+			message( '密码输入错误', 'back', 'error' );
 		}
-		Session::set( 'member', $user );
+		Session::set( 'member_uid', $user['uid'] );
 
-		return [ 'valid' => 1, 'data' => $user ];
+		return TRUE;
 	}
 
 	//注册页面
 	public function register( $data ) {
-		switch ( v( 'setting.register.item' ) ) {
+		$member             = new \system\model\Member();
+		$member['password'] = $data['password'];
+		$member['group_id'] = $this->defaultGruopId();
+		$info               = $member->getPasswordAndSecurity();
+		$member['password'] = $info['password'];
+		$member['security'] = $info['security'];
+		switch ( v( 'site.setting.register.item' ) ) {
 			case 1:
 				//手机号注册
 				if ( ! preg_match( '/^\d{11}$/', $data['username'] ) ) {
 					message( '请输入手机号', 'back', 'error' );
 				}
-				$data['mobile'] = $data['username'];
+				$member['mobile'] = $data['username'];
 				break;
 			case 2:
 				//邮箱注册
 				if ( ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱', 'back', 'error' );
 				}
-				$data['email'] = $data['username'];
+				$member['email'] = $data['username'];
 				break;
 			case 3:
 				//二者都行
 				if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) && ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱或手机号', 'back', 'error' );
 				} else if ( preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
-					$data['mobile'] = $data['username'];
+					$member['mobile'] = $data['username'];
 				} else {
-					$data['email'] = $data['username'];
+					$member['email'] = $data['username'];
 				}
 		}
-		if ( ! empty( $data['mobile'] ) ) {
-			if ( $this->db->Where( 'mobile', $data['mobile'] )->get() ) {
-				return [ 'valid' => 0, 'message' => '手机号已经存在' ];
+		if ( ! empty( $member['mobile'] ) ) {
+			if ( $member->where( 'mobile', $data['mobile'] )->get() ) {
+				message( '手机号已经存在', '', 'error' );
 			}
 		}
 		if ( ! empty( $data['email'] ) ) {
-			if ( $this->db->Where( 'mobile', $data['email'] )->get() ) {
-				return [ 'valid' => 0, 'message' => '邮箱已经存在' ];
+			if ( $member->where( 'mobile', $data['email'] )->get() ) {
+				message( '邮箱已经存在', '', 'error' );
 			}
 		}
 
-		if ( ! $uid = $this->db->add( $data ) ) {
-			return [ 'valid' => 0, 'message' => $this->db->getError() ];
-		}
+		$member->save( $data );
 
-		return [ 'valid' => 1, 'data' => $this->db->find( $uid ) ];
+		return TRUE;
 	}
 
 	/**

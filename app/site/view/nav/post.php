@@ -14,7 +14,9 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">分配到微站</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-model="field.web_id" ng-options="a.id as a.title for a in web"></select>
+							<select class="form-control" ng-model="field.web_id" ng-options="a.id as a.title for a in web">
+								<option value="">选择站点</option>
+							</select>
 						</div>
 					</div>
 					<div class="form-group">
@@ -71,7 +73,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">排序</label>
 					<div class="col-sm-8">
-						<input type="number" class="form-control" ng-model="field.orderby">
+						<input type="text" class="form-control" ng-model="field.orderby">
 						<span class="help-block">导航排序，越大越靠前</span>
 					</div>
 				</div>
@@ -164,8 +166,9 @@
 <script>
 	require(['angular', 'util'], function (angular, util) {
 		angular.module('myApp', []).controller('MyController', ['$scope', function ($scope) {
-			$scope.web = <?php echo json_encode( $web );?>;
-			$scope.field = <?php echo json_encode( $field );?>;
+			$scope.web = <?php echo json_encode( $web,JSON_UNESCAPED_UNICODE );?>;
+			$scope.field = <?php echo json_encode( $field,JSON_UNESCAPED_UNICODE );?>;
+
 			//设置导航显示位置
 			$scope.getTemplatePositon = function () {
 				var position = [];

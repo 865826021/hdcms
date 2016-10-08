@@ -22,7 +22,7 @@
                             </div>
                         </div>
                         <button class="btn btn-info btn-block btn-lg"> 立即登录</button>
-                        <if value="IS_WEIXIN && v('wechat.level') gt 2">
+                        <if value="IS_WEIXIN && v('site.wechat.level') gt 2">
                             <a href="{{web_url('reg/openidLogin')}}" class="btn btn-danger btn-block btn-lg"> 微信一键登录</a>
                         </if>
                     </form>

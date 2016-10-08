@@ -16,7 +16,7 @@ class processor extends hdProcessor {
 				'title'       => $res['title'],
 				'discription' => $res['description'],
 				'picurl'      => __ROOT__ . '/' . $res['thumb'],
-				'url'         => __ROOT__ . '/' . $res['url'],
+				'url'         => preg_match( '/^http/i', $res['url'] ) ? $res['url'] : __ROOT__ . '/' . $res['url'],
 			];
 			$this->news( $data );
 

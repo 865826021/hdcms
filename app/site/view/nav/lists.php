@@ -3,7 +3,7 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表 </a></li>
 		<li class="active">
-			<a href="javascript:;"><?php echo m( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
+			<a href="javascript:;"><?php echo model( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
 		</li>
 		<if value="empty($_GET['m'])">
 			<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
@@ -19,7 +19,9 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">站点</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-change="changeWeb()" ng-model="webid" ng-options="a.id as a.title for a in web"></select>
+							<select class="form-control" ng-change="changeWeb()" ng-model="webid" ng-options="a.id as a.title for a in web">
+								<option value="">选择微站</option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -82,8 +84,7 @@
 						<if value="!v('module.name')">
 							<!--模块链接时不显示位置,位置在文章系统有效-->
 							<td>
-								<select class="form-control" ng-options="a.position as a.title for a in template.template_position"
-								        ng-model="field.position">
+								<select class="form-control" ng-options="a.position as a.title for a in template.template_position" ng-model="field.position">
 									<option value="">不显示</option>
 								</select>
 							</td>

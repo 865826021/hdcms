@@ -18,18 +18,16 @@ namespace app\system\controller;
 class Component {
 	//模块列表
 	public function moduleBrowser() {
-		if ( ! Session::get( 'member_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		View::with( 'modules', v( 'modules' ) );
+		service( 'user' )->loginAuth();
+		View::with( 'modules', v( 'site.modules' ) );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
-		View::make();
+
+		return view();
 	}
 
 	//加载系统链接
 	public function linkBrowser() {
 		service( 'user' )->loginAuth();
-
 		return view();
 	}
 
@@ -43,7 +41,8 @@ class Component {
 
 	//字体列表
 	public function font() {
-		service('user')->loginAuth();
+		service( 'user' )->loginAuth();
+
 		return View::make();
 	}
 

@@ -11,10 +11,13 @@ use module\hdSite;
 class site extends hdSite {
 	//系统消息回复设置
 	public function doSitePost() {
-		service( 'user' )->auth( 'reply_special', 'system' );
 		if ( IS_POST ) {
-			$data['welcome']         = $_POST['welcome'];
-			$data['default_message'] = $_POST['default'];
+			Validate::make( [
+				[ 'welcome', 'required', '欢迎信息关键字 不能为空' ],
+				[ 'default', 'required', '默认信息关键字 不能为空' ],
+			] );
+			$data['welcome']         = Request::post( 'welcome' );
+			$data['default_message'] = Request::post( 'default' );
 			Db::table( 'site_setting' )->where( 'siteid', SITEID )->update( $data );
 			service( 'site' )->updateCache();
 			message( '系统回复消息设置成功', '', 'success' );

@@ -18,17 +18,18 @@ use hdphp\model\Model;
  * @author 向军
  */
 class WebArticle extends Model {
-	protected $table            = 'web_article';
-	protected $denyInsertFields = [ 'aid' ];
+	protected $table     = 'web_article';
+	protected $allowFill = [ '*' ];
 	protected $validate
-	                            = [
-			[ 'title', 'required', '文章标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'category_cid', 'required', '请选择文章栏目', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'content', 'required', '文章内容不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+	                     = [
+			[ 'title', 'required', '文章标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'category_cid', 'required', '请选择文章栏目', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'content', 'required', '文章内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'description', 'required', '摘要不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'orderby', 'num:0,255', '排序只能是0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		];
 	protected $auto
-	                            = [
+	                     = [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'rid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'iscommend', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
@@ -44,4 +45,20 @@ class WebArticle extends Model {
 			[ 'click', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'thumb', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		];
+
+	/**
+	 * 删除文章
+	 *
+	 * @param $aid 文章编号
+	 *
+	 * @return bool
+	 */
+	public function del( $aid ) {
+		$rid = Db::table( 'reply_cover' )->where( 'module', 'article:aid:' . $aid )->pluck( 'rid' );
+		service( 'WeChat' )->removeRule( $rid );
+		Db::table( 'web_article' )->where( 'aid', $aid )->delete();
+		Db::table( 'reply_cover' )->where( 'module', 'article:aid:' . $aid )->delete();
+
+		return TRUE;
+	}
 }

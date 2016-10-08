@@ -35,7 +35,7 @@ class tag {
 				\$db->orderBy('aid','ASC');
 				break;
 		}
-		\$_result = \$db->get();
+		\$_result = \$db->get()?:[];
 		foreach(\$_result as \$field){
 			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
@@ -58,7 +58,7 @@ str;
 		\$db->where('category_cid',\$_GET['cid']);
 		//排序
 		\$db->orderBy('rand()');
-		\$_result = \$db->get();
+		\$_result = \$db->get()?:[];
 		foreach(\$_result as \$field){
 			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
@@ -78,7 +78,7 @@ str;
 		$autoplay = isset( $attr['autoplay'] ) ? $attr['autoplay'] : 3000;
 		$php
 		          = <<<str
-        <?php \$slideData = Db::table('web_slide')->where('web_id',Session::get('webid'))->where('siteid',SITEID)->orderBy('id','DESC')->get();?>
+        <?php \$slideData = Db::table('web_slide')->where('web_id',Session::get('webid'))->where('siteid',SITEID)->orderBy('id','DESC')->get()?:[];?>
         <?php if(!empty(\$slideData)){?>
 <div class="hdcms_swiper_container">
         <div class="swiper-wrapper">
@@ -177,7 +177,7 @@ str;
         <div class="child_menu_list clearfix">
             <dl>
                 <?php
-                 \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get();
+                 \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get()?:[];
                  \$categoryData = Data::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
                         \$d['url']=empty(\$d['linkurl'])?web_url('entry/category',['cid'=>\$d['cid']],'article'):\$d['linkurl'];
@@ -214,7 +214,7 @@ str;
 if(\$cid){
 	\$db->whereIn('cid',\$cid);
 }
-\$_category =\$db->get();
+\$_category =\$db->get()?:[];
 foreach(\$_category as \$field){
     //栏目链接
     \$field['url']=empty(\$field['cat_linkurl'])?web_url('entry/category',['cid'=>\$field['cid']],'article'):\$field['cat_linkurl'];
@@ -262,7 +262,7 @@ str;
         if($iscommend){
             \$db->where('iscommend','=',1);
         }
-        \$_data=\$db->limit(Page::limit())->get();
+        \$_data=\$db->limit(Page::limit())->get()?:[];
         //栏目数据
         \$_category = Db::table('web_category')->where('cid',q('get.cid',0,'intval'))->where('siteid',SITEID)->first();
         //栏目链接

@@ -36,11 +36,12 @@ class Template {
 	 *
 	 * @param int $siteId 站点编号
 	 * @param string $industry 模板类型
+	 * @param string $module 模块
 	 *
-	 * @return array
+	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function getSiteAllTemplate( $siteId = 0, $industry = '' ) {
+	public function getSiteAllTemplate( $siteId = 0, $industry = '', $module = '' ) {
 		$siteId = $siteId ?: SITEID;
 		if ( empty( $siteId ) ) {
 			throw new \Exception( '$siteid 参数错误' );
@@ -58,6 +59,9 @@ class Template {
 			if ( $industry ) {
 				$db->where( 'industry', $industry );
 			}
+			if ( $module ) {
+				$db->where( 'module', $module );
+			}
 			$templates = $db->get();
 		} else {
 			$templateNames = [ ];
@@ -68,6 +72,9 @@ class Template {
 			if ( ! empty( $templateNames ) ) {
 				if ( $industry ) {
 					$db->where( 'industry', $industry );
+				}
+				if ( $module ) {
+					$db->where( 'module', $module );
 				}
 				$templates = $db->whereIn( 'name', $templateNames )->get();
 			}
@@ -88,7 +95,7 @@ class Template {
 	 * )
 	 */
 	public function getPositionData( $tid ) {
-		$position = $this->where( 'tid', $tid )->pluck( 'position' );
+		$position = Db::table( 'template' )->where( 'tid', $tid )->pluck( 'position' );
 		$data     = [ ];
 		if ( $position ) {
 			for ( $i = 1;$i <= $position;$i ++ ) {
@@ -127,8 +134,9 @@ class Template {
 	 * @return array 模板数据
 	 */
 	public function getTemplateData( $webid ) {
-		$template_tid = $this->where( 'siteid', SITEID )->where( 'id', $webid )->pluck( 'template_tid' );
-
-		return Db::table( 'template' )->where( 'tid', $template_tid )->first();
+		$name = Db::table( 'web' )->where( 'siteid', SITEID )->where( 'id', $webid )->pluck( 'template_name' );
+		if ( $name ) {
+			return Db::table( 'template' )->where( 'name', $name )->first();
+		}
 	}
 }
