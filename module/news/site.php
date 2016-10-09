@@ -23,6 +23,6 @@ class site extends hdSite {
 		$article = Db::table( 'reply_news' )->where( 'id', $id )->first();
 		$tpl     = __TEMPLATE__ . '/article.html';
 		View::with( 'hdcms', $article );
-		View::make( $tpl );
+		return view( $tpl );
 	}
 }

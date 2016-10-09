@@ -69,12 +69,13 @@
                             </td>
                             <td>{{$g['uid']?$g['user_count']:0}}人</td>
                             <td class="text-right">
-                                <a href="{{site_url('site/GroupPost',['id'=>$g['id']])}}">编辑</a>
-                                <if value="$g['is_system']==0">
-                                    -
-                                    <a href="javascript:;" onclick="del({{$g['id']}})">删除</a>
-                                </if>
-                                - <a href="javascript:;" onclick="setDefaut({{$g['id']}})">设为默认组</a>
+                                <div class="btn-group">
+                                    <a href="{{site_url('site/GroupPost',['id'=>$g['id']])}}" class="btn btn-default">编辑</a>
+                                    <if value="$g['is_system']==0">
+                                    <a href="javascript:;" onclick="del({{$g['id']}})" class="btn btn-default">删除</a>
+                                        </if>
+                                    <a href="javascript:;" onclick="setDefaut({{$g['id']}})"class="btn btn-default">设为默认组</a>
+                                </div>
                             </td>
                         </tr>
                     </foreach>

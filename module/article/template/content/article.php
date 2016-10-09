@@ -43,13 +43,13 @@
 		<input type="hidden" name="data">
 		<button type="submit" class="btn btn-primary" ng-if="data.length>0">确定</button>
 	</form>
-	{{$page}}
+	{{$data->links()}}
 </block>
 
 <script>
 	require(['angular', 'util'], function (angular, util) {
 		angular.module('myApp', []).controller('MyController', ['$scope', function ($scope) {
-			$scope.data =<?php echo json_encode( $data );?>;
+			$scope.data =<?php echo json_encode( $data?$data->toArray():[] );?>;
 			$scope.del = function (aid) {
 				util.confirm('确定删除文章吗,删除后将不可以恢复?', function () {
 					location.href = '?a=content/articleDel&t=site&m=article&aid=' + aid;

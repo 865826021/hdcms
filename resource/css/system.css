@@ -129,6 +129,9 @@ body.hdcms {
   background-size: 120%;
   height: 100%;
 }
+table {
+  table-layout: fixed;
+}
 div.system-container .breadcrumb {
   padding-left: 0px;
   margin: 0px 0px .5em 0px;

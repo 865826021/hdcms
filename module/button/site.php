@@ -29,7 +29,8 @@ class site extends hdSite {
 	public function doSiteLists() {
 		$data = $this->db->where( 'siteid', SITEID )->get();
 		View::with( 'data', $data );
-		View::make( $this->template . '/lists.html' );
+
+		return view( $this->template . '/lists.html' );
 	}
 
 	//删除菜单
@@ -54,34 +55,29 @@ class site extends hdSite {
 			$this->db->where( 'id', $id )->update( [ 'status' => 1 ] );
 			message( '推送微信菜单成功', 'back', 'success' );
 		}
-		message( $res['errinfo'], 'back', 'error',5 );
+		message( $res['errinfo'], 'back', 'error', 5 );
 	}
 
 	//添加/编辑菜单
 	public function doSitePost() {
 		$id = q( 'get.id' );
 		if ( IS_POST ) {
-			$data['title']  = $_POST['title'];
-			$data['data']   = $_POST['data'];
-			$data['status'] = 0;
-			$action         = $id ? 'save' : 'add';
-			if ( $id ) {
-				$data['id'] = $id;
-			}
-			if ( $this->db->$action( $data ) ) {
-				message( '添加菜单成功', site_url( 'lists' ), 'success' );
-			}
-			message( $this->db->getError(), 'back', 'error' );
+			$this->db['title']  = Request::post( 'title' );
+			$this->db['data']   = Request::post( 'data' );
+			$this->db['status'] = 0;
+			$this->db['id']     = Request::get( 'id' );
+			$this->db->save();
+			message( '添加菜单成功', site_url( 'lists' ), 'success' );
 		}
 		if ( $id ) {
-			$field = $this->db->where( 'id', $id )->first();
+			$field = Db::table( 'button' )->where( 'id', $id )->first();
 		} else {
 			$field['title'] = '';
 			$data           = [ 'button' => [ [ 'type' => 'view', 'name' => '菜单名称', 'url' => '', 'sub_button' => [ ] ] ] ];
 			$field['data']  = json_encode( $data, JSON_UNESCAPED_UNICODE );
 		}
-		View::with( 'field', $field );
-		View::make( $this->template . '/post.html' );
+
+		return view( $this->template . '/post.html' )->with( 'field', $field );
 	}
 
 	//url地址前添加http

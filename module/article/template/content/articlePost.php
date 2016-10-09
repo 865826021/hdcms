@@ -73,7 +73,7 @@
 					<label class="col-sm-2 control-label">缩略图</label>
 					<div class="col-sm-9">
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="field.thumb">
+							<input type="text" class="form-control" ng-model="field.thumb" readonly="readonly">
 							<div class="input-group-btn">
 								<button ng-click="upImage()" class="btn btn-default" type="button">选择图片</button>
 							</div>
@@ -95,7 +95,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">简介</label>
+					<label class="col-sm-2 control-label star">摘要</label>
 					<div class="col-sm-9">
 						<textarea name="description" rows="4" class="form-control" ng-model="field.description"></textarea>
 					</div>
@@ -141,6 +141,9 @@
 			$scope.field =<?php echo json_encode( $field );?>;
 			$scope.template =<?php echo json_encode( $template );?>;
 			$scope.category =<?php echo json_encode( $category );?>;
+			if(!$scope.field){
+				$scope.field={"keyword":'',"orderby":0,"click":0};
+			}
 			$scope.link = {
 				system: function () {
 					util.linkBrowser(function (link) {

@@ -19,26 +19,19 @@ use hdphp\model\Model;
  */
 class MemberFields extends Model {
 	protected $table = 'member_fields';
+	protected $validate
+	                 = [
+			[ 'title', 'required', '字段名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'status', 'num:0,1', '状态选择错误', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'id', 'checkId', '当前站点不存在该字段', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		];
+	protected $auto
+	                 = [
+			[ 'orderby', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ]
+		];
 
-	/**
-	 * 初始化站点的会员字段信息数据
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return bool
-	 */
-	public function InitializationSiteTableData( $siteid ) {
-		$this->where( 'siteid', $siteid )->delete();
-		$profile_fields = Db::table( 'profile_fields' )->get();
-		foreach ( $profile_fields as $f ) {
-			$d['siteid']  = $siteid;
-			$d['field']   = $f['field'];
-			$d['title']   = $f['title'];
-			$d['orderby'] = $f['orderby'];
-			$d['status']  = $f['status'];
-			$this->add( $d );
-		}
-
-		return TRUE;
+	protected function checkId( $field, $value ) {
+		return Db::table( 'member_fields' )->where( 'siteid', SITEID )->where( 'id', $value )->get() ? TRUE : FALSE;
 	}
 }

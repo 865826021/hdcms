@@ -29,18 +29,4 @@ class ModuleSetting extends Model {
 	protected function autoGetModule() {
 		return v( 'module.name' );
 	}
-
-	/**
-	 * 获取模块配置
-	 *
-	 * @param string $module 模块名称
-	 *
-	 * @return array
-	 */
-	public function getModuleConfig( $module = NULL ) {
-		$module  = $module ?: v( 'module.name' );
-		$setting = $this->where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
-
-		return $setting ? unserialize( $setting ) : [ ];
-	}
 }

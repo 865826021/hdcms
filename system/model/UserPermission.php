@@ -26,33 +26,4 @@ class UserPermission extends Model {
 			[ 'type', 'required', '模块类型不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'permission', 'required', '权限内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		];
-	protected $auto
-	                 = [
-			[ 'permission', 'autoPermission', 'method', self::MUST_AUTO, self::MODEL_BOTH ]
-		];
-
-	protected function autoPermission( $val ) {
-		return implode( '|', $val );
-	}
-
-
-	/**
-	 * 获取用户在站点的权限分配
-	 *
-	 * @param int $siteid 站点编号
-	 * @param int $uid 用户编号
-	 *
-	 * @return mixed
-	 */
-	public function getUserAtSiteAccess( $siteid = NULL, $uid = NULL ) {
-		$siteid     = $siteid ?: Session::get( 'siteid' );
-		$uid        = $uid ?: Session::get( "user.uid" );
-		$permission = $this->where( 'siteid', $siteid )->where( 'uid', $uid )->lists( 'type,permission' );
-		foreach ( $permission as $m => $p ) {
-			$permission[ $m ] = explode( '|', $p );
-		}
-
-		return $permission;
-	}
-
 }

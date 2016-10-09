@@ -32,13 +32,13 @@
 			</div>
 			<div class="slide col-sm-6" style="margin: 80px 0px 0px 10px;">
 				<div class="well">
-						<!--将导航应用在以下页面:-->
-<!--					<div style="margin-top: 10px;">-->
-<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter"> 会员中心</label>-->
-<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页</label>-->
-<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_special"> 专题页</label>-->
-<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类</label>-->
-<!--					</div>-->
+					<!--将导航应用在以下页面:-->
+					<!--					<div style="margin-top: 10px;">-->
+					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter"> 会员中心</label>-->
+					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页</label>-->
+					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_special"> 专题页</label>-->
+					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类</label>-->
+					<!--					</div>-->
 					<div style="margin-top: 10px;">
 						将导航隐藏在以下模块:
 						<a href="javascript:;" ng-click="moduleBrowsers(this)">选择模块</a>
@@ -71,13 +71,13 @@
 					<div class="modal-body">
 						<div class="alert">
 							<label class="radio-inline">
-								<input type="radio" value="quickmenu_normal" ng-model="menu.params.style" > 仿微信菜单模板
+								<input type="radio" value="quickmenu_normal" ng-model="menu.params.style"> 仿微信菜单模板
 							</label>
 							<div class="quickmenu_normal_img"></div>
 						</div>
 						<div class="alert">
 							<label class="radio-inline">
-								<input type="radio" value="quickmenu_shop" ng-model="menu.params.style" > 商城导航模板
+								<input type="radio" value="quickmenu_shop" ng-model="menu.params.style"> 商城导航模板
 							</label>
 							<div class="quickmenu_shop_img"></div>
 						</div>
@@ -100,9 +100,10 @@
 </block>
 <style>
 	/*菜单样式一的二级菜单默认显示*/
-	.quickmenu_normal{
-		position: absolute;
+	.quickmenu_normal {
+		position : absolute;
 	}
+
 	.quickmenu_normal .sub-menus {
 		display : block !important;
 	}
@@ -116,7 +117,27 @@
 	})
 	require(['../../js/quickmenu'], function () {
 		$(function () {
-			menu =<?php echo json_encode( $field );?>;
+			menu =<?php echo $field?json_encode( $field ):'false';?>;
+			if (!menu) {
+				menu = {
+					"siteid": 1,
+					"web_id": 0,
+					"title": "类型:快捷导航",
+					"description": "",
+					"type": 1,
+					"status": 1,
+					"params": {
+						"style": "quickmenu_normal",
+						"menus": [],
+						"modules": [],
+						"has_home_button": 1,
+						"has_ucenter": 1,
+						"has_home": 1,
+						"has_special": 1,
+						"has_article": 1
+					}
+				};
+			}
 			angular.bootstrap(document.getElementById('form'), ['app']);
 		});
 	});

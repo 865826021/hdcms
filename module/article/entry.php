@@ -17,20 +17,17 @@ use system\model\Web;
  * @package module\article
  */
 class entry {
-
 	//模板目录
 	protected $db;
-
 	//目录类型 mobile手机 web桌面
 	protected $dir;
-
 	protected $webid;
 
 	public function __construct() {
 		$this->dir   = IS_MOBILE ? 'mobile' : 'web';
 		$this->webid = isset( $_GET['webid'] ) ? intval( $_GET['webid'] ) : Session::get( 'webid' );
 		if ( ! $this->webid ) {
-			$web         = ( new Web() )->getDefaultWeb();
+			$web         = service( 'web' )->getDefaultWeb();
 			$this->webid = $web['id'];
 		}
 		Session::set( 'webid', $this->webid );
@@ -46,7 +43,8 @@ class entry {
 		$path = 'theme/' . $web['template_name'] . '/' . $this->dir;
 		define( '__TEMPLATE__', $path );
 		View::with( 'hdcms', $web );
-		View::make( $path . '/index.html' );
+
+		return View::make( $path . '/index.html' );
 	}
 
 	//栏目页
@@ -82,10 +80,10 @@ class entry {
 		if ( empty( $article ) ) {
 			message( '文章不存在', 'back', 'error' );
 		}
-		$article['url']=web_url('entry/content',['aid'=>$article['aid'],'cid'=>$article['category_cid']],'article');
+		$article['url'] = web_url( 'entry/content', [ 'aid' => $article['aid'], 'cid' => $article['category_cid'] ], 'article' );
 		//栏目
-		$category = Db::table( 'web_category' )->where( 'cid', $article['category_cid'] )->first();
-		$category['url']=empty($category['cat_linkurl'])?web_url('entry/category',['cid'=>$category['cid']],'article'):$category['cat_linkurl'];
+		$category        = Db::table( 'web_category' )->where( 'cid', $article['category_cid'] )->first();
+		$category['url'] = empty( $category['cat_linkurl'] ) ? web_url( 'entry/category', [ 'cid' => $category['cid'] ], 'article' ) : $category['cat_linkurl'];
 		//模板风格
 		$template_name = $article['template_name'] ?: $category['template_name'];
 		if ( empty( $template_name ) ) {
@@ -105,6 +103,7 @@ class entry {
 		}
 		View::with( 'hdcms', $article );
 		View::with( 'category', $category );
-		View::make( $tpl );
+
+		return View::make( $tpl );
 	}
 }

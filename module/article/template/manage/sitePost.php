@@ -28,7 +28,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label star">站点名称</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.name" required="required">
+						<input type="text" class="form-control" ng-model="field.title" required="required">
 					</div>
 				</div>
 				<div class="form-group">
@@ -53,7 +53,7 @@
 					<div class="col-sm-9 box" ng-if="field.template_tid">
 						<div class="thumbnail">
 							<h5 ng-bind="field.template_title"></h5>
-							<img src="theme/@{{field.template_name}}/@{{field.template_thumb}}">
+							<img ng-src="theme/@{{field.template_name}}/@{{field.template_thumb}}">
 						</div>
 					</div>
 				</div>
@@ -67,7 +67,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">封面</label>
+					<label class="col-sm-2 control-label star">封面</label>
 					<div class="col-sm-9">
 						<div class="input-group">
 							<input type="text" class="form-control" readonly="" ng-model="field.thumb">
@@ -77,7 +77,7 @@
 						</div>
 						<div class="input-group" style="margin-top:5px;">
 							<img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150" ng-hide="field.thumb">
-							<img src="@{{field.thumb}}" class="img-responsive img-thumbnail" width="150" ng-show="field.thumb">
+							<img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail" width="150" ng-show="field.thumb">
 						</div>
 						<span class="help-block">用于用户触发关键字后，系统回复时的封面图片</span>
 					</div>
@@ -87,13 +87,6 @@
 					<div class="col-sm-9">
 						<textarea class="form-control" rows="3" ng-model="field.description" required="required"></textarea>
 						<span class="help-block">用户通过微信分享给朋友时,会自动显示页面描述</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">绑定域名</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.domain">
-						<span class="help-block">绑定时请先将域名解析指向到本服务器，请只填写host部分，例如：www.baidu.com</span>
 					</div>
 				</div>
 				<div class="form-group">

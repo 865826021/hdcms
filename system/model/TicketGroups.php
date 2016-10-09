@@ -21,25 +21,8 @@ class TicketGroups extends Model {
 	protected $table = 'ticket_groups';
 	protected $auto
 	                 = [
-			[ 'siteid', 'autoSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'tid', 'required', '卡券编号tid不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'group_id', 'required', '会员级编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 		];
-
-	protected function autoSiteid() {
-		return v( 'site.siteid' );
-	}
-
-	/**
-	 * 获取指定卡券允许使用的用户组
-	 *
-	 * @param int $tid 卡券编号
-	 *
-	 * @return array
-	 */
-	public function getTicketGroupIds( $tid ) {
-		if ( empty( $tid ) ) {
-			return [ ];
-		}
-
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'tid', $tid )->lists( 'group_id' );
-	}
 }

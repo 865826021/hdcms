@@ -19,28 +19,13 @@ use hdphp\model\Model;
  */
 class TicketModule extends Model {
 	protected $table = 'ticket_module';
+	protected $validate
+	                 = [
+			[ 'tid', 'required', '卡券tid不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+			[ 'module', 'required', '模块不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		];
 	protected $auto
 	                 = [
-			[ 'siteid', 'autoSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 		];
-
-	protected function autoSiteid() {
-		return v( 'site.siteid' );
-	}
-
-	/**
-	 * 获取指定卡券允许使用的模块
-	 *
-	 * @param int $tmid 卡券编号
-	 *
-	 * @return array
-	 */
-	public function getTicketModules( $tid ) {
-		if ( empty( $tid ) ) {
-			return [ ];
-		}
-		$module = $this->where( 'siteid', Session::get( 'siteid' ) )->where( 'tid', $tid )->lists( 'module' );
-
-		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
-	}
 }

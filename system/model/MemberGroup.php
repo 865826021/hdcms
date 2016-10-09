@@ -23,35 +23,10 @@ class MemberGroup extends Model {
 		];
 	protected $auto
 	                 = [
-			[ 'siteid', 'autoSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'credit', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'isdefault', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'is_system', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
-
-	protected function autoSiteid() {
-		return v( "site.siteid" );
-	}
-
-	/**
-	 * 获取站点默认组
-	 * @return mixed
-	 */
-	public function getDefaultGroup() {
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
-	}
-
-	/**
-	 * 获取站点所有组
-	 *
-	 * @param int $siteid 站点编号
-	 *
-	 * @return array
-	 */
-	public function getSiteGroups( $siteid = NULL ) {
-		$siteid = $siteid ?: SITEID;
-
-		return $this->where( 'siteid', $siteid )->get() ?: [ ];
-	}
 }

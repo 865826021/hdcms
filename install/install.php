@@ -8,8 +8,8 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1&type=small';
-$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1&type=small';
+$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
+$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -23,7 +23,6 @@ if ( $action == 'environment' ) {
 		echo '请求HDCMS云主机失败';
 		exit;
 	}
-	$_SESSION['soft'] = json_decode( $soft, TRUE );
 	//系统信息
 	$data['PHP_OS']              = PHP_OS;
 	$data['SERVER_SOFTWARE']     = $_SERVER['SERVER_SOFTWARE'];
@@ -83,7 +82,7 @@ if ( $action == 'download' ) {
 
 //远程下载文件
 if ( $action == 'downloadFile' ) {
-	if ( is_dir( 'web' ) ) {
+	if ( is_dir( 'app' ) ) {
 		//完整版时
 		echo 1;
 		exit;
@@ -153,34 +152,14 @@ if ( $action == 'table' ) {
 			}
 		}
 	}
-
-	//添加表初始数据
-	if ( is_file( 'data/init_data.sql' ) ) {
-		$sql = file_get_contents( 'data/init_data.sql' );
-		$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
-		//替换表前缀
-		$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
-		$result = preg_split( '/;(\r|\n)/is', $sql );
-		foreach ( (array) $result as $r ) {
-			if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
-				try {
-					$pdo->exec( $r );
-				} catch ( PDOException $e ) {
-					die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
-				}
-			}
-		}
-	}
-
 	//更新系统版本号
-	$xml = file_get_contents( 'data/upgrade.xml' );
-	preg_match( '/versionCode="(.*?)"\s+releaseCode="(.*?)"/', $xml, $ver );
-	$ver  = include 'data/version.php';
-	$sql  = "UPDATE {$_SESSION['config']['prefix']}cloud SET uid=0,username='',webname='',AppSecret='',versionCode='{$ver['versionCode']}',releaseCode='{$ver['releaseCode']}',createtime=0";
+	$version = include 'data/upgrade.php';
+	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
+		VALUES(0,'','','','{$version['versionCode']}','{$version['releaseCode']}',0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
-		die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
+		die( 'SQL执于失败:' . $sql . '. ' . $e->getMessage() );
 	}
 
 	//设置管理员帐号

@@ -14,11 +14,11 @@
         </div>
         <div class="panel-body">
             <ul class="image">
-                <foreach from="$data['data']" value="$v">
+                <foreach from="$data" value="$v">
                     <li>
-                        <img src="{{$v['file']}}"><br/>
+                        <img src="{{nopic($v['file'])}}"><br/>
                         <div class="footer-btn">
-                            <a href="{{$v['file']}}" title="预览" target="_blank">
+                            <a href="{{nopic($v['file'])}}" title="预览" target="_blank">
                                 <i class="fa fa-video-camera"></i>
                             </a>
                             <a href="javascript:del({{$v['id']}})" title="删除">
@@ -47,7 +47,7 @@
                     line-height : 2em;
                     background  : #f4f5f9;
                     border-top  : 1px solid #e7e7eb;
-                    overflow: hidden;
+                    overflow    : hidden;
                 }
 
                 .image li .footer-btn a {
@@ -61,7 +61,6 @@
 
                 .image li .footer-btn a:first-child {
                     border-right : solid 1px #e7e7eb;
-
                 }
 
                 .image li img {
@@ -70,7 +69,7 @@
                 }
             </style>
         </div>
-        <div class="pull-right">{{$data['page']}}</div>
+        <div class="pull-right">{{$data['links']}}</div>
     </div>
 
 </block>
@@ -95,10 +94,10 @@
     //删除
     function del(id) {
         require(['util'], function (util) {
-            util.confirm('确定删除吗?', function () {
+            util.confirm('删除图片可能影响图文消息的图片显示,确定删除吗?', function () {
                 $.post('{{site_url("site/delMaterial")}}', {id: id}, function (res) {
                     if (res.valid == 1) {
-                        location.reload(true);
+                        util.message('删除成功', 'refresh', 'success');
                     } else {
                         util.message(res.message, '', 'error');
                     }

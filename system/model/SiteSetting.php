@@ -17,14 +17,13 @@ use hdphp\model\Model;
  * @package system\model
  */
 class SiteSetting extends Model {
-	protected $table = 'site_setting';
-	protected $validate
-	                 = [
-			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-		];
+	protected $table     = 'site_setting';
+	protected $allowFill = [ '*' ];
+	protected $validate  = [ ];
 	protected $auto
-	                 = [
+	                     = [
 			[ 'grouplevel', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'default_template', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'welcome', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'default_message', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
@@ -39,18 +38,4 @@ class SiteSetting extends Model {
 			[ 'register', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'register', 'serialize', 'function', self::EXIST_AUTO, self::MODEL_UPDATE ],
 		];
-
-	/**
-	 * 根据积分字段获取中文描述
-	 *
-	 * @param $name
-	 * <code>
-	 *  api('credit')->getTitle('credit1');
-	 * </code>
-	 *
-	 * @return string 积分中文描述
-	 */
-	public function getTitle( $name ) {
-		return v( 'setting.creditnames.' . $name . '.title' );
-	}
 }

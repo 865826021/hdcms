@@ -24,7 +24,7 @@ abstract class hdSite {
 		$this->siteid           = SITEID;
 		$this->template         = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
 		$this->ucenter_template = 'ucenter/' . ( IS_MOBILE ? "mobile" : "web" );
-		$this->config           = ( new ModuleSetting() )->getModuleConfig();
+		$this->config           = service( 'module' )->getModuleConfig();
 		defined( '__TEMPLATE_PATH__' ) or define( '__TEMPLATE_PATH__', $this->template );
 		defined( '__TEMPLATE__' ) or define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
 		defined( '__UCENTER_TEMPLATE__' ) or define( '__UCENTER_TEMPLATE__', __ROOT__ . '/' . $this->ucenter_template );

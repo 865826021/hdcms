@@ -51,23 +51,12 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">是否添加微站首页导航</label>
-					<div class="col-sm-9">
-						<label class="radio-inline">
-							<input type="radio" ng-model="field.isnav" value="1"> 是
-						</label>
-						<label class="radio-inline">
-							<input type="radio" ng-model="field.isnav" value="0"> 否
-						</label>
-						<span class="help-block">开启此选项后,系统在微站首页导航自动生成以分类名称为导航名称的记录.关闭此选项后,系统将删除对应的导航记录</span>
-
-					</div>
-				</div>
-				<div class="form-group" ng-show="field.isnav==1">
-					<label for="" class="col-sm-2 control-label">分配到微站</label>
+					<label for="" class="col-sm-2 control-label">分配到微站首页导航</label>
 					<div class="col-sm-9">
 						<select class="form-control" ng-options="a.id as a.title for a in web" ng-model="field.web_id">
+							<option value="">不分配</option>
 						</select>
+						<span class="help-block">系统在微站首页导航自动生成以分类名称为导航名称的记录.关闭此选项后,系统将删除对应的导航记录</span>
 					</div>
 				</div>
 				<div class="form-group">
@@ -130,10 +119,10 @@
 						<div class="col-sm-9">
 							<div class="input-group" style="width: 300px;">
 								<input type="text" class="form-control iconfontinput" ng-model="field.css.icon">
-                                <span class="input-group-addon iconfontspan" style="border-left: none">
+								<span class="input-group-addon iconfontspan" style="border-left: none">
                                     <i class="@{{field.css.icon}}"></i>
                                 </span>
-                              <span class="input-group-btn">
+								<span class="input-group-btn">
                                 <button class="btn btn-default" type="button" ng-click="upFont()">选择图标</button>
                               </span>
 							</div>
@@ -197,7 +186,7 @@
 		overflow : hidden;
 		float    : left;
 		margin   : 3px 7px;
-		position: relative;
+		position : relative;
 	}
 
 	.template .thumbnail .caption {
@@ -221,9 +210,10 @@
 	.template .thumbnail .caption {
 		margin-top : 8px;
 	}
-	.template .thumbnail a{
-		position: absolute;
-		right:10px;top:10px;
+
+	.template .thumbnail a {
+		position : absolute;
+		right    : 10px; top : 10px;
 	}
 
 </style>
@@ -234,7 +224,12 @@
 			$scope.category = <?php echo json_encode( $category );?>;
 			$scope.field = <?php echo json_encode( $field );?>;
 			$scope.template = <?php echo json_encode( $template );?>;
-
+			if (!$scope.field) {
+				$scope.field = {"pid":0,"icontype":1,"ishomepage":0,"css": {"icon": "fa fa-external-link", "image": "", "color": "#333333", "size": 35}};
+			}
+			if (!$scope.template) {
+				$scope.template = {};
+			}
 			//选择系统图标
 			$scope.upFont = function () {
 				util.font(function (icon) {

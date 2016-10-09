@@ -23,28 +23,4 @@ class Material extends Model {
 			[ 'createtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'status', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ]
 		];
-	protected $filter
-		= [
-			[ 'id', self::EMPTY_FILTER, self::MODEL_BOTH ]
-		];
-
-	/**
-	 * 获取分页数据
-	 *
-	 * @param $type
-	 *
-	 * @return array
-	 */
-	public function getLists( $type ) {
-		$count = $this->where( 'type', $type )->where( 'status', 1 )->where( 'siteid', SITEID )->count();
-		$page  = Page::row( 10 )->make( $count );
-		$data  = $this->where( 'type', $type )
-		              ->orderBy( 'id', 'DESC' )
-		              ->where( 'status', 1 )
-		              ->where( 'siteid', SITEID )
-		              ->limit( Page::limit() )
-		              ->get();
-
-		return [ 'page' => $page, 'data' => $data ];
-	}
 }

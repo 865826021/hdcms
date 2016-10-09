@@ -49,41 +49,42 @@ class site extends hdSite {
 	//删除素材
 	public function doSiteDelMaterial() {
 		$id   = q( 'post.id' );
-		$data = $this->db->find( $id );
-		$data = Weixin::instance( 'material' )->delete( $data['media_id'] );
+		$model = $this->db->find( $id );
+		$data = Weixin::instance( 'material' )->delete( $model['media_id'] );
 		if ( isset( $data['errcode'] ) ) {
 			message( $data['errmsg'], '', 'error' );
 		} else {
-			$this->db->where( 'id', $id )->delete();
+			$model->destory();
 			message( '删除成功', '', 'success' );
 		}
 	}
 
 	//图片
 	public function doSiteImage() {
-		$data = $this->db->getLists( 'image' );
-		View::with( 'data', $data );
-		View::make( $this->template . '/image.html' );
+		$data = Db::table( 'material' )->orderBy( 'id', 'DESC' )->paginate( 20, 8 );
+
+		return view( $this->template . '/image.html' )->with( [ 'data' => $data ] );
 	}
 
 	//语音
 	public function doSiteVoice() {
-		View::make( $this->template . '/voice.html' );
+		return view( $this->template . '/voice.html' );
 	}
 
 	//视频
 	public function doSiteVideo() {
-		View::make( $this->template . '/video.html' );
+		return view( $this->template . '/video.html' );
 	}
 
 	//图文
 	public function doSiteNews() {
-		$data = $this->db->where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
-		foreach ( $data as $k => $v ) {
+		$data = Db::table( 'material' )->where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
+		foreach ( (array) $data as $k => $v ) {
 			$data[ $k ]['data'] = json_decode( $v['data'], TRUE );
 		}
 		View::with( 'data', json_encode( $data, JSON_UNESCAPED_UNICODE ) );
-		View::make( $this->template . '/news.html' );
+
+		return view( $this->template . '/news.html' );
 	}
 
 	//删除图文
@@ -100,13 +101,14 @@ class site extends hdSite {
 			}
 			message( "图文消息删除失败," . $result['errmsg'], '', 'error' );
 		}
-		View::make( $this->template . '/post_news.html' );
+
+		return view( $this->template . '/post_news.html' );
 	}
 
 	//同步图文消息
 	public function doSiteSyncNews() {
 		if ( isset( $_GET['pos'] ) ) {
-			$pos    = q( 'get.pos' );
+			$pos    = q( 'get.pos', 0 );
 			$param  = [
 				//素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
 				"type"   => 'news',
@@ -150,27 +152,41 @@ class site extends hdSite {
 
 	//添加图文
 	public function doSitePostNews() {
-		$id = q( 'get.id' );
+		$id = q( 'get.id', 0, 'intval' );
 		if ( IS_POST ) {
-			$articles = json_decode( $_POST['data'], JSON_UNESCAPED_UNICODE );
-			//推送到微信
-			$res = Weixin::instance( 'material' )->addNews( $articles );
-			if ( isset( $res['media_id'] ) ) {
-				if ( $id ) {
-					//编辑时删除微信图文
-					$field = $this->db->find( $id );
-					Weixin::instance( 'material' )->delete( $field['media_id'] );
-					$tab['id'] = $id;
+			$articles = json_decode( Request::post( 'data' ), JSON_UNESCAPED_UNICODE );
+			if ( $id ) {
+				//编辑时修改微信图文消息
+				foreach ( $articles['articles'] as $k => $v ) {
+					$field    = $this->db->find( $id );
+					$editData = [
+						"media_id" => $field['media_id'],
+						"index"    => $k,
+						"articles" => $v
+					];
+					$res      = Weixin::instance( 'material' )->editNews( $editData );
+					if ( $res['errcode'] != 0 ) {
+						//推送到微信失败
+						message( $res['errmsg'], '', 'error' );
+					}
 				}
-				$tab['type']     = 'news';
-				$tab['data']     = $_POST['data'];
-				$tab['media_id'] = $res['media_id'];
-				$tab['status']   = 1;
-				$action          = $id ? 'save' : 'add';
-				$this->db->$action( $tab );
-				message( '图文消息保存成功', site_url( 'site/news' ), 'success' );
+				$media_id = $field['media_id'];
+			} else {
+				//新增时推送到微信
+				$res = Weixin::instance( 'material' )->addNews( $articles );
+				if ( ! isset( $res['media_id'] ) ) {
+					//推送到微信失败
+					message( $res['errmsg'], '', 'error' );
+				}
+				$media_id = $res['media_id'];
 			}
-			message( $res['errmsg'], '', 'error' );
+			$this->db['id']       = $id;
+			$this->db['type']     = 'news';
+			$this->db['data']     = Request::post( 'data' );
+			$this->db['media_id'] = $media_id;
+			$this->db['status']   = 1;
+			$this->db->save();
+			message( '图文消息保存成功', site_url( 'site/news' ), 'success' );
 		}
 		if ( $id ) {
 			$field = $this->db->where( 'id', $id )->pluck( 'data' );
@@ -196,14 +212,15 @@ class site extends hdSite {
 str;
 
 		}
-		View::with( 'field', $field );
-		View::make( $this->template . '/post_news.html' );
+
+		return view( $this->template . '/post_news.html' )->with( 'field', $field );
 	}
 
 	//根据文件获取微信media_id
 	public function doSiteGetMediaId() {
 		$file = q( 'post.file' );
-		$res  = $this->db->where( 'file', $file )->first();
+		$db   = Db::table( 'material' );
+		$res  = $db->where( 'file', $file )->first();
 		if ( $res ) {
 			return [ 'valid' => 1, 'media_id' => $res['media_id'] ];
 		} else {
@@ -219,7 +236,7 @@ str;
 				$tab['siteid']     = SITEID;
 				$tab['createtime'] = time();
 				$tab['status']     = 1;
-				$this->db->add( $tab );
+				$this->db->insert( $tab );
 
 				return [ 'valid' => 1, 'media_id' => $data['media_id'] ];
 			}
@@ -230,7 +247,8 @@ str;
 	public function doSiteUsers() {
 		$user = Db::table( 'member' )->where( 'openid', '<>', '' )->where( 'siteid', SITEID )->get();
 		View::with( 'user', $user );
-		View::make( $this->template . '/users.html' );
+
+		return view( $this->template . '/users.html' );
 	}
 
 	//群发图文消息

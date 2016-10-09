@@ -19,12 +19,13 @@ use hdphp\model\Model;
  * @author 向军
  */
 class CreditsRecord extends Model {
-	protected $table = 'credits_record';
+	protected $table     = 'credits_record';
+	protected $allowFill = [ '*' ];
 	protected $validate
-	                 = [
+	                     = [
 		];
 	protected $auto
-	                 = [
+	                     = [
 			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
 			[ 'operator', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],

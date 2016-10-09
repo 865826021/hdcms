@@ -23,14 +23,8 @@ use system\model\WebPage;
  * @author 向军
  */
 class ucenter extends hdSite {
-	protected $webPage;
-
-	public function __construct() {
-		parent::__construct();
-		$this->webPage = new WebPage();
-	}
-
 	public function doSitePost() {
+		$webPage = new WebPage();
 		if ( IS_POST ) {
 			$modules = json_decode( $_POST['modules'], TRUE );
 			//会员中心数据
@@ -43,12 +37,9 @@ class ucenter extends hdSite {
 			$data['html']        = $_POST['html'];
 			$data['type']        = 3;
 			$data['status']      = 1;
-			$res                 = $this->webPage->where( 'siteid', SITEID )->where( 'type', 3 )->first();
-			$action              = $res ? 'save' : 'add';
-			$data['id']          = $res['id'];
-			if ( ! $this->webPage->$action( $data ) ) {
-				message( $this->webPage->getError(), 'back', 'error' );
-			}
+			$res                 = $webPage->where( 'siteid', SITEID )->where( 'type', 3 )->first() ?: [ ];
+			$data['id']          = empty( $res['id'] ) ? 0 : $res['id'];
+			$webPage->save( $data );
 			//添加菜单,首先删除原菜单
 			$menus = json_decode( $_POST['menus'], TRUE );
 			//删除旧的菜单
@@ -62,39 +53,20 @@ class ucenter extends hdSite {
 					$data['url']      = $m['url'];
 					$data['icontype'] = 1;
 					$data['entry']    = 'profile';
-					if ( ! $webNavModel->add( $data ) ) {
-						message( $webNavModel->getError(), 'back', 'error' );
-					}
+					$webNavModel->save( $data );
 				}
 			}
 			//************************************回复关键词处理************************************
-			$rid    = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '会员中心' )->pluck( 'rid' );
-			$action = $rid ? 'save' : 'add';
+			$rid = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##会员中心##' )->pluck( 'rid' );
 			//会员中心顶部资料,回复关键词,描述,缩略图
 			$ucenter = $modules[0]['params'];
 			//添加回复规则
 			$rule['rid']    = $rid;
-			$rule['name']   = '会员中心';
+			$rule['name']   = '##会员中心##';
 			$rule['module'] = 'cover';
-			$ruleModel      = new Rule();
-			if ( ! $insertRid = $ruleModel->$action( $rule ) ) {
-				message( $ruleModel->getError(), 'back', 'error' );
-			}
-			$rid = $action == 'add' ? $insertRid : $rid;
 			//回复关键词
-			$ruleKeyword        = new RuleKeyword();
-			$keyword['content'] = $ucenter['keyword'];
-			$keyword['module']  = 'cover';
-			$keyword['rid']     = $rid;
-			if ( $res = $ruleKeyword->where( 'rid', $rid )->first() ) {
-				$keyword['id'] = $res['id'];
-				$action        = 'save';
-			} else {
-				$action = 'add';
-			}
-			if ( ! $ruleKeyword->$action( $keyword ) ) {
-				message( $ruleKeyword->getError(), 'back', 'error' );
-			}
+			$rule['keywords'] = [ [ 'content' => $ucenter['keyword'] ] ];
+			service( 'WeChat' )->rule( $rule );
 			//回复封面
 			$replyCover           = new ReplyCover();
 			$cover['rid']         = $rid;
@@ -102,34 +74,27 @@ class ucenter extends hdSite {
 			$cover['description'] = $ucenter['description'];
 			$cover['thumb']       = $ucenter['thumb'];
 			$cover['url']         = "?a=entry/home&t=web&m=uc&siteid=" . SITEID;
-			if ( $res = $replyCover->where( 'rid', $rid )->first() ) {
-				$cover['id'] = $res['id'];
-				$action      = 'save';
-			} else {
-				$action = 'add';
-			}
-			if ( ! $replyCover->$action( $cover ) ) {
-				message( $replyCover->getError(), 'back', 'error' );
-			}
+			$replyCover->where( 'rid', $rid )->delete();
+			$replyCover->save( $cover );
 			message( '会员中心视图保存成功', 'refresh', 'success' );
 		}
 		//模块
-		$modules = $this->webPage->where( 'siteid', SITEID )->where( 'type', '=', 3 )->pluck( 'params' );
+		$modules = $webPage->where( 'siteid', SITEID )->where( 'type', 3 )->pluck( 'params' );
 		//菜单
-		$menusData
-			= Db::table( 'web_nav' )
-			    ->where( 'siteid', SITEID )
-			    ->where( 'entry', 'profile' )
-			    ->field( 'id,name,url,css' )
-			    ->orderBy( 'orderby', 'desc' )
-			    ->orderBy( 'id', 'asc' )
-			    ->get();
+		$menusData = Db::table( 'web_nav' )
+		               ->where( 'siteid', SITEID )
+		               ->where( 'entry', 'profile' )
+		               ->field( 'id,name,url,css' )
+		               ->orderBy( 'orderby', 'desc' )
+		               ->orderBy( 'id', 'asc' )
+		               ->get() ?: [ ];
 		//将CSS样式返序列化,用于显示图标等信息
 		foreach ( $menusData as $k => $v ) {
 			$menusData[ $k ]['css'] = json_decode( $v['css'], TRUE );
 		}
-		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '会员中心' )->pluck( 'rid' ) );
+		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##会员中心##' )->pluck( 'rid' ) );
 		View::with( [ 'modules' => $modules, 'menusData' => $menusData ] );
-		View::make( $this->template . '/ucenter/post.php' );
+
+		return View::make( $this->template . '/ucenter/post.php' );
 	}
 }
