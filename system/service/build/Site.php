@@ -10,20 +10,26 @@ use system\model\SiteSetting;
  * @package system\service\build
  */
 class Site extends \system\model\Site {
-	//加载站点缓存
-	public function loadSite() {
+	/**
+	 * 加载当前请求的站点缓存
+	 * @param int $siteId 站点编号
+	 *
+	 * @return bool|void
+	 */
+	public function loadSite( $siteId ) {
 		//缓存存在时不获取
-		if ( v( 'site' ) ) {
-			return TRUE;
+		if ( v( 'site' ) || empty( $siteId ) ) {
+			return;
 		}
+
 		//站点信息
-		v( 'site.info', d( "site:" . SITEID ) );
+		v( 'site.info', d( "site:" . $siteId ) );
 		//站点设置
-		v( 'site.setting', d( "setting:" . SITEID ) );
+		v( 'site.setting', d( "setting:" . $siteId ) );
 		//微信帐号
-		v( 'site.wechat', d( "wechat:" . SITEID ) );
+		v( 'site.wechat', d( "wechat:" . $siteId ) );
 		//加载模块
-		v( 'site.modules', d( "modules:" . SITEID ) );
+		v( 'site.modules', d( "modules:" . $siteId ) );
 		//设置微信配置
 		$config = [
 			"token"          => v( 'site.wechat.token' ),
