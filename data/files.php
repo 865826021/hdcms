@@ -1,6 +1,11 @@
+A	a.php
 M	admin.php
+M	app/system/controller/Cloud.php
 M	data/files.php
 M	data/upgrade.php
 M	install/install.php
 M	resource/view/system.php
 M	system/config/database.php
+M	system/middleware/Initialize.php
+M	system/service/build/Member.php
+M	system/service/build/User.php
