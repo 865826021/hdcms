@@ -70,7 +70,7 @@ class Cloud {
 
 	//检测有没有新版本
 	public function checkUpgrade() {
-		$hdcms = $this->db->find( 1 );
+		$hdcms = Db::table('cloud')->find( 1 );
 		$d     = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode={$hdcms['releaseCode']}&AppSecret={$hdcms['AppSecret']}" );
 
 		return json_decode( $d, TRUE );

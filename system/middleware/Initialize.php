@@ -23,30 +23,10 @@ class Initialize {
 
 	//初始用户信息
 	protected function initUserInfo() {
-		//前台访问
-		$user                        = [ ];
-		$user['system']['user_type'] = isset( $_GET['t'] ) && $_GET['t'] == 'web' ? 'member' : 'admin';
-		switch ( $user['system']['user_type'] ) {
-			case 'member':
-				//前台用户
-				if ( isset( $_SESSION['member_uid'] ) ) {
-					$user['info']  = Db::table( 'member' )->find( $_SESSION['member_uid'] );
-					$group         = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
-					$user['group'] = $group ?: [ ];
-					v( 'user', $user );
-				}
-				break;
-			case 'admin':
-				//后台用户
-				if ( isset( $_SESSION['admin_uid'] ) ) {
-					$user['info']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] );
-					$group                        = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
-					$user['group']                = $group ?: [ ];
-					$user['system']['super_user'] = $user['group']['id'] == 0;
-					v( 'user', $user );
-				}
-				break;
-		}
+		//后台用户
+		service( 'user' )->initUserInfo();
+		//前台用户
+		service( 'member' )->initUserInfo();
 	}
 
 	//加载系统配置项
@@ -76,7 +56,7 @@ class Initialize {
 			if ( Db::table( 'site' )->find( $siteId ) ) {
 				define( 'SITEID', $siteId );
 				Session::set( 'siteid', $siteId );
-				service( 'site' )->loadSite($siteId);
+				service( 'site' )->loadSite( $siteId );
 			} else {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}

@@ -30,6 +30,18 @@ class Member {
 		return TRUE;
 	}
 
+	//初始用户信息
+	public function initUserInfo() {
+		if ( Session::get( "member_uid" ) ) {
+			$user                        = [ ];
+			$user['member']              = Db::table( 'member' )->find( $_SESSION['member_uid'] );
+			$group                       = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
+			$user['group']               = $group ?: [ ];
+			$user['system']['user_type'] = 'member';
+			v( 'user', $user );
+		}
+	}
+
 	//获取会员组
 	public function getGroupName( $uid = 0 ) {
 		$uid = $uid ?: v( 'user.uid' );
