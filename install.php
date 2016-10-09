@@ -608,7 +608,7 @@ if ( $action == 'copyright' ) {
 //环境检测
 if ( $action == 'environment' ) {
 	//获取新新版本
-	if ( ! is_dir( 'web' ) && ! $soft = curl_get( $last_version_url ) ) {
+	if ( ! is_dir( 'app' ) && ! $soft = curl_get( $last_version_url ) ) {
 		echo '请求HDCMS云主机失败';
 		exit;
 	}
