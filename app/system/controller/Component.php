@@ -28,6 +28,7 @@ class Component {
 	//加载系统链接
 	public function linkBrowser() {
 		service( 'user' )->loginAuth();
+
 		return view();
 	}
 
@@ -54,7 +55,7 @@ class Component {
 		$file = Upload::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
 		if ( $file ) {
 			$data = [
-				'uid'        => v( 'user.info.uid' ),
+				'uid'        => v( 'user.info.uid' ) ?: v( 'user.member.uid' ),
 				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
