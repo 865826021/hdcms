@@ -7,4 +7,5 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-header('location:index.php?s=system/entry/login');
+$_GET['s'] = 'system/entry/login';
+require __DIR__ . '/system/hdphp.php';
