@@ -111,6 +111,7 @@ class Cloud {
 						//下载文件
 						$postData = [ 'file' => $file, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
 						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
+
 						is_dir( dirname( $file ) ) or mkdir( dirname( $file ), 0755, TRUE );
 						$res = json_decode( $content, TRUE );
 
