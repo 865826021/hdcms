@@ -45,13 +45,14 @@
 		</div>
 	</div>
 	<if value="$data['valid']==1">
-		<form action="" class="form-horizontal">
+		<form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl" onsubmit="return false;">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新版本</label>
 				<div class="col-sm-10">
-					<foreach from="$data['lists']" value="$f">
+					<foreach from="$data['data']['version']" value="$f">
 						<p class="form-control-static">
-							<span class="fa fa-square-o"></span> &nbsp; HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}}
+							<span class="fa fa-square-o"></span> &nbsp;
+							HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}}
 							更新时间【{{date('Y年m月d日',$f['createtime'])}}】
 						</p>
 					</foreach>
@@ -75,7 +76,8 @@
 					<div class="col-sm-10 ">
 						<div class="alert alert-success form-control-static">
 							<foreach from="$data['data']['sql']" value="$f">
-								{{$f}} <hr/>
+								{{$f}}
+								<hr/>
 							</foreach>
 						</div>
 					</div>
@@ -86,22 +88,23 @@
 				<div class="col-sm-10">
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" id="cp1"> 我已经做好了相关文件的备份工作
+							<input type="checkbox" ng-model="cp1"> 我已经做好了相关文件的备份工作
 						</label>
 					</div>
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" id="cp2"> 认同官方的更新行为并自愿承担更新所存在的风险
+							<input type="checkbox" ng-model="cp2"> 认同官方的更新行为并自愿承担更新所存在的风险
 						</label>
 					</div>
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" id="cp3"> 理解官方的辛勤劳动并报以感恩的心态点击更新按钮
+							<input type="checkbox" ng-model="cp3"> 理解官方的辛勤劳动并报以感恩的心态点击更新按钮
 						</label>
 					</div>
 				</div>
 			</div>
-			<button class="btn btn-primary" type="button" onclick="upgrade()">开始更新</button>
+			<button type="button" class="btn btn-default col-lg-offset-1" disabled="disabled" ng-show="!cp1 || !cp2 ||!cp3">请接受所有更新协议</button>
+			<button type="button" class="btn btn-success col-lg-offset-1" ng-click="send()" ng-show="cp1 && cp2 &&cp3">开始执行更新</button>
 			<else/>
 			<div class="panel panel-success">
 				<div class="panel-heading">
@@ -115,15 +118,14 @@
 	</if>
 </block>
 <script>
-	function upgrade() {
-		require(['util'], function (util) {
-			if ($("#cp1:checked").is(':checked') && $("#cp2:checked").is(':checked') && $("#cp3:checked").is(':checked')) {
+	require(['angular'], function (angular) {
+		angular.module('hd', []).controller('ctrl',['$scope', function ($scope) {
+			$scope.send = function () {
 				if (confirm('更新将直接覆盖本地文件, 请注意备份文件和数据. \n\n**另注意** 更新过程中不要关闭此浏览器窗口.')) {
-					location.href = "{{u('upgrade',['action'=>'sql'])}}";
+					location.href = "{{u('upgrade',['action'=>'downloadLists'])}}";
 				}
-			} else {
-				util.message('请认真检查系统协议', '', 'error');
 			}
-		})
-	}
+		}]);
+		angular.bootstrap(document.getElementById('form'), ['hd']);
+	})
 </script>
