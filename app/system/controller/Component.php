@@ -76,7 +76,7 @@ class Component {
 	//获取文件列表webuploader
 	public function filesLists() {
 		$db = Db::table( 'core_attachment' )
-		        ->where( 'uid', v( 'user.info.uid' ) )
+		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ))
 		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
 		        ->where( 'user_type', v( 'user.system.user_type' ) )
 		        ->orderBy( 'id', 'DESC' );
