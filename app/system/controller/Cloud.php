@@ -26,7 +26,7 @@ class Cloud {
 		$this->user = new User();
 		service( 'user' )->superUserAuth();
 		$user      = Db::table( 'cloud' )->find( 1 );
-		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}";
+		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}&t=web&siteid=1&m=store";
 		$this->db  = new \system\model\Cloud();
 	}
 
