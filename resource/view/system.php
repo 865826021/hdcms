@@ -39,7 +39,7 @@
                         <li>
                             <a href="?s=system/manage/menu"><i class="fa fa-w fa-cogs"></i> 系统管理</a>
                         </li>
-                        <if value="SITEID">
+                        <if value="v('site')">
                             <li>
                                 <a href="?s=site/entry/refer&siteid={{SITEID}}" target="_blank"><i class="fa fa-share"></i> 继续管理公众号 ({{v('site.info.name')}})</a>
                             </li>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <if value="SITEID">
+                        <if value="v('site')">
                             <li class="dropdown">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; " aria-expanded="false">
                                     <i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b></a>

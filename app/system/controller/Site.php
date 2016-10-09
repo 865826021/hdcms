@@ -89,7 +89,6 @@ class Site {
 			$Site->domain      = Request::post( 'domain' );
 			$Site->module      = Request::post( 'module' );
 			$siteId            = $Site->save();
-			define( 'SITEID', $siteId );
 			//添加站长数据,系统管理员不添加数据
 			service( 'user' )->setSiteOwner( $siteId, v( 'user.info.uid' ) );
 			//创建用户字段表数据

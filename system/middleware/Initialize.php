@@ -62,7 +62,6 @@ class Initialize {
 		if ( $name = q( 'get.m' ) ) {
 			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
 		}
-
 		//扩展模块访问
 		if ( ! empty( Request::get( 'a' ) ) ) {
 			Request::get( 's', 'site/module/entry' );
@@ -75,12 +74,9 @@ class Initialize {
 		$siteId = q( 'get.siteid', Session::get( 'siteid' ), 'intval' );
 		if ( $siteId ) {
 			if ( Db::table( 'site' )->find( $siteId ) ) {
-				Session::set( 'siteid', $siteId );
 				define( 'SITEID', $siteId );
-				//加载站点缓存
-				service( 'site' )->loadSite();
-
-				return;
+				Session::set( 'siteid', $siteId );
+				service( 'site' )->loadSite($siteId);
 			} else {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}
