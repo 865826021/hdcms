@@ -58,13 +58,23 @@
 					</foreach>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新日志</label>
+				<div class="col-sm-10">
+					<p class="form-control-static">
+						<foreach from="$data['data']['logs']" value="$f">
+							<span class="fa fa-square-o"></span> &nbsp;{{$f}}<br/>
+						</foreach>
+					</p>
+				</div>
+			</div>
 			<if value="!empty($data['data']['files'])">
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">文件列表</label>
 					<div class="col-sm-10 ">
 						<div class="alert alert-success form-control-static">
 							<foreach from="$data['data']['files']" value="$f">
-								{{preg_replace('/\s+/','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',$f)}}<br/>
+								{{preg_replace('/\s+/','',$f)}}<br/>
 							</foreach>
 						</div>
 					</div>
@@ -119,7 +129,7 @@
 </block>
 <script>
 	require(['angular'], function (angular) {
-		angular.module('hd', []).controller('ctrl',['$scope', function ($scope) {
+		angular.module('hd', []).controller('ctrl', ['$scope', function ($scope) {
 			$scope.send = function () {
 				if (confirm('更新将直接覆盖本地文件, 请注意备份文件和数据. \n\n**另注意** 更新过程中不要关闭此浏览器窗口.')) {
 					location.href = "{{u('upgrade',['action'=>'downloadLists'])}}";

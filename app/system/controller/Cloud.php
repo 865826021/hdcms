@@ -132,51 +132,24 @@ class Cloud {
 				break;
 			case 'sql':
 				if ( IS_POST ) {
-					//执行表操作的SQL
-					if ( empty( $data['data']['sql'] ) ) {
-						//全部下载完成
-						$res = [ 'valid' => 2 ];
-					} else {
-						if ( ! empty( $data['data']['sql'] ) ) {
-							$t = array_shift( $data['data']['sql'] );
-							if ( Db::sql( $t ) ) {
-								D( '_upgrade_', $data );
-								$res = [ 'valid' => 1, 'sql' => $t ];
-							} else {
-								$res = [ 'valid' => 0, 'sql' => $t ];
-							}
-						}
-					}
-					echo json_encode( $res );
+					cli( 'migrate:make' );
+					echo json_encode( $res = [ 'valid' => 2 ] );
 					exit;
 				}
-				if ( empty( $data['data']['sql'] ) ) {
-					//没有更新数据时执行文件更新
-					go( u( 'upgrade', [ 'action' => 'downloadLists' ] ) );
-				}
-				View::make( 'updateSql' );
+
+				return view( 'updateSql' )->with( 'data', f( '_upgrade_' ) );
 				break;
 			case 'finish':
-				if ( empty( $data['data']['files'] ) && empty( $data['data']['tables'] ) && empty( $data['data']['fields'] ) ) {
-					//全部更新完成
-					$data = [
-						'id'          => 1,
-						'versionCode' => $data['lastVersion']['versionCode'],
-						'releaseCode' => $data['lastVersion']['releaseCode'],
-						'createtime'  => time()
-					];
-					$this->db->save( $data );
-					//删除更新缓存
-					D( '_upgrade_', '[del]' );
-					\Dir::del( 'install' );
-					foreach ( glob( 'data/*' ) as $f ) {
-						if ( basename( $f ) != 'database.php' ) {
-							@unlink( $f );
-						}
-					}
-					message( '恭喜! 系统更新完成', 'upgrade', 'success' );
-				}
-				message( '部分文件下载失败,请重新运行更新程序', 'upgrade', 'error' );
+				$data = f( '_upgrade_' );
+				//全部更新完成
+				$this->db['id']          = 1;
+				$this->db['versionCode'] = $data['data']['version'][0]['versionCode'];
+				$this->db['releaseCode'] = $data['data']['version'][0]['releaseCode'];
+				$this->db['createtime']  = time();
+				$this->db->save();
+				//删除更新缓存
+				f( '_upgrade_', '[del]' );
+				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
 				$hdcms = $this->db->find( 1 );
