@@ -116,13 +116,7 @@ class Cloud {
 						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
 							$res = [ 'valid' => 0 ];
 						} else {
-							if ( in_array( basename( $file ), [ 'database.php' ] ) ) {
-								//忽略下载的文件
-								$res = [ 'valid' => 1, 'file' => $file ];
-							} else if ( in_array( dirname( $file ), [ 'theme', 'addons', 'attachment' ] ) ) {
-								//忽略该目录下的所有文件
-								$res = [ 'valid' => 1, 'file' => $file ];
-							} else if ( file_put_contents( $file, $content ) ) {
+							if ( file_put_contents( $file, $content ) ) {
 								$res = [ 'valid' => 1, 'file' => $file ];
 							} else {
 								$res = [ 'valid' => 0, 'file' => $file ];
