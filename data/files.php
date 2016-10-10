@@ -1,4 +1,6 @@
 M	app/system/controller/Cloud.php
+M	data/files.php
+M	data/upgrade.php
 M	theme/article/article.html
 M	theme/article/css/article.css
 M	theme/article/css/article.less
