@@ -7,7 +7,7 @@
         <div class="left col-sm-8 ">
             <h1>{{$article['title']}}</h1>
             <div class="times">
-                更新时间: {{date('Y-m-d',$article['createtime'])}}
+                创建时间: {{date('Y-m-d',$article['createtime'])}}
                 <div class="bdsharebuttonbox">
                     <a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone"></a><a href="#" class="bds_tsina" data-cmd="tsina"></a><a href="#" class="bds_tqq" data-cmd="tqq"></a><a href="#" class="bds_renren" data-cmd="renren"></a><a href="#" class="bds_weixin" data-cmd="weixin"></a>
                 </div>
@@ -15,7 +15,7 @@
                 with (document)0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
             </div>
             <div class="content">
-                <?php $data = Db::table('store_hdcms')->where('packType','release')->orderBy('id','DESC')->get();?>
+                <?php $data = Db::table('store_hdcms')->where('type','full')->where('packType','release')->orderBy('id','DESC')->get();?>
                 <foreach from="$data" value="$v">
                     <h2>{{date('Y-m-d',$v['createtime'])}}</h2>
                     <?php $logs = json_decode($v['logs']);?>
