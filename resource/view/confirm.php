@@ -4,21 +4,12 @@
     <meta charset="UTF-8">
     <title>温馨提示</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<<<<<<< HEAD
     <script src="{{__ROOT__}}/resource/hdjs/js/jquery.min.js"></script>
     <script src="{{__ROOT__}}/resource/hdjs/app/util.js"></script>
     <script src="{{__ROOT__}}/resource/hdjs/require.js"></script>
     <script src="{{__ROOT__}}/resource/hdjs/app/config.js"></script>
     <link href="{{__ROOT__}}/resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{__ROOT__}}/resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
-=======
-    <script src="resource/hdjs/js/jquery.min.js"></script>
-    <script src="resource/hdjs/app/util.js"></script>
-    <script src="resource/hdjs/require.js"></script>
-    <script src="resource/hdjs/app/config.js"></script>
-    <link href="resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link href="resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
->>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 </head>
 <body style="background: url('resource/images/bg.jpg');background-size: cover">
 <!--导航-->
