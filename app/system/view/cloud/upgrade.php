@@ -53,7 +53,7 @@
 						<p class="form-control-static">
 							<span class="fa fa-square-o"></span> &nbsp;
 							HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}}
-							更新时间【{{date('Y年m月d日',$f['createtime'])}}】
+							更新时间【{{date('Y年m月d日',strtotime($f['releaseCode']))}}】
 						</p>
 					</foreach>
 				</div>
