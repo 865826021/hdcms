@@ -7,5 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-$_GET['s'] = 'system/entry/login';
+if ( ! isset( $_GET['s'] ) ) {
+	$_GET['s'] = 'system/entry/login';
+}
 require __DIR__ . '/system/hdphp.php';
