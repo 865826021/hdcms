@@ -743,7 +743,8 @@ if ( $action == 'table' ) {
 	}
 	//更新系统版本号
 	$version = include 'data/upgrade.php';
-	$sql  = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
+	$sql
+	         = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
 		VALUES(0,'','','','{$version['versionCode']}','{$version['releaseCode']}',0)";
 	try {
 		$pdo->exec( $sql );
@@ -765,7 +766,7 @@ if ( $action == 'table' ) {
 if ( $action == 'finish' ) {
 	//清除运行数据
 	foreach ( glob( 'data/*' ) as $f ) {
-		if ( basename( $f ) != 'database.php' ) {
+		if ( ! in_array( basename( $f ), [ 'database.php', 'upgrade.php' ] ) ) {
 			@unlink( $f );
 		}
 	}
