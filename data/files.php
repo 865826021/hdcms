@@ -1,3 +1,4 @@
+D	.gitignore
 M	app/home/controller/Entry.php
 M	app/site/controller/Api.php
 M	app/site/controller/Entry.php
