@@ -1,4 +1,8 @@
 M	app/system/controller/Cloud.php
+M	app/system/view/cloud/account.php
+M	app/system/view/cloud/downloadLists.php
+M	app/system/view/cloud/updateSql.php
+M	app/system/view/cloud/upgrade.php
 M	data/files.php
 M	data/upgrade.php
 M	theme/article/article.html
