@@ -74,7 +74,7 @@
 					<div class="col-sm-10 ">
 						<div class="alert alert-success form-control-static">
 							<foreach from="$data['data']['files']" value="$f">
-								{{preg_replace('/\s+/','',$f)}}<br/>
+								{{preg_replace('/\s+/',' ',$f)}}<br/>
 							</foreach>
 						</div>
 					</div>

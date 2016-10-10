@@ -109,17 +109,26 @@ class User extends \system\model\User {
 	 * 用户登录
 	 *
 	 * @param array $data 登录数据
+	 * @param bool $process 直接处理
 	 *
-	 * @return bool
+	 * @return bool|array
 	 */
-	public function login( array $data ) {
+	public function login( array $data, $process = TRUE ) {
 		$user = Db::table( 'user' )->where( 'username', $data['username'] )->first();
 		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
-			message( '密码输入错误', 'back', 'error' );
+			if ( $process ) {
+				message( '密码输入错误', 'back', 'error' );
+			} else {
+				return [ 'valid' => 0, 'message' => '密码输入错误' ];
+			}
 		}
 
 		if ( ! $user['status'] ) {
-			message( '您的帐号正在审核中', 'back', 'error' );
+			if ( $process ) {
+				message( '您的帐号正在审核中', 'back', 'error' );
+			} else {
+				return [ 'valid' => 0, 'message' => '您的帐号正在审核中' ];
+			}
 		}
 		//更新登录状态
 		$data             = [ ];
@@ -127,8 +136,23 @@ class User extends \system\model\User {
 		$data['lasttime'] = time();
 		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
 		Session::set( "admin_uid", $user['uid'] );
+		$this->initUserInfo();
 
 		return TRUE;
+	}
+
+	//初始用户信息
+	public function initUserInfo() {
+		//前台访问
+		if ( Session::get( "admin_uid" ) ) {
+			$user                         = [ ];
+			$user['info']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] );
+			$group                        = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
+			$user['group']                = $group ?: [ ];
+			$user['system']['super_user'] = $user['group']['id'] == 0;
+			$user['system']['user_type']  = 'admin';
+			v( 'user', $user );
+		}
 	}
 
 	/**

@@ -1,0 +1,12 @@
+/addons/
+!addons/index.html
+*.gitignore
+/attachment/
+/data/database.php
+/storage/
+.DS_Store
+.gitignore.swp
+vendor/houdunwang/framework/.gitignore
+.DS_Store
+.env
+.idea

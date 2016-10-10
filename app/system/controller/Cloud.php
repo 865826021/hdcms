@@ -26,7 +26,7 @@ class Cloud {
 		$this->user = new User();
 		service( 'user' )->superUserAuth();
 		$user      = Db::table( 'cloud' )->find( 1 );
-		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}";
+		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}&t=web&siteid=1&m=store";
 		$this->db  = new \system\model\Cloud();
 	}
 
@@ -70,7 +70,7 @@ class Cloud {
 
 	//检测有没有新版本
 	public function checkUpgrade() {
-		$hdcms = $this->db->find( 1 );
+		$hdcms = Db::table('cloud')->find( 1 );
 		$d     = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode={$hdcms['releaseCode']}&AppSecret={$hdcms['AppSecret']}" );
 
 		return json_decode( $d, TRUE );
@@ -111,6 +111,7 @@ class Cloud {
 						//下载文件
 						$postData = [ 'file' => $file, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
 						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
+
 						is_dir( dirname( $file ) ) or mkdir( dirname( $file ), 0755, TRUE );
 						$res = json_decode( $content, TRUE );
 
@@ -118,10 +119,9 @@ class Cloud {
 							$res = [ 'valid' => 0 ];
 						} else {
 							if ( file_put_contents( $file, $content ) ) {
-								array_shift( $fileLists );
-								$res = [ 'valid' => 1 ];
+								$res = [ 'valid' => 1,'file'=>$file ];
 							} else {
-								$res = [ 'valid' => 0 ];
+								$res = [ 'valid' => 0,'file'=>$file ];
 							}
 						}
 					}
@@ -153,7 +153,7 @@ class Cloud {
 				break;
 			default:
 				$hdcms = $this->db->find( 1 );
-				$data  = \Curl::get( $this->url . '&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode=' . $hdcms['releaseCode'] );
+				$data  = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&AppSecret={$hdcms['AppSecret']}&releaseCode=" . $hdcms['releaseCode'] );
 				$data  = json_decode( $data, TRUE );
 				f( '_upgrade_', $data );
 
