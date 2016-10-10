@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace system\service\build;
+use system\model\SiteUser;
 
 /**
  * 用户管理服务
@@ -287,9 +288,19 @@ class User extends \system\model\User {
 	 * @return mixed
 	 */
 	public function siteNums( $uid = 0 ) {
-		$uid = $uid ?: v( "user.uid" );
+		$uid = $uid ?: v( "user.info.uid" );
 
-		return Db::table( 'site_user' )->where( 'uid', $uid )->where( 'role', 'owner' )->count();
+		return Db::table( 'site_user' )->where( 'uid', $uid )->where( 'role', 'owner' )->count() * 1;
+	}
+
+	/**
+	 * 检测当前帐号是否能添加站点
+	 * @return bool
+	 */
+	public function hasAddSite( $uid = 0 ) {
+		$uid     = $uid ?: v( 'user.info.uid' );
+		$maxsite = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'uid', $uid )->pluck( 'maxsite' );
+		return $maxsite - $this->siteNums( $uid ) <= 0 ? FALSE : TRUE;
 	}
 
 	/**
@@ -320,16 +331,15 @@ class User extends \system\model\User {
 	 */
 	public function setSiteOwner( $siteid, $uid ) {
 		//系统管理员不添加数据
-		if ( ( new User() )->isSuperUser( $uid ) ) {
+		if ( $this->isSuperUser( $uid ) ) {
 			return TRUE;
 		}
-		$data = [
-			'siteid' => $siteid,
-			'role'   => 'owner',
-			'uid'    => $uid
-		];
+		$SiteUser           = new SiteUser();
+		$SiteUser['siteid'] = $siteid;
+		$SiteUser['role']   = 'owner';
+		$SiteUser['uid']    = $uid;
 
-		return $this->add( $data );
+		return $SiteUser->save();
 	}
 
 	/**

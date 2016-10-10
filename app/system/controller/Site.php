@@ -44,8 +44,8 @@ class Site {
 			$site->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
-		if ( ! $isSuperUser = Util::instance( 'user' )->isSuperUser() ) {
-			$site->where( 'user.uid', v( 'user.uid' ) );
+		if ( ! $isSuperUser = service( 'user' )->isSuperUser() ) {
+			$site->where( 'user.uid', v( 'user.info.uid' ) );
 		}
 		if ( $sites = $site->get() ) {
 			//获取站点套餐与所有者数据
@@ -81,6 +81,10 @@ class Site {
 
 	//添加站点
 	public function addSite() {
+		//检测用户是否可以添加帐号
+		if ( !service( 'user' )->hasAddSite() ) {
+			message( '您可创建的站点数量已经用完,请联系管理员进行升级' );
+		}
 		$Site = new \system\model\Site();
 		if ( IS_POST ) {
 			//添加站点信息

@@ -12,6 +12,7 @@ use system\model\SiteSetting;
 class Site extends \system\model\Site {
 	/**
 	 * 加载当前请求的站点缓存
+	 *
 	 * @param int $siteId 站点编号
 	 *
 	 * @return bool|void
