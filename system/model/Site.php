@@ -31,6 +31,7 @@ class Site extends Model {
 			[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'allfilesize', 200, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 			[ 'description', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+			[ 'domain', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		];
 
 	/**
