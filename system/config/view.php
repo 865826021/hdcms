@@ -5,11 +5,7 @@ return [
 	//模板后缀
 	'prefix'    => '.php',
 	//标签
-<<<<<<< HEAD
 	'tags'      => [ 'system\tag\Tag' ],
-=======
-	'tags'      => [  ],
->>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 	//消息模板
 	'message'   => ROOT_PATH . '/resource/view/message.php',
 	//有确定提示的模板页面

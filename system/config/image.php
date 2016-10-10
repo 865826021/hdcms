@@ -11,11 +11,7 @@ return [
 	//压缩比
 	'quality'    => 80,
 	//水印文字
-<<<<<<< HEAD
 	'text'       => 'houdunwang.com',
-=======
-	'text'       => 'hdphp.com',
->>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 	//文字颜色
 	'text_color' => '#f00f00',
 	//文字大小

@@ -1,6 +1,5 @@
 <?php
 return [
-<<<<<<< HEAD
 	//应用错误处理
 	'app'   => [
 		/**
@@ -22,16 +21,4 @@ return [
 		'error' => '错误',
 		'debug' => '调试',
 	],
-=======
-    //开启Trace
-    'trace' => TRUE,
-    //Trace选项卡
-    'level' => [
-        'view'  => '视图',
-        'sql'   => 'sql语句',
-        'file'  => '加载文件',
-        'error' => '错误',
-        'debug' => '调试',
-    ],
->>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 ];

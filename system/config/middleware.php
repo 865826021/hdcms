@@ -1,7 +1,6 @@
 <?php
 //中间件配置
 return [
-<<<<<<< HEAD
 	/**
 	 * 控制器中间件指在控制器中执行的中间件
 	 */
@@ -21,10 +20,4 @@ return [
 			'hdphp\middleware\build\AppEnd'
 		]
 	]
-=======
-    //全局中间件
-    'global'     => [ ],
-    //路由中间件
-    'middleware' => [],
->>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 ];
