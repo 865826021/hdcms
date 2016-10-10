@@ -241,6 +241,38 @@
                 }
             );
         },
+<<<<<<< HEAD
+=======
+        ////日期时间区间
+        //datetimerangepicker: function (opt) {
+        //    var options = $.extend({
+        //        "autoApply": true,//自动关闭,有timePicker属性时无效
+        //        "locale": {
+        //            "format": "YYYY/MM/DD",//YYYY/MM/DD H:m
+        //            "separator": " 至 ",
+        //            "applyLabel": "确定",
+        //            "cancelLabel": "取消",
+        //            "fromLabel": "From",
+        //            "daysOfWeek": [
+        //                "日", "一", "二", "三", "四", "五", "六"
+        //            ],
+        //            "monthNames": [
+        //                "一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"
+        //            ],
+        //            "firstDay": 0
+        //        },
+        //    }, opt.options);
+        //
+        //    require(['bootstrap', 'daterangepicker'], function ($) {
+        //            $(opt.element).daterangepicker(options, function (start, end, label) {
+        //                if (opt.callback) {
+        //                    opt.callback(start, end, label)
+        //                }
+        //            });
+        //        }
+        //    )
+        //},
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
         //日期区间
         daterangepicker: function (opt) {
             var options = $.extend({
@@ -259,7 +291,11 @@
                     ],
                     "firstDay": 0
                 },
+<<<<<<< HEAD
             }, opt);
+=======
+            }, opt.options);
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
 
             require(['bootstrap', 'daterangepicker'], function ($) {
                     $(opt.element).daterangepicker(options, function (start, end, label) {
@@ -319,6 +355,43 @@
                 }
             );
         },
+<<<<<<< HEAD
+=======
+        //编辑器
+        keditor: function (opt, callback) {
+            require(['kindeditor'], function () {
+                    var options = {
+                        width: '100%',
+                        height: '300px',
+                        allowFileManager: true,
+                        uploadJson: '?s=system/component/kindUpload',
+                        fileManagerJson: '?s=system/component/kindFileManagerJson',
+                        items: ['source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+                            'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                            'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                            'superscript', 'clearhtml', 'quickformat', 'fullscreen', '/',
+                            'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                            'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+                            'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+                            'anchor', 'link', 'unlink'
+                        ],
+                        afterCreate: function () {
+                            this.sync();
+                        },
+                        //下面这行代码就是关键的所在，当失去焦点时执行 this.sync();
+                        afterBlur: function () {
+                            this.sync();
+                        }
+                    };
+                    options = $.extend(options, opt);
+                    editor = KindEditor.create("#" + options.id, options);
+                    if ($.isFunction(callback)) {
+                        callback(editor);
+                    }
+                }
+            );
+        },
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
         //百度编辑器
         ueditor: function (id, opt, callback) {
             require(['ueditor', 'ZeroClipboard'], function (ueditor, ZeroClipboard) {
@@ -332,10 +405,17 @@
                     'maximumWords': 9999999999999,
                     'autoClearinitialContent': false,
                     'toolbars': [['fullscreen', 'source', 'preview', '|', 'bold', 'italic', 'underline', 'strikethrough', 'forecolor', 'backcolor', '|',
+<<<<<<< HEAD
                         'justifyleft', 'justifycenter', 'justifyright', '|', 'insertorderedlist', 'insertunorderedlist', 'blockquote', 'emotion',
                         'link', 'removeformat', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', 'indent', 'paragraph', 'fontsize', '|',
                         'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol',
                         'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|',  'map', 'print', 'drafts']],
+=======
+                        'justifyleft', 'justifycenter', 'justifyright', '|', 'insertorderedlist', 'insertunorderedlist', 'blockquote', 'emotion', 'insertvideo',
+                        'link', 'removeformat', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight', 'indent', 'paragraph', 'fontsize', '|',
+                        'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol',
+                        'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|', 'anchor', 'map', 'print', 'drafts']],
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                     autoHeightEnabled: false,//自动增高
                     autoFloatEnabled: false,
                 }, opt);
@@ -348,6 +428,11 @@
                                     type: 'image',
                                     multiple: true,
                                     extensions: 'gif,jpg,jpeg,bmp,png',
+<<<<<<< HEAD
+=======
+                                    data: opt.data ? opt.data : '',
+                                    hash: opt.hash ? opt.hash : ''
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                 };
                                 fileUploader.show(function (imgs) {
                                     if (imgs.length == 0) {
@@ -739,7 +824,12 @@
                 type: 'image',
                 extensions: 'gif,jpg,jpeg,bmp,png',
                 multiple: false,
+<<<<<<< HEAD
                 data: ''
+=======
+                data: '',
+                hash: ''
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
             }, options);
 
             require(['bootstrap', 'fileUploader'], function ($, fileUploader) {

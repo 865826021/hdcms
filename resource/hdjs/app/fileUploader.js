@@ -43,7 +43,11 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                 }
                                 //加载远程文件
                                 function getImageList(url) {
+<<<<<<< HEAD
                                     $.get(url, {extensions: options.extensions}, function (res) {
+=======
+                                    $.post(url, {extensions: options.extensions, hash: options.hash, data: options.data}, function (res) {
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                         var html = '<ul class="clearfix image-list-box">';
                                         $(res.data).each(function (i) {
                                             html += '<li style="background-image: url(' + res.data[i].path + ');" path="' + res.data[i].path + '"></li>';
@@ -70,11 +74,19 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                         images.push(url);
                                     })
                                     if (!options.multiple) {
+<<<<<<< HEAD
+=======
+                                        callback(images);
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                         modalobj.modal('hide');
                                     }
                                 });
                                 //多图上传时选中确定选择的图片
                                 modalobj.delegate('.uploadSelectFiles', 'click', function () {
+<<<<<<< HEAD
+=======
+                                    callback(images);
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                     modalobj.modal('hide');
                                 });
                                 //显示上传控件
@@ -84,6 +96,10 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                         extensions: options.extensions,//允许上传的文件类型
                                         mimeTypes: 'image/*'
                                     },
+<<<<<<< HEAD
+=======
+                                    formData: {hash: options.hash, data: options.data},
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                     multiple: options.multiple,
                                     fileNumLimit: 100,//允许上传的文件数量
                                     fileSizeLimit: 200 * 1024 * 1024,    // 200 M 允许上传文件大小
@@ -102,9 +118,15 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                 });
                             },
                             'hide.bs.modal': function () {
+<<<<<<< HEAD
                                 callback(images);
                             },
                             'hidden.bs.modal': function () {
+=======
+                            },
+                            'hidden.bs.modal': function () {
+                                callback(images);
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                 modalobj.remove();
                             }
                         }
@@ -173,6 +195,10 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                         width: 1600,
                                         height: 1600,
                                     },
+<<<<<<< HEAD
+=======
+                                    formData: {hash: options.hash, data: options.data},
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                     auto: true,
                                     multiple: false,
                                     fileNumLimit: 1,//允许上传的文件数量
@@ -271,7 +297,11 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                                         extensions: options.extensions,//允许上传的文件类型
                                         mimeTypes: '.' + options.extensions.replace(/,/g, ',.'),
                                     },
+<<<<<<< HEAD
                                     formData: {data: options.data},
+=======
+                                    formData: {hash: options.hash, data: options.data},
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                                     multiple: options.multiple,
                                     fileNumLimit: 100,//允许上传的文件数量
                                     fileSizeLimit: 200 * 1024 * 1024,    // 200 M 允许上传文件大小
@@ -454,7 +484,12 @@ define(["jquery", "underscore", "webuploader", "util"], function (bootstrap, und
                     multiple: opt.multiple,
                 },
                 formData: {
+<<<<<<< HEAD
                     uid: 123
+=======
+                    data: '',
+                    hash: ''
+>>>>>>> d191ef7fd2db8f578f2e53e41b319d65713d9c79
                 },
                 dnd: '#dndArea',
                 paste: '#uploader',
