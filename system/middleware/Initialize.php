@@ -43,7 +43,7 @@ class Initialize {
 			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
 		}
 		//扩展模块访问
-		if ( ! empty( Request::get( 'a' ) ) ) {
+		if ( ! empty( $_GET['a'] ) ) {
 			Request::get( 's', 'site/module/entry' );
 		}
 	}

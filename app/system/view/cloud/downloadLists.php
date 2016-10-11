@@ -42,25 +42,23 @@
 			angular.forEach($scope.files, function (v, k) {
 				$scope.files[k] = {downloaded: null, file: v};
 			});
-			//执行下载
-			var i=0;
+			var pos = 0;
 			$scope.download = function () {
-				$.get("{{u('upgrade',['action'=>'download'])}}",{i:i},function(res){
+				$.get("{{u('upgrade',['action'=>'download'])}}", {}, function (res) {
 					if (res.valid == 0) {
 						//更新失败
-						$scope.files[i].downloaded = 0;
+						util.message($scope.files[pos].file+' 更新失败<br/> 请稍候再试或加入官方QQ群获取帮助','','warning');
 					} else if (res.valid == 1) {
 						//更新成功
-						$scope.files[i].downloaded = 1;
+						$scope.files[pos].downloaded = true;
+						pos++;
+						$scope.$apply();
+						$scope.download();
 					} else if (res.valid == 2) {
 						//更新完成
 						location.href = "{{u('upgrade',['action'=>'sql'])}}";
-						return;
 					}
-					i++;
-					$scope.download();
-					$scope.$apply();
-				},'json')
+				}, 'json')
 			}
 			$scope.download();
 		}]);

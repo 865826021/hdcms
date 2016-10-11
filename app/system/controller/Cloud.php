@@ -70,7 +70,7 @@ class Cloud {
 
 	//检测有没有新版本
 	public function checkUpgrade() {
-		$hdcms = Db::table('cloud')->find( 1 );
+		$hdcms = Db::table( 'cloud' )->find( 1 );
 		$d     = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode={$hdcms['releaseCode']}&AppSecret={$hdcms['AppSecret']}" );
 
 		return json_decode( $d, TRUE );
@@ -85,23 +85,27 @@ class Cloud {
 					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
 					go( u( 'upgrade', [ 'action' => 'sql' ] ) );
 				}
+				//下标排序
+				sort( $data['data']['files'] );
+				f( '_upgrade_', $data );
 
 				return view( 'downloadLists' )->with( 'data', $data );
 				break;
 			case 'download':
 				$data      = f( '_upgrade_' );
 				$fileLists = $data['data']['files'];
-				//下载文件,根据文件类型 ADM  AM下载,D删除
 				if ( empty( $fileLists ) ) {
 					//全部下载完成
 					$res = [ 'valid' => 2 ];
 				} else {
+					//文件位置
+					$file = current( $fileLists );
 					//从第一个文件开始下载
-					$firstFile = current( $fileLists );
-					$action    = strtoupper( $firstFile[0] );
-					$file      = trim( substr( $firstFile, 1 ) );
+					$action = strtoupper( $file[0] );
+					$path   = trim( substr( $file, 1 ) );
+					//下载文件,根据文件类型 ADM  AM下载,D删除
 					if ( $action == 'D' ) {
-						if ( \Dir::delFile( $file ) ) {
+						if ( \Dir::delFile( $path ) ) {
 							array_shift( $fileLists );
 							$res = [ 'valid' => 1 ];
 						} else {
@@ -109,20 +113,16 @@ class Cloud {
 						}
 					} else {
 						//下载文件
-						$postData = [ 'file' => $file, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
+						$postData = [ 'file' => $path, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
 						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
-
-						is_dir( dirname( $file ) ) or mkdir( dirname( $file ), 0755, TRUE );
-						$res = json_decode( $content, TRUE );
-
+						Dir::create( dirname( $path ) );
+						$res = json_decode( $path, TRUE );
 						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
 							$res = [ 'valid' => 0 ];
 						} else {
-							if ( file_put_contents( $file, $content ) ) {
-								$res = [ 'valid' => 1,'file'=>$file ];
-							} else {
-								$res = [ 'valid' => 0,'file'=>$file ];
-							}
+							file_put_contents( $path, $content );
+							array_shift( $fileLists );
+							$res = [ 'valid' => 1 ];
 						}
 					}
 				}
