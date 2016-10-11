@@ -90,6 +90,7 @@ M	app/system/view/user/lists.php
 M	app/system/view/user/myPassword.php
 M	app/system/view/user/permission.php
 M	data/files.php
+M	data/install.sql
 M	data/upgrade.php
 M	install.php
 M	install/download.html
