@@ -91,6 +91,8 @@ M	app/system/view/user/myPassword.php
 M	app/system/view/user/permission.php
 M	data/files.php
 M	data/upgrade.php
+M	install.php
+M	install/download.html
 M	system/config/alipay.php
 M	system/config/api.php
 M	system/config/app.php
@@ -133,15 +135,6 @@ M	system/service/index.html
 M	system/service/template/pay.html
 M	system/tag/Tag.php
 M	system/tag/index.html
-M	theme/article/article.html
-M	theme/article/css/article.css
-M	theme/article/css/article.less
-M	theme/article/css/index.css
-M	theme/article/css/index.less
-M	theme/article/images/hdcms.jpg
 D	theme/article/images/hdcms.png
 M	theme/article/index.html
-M	theme/article/list.html
-M	theme/article/logs.html
-M	theme/article/master.html
 M	vendor/houdunwang/framework/src/dir/Dir.php

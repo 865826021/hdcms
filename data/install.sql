@@ -810,7 +810,7 @@ LOCK TABLES `hd_site_wechat` WRITE;
 
 INSERT INTO `hd_site_wechat` (`weid`, `siteid`, `wename`, `account`, `original`, `level`, `appid`, `appsecret`, `qrcode`, `icon`, `is_connect`, `token`, `encodingaeskey`)
 VALUES
-  (1,1,'后盾','aihoudun','gh_65598c47b2b9',4,'wxc47243ed572e273d','1c72ad236f72c70e347343653410934b','attachment/2016/10/07/13311475772067.jpg','resource/images/hd.png',1,'d5cd6efca1ddb64ad5a264495270c3','73af4a950da79a735f763be1d26ec35e049453adfbc');
+  (1,1,'后盾','aihoudun','gh_65598c47b2b9',4,'wxc33343ed572e111d','1c72ad777f72c70e898343653410888b','attachment/2016/10/07/13311475772067.jpg','resource/images/hd.png',1,'d5cd6efca1ddb11ad5a999492220c3','22af4a950da22a888f755be1d26ec35e049111adfbc');
 
 UNLOCK TABLES;
 
