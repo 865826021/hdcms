@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace system\service\build;
+
 use system\model\SiteUser;
 
 /**
@@ -298,9 +299,19 @@ class User extends \system\model\User {
 	 * @return bool
 	 */
 	public function hasAddSite( $uid = 0 ) {
-		$uid     = $uid ?: v( 'user.info.uid' );
-		$maxsite = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'uid', $uid )->pluck( 'maxsite' );
-		return $maxsite - $this->siteNums( $uid ) <= 0 ? FALSE : TRUE;
+		$uid  = $uid ?: v( 'user.info.uid' );
+		$user = Db::table( 'user' )->find( $uid );
+		if ( $user ) {
+			//系统管理员不受限制
+			if ( $this->isSuperUser( $user['uid'] ) ) {
+				return TRUE;
+			} else {
+				//普通用户检查
+				$maxsite = Db::table( 'user_group' )->where( 'id', $user['groupid'] )->pluck( 'maxsite' );
+
+				return $maxsite - $this->siteNums( $uid ) > 0 ? TRUE : FALSE;
+			}
+		}
 	}
 
 	/**

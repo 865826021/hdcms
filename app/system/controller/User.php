@@ -29,9 +29,7 @@ class User {
 		//管理员验证
 		service( 'user' )->superUserAuth();
 		$User = new \system\model\User();
-
-		$users = $User->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'groupid', '>', '0' )->paginate( 8 );
-
+		$users = $User->leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )->where( 'user.groupid', '>', '0' )->paginate( 8 );
 		return view()->with( 'users', $users );
 	}
 
