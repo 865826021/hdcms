@@ -77,6 +77,7 @@ class Member {
 					$this->db['openid']   = $info['openid'];
 					$this->db['nickname'] = $info['nickname'];
 					$this->db['icon']     = $info['headimgurl'];
+					$this->db['group_id'] = $this->defaultGruopId();
 					$uid                  = $this->db->save();
 					$user                 = $this->db->find( $uid );
 				}

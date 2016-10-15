@@ -27,7 +27,7 @@ class User extends Model {
 			[ 'username', 'regexp:/^[a-z][\w@]+$/i', '用户名必须是字母,数字,下划线或 @ 符号,并且必须以字母开始', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'username', 'unique', '用户名已经存在', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_UPDATE ],
-			[ 'password', 'required', '密码不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+			[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 			[ 'password', 'minlen:5', '密码不能少于五位', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'groupid', 'required', '用户组不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 			[ 'qq', 'regexp:/^\d+$/', '请输入正确的QQ号', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
