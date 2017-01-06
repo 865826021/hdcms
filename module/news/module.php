@@ -31,7 +31,7 @@ class Module extends hdModule {
 				$contents[ $k ]['son_news'] = $news ?: [ ];
 			}
 		}
-		View::with( 'contents', json_encode( $contents ?: [ ], TRUE ) );
+		View::with( 'contents', json_encode( $contents ?: [ ], true ) );
 
 		return View::fetch( $this->template . '/fieldsDisplay.html' );
 	}
@@ -47,7 +47,7 @@ class Module extends hdModule {
 
 	public function fieldsSubmit( $rid ) {
 		Db::table( 'reply_news' )->where( 'rid', $rid )->delete();
-		$content = json_decode( $_POST['content'], TRUE );
+		$content = json_decode( $_POST['content'], true );
 		foreach ( $content as $c ) {
 			//添加一级图文
 			$c['rid']         = $rid;
