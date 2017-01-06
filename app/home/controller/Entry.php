@@ -2,6 +2,6 @@
 
 class Entry {
 	public function index() {
-		return view( 'theme/article/index.html' );
+		return view();
 	}
 }
