@@ -10,7 +10,7 @@ class {{NAME}}Provider extends Provider {
 	}
 
 	public function register() {
-		$this->app->bind( '{{NAME}}', function ( $app ) {
+		$this->app->single( '{{NAME}}', function ( $app ) {
 			return new {{NAME}}($app);
 		} );
 	}

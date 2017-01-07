@@ -23,6 +23,11 @@
 <div class="container logo">
 	<div style="background: url('resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
 </div>
+<form action="" method="post" enctype="multipart/form-data">
+	{{csrf_field()}}
+	<input type="file" name="a">
+	<input type="submit">
+</form>
 <div class="container well">
 	<if value="$errors">
 		<div class="alert alert-warning">

@@ -284,156 +284,6 @@
         ]
     },
     {
-        "name": "houdunwang/arr",
-        "version": "v1.0.10",
-        "version_normalized": "1.0.10.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/arr.git",
-            "reference": "340f8c99e911aaa2ee0dec58ab9d7169895aeb34"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/arr/zipball/340f8c99e911aaa2ee0dec58ab9d7169895aeb34",
-            "reference": "340f8c99e911aaa2ee0dec58ab9d7169895aeb34",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2016-12-29 14:19:59",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\arr\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "数组增强组件主要是对数组等数据进行处理，如无限级分类操作、商品规格的迪卡尔乘积运算等",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "array",
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师"
-        ]
-    },
-    {
-        "name": "houdunwang/page",
-        "version": "v1.0.6",
-        "version_normalized": "1.0.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/page.git",
-            "reference": "d568668121bc9affc3a81bdb45113b8922d26e30"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/page/zipball/d568668121bc9affc3a81bdb45113b8922d26e30",
-            "reference": "d568668121bc9affc3a81bdb45113b8922d26e30",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2016-12-29 14:32:52",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\page\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "分页组件可以产生基于当前页面的智能「范围」链接，所产生的 HTML 兼容 Bootstrap CSS 框架.",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "page",
-            "后盾人",
-            "后盾网",
-            "后盾网向军"
-        ]
-    },
-    {
-        "name": "houdunwang/db",
-        "version": "v1.0.16",
-        "version_normalized": "1.0.16.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/db.git",
-            "reference": "63d054e5355997b238767e1b356bcbb0741ffb83"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/db/zipball/63d054e5355997b238767e1b356bcbb0741ffb83",
-            "reference": "63d054e5355997b238767e1b356bcbb0741ffb83",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/arr": "~1.0",
-            "houdunwang/config": "~1.0",
-            "houdunwang/dir": "~1.0",
-            "houdunwang/page": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 18:46:41",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/helper.php"
-            ],
-            "psr-4": {
-                "houdunwang\\db\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "数据库管理组件提供了丰富的数据操作功能，使用我们在开发中快速的管理数据",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "数据库管理"
-        ]
-    },
-    {
         "name": "houdunwang/cache",
         "version": "v1.0.11",
         "version_normalized": "1.0.11.0",
@@ -485,59 +335,6 @@
             "后盾网",
             "向军老师",
             "邮件处理"
-        ]
-    },
-    {
-        "name": "houdunwang/view",
-        "version": "v1.0.5",
-        "version_normalized": "1.0.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/view.git",
-            "reference": "286c57494448e92ef8ecb906ffb9f6630c771bf1"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/view/zipball/286c57494448e92ef8ecb906ffb9f6630c771bf1",
-            "reference": "286c57494448e92ef8ecb906ffb9f6630c771bf1",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/cache": "~1.0",
-            "houdunwang/config": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 18:38:21",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/helper.php"
-            ],
-            "psr-4": {
-                "houdunwang\\view\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "日志管理",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "模板",
-            "视图"
         ]
     },
     {
@@ -696,57 +493,6 @@
         ]
     },
     {
-        "name": "houdunwang/validate",
-        "version": "v1.0.3",
-        "version_normalized": "1.0.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/validate.git",
-            "reference": "5547776c1133cd118aac03ca3e15ba4c35d5c06d"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/validate/zipball/5547776c1133cd118aac03ca3e15ba4c35d5c06d",
-            "reference": "5547776c1133cd118aac03ca3e15ba4c35d5c06d",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/config": "~1.0",
-            "houdunwang/session": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 18:37:56",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\validate\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "Validate组件提供了方便的验证机制，快速实现验证业务。",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "validate",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "表单验证"
-        ]
-    },
-    {
         "name": "houdunwang/tool",
         "version": "v1.0.3",
         "version_normalized": "1.0.3.0",
@@ -884,56 +630,6 @@
             }
         ],
         "description": "IOC服务容器管理组件",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "数据库管理"
-        ]
-    },
-    {
-        "name": "houdunwang/middleware",
-        "version": "v1.0.6",
-        "version_normalized": "1.0.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/middleware.git",
-            "reference": "8bbfbf250c0287c8c54e30835a9d4991383f5a44"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/middleware/zipball/8bbfbf250c0287c8c54e30835a9d4991383f5a44",
-            "reference": "8bbfbf250c0287c8c54e30835a9d4991383f5a44",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/config": "~1.0",
-            "houdunwang/container": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 22:06:39",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\middleware\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "中间件组件",
         "homepage": "http://www.houdunwang.com/",
         "keywords": [
             "hdphp",
@@ -1254,56 +950,6 @@
             "后盾网",
             "向军老师",
             "邮件处理"
-        ]
-    },
-    {
-        "name": "houdunwang/collection",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/collection.git",
-            "reference": "d29c92aa09fe4e27eebd78358fd7c46f8b5e3194"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/collection/zipball/d29c92aa09fe4e27eebd78358fd7c46f8b5e3194",
-            "reference": "d29c92aa09fe4e27eebd78358fd7c46f8b5e3194",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/xml": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 18:05:03",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/helper.php"
-            ],
-            "psr-4": {
-                "houdunwang\\collection\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "Collection 组件提供一个流畅、方便的封装来操作数据",
-        "homepage": "http://www.hdphp.com/",
-        "keywords": [
-            "collection",
-            "hdphp",
-            "houdunwang",
-            "json",
-            "集合管理"
         ]
     },
     {
@@ -1855,54 +1501,6 @@
         ]
     },
     {
-        "name": "houdunwang/cli",
-        "version": "v1.0.3",
-        "version_normalized": "1.0.3.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/cli.git",
-            "reference": "76a6d16f5e6822120d266706daab89f7225da246"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/cli/zipball/76a6d16f5e6822120d266706daab89f7225da246",
-            "reference": "76a6d16f5e6822120d266706daab89f7225da246",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 16:23:27",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\cli\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "命令行控制指令",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "命令行"
-        ]
-    },
-    {
         "name": "houdunwang/cart",
         "version": "v1.0.3",
         "version_normalized": "1.0.3.0",
@@ -2059,18 +1657,420 @@
         ]
     },
     {
-        "name": "houdunwang/framework",
-        "version": "v3.0.46",
-        "version_normalized": "3.0.46.0",
+        "name": "houdunwang/page",
+        "version": "v1.0.9",
+        "version_normalized": "1.0.9.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/houdunwang/framework.git",
-            "reference": "fac42c565d3248b6b98bbe69de1c63e55154e216"
+            "url": "https://github.com/houdunwang/page.git",
+            "reference": "cf8014cfda564c451457352a140c0690831b0879"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/framework/zipball/fac42c565d3248b6b98bbe69de1c63e55154e216",
-            "reference": "fac42c565d3248b6b98bbe69de1c63e55154e216",
+            "url": "https://api.github.com/repos/houdunwang/page/zipball/cf8014cfda564c451457352a140c0690831b0879",
+            "reference": "cf8014cfda564c451457352a140c0690831b0879",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 13:08:45",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\page\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "分页组件可以产生基于当前页面的智能「范围」链接，所产生的 HTML 兼容 Bootstrap CSS 框架.",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "page",
+            "后盾人",
+            "后盾网",
+            "后盾网向军"
+        ]
+    },
+    {
+        "name": "houdunwang/arr",
+        "version": "v1.0.11",
+        "version_normalized": "1.0.11.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/arr.git",
+            "reference": "a864be9f0f122a5efacd04b0bed193603f34d2d7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/arr/zipball/a864be9f0f122a5efacd04b0bed193603f34d2d7",
+            "reference": "a864be9f0f122a5efacd04b0bed193603f34d2d7",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 12:08:32",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\arr\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "数组增强组件主要是对数组等数据进行处理，如无限级分类操作、商品规格的迪卡尔乘积运算等",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "array",
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师"
+        ]
+    },
+    {
+        "name": "houdunwang/db",
+        "version": "v1.0.17",
+        "version_normalized": "1.0.17.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/db.git",
+            "reference": "30e1e953580ba2178ffc530c875397f49c7b1dcf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/db/zipball/30e1e953580ba2178ffc530c875397f49c7b1dcf",
+            "reference": "30e1e953580ba2178ffc530c875397f49c7b1dcf",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/arr": "~1.0",
+            "houdunwang/config": "~1.0",
+            "houdunwang/dir": "~1.0",
+            "houdunwang/page": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 12:50:37",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\db\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "数据库管理组件提供了丰富的数据操作功能，使用我们在开发中快速的管理数据",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "数据库管理"
+        ]
+    },
+    {
+        "name": "houdunwang/view",
+        "version": "v1.0.6",
+        "version_normalized": "1.0.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/view.git",
+            "reference": "708ba7bb5fd4e6689eb214f2e1a2e1a9079cc623"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/view/zipball/708ba7bb5fd4e6689eb214f2e1a2e1a9079cc623",
+            "reference": "708ba7bb5fd4e6689eb214f2e1a2e1a9079cc623",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/cache": "~1.0",
+            "houdunwang/config": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 13:09:05",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\view\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "日志管理",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "模板",
+            "视图"
+        ]
+    },
+    {
+        "name": "houdunwang/validate",
+        "version": "v1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/validate.git",
+            "reference": "d581be6901d441f4ff7df035447356ba86bfd2b1"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/validate/zipball/d581be6901d441f4ff7df035447356ba86bfd2b1",
+            "reference": "d581be6901d441f4ff7df035447356ba86bfd2b1",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/config": "~1.0",
+            "houdunwang/session": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 10:38:01",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\validate\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "Validate组件提供了方便的验证机制，快速实现验证业务。",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "validate",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "表单验证"
+        ]
+    },
+    {
+        "name": "houdunwang/middleware",
+        "version": "v1.0.7",
+        "version_normalized": "1.0.7.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/middleware.git",
+            "reference": "1d688e8097620772a5e14c01c04021c56f4384d9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/middleware/zipball/1d688e8097620772a5e14c01c04021c56f4384d9",
+            "reference": "1d688e8097620772a5e14c01c04021c56f4384d9",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/config": "~1.0",
+            "houdunwang/container": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 11:23:52",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\middleware\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "中间件组件",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "数据库管理"
+        ]
+    },
+    {
+        "name": "houdunwang/collection",
+        "version": "v1.0.5",
+        "version_normalized": "1.0.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/collection.git",
+            "reference": "fb479c1aa1fd408b05170b3675326973a38dd081"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/collection/zipball/fb479c1aa1fd408b05170b3675326973a38dd081",
+            "reference": "fb479c1aa1fd408b05170b3675326973a38dd081",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/xml": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 13:08:22",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\collection\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "Collection 组件提供一个流畅、方便的封装来操作数据",
+        "homepage": "http://www.hdphp.com/",
+        "keywords": [
+            "collection",
+            "hdphp",
+            "houdunwang",
+            "json",
+            "集合管理"
+        ]
+    },
+    {
+        "name": "houdunwang/cli",
+        "version": "v1.0.4",
+        "version_normalized": "1.0.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/cli.git",
+            "reference": "5723e64c54cd9333391bed05d46fb958b74a1b5a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/cli/zipball/5723e64c54cd9333391bed05d46fb958b74a1b5a",
+            "reference": "5723e64c54cd9333391bed05d46fb958b74a1b5a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 10:38:40",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\cli\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "命令行控制指令",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "命令行"
+        ]
+    },
+    {
+        "name": "houdunwang/framework",
+        "version": "v3.0.50",
+        "version_normalized": "3.0.50.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/framework.git",
+            "reference": "f01f9336242f5e2361eea9acaa562e79ffbe1bcb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/framework/zipball/f01f9336242f5e2361eea9acaa562e79ffbe1bcb",
+            "reference": "f01f9336242f5e2361eea9acaa562e79ffbe1bcb",
             "shasum": ""
         },
         "require": {
@@ -2117,7 +2117,7 @@
             "houdunwang/zip": "~1.0",
             "php": ">=5.4.0"
         },
-        "time": "2017-01-06 21:28:49",
+        "time": "2017-01-07 13:38:32",
         "type": "project",
         "installation-source": "dist",
         "autoload": {

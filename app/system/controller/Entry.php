@@ -47,6 +47,12 @@ class Entry {
 	 * @return mixed
 	 */
 	public function login() {
+		if(IS_POST){
+			$f = File::upload();
+			dd($f);
+		}
+		RETURN view();
+		exit;
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'username', 'required', '用户名不能为空', Validate::MUST_VALIDATE ],
