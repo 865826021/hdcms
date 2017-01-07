@@ -1,16 +1,4 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-
-namespace system\model;
-
-use hdphp\model\Model;
+<?php namespace system\model;
 
 /**
  * 积分记录
@@ -18,7 +6,7 @@ use hdphp\model\Model;
  * @package system\model
  * @author 向军
  */
-class CreditsRecord extends Model {
+class CreditsRecord extends Common {
 	protected $table     = 'credits_record';
 	protected $allowFill = [ '*' ];
 	protected $validate

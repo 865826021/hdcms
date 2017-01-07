@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 菜单管理
  * Class Menu
  * @package system\model
  */
-class Menu extends Model {
+class Menu extends Common {
 	protected $table = 'menu';
 
 	protected $validate

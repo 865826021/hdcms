@@ -9,12 +9,10 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
-class SiteWechat extends Model {
+class SiteWechat extends Common {
 	protected $table = 'site_wechat';
 	protected $validate
-	                 = [
+		= [
 			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 			[ 'wename', 'required', '微信名称不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 			[ 'account', 'required', '公众号帐号不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
@@ -25,7 +23,7 @@ class SiteWechat extends Model {
 			[ 'encodingaeskey', 'required', 'encodingaeskey不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 		];
 	protected $auto
-	                 = [
+		= [
 			[ 'level', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'qrcode', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 			[ 'icon', 'resource/images/hd.png', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

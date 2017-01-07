@@ -1,35 +1,32 @@
 <?php namespace app\system\controller;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-
-use system\model\MemberFields;
 use system\model\Modules;
 use system\model\Package;
 use system\model\SiteWechat;
 use system\model\User;
 
 /**
- * 站点管理
- * Class site
- * @package system\controller
+ * Class Site
+ * @package app\system\controller
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class Site {
 	public function __construct() {
 		//登录检测
-		service( 'user' )->loginAuth();
+		\User::loginAuth();
 	}
 
-	//站点列表
-	public function lists() {
-		$site = new \system\model\Site();
-		$user = ( new User() )->find( v( "user.uid" ) );
+	/**
+	 * 站点列表
+	 *
+	 * @param \system\model\Site $site
+	 * @param User $user
+	 *
+	 * @return mixed
+	 */
+	public function lists( \system\model\Site $site, User $user ) {
+		$user = $user->find( v( "user.info.uid" ) );
 		$site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
 		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
 		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
@@ -44,14 +41,14 @@ class Site {
 			$site->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
-		if ( ! $isSuperUser = service( 'user' )->isSuperUser() ) {
+		if ( ! $isSuperUser = \User::isSuperUser() ) {
 			$site->where( 'user.uid', v( 'user.info.uid' ) );
 		}
 		if ( $sites = $site->get() ) {
 			//获取站点套餐与所有者数据
 			foreach ( $sites as $k => $v ) {
-				$v['package'] = service( 'package' )->getSiteAllPackageData( $v['siteid'] );
-				$v['owner']   = service( 'user' )->getSiteOwner( $v['siteid'] );
+				$v['package'] = \Package::getSiteAllPackageData( $v['siteid'] );
+				$v['owner']   = \User::getSiteOwner( $v['siteid'] );
 				if ( ! empty( $v['owner'] ) ) {
 					$v['owner']['group_name'] = Db::table( 'user_group' )->where( 'id', $v['owner']['groupid'] )->pluck( 'name' );
 				}
@@ -80,25 +77,24 @@ class Site {
 	}
 
 	//添加站点
-	public function addSite() {
+	public function addSite( \system\model\Site $site ) {
 		//检测用户是否可以添加帐号
-		if ( !service( 'user' )->hasAddSite() ) {
+		if ( ! \User::hasAddSite() ) {
 			message( '您可创建的站点数量已经用完,请联系管理员进行升级' );
 		}
-		$Site = new \system\model\Site();
 		if ( IS_POST ) {
 			//添加站点信息
-			$Site->name        = Request::post( 'name' );
-			$Site->description = Request::post( 'description' );
-			$Site->domain      = Request::post( 'domain' );
-			$Site->module      = Request::post( 'module' );
-			$siteId            = $Site->save();
+			$site['name']        = Request::post( 'name' );
+			$site['description'] = Request::post( 'description' );
+			$site['domain']      = Request::post( 'domain' );
+			$site['module']      = Request::post( 'module' );
+			$siteId              = $site->save();
 			//添加站长数据,系统管理员不添加数据
-			service( 'user' )->setSiteOwner( $siteId, v( 'user.info.uid' ) );
+			\User::setSiteOwner( $siteId, v( 'user.info.uid' ) );
 			//创建用户字段表数据
-			service( 'site' )->InitializationSiteTableData( $siteId );
+			\Site::InitializationSiteTableData( $siteId );
 			//更新站点缓存
-			service( 'site' )->updateCache( $siteId );
+			\Site::updateCache( $siteId );
 			message( '站点添加成功', 'lists', 'error' );
 		}
 
@@ -242,7 +238,7 @@ class Site {
 			$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
 			c( "weixin", $wechat );
 			//与微信官网通信绑定验证
-			$status = \Weixin::getAccessToken( '', TRUE );
+			$status = \Weixin::getAccessToken( '', true );
 			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 			if ( $status ) {
 				message( '恭喜, 公众号连接成功', 'lists', 'success' );
@@ -264,9 +260,9 @@ class Site {
 		$status = Weixin::getAccessToken();
 		Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {
-			ajax( [ 'valid' => TRUE, 'message' => '恭喜, 微信公众号接入成功' ] );
+			ajax( [ 'valid' => true, 'message' => '恭喜, 微信公众号接入成功' ] );
 		} else {
-			ajax( [ 'valid' => FALSE, 'message' => '公众号接入失败' ] );
+			ajax( [ 'valid' => false, 'message' => '公众号接入失败' ] );
 		}
 	}
 

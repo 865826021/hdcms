@@ -9,15 +9,13 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 封面回复
  * Class ReplyCover
  * @package system\model
  * @author 向军
  */
-class ReplyCover extends Model {
+class ReplyCover extends Common {
 	protected $table     = 'reply_cover';
 	protected $allowFill = [ '*' ];
 	protected $validate

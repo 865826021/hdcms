@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 站点配置管理
  * Class SiteSetting
  * @package system\model
  */
-class SiteSetting extends Model {
+class SiteSetting extends Common {
 	protected $table     = 'site_setting';
 	protected $allowFill = [ '*' ];
 	protected $validate  = [ ];

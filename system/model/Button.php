@@ -1,14 +1,12 @@
 <?php namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 微信菜单管理
  * Class Button
  * @package system\model
  * @author 向军
  */
-class Button extends Model {
+class Button extends Common {
 	protected $table = 'button';
 	protected $validate
 		= [

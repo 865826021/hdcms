@@ -117,20 +117,14 @@ class User extends Common {
 	public function login( array $data, $process = true ) {
 		$user = Db::table( 'user' )->where( 'username', $data['username'] )->first();
 		if ( empty( $user ) ) {
-			$this->error = '帐号不存在';
-
-			return false;
+			message( '帐号不存在', 'back', 'error' );
 		}
 		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
-			$this->error = '密码输入错误';
-
-			return false;
+			message( '密码输入错误', 'back', 'error' );
 		}
 
 		if ( ! $user['status'] ) {
-			$this->error = '您的帐号正在审核中';
-
-			return false;
+			message( '您的帐号正在审核中', 'back', 'error' );
 		}
 		//更新登录状态
 		$data             = [ ];
@@ -148,7 +142,7 @@ class User extends Common {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
 			$user                         = [ ];
-			$user['info']                 = Db::table( 'user' )->find( $_SESSION['admin_uid'] );
+			$user['info']                 = Db::table( 'user' )->find( \Session::get('admin_uid') );
 			$group                        = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
 			$user['group']                = $group ?: [ ];
 			$user['system']['super_user'] = $user['group']['id'] == 0;

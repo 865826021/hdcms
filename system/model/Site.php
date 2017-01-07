@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 站点模型
  * Class Site
  * @package system\model
  */
-class Site extends Model {
+class Site extends Common {
 	protected $table = 'site';
 	protected $validate
 	                 = [

@@ -1,20 +1,11 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace app\system\controller;
-
-use system\model\Site;
+<?php namespace app\system\controller;
 
 /**
  * 模块菜单和菜单组欢迎页
  * Class Manage
  * @package app\system\controller
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class Manage {
 	/**
@@ -22,9 +13,9 @@ class Manage {
 	 * @return mixed
 	 */
 	public function menu() {
-		service( 'user' )->loginAuth();
+		\User::loginAuth();
 
-		return view()->with( [ 'isSuperUser' => Util::instance( 'user' )->isSuperUser() ] );
+		return view()->with( [ 'isSuperUser' => \User::isSuperUser() ] );
 	}
 
 	/**

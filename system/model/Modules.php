@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 模块管理模型
  * Class Modules
  * @package system\model
  */
-class Modules extends Model {
+class Modules extends Common {
 	protected $table            = 'modules';
 	protected $denyInsertFields = [ 'mid' ];
 	protected $validate

@@ -1,8 +1,12 @@
 <?php namespace system\model;
 
-use hdphp\model\Model;
-
-class UserProfile extends Model {
+/**
+ * Class UserProfile
+ * @package system\model
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
+ */
+class UserProfile extends Common {
 	protected $table = 'user_profile';
 	protected $auto
 	                 = [

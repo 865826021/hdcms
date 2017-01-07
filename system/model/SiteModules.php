@@ -9,17 +9,15 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 站点扩展模块管理
  * Class SiteModules
  * @package system\model
  */
-class SiteModules extends Model {
+class SiteModules extends Common {
 	protected $table = 'site_modules';
 	protected $validate
-	                 = [
+		= [
 			[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 			[ 'module', 'required', '模块编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 		];

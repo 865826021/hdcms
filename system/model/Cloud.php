@@ -1,14 +1,12 @@
 <?php namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 后盾云
  * Class Cloud
  * @package system\model
  * @author 向军
  */
-class Cloud extends Model {
+class Cloud extends Common {
 	protected $table     = 'cloud';
 	protected $allowFill = [ '*' ];
 	protected $validate

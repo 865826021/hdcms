@@ -6,6 +6,7 @@
 		<li class="active">设置站点权限</li>
 	</ol>
 	<form action="" method="post" role="form" class="form-horizontal">
+		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h4 class="panel-title">站点权限设置</h4>

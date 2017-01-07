@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 回复关键字
  * Class RuleKeyword
  * @package system\model
  */
-class RuleKeyword extends Model {
+class RuleKeyword extends Common {
 	protected $table            = 'rule_keyword';
 	protected $denyInsertFields = [ 'id' ];
 	protected $validate

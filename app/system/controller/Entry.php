@@ -1,6 +1,7 @@
 <?php namespace app\system\controller;
 
 use houdunwang\validate\Validate;
+use system\model\User;
 
 /**
  * 后台登录/退出
@@ -11,11 +12,11 @@ class Entry {
 	//注册
 	public function register() {
 		//系统维护检测
-		service( 'user' )->checkSystemClose();
+		\User::checkSystemClose();
 		if ( IS_POST ) {
 			Validate::make( [
-				[ 'code', 'captcha', '验证码输入错误', 1 ],
-				[ 'password', 'confirm:password2', '两次密码输入不一致', 3 ]
+				[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ],
+				[ 'password', 'confirm:password2', '两次密码输入不一致', Validate::MUST_VALIDATE ]
 			] );
 			//默认用户组
 			$User             = new User();
@@ -35,7 +36,7 @@ class Entry {
 			if ( ! $User->save() ) {
 				message( $User->getError(), 'back', 'error' );
 			}
-			message( '注册成功,请登录系统', u( 'login', [ 'from' => $_GET['from'] ] ) );
+			message( '注册成功,请登录系统', u( 'login', [ 'from' => q( 'get.form' ) ] ) );
 		}
 
 		return view();
@@ -47,12 +48,6 @@ class Entry {
 	 * @return mixed
 	 */
 	public function login() {
-		if(IS_POST){
-			$f = File::upload();
-			dd($f);
-		}
-		RETURN view();
-		exit;
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'username', 'required', '用户名不能为空', Validate::MUST_VALIDATE ],
@@ -60,9 +55,7 @@ class Entry {
 				[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ],
 			] );
 			//会员登录
-			if ( !\User::login( Request::post() ) ) {
-				message( \User::getError(), 'back', 'error' );
-			}
+			\User::login( Request::post() );
 			//系统维护检测
 			\User::checkSystemClose();
 

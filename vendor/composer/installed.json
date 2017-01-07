@@ -1009,54 +1009,6 @@
         ]
     },
     {
-        "name": "houdunwang/mail",
-        "version": "v1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/mail.git",
-            "reference": "cd273bbcc6ee7394cce2e7a2c5a003a0a7c96a17"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/mail/zipball/cd273bbcc6ee7394cce2e7a2c5a003a0a7c96a17",
-            "reference": "cd273bbcc6ee7394cce2e7a2c5a003a0a7c96a17",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 16:53:27",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\mail\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "邮件组件内部集成了方便的邮件发送机制，使用非常简单",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "邮件处理"
-        ]
-    },
-    {
         "name": "houdunwang/log",
         "version": "v1.0.8",
         "version_normalized": "1.0.8.0",
@@ -1250,54 +1202,6 @@
             "后盾人",
             "后盾网",
             "生成页面静态文件"
-        ]
-    },
-    {
-        "name": "houdunwang/file",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/file.git",
-            "reference": "fea3a4fb30eb31b38449321e2c43600fc6f026ba"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/file/zipball/fea3a4fb30eb31b38449321e2c43600fc6f026ba",
-            "reference": "fea3a4fb30eb31b38449321e2c43600fc6f026ba",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 16:38:17",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\file\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "File组件提供非常方便的上传处理与下载等相关功能",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "文件上传"
         ]
     },
     {
@@ -2139,5 +2043,101 @@
             }
         ],
         "description": "Hdphp Framework (Kernel)"
+    },
+    {
+        "name": "houdunwang/file",
+        "version": "v1.0.5",
+        "version_normalized": "1.0.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/file.git",
+            "reference": "4007eef2f5165d03d75045eded23943d307cd926"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/file/zipball/4007eef2f5165d03d75045eded23943d307cd926",
+            "reference": "4007eef2f5165d03d75045eded23943d307cd926",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 14:03:26",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\file\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "File组件提供非常方便的上传处理与下载等相关功能",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "文件上传"
+        ]
+    },
+    {
+        "name": "houdunwang/mail",
+        "version": "v1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/mail.git",
+            "reference": "34c0bd34dac5f3eac8fdd133f290aec215d04797"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/mail/zipball/34c0bd34dac5f3eac8fdd133f290aec215d04797",
+            "reference": "34c0bd34dac5f3eac8fdd133f290aec215d04797",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-07 14:03:56",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\mail\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "邮件组件内部集成了方便的邮件发送机制，使用非常简单",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "邮件处理"
+        ]
     }
 ]

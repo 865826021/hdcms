@@ -1,9 +1,13 @@
 <?php namespace system\model;
 
-use hdphp\model\Model;
-
-//管理员组
-class UserGroup extends Model {
+/**
+ * 管理员组
+ * Class UserGroup
+ * @package system\model
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
+ */
+class UserGroup extends Common {
 	protected $table = 'user_group';
 	protected $validate
 	                 = [

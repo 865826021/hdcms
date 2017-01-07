@@ -1,25 +1,18 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace system\model;
+<?php namespace system\model;
 
-use hdphp\model\Model;
-
-//会员地址管理
-class MemberAddress extends Model {
+/**
+ * 会员地址管理
+ * Class MemberAddress
+ * @package system\model
+ */
+class MemberAddress extends Common {
 	protected $table = 'member_address';
 	protected $filter
-	                 = [
+		= [
 			[ 'id', self::EMPTY_FILTER, self::MODEL_BOTH ]
 		];
 	protected $validate
-	                 = [
+		= [
 			[ 'id', 'validateId', '地址不属于这个用户', self::NOT_EMPTY_VALIDATE, self::MODEL_UPDATE ],
 			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'uid', 'required', '会员编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
@@ -38,7 +31,7 @@ class MemberAddress extends Model {
 		         ->where( 'siteid', SITEID )
 		         ->where( 'id', $value )
 		         ->where( 'uid', Session::get( 'member.uid' ) )
-		         ->first() ? TRUE : FALSE;
+		         ->first() ? true : false;
 	}
 
 	protected $auto

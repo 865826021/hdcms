@@ -9,14 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 站点角色管理
  * Class SiteUser
  * @package system\model
  */
-class SiteUser extends Model {
+class SiteUser extends Common {
 	protected $table = 'site_user';
 	protected $validate
 	                 = [

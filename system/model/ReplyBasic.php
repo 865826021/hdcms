@@ -9,15 +9,13 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 文本回复
  * Class ReplyNews
  * @package system\model
  * @author 向军
  */
-class ReplyBasic extends Model {
+class ReplyBasic extends Common {
 	protected $table            = 'reply_basic';
 	protected $denyInsertFields = [ 'id' ];
 	protected $validate

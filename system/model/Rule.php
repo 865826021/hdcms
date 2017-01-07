@@ -9,19 +9,17 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 微信回复规则
  * Class Rule
  * @package system\model
  * @author 向军
  */
-class Rule extends Model {
-	protected $table            = 'rule';
+class Rule extends Common {
+	protected $table = 'rule';
 	protected $denyInsertFields = [ 'rid' ];
 	protected $validate
-	                            = [
+		= [
 			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'name', 'required', '规则名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'module', 'required', '模块字段不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
@@ -31,10 +29,10 @@ class Rule extends Model {
 	protected function validateRid( $field, $val ) {
 		$rule = Db::table( 'rule' )->where( 'rid', $val )->first();
 		if ( ! empty( $rule ) && $rule['siteid'] != SITEID ) {
-			return FALSE;
+			return false;
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	protected $auto

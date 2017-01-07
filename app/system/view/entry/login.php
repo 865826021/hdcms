@@ -6,10 +6,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
 	<link href="node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="node_modules/hdjs/js/jquery.min.js"></script>
-	<script src="node_modules/hdjs/app/util.js"></script>
-	<script src="node_modules/hdjs/require.js"></script>
-	<script src="node_modules/hdjs/app/config.js"></script>
 	<link href="resource/css/hdcms.css" rel="stylesheet">
 	<script>
 		if (navigator.appName == 'Microsoft Internet Explorer') {
@@ -23,11 +19,6 @@
 <div class="container logo">
 	<div style="background: url('resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
 </div>
-<form action="" method="post" enctype="multipart/form-data">
-	{{csrf_field()}}
-	<input type="file" name="a">
-	<input type="submit">
-</form>
 <div class="container well">
 	<if value="$errors">
 		<div class="alert alert-warning">

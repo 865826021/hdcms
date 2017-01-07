@@ -9,15 +9,13 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 卡券使用模块
  * Class TicketModule
  * @package system\model
  * @author 向军
  */
-class TicketModule extends Model {
+class TicketModule extends Common {
 	protected $table = 'ticket_module';
 	protected $validate
 	                 = [

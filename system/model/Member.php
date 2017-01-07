@@ -1,12 +1,16 @@
 <?php namespace system\model;
 
-use hdphp\model\Model;
-
-//会员管理
-class Member extends Model {
+/**
+ * 会员管理
+ * Class Member
+ * @package system\model
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
+ */
+class Member extends Common {
 	protected $table = 'member';
 	protected $auto
-	                 = [
+		= [
 			[ 'siteid', 'getSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
 			[ 'mobile', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 			[ 'email', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
@@ -44,7 +48,7 @@ class Member extends Model {
 			[ 'access_token', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		];
 	protected $validate
-	                 = [
+		= [
 			[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 			[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 			[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
@@ -55,11 +59,12 @@ class Member extends Model {
 			[ 'group_id', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ]
 		];
 
-	protected function getSiteid(){
+	protected function getSiteid() {
 		return SITEID;
 	}
+
 	public function checkUid( $field, $value, $params, $data ) {
-		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? TRUE : FALSE;
+		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? true : false;
 	}
 
 	protected $filter

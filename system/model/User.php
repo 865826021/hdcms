@@ -1,18 +1,11 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace system\model;
+<?php namespace system\model;
 
 /**
  * 管理员模型
  * Class User
  * @package system\model
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class User extends Common {
 	protected $table = 'user';
@@ -59,6 +52,7 @@ class User extends Common {
 	protected $filter = [
 		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
 	];
+
 	/**
 	 * 删除用户时关联删除数据的表
 	 * @var array
@@ -96,7 +90,7 @@ class User extends Common {
 	 */
 	public function remove() {
 		foreach ( $this->relationDeleteTable as $t ) {
-			Db::table( $t )->where( 'uid', $this->uid )->delete();
+			Db::table( $t )->where( 'uid', $this['uid'] )->delete();
 		}
 
 		return true;

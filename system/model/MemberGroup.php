@@ -9,10 +9,12 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
-//前台用户组
-class MemberGroup extends Model {
+/**
+ * 前台用户组
+ * Class MemberGroup
+ * @package system\model
+ */
+class MemberGroup extends Common {
 	protected $table = 'member_group';
 	protected $validate
 	                 = [

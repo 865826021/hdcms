@@ -1,5 +1,4 @@
 <extend file="resource/view/system"/>
-
 <block name="content">
 	<ol class="breadcrumb">
 		<li><i class="fa fa-home"></i></li>
@@ -114,18 +113,18 @@
 							</if>
 						</div>
 						<div class="col-xs-6 text-right">
-							<?php if ( Util::instance( 'user' )->isSuperUser( v( 'user.info.uid' ), 'return' ) ) { ?>
+							<?php if ( \User::isSuperUser( v( 'user.info.uid' ), 'return' ) ) { ?>
 								<a href="?s=system/site/access_setting&siteid={{$s['siteid']}}">
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/site/wechat&step=add&siteid={{$s['siteid']}}"><i class="fa fa-comment-o"></i> 微信公众号</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( Util::instance( 'user' )->isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( Util::instance( 'user' )->isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>

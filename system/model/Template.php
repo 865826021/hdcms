@@ -9,15 +9,13 @@
  * '-------------------------------------------------------------------*/
 namespace system\model;
 
-use hdphp\model\Model;
-
 /**
  * 模板
  * Class Template
  * @package system\model
  * @author 向军
  */
-class Template extends Model {
+class Template extends Common {
 	protected $table = 'template';
 
 	/**

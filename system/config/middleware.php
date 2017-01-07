@@ -8,7 +8,7 @@ return [
 	| 全局中间件系统会自动执行不需要人为调用
 	*/
 	'global'     => [
-//		'system\middleware\Initialize'
+		'system\middleware\Initialize'
 	],
 
 	/*

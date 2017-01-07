@@ -1,8 +1,10 @@
-.system body {
-  background-color: #f5f5f5;
+/*
+|--------------------------------------------------------------------------
+| 系统管理公共样式
+|--------------------------------------------------------------------------
+*/
+.system {
   font-size: 14px !important;
-}
-.system body.hdcms {
   background: url('../images/bg.jpg');
   background-size: 120%;
   height: 100%;

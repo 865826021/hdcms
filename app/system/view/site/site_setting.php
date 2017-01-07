@@ -7,6 +7,7 @@
     </ol>
 
     <form action="" method="post" role="form" class="form-horizontal">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">设置网站基本信息</h4>
