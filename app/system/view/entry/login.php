@@ -23,14 +23,17 @@
 <div class="container logo">
 	<div style="background: url('resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
 </div>
-<if value="$errors">
-	<foreach from="$errors" value="$v">
-		{{$v}}<br/>
-	</foreach>
-</if>
 <div class="container well">
+	<if value="$errors">
+		<div class="alert alert-warning">
+			<foreach from="$errors" value="$v">
+				<p>{{$v}}</p>
+			</foreach>
+		</div>
+	</if>
 	<div class="row ">
 		<div class="col-md-6">
+
 			<form method="post" action="">
 				{{csrf_field()}}
 				<div class="form-group">
@@ -56,9 +59,11 @@
 						<label>验证码</label>
 
 						<div class="input-group">
-							<input type="text" class="form-control input-lg" name="code" placeholder="请输入验证码" aria-describedby="basic-addon2">
-                        <span class="input-group-addon">
-                            <img src="{{u('code')}}" onclick="this.src='{{u('code')}}&_Math.random()'" style="cursor: pointer">
+							<input type="text" class="form-control input-lg" name="code" placeholder="请输入验证码"
+							       aria-describedby="basic-addon2">
+							<span class="input-group-addon">
+                            <img src="{{u('code')}}" onclick="this.src='{{u('code')}}&_Math.random()'"
+                                 style="cursor: pointer">
                         </span>
 						</div>
 					</div>

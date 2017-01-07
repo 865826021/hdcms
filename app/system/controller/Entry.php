@@ -1,16 +1,6 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace app\system\controller;
+<?php namespace app\system\controller;
 
 use houdunwang\validate\Validate;
-use system\model\User;
 
 /**
  * 后台登录/退出
@@ -54,22 +44,21 @@ class Entry {
 	/**
 	 * 后台帐号登录
 	 *
-	 * @param User $model
-	 *
 	 * @return mixed
 	 */
-	public function login( User $model ) {
+	public function login() {
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'username', 'required', '用户名不能为空', Validate::MUST_VALIDATE ],
-				[ 'password', 'required', '请输入帐号密码', Validate::MUST_VALIDATE ],
+				[ 'password', 'required', '密码不能为空', Validate::MUST_VALIDATE ],
 				[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ],
 			] );
-			if ( ! service( 'user' )->login( Request::post() ) ) {
-				message( $User->getError(), 'back', 'error' );
+			//会员登录
+			if ( !\User::login( Request::post() ) ) {
+				message( \User::getError(), 'back', 'error' );
 			}
 			//系统维护检测
-			service( 'user' )->checkSystemClose();
+			\User::checkSystemClose();
 
 			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
 		}

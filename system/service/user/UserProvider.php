@@ -1,4 +1,5 @@
 <?php namespace system\service\User;
+
 use houdunwang\framework\build\Provider;
 
 class UserProvider extends Provider {
@@ -10,8 +11,8 @@ class UserProvider extends Provider {
 	}
 
 	public function register() {
-		$this->app->single( 'User', function ( $app ) {
-			return new User($app);
-		} );
+		$this->app->bind( 'User', function ( $app ) {
+			return new User( $app );
+		}, true );
 	}
 }
