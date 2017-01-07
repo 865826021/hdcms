@@ -1,0 +1,221 @@
+<extend file="resource/view/site"/>
+<link rel="stylesheet" href="module/material/template/css.css">
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="{{site_url('site/image')}}">图片素材列表</a></li>
+        <li><a href="{{site_url('site/news')}}">图文消息列表</a></li>
+        <li class="active"><a href="{{site_url('site/news')}}">编辑图文消息</a></li>
+    </ul>
+    <form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">图文消息管理</h3>
+            </div>
+            <div class="panel-body preview">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="lists">
+                            <ul>
+                                <li ng-repeat="(i,v) in data.articles" ng-click="setActionItem(i)" ng-if="i==0">
+                                    <div class="pic" style="background-image: url('@{{v.pic?v.pic:'resource/images/nopic.jpg'}}')">
+                                        <h3 ng-bind="v.title"></h3>
+                                    </div>
+                                    <div class="action">
+                                        <div class="pull-left">
+                                            <a href="javascript:;" ng-click="moveDown(i)"><i class="fa fa-long-arrow-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </div>
+                                        <a href="javascript:;" class="pull-right" ng-click="remove(v)"><i class="fa fa-trash-o"></i></a>
+                                    </div>
+                                </li>
+                                <li class="small clearfix" ng-repeat="(i,v) in data.articles" ng-click="setActionItem(i)" ng-if="i>0">
+                                    <p ng-bind="v.title"></p>
+                                    <div class="pic" style="background-image: url('@{{v.pic?v.pic:'resource/images/nopic.jpg'}}')"></div>
+                                    <div class="action">
+                                        <div class="pull-left">
+                                            <a href="javascript:;" ng-click="moveDown(i)" ng-show="i<data.articles.length-1"><i class="fa fa-long-arrow-down"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="javascript:;" ng-click="moveUp(i)"><i class="fa fa-long-arrow-up"></i></a>
+                                        </div>
+                                        <a href="javascript:;" class="pull-right" ng-click="remove(v)"><i class="fa fa-trash-o"></i></a>
+                                    </div>
+                                </li>
+                                <li class="add" ng-click="addItem()">
+                                    <i class="fa fa-plus-circle"></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-9" ng-show="action.title!=undefined">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">标题</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="action.title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">封面图片</label>
+                            <div class="col-sm-10">
+                                <button type="button" class="btn btn-default" ng-click="upImage()">选择图片</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">作者</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="action.author">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">摘要</label>
+                            <div class="col-sm-10">
+                                <textarea rows="5" class="form-control" ng-model="action.digest"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">内容</label>
+                            <div class="col-sm-10">
+                                <textarea id="container" style="height:300px;width:100%;"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">链接</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" ng-model="action.content_source_url">
+                                <span class="help-block"> <i class="fa fa-info-circle"></i> 设置链接时将跳转到此链接</span>
+                            </div>
+                        </div>
+                        <div class="btn-group col-sm-offset-2" role="group" aria-label="...">
+                            <button type="submit" class="btn btn-success"> 保存 </button>
+                        </div>
+                        <input type="text" name="data" hidden="hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</block>
+<script>
+    require(['angular', 'util', 'underscore'], function (angular, util, _) {
+        angular.module(['myApp'], []).controller('ctrl', ['$scope', function ($scope) {
+            $scope.data = <?php echo $field;?>;
+            //当前编辑元素
+            $scope.action = $scope.data.articles[0];
+
+            //设置当前元素
+            $scope.setActionItem = function (i) {
+                $scope.action = $scope.data.articles[i];
+            }
+
+            //移除
+            $scope.remove = function (item) {
+                $scope.data.articles = _.without($scope.data.articles, item);
+                if ($scope.data.articles.length > 0) {
+                    $scope.action = $scope.data.articles[0];
+                } else {
+                    $scope.action = {};
+                }
+            }
+
+            //下移
+            $scope.moveDown = function (i) {
+                if($scope.data.articles[i + 1]){
+                        var tmp = $scope.data.articles[i + 1];
+                        $scope.data.articles[i + 1] = $scope.data.articles[i];
+                        $scope.data.articles[i] = tmp;
+                }
+            }
+
+            //上移
+            $scope.moveUp = function (i) {
+                var tmp = $scope.data.articles[i - 1];
+                $scope.data.articles[i - 1] = $scope.data.articles[i];
+                $scope.data.articles[i] = tmp;
+            }
+
+
+            //添加
+            $scope.addItem = function () {
+                if ($scope.data.articles.length > 5) {
+                    util.message('只能添加5个图文消息', '', 'error');
+                } else {
+                    $scope.data.articles.push({
+                        "title": '',
+                        "thumb_media_id": '',
+                        "author": '{{v("site.name")}}',
+                        "digest": '',
+                        "show_cover_pic": 1,
+                        "content": '',
+                        "content_source_url": '',
+                        'pic': ''
+                    });
+                }
+                $scope.action = _.last($scope.data.articles);
+            }
+
+            //上传图片
+            $scope.upImage = function (obj) {
+                util.image(function (images) {
+                    if (images[0]) {
+                        $.post('{{site_url("site/getMediaId")}}', {file: images[0]}, function (res) {
+                            if (res.valid == 1) {
+                                $scope.action.pic = images[0];
+                                $scope.action.thumb_media_id = res.media_id;
+                            } else {
+                                util.message(res.message, '', 'error');
+                            }
+                            $scope.$apply();
+                        }, 'json');
+                    }
+                })
+            }
+
+            //图文编辑器
+            util.ueditor('container', {}, function (editor) {
+                editor.addListener('contentChange', function () {
+                    $scope.action.content = editor.getContent();
+                });
+                editor.addListener('ready', function () {
+                    if (editor && editor.getContent() != $scope.action.content) {
+                        editor.setContent($scope.action.content);
+                    }
+                    $scope.$watch('action', function (item) {
+                        if (editor && editor.getContent() != item.content) {
+                            editor.setContent(item.content ? item.content : '');
+                        }
+                    }, true);
+                });
+                editor.addListener('clearRange', function () {
+                    $scope.action.content = editor.getContent();
+                    $scope.$apply();
+                });
+            });
+
+            $('form').submit(function () {
+                var msg = '';
+                angular.forEach($scope.data.articles, function (v, key) {
+                    key++;
+                    if (v.title == '') {
+                        msg += "第" + key + "个图文标题为空<br/>";
+                    }
+                    if (v.thumb_media_id == '') {
+                        msg += "第" + key + "个图文缺少封面图片<br/>";
+                    }
+                    if (v.author == '') {
+                        msg += "第" + key + "个图文作者为空<br/>";
+                    }
+                    if ($.trim(v.digest) == '') {
+                        msg += "第" + key + "个图文摘要为空<br/>";
+                    }
+                    if ($.trim(v.content) == '') {
+                        msg += "第" + key + "个图文内容为空<br/>";
+                    }
+                });
+                if (msg) {
+                    util.message(msg, '', 'error');
+                    return false;
+                }
+                $("[name='data']").val(angular.toJson($scope.data));
+            })
+        }]);
+        angular.bootstrap(document.getElementById('form'), ['myApp']);
+    });
+
+</script>

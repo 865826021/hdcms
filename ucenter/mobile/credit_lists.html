@@ -1,0 +1,67 @@
+<extend file='resource/view/mobile'/>
+<block name="title"></block>
+<block name="content">
+    <div class="panel panel-default clearfix form-horizontal">
+        <div class="panel-body ">
+            <div class="form-group">
+                <label class="col-xs-3 control-label">日期范围</label>
+                <div class="col-xs-9">
+                    <div class="input-group date-range">
+                        <input type="text" id="dateinput" class="form-control" value="{{q('get.timerange')}}">
+                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                    </div>
+                    <script>
+                        require(['util'], function (hd) {
+                            hd.daterangepickerList({
+                                element: '.date-range',
+                                options: {},//选项参考插件官网
+                                callback: function (start, end, label) {
+                                    str = start.format('YYYY-MM-DD') + '至' + end.format('YYYY-MM-DD');
+                                    $('#dateinput').val(str);
+                                    location.href = util.getReplace('timerange', str);
+                                }
+                            });
+                        });
+
+                    </script>
+                </div>
+            </div>
+            <div class="clearfix row">
+                <div class="col-xs-6">支出: {{$expend?:0}}</div>
+                <div class="col-xs-6"> 收入: {{$income}}</div>
+            </div>
+        </div>
+    </div>
+    <if value="empty($data)">
+        <div class="alert alert-info">
+            没有记录
+        </div>
+        <else/>
+        <div class="table-responsive">
+            <table class="table table-condensed bg-success">
+                <foreach from="$data" value="$d">
+                    <tr>
+                        <td>
+                            <img src="{{$user['icon']}}" style="width:35px;height: 35px;">
+                            <small class="text-muted">{{$user['realname']}}</small>
+                        </td>
+                        <td>
+                            <span>{{$d['remark']}}</span><br/>
+                            <small class="text-muted">{{date('Y-m-d h:i',$d['createtime'])}}</small>
+                        </td>
+                        <td>
+                            {{$d['num']}}<br/>
+                            <small class="text-muted">交易成功</small>
+                        </td>
+                    </tr>
+                </foreach>
+            </table>
+        </div>
+    </if>
+    <div class="col-xs-offset-1">
+        <ul class="pagination ">
+            {{$page}}
+        </ul>
+    </div>
+</block>
+<line action="uc.quick_menu"/>

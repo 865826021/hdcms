@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'system\\' => array($baseDir . '/system'),
+    'module\\' => array($baseDir . '/module'),
     'houdunwang\\zip\\' => array($vendorDir . '/houdunwang/zip/src'),
     'houdunwang\\xml\\' => array($vendorDir . '/houdunwang/xml/src'),
     'houdunwang\\weixin\\' => array($vendorDir . '/houdunwang/weixin/src'),
@@ -50,4 +51,5 @@ return array(
     'houdunwang\\arr\\' => array($vendorDir . '/houdunwang/arr/src'),
     'houdunwang\\alipay\\' => array($vendorDir . '/houdunwang/alipay/src'),
     'app\\' => array($baseDir . '/app'),
+    'addons\\' => array($baseDir . '/addons'),
 );

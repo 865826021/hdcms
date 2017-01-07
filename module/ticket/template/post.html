@@ -1,0 +1,243 @@
+<extend file="resource/view/site"/>
+<block name="content">
+    <ul class="nav nav-tabs">
+        <li><a href="{{site_url('site/lists')}}&type={{$_GET['type']}}">管理{{$msg['module']['title']}}</a></li>
+        <if value="$field">
+            <li><a href="{{site_url('site/post')}}&type={{$_GET['type']}}"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
+            <li class="active"><a href="#"><i class="fa fa-plus"></i> 编辑{{$msg['module']['title']}}</a></li>
+            <else/>
+            <li class="active"><a href="javascript:;"><i class="fa fa-plus"></i> 添加{{$msg['module']['title']}}</a></li>
+        </if>
+    </ul>
+    <form action="" method="post" role="form" class="form-horizontal" id="form">
+        <input type="hidden" name="tid" value="{{$field['tid']}}">
+        <input type="hidden" name="type" value="{{q('get.type')}}">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                折扣券
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">可用模块</label>
+                    <div class="col-sm-10">
+                        <button type="button" class="btn btn-default" onclick="selectModule(this)">选择模块</button>
+                        <if value="$modules">
+                            <table class="table" id="modules" style="margin-top:10px;margin-bottom:0px;">
+                                <tbody>
+                                <tr>
+                                    <foreach from="$modules" value="$m">
+                                        <td>{{$m['title']}}<input type="hidden" name="module[]" value="{{$m['name']}}"></td>
+                                    </foreach>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </if>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">{{$msg['title']['title']}}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="title" value="{{$field['title']}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star"> {{$msg['condition']['title']}}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="condition" value="{{$field['condition']}}">
+                        <span class="help-block">{{$msg['condition']['help']}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star"> {{$msg['discount']['title']}}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="discount" value="{{$field['discount']}}">
+                        <span class="help-block">{{$msg['discount']['help']}}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star"> 可使用的会员组</label>
+                    <div class="col-sm-10">
+                        <select name="groups[]" class="js-example-basic-single form-control" multiple>
+                            <foreach from="$groups" value="$g">
+                                <if value="in_array($g['id'],$groupsIds)">
+                                    <option value="{{$g['id']}}" selected>{{$g['title']}}</option>
+                                    <else/>
+                                    <option value="{{$g['id']}}">{{$g['title']}}</option>
+                                </if>
+
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star"> 封面</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="thumb" readonly="" name="thumb" value="{{$field['thumb']}}">
+                            <div class="input-group-btn">
+                                <button onclick="upImage(this)" class="btn btn-default" type="button">选择图片</button>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-top:5px;">
+                            <img src="{{$field['thumb']?:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail" width="150">
+                            <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star"> {{$msg['description']['title']}}</label>
+                    <div class="col-sm-10">
+                        <textarea id="container" name="description" style="height:300px;width:100%;">{{$field['description']}}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                兑换方式
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">积分类型</label>
+                    <div class="col-sm-10">
+                        <select name="credittype" class="form-control">
+                            <foreach from="v('site.setting.creditnames')" key="$name" value="$v">
+                                <if value="$v['title']">
+                                    <option value="{{$name}}">{{$v['title']}}</option>
+                                </if>
+                            </foreach>
+                        </select>
+                        <span class="help-block">
+                            此设置项设置当前礼品兑换需要消耗的积分类型,如:金币、积分、贡献等。
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">积分数量</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="credit" value="{{$field['credit']}}">
+                        <span class="help-block">
+                            此设置项设置当前礼品兑换需要消耗的积分数量。
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">使用期限</label>
+                    <div class="col-sm-10">
+                        <div class="input-group date-range">
+                            <if value="$field['starttime']">
+                                <input type="text" id="dateinput" readonly class="form-control" name="times" value="{{date('Y-m-d',$field['starttime'])}} 至 {{date('Y-m-d',$field['endtime'])}}">
+                                <else/>
+                                <input type="text" id="dateinput" readonly class="form-control" name="times">
+                            </if>
+                            <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">{{$msg['limit']['title']}}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="limit" value="{{$field['limit']}}">
+                        <span class="help-block">
+                            {{$msg['limit']['help']}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">{{$msg['module']['title']}}总数量</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="amount" value="{{$field['amount']}}">
+                        <span class="help-block">
+                            此设置项设置折扣券的总发行数量。
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+    </form>
+</block>
+
+<script>
+    //说明
+    util.ueditor('container', {}, function (editor) {
+        //这是回调函数 editor是百度编辑器实例
+    });
+    //使用期限
+    require(['util'], function (util) {
+        util.daterangepickerList({
+            element: '.date-range',
+            options: {},//选项参考插件官网
+            callback: function (start, end, label) {
+                str = start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD');
+                $('#dateinput').val(str);
+            }
+        });
+    });
+
+    //封面图上传
+    function upImage(obj) {
+        util.image(function (images) {
+            //上传成功的图片，数组类型
+            if (images.length > 0) {
+                $(obj).parent().prev().val(images[0]);
+                $(obj).parent().parent().next().find('img').eq(0).attr('src', images[0]);
+            }
+        }, {})
+    }
+
+    //选择模块
+    function selectModule(obj) {
+        require(['util', 'jquery'], function (util, $) {
+            util.modal({
+                content: ['?s=system/component/moduleList'],//加载的远程地址
+                title: '选择适用模块',
+                width: 600,
+                id: 'module',
+                show: true,//直接显示
+                footer: '<button type="button" class="btn btn-primary confirm">保存</button>',
+                events: {
+                    //显示时选择模块
+                    'shown.bs.modal': function () {
+                        var moduleName = $("#modules td");
+                        if (moduleName.length > 0) {
+                            moduleName.each(function (i) {
+                                $("[title='" + $(this).text() + "']").attr('checked', true);
+                            });
+                        }
+                    },
+                    confirm: function (modalobj) {
+                        var checkbox = $(modalobj).find("input:checked");
+                        var html = '';
+                        if (checkbox.length > 0) {
+                            html = '<table id="modules" class="table" style="margin-top:10px;margin-bottom:0px;"><tbody><tr>';
+                            $.each(checkbox, function (i) {
+                                var module_name = $(this).attr('module_name');
+                                html += '<td>' + $(this).attr('title') +
+                                        '<input type="hidden" name="module[]" value="' + module_name + '"/>' +
+                                        '</td>';
+                            });
+                            html += '</tr></tbody></table>';
+                        }
+                        $(obj).next('table').remove().end().after(html);
+                        modalobj.modal('hide');
+                    }
+                }
+            });
+        });
+    }
+
+    //提交表单
+    $("#form").submit(function () {
+        var msg = '';
+        if ($.trim($("[name='title']").val()).length == 0) {
+            msg += "{{$msg['module']['title']}}名称不能为空<br/>";
+        }
+        if (msg) {
+            util.message(msg, '', 'error');
+            return false;
+        }
+        return true;
+    })
+</script>

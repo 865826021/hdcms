@@ -1,0 +1,90 @@
+.system body {
+  background-color: #f5f5f5;
+  font-size: 14px !important;
+}
+.system body.hdcms {
+  background: url('../images/bg.jpg');
+  background-size: 120%;
+  height: 100%;
+}
+.system table {
+  table-layout: fixed;
+}
+.system div.system-container .breadcrumb {
+  padding-left: 0px;
+  margin: 0px 0px .5em 0px;
+}
+.system div.system-container ul.nav-pills li {
+  margin-right: 10px;
+}
+.system div.system-container ul.nav-pills li a.tile {
+  margin: 0px;
+  padding: .5em 1em .5em 1em;
+  display: block;
+  width: 8em;
+  text-align: center;
+  background: #438384;
+  color: #eeeeee;
+  opacity: .8;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 2px 4px;
+}
+.system div.system-container ul.nav-pills li a.tile:hover {
+  background: #006675;
+}
+.system div.system-container ul.nav-pills li a.tile i {
+  display: block;
+}
+.system div.system-container ul.nav-pills li a.active {
+  opacity: .95;
+  background: #006675;
+}
+.system div.system-container .breadcrumb {
+  background: #f5f5f5;
+}
+.system div.system-container .breadcrumb li a {
+  color: #333333;
+}
+.system div.system-container .panel .panel-footer a {
+  color: #999999;
+}
+.system div.system-container h5.page-header {
+  border: none;
+  border-left: 0.3em #333333 solid;
+  padding-left: 1em;
+  margin-top: 40px;
+  padding-bottom: 0px;
+}
+.system div.system-container h5.page-header:first-of-type {
+  margin-top: 0px !important;
+}
+.system div.system-container a.tile {
+  margin: 0.4em;
+  padding: .2em 1em .5em 1em;
+  display: block;
+  float: left;
+  width: 8em;
+  text-align: center;
+  background: #eeeeee;
+  color: #333333;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 2px 4px;
+}
+.system div.system-container a.tile i {
+  display: block;
+  font-size: 2em;
+  margin: 0.3em auto 0 auto;
+}
+.system div.system-container a.tile:hover {
+  background: #7dacdd;
+  color: #ffffff;
+}
+.system div.system-container div.footer {
+  margin-bottom: 50px;
+  color: #ffffff;
+  font-size: 15px;
+  text-align: center;
+}
+.system div.system-container div.footer a {
+  color: #ffffff;
+  display: inline-block;
+  padding: 5px;
+}

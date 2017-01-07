@@ -26,6 +26,10 @@ class ComposerStaticInit86874033b3caf2176ba25d2e7159302d
         array (
             'system\\' => 7,
         ),
+        'm' => 
+        array (
+            'module\\' => 7,
+        ),
         'h' => 
         array (
             'houdunwang\\zip\\' => 15,
@@ -74,6 +78,7 @@ class ComposerStaticInit86874033b3caf2176ba25d2e7159302d
         'a' => 
         array (
             'app\\' => 4,
+            'addons\\' => 7,
         ),
     );
 
@@ -81,6 +86,10 @@ class ComposerStaticInit86874033b3caf2176ba25d2e7159302d
         'system\\' => 
         array (
             0 => __DIR__ . '/../..' . '/system',
+        ),
+        'module\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/module',
         ),
         'houdunwang\\zip\\' => 
         array (
@@ -253,6 +262,10 @@ class ComposerStaticInit86874033b3caf2176ba25d2e7159302d
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'addons\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/addons',
         ),
     );
 

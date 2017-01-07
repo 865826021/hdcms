@@ -1,0 +1,9 @@
+body{
+  background: url("../images/xiangshan.jpg") 0 0 no-repeat;
+  background-size: 100%;
+  padding: 0px;
+  margin: 0px;
+}
+div.wrap {
+  width:100%;
+}
