@@ -18,6 +18,7 @@
 	<div class="clearfix">
 		<div class="form-group">
 			<form class="form-horizontal" action="" method="post">
+				{{csrf_field()}}
 				<input type="hidden" name="id" value="{{$package['id']}}">
 				<h5 class="page-header">服务套餐管理</h5>
 
@@ -25,7 +26,7 @@
 					<label for="name" class="col-sm-2 control-label">服务套餐名称</label>
 
 					<div class="col-sm-10">
-						<input type="text" name="name" class="form-control" value="{{$package->name}}">
+						<input type="text" name="name" class="form-control" value="{{$package['name']}}" required="required">
 					</div>
 				</div>
 

@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
+
 use system\model\UserGroup;
 
 /**
@@ -19,7 +20,7 @@ use system\model\UserGroup;
 class Group {
 	public function __construct() {
 		//验证超级管理员权限
-		service( 'user' )->superUserAuth();
+		\User::superUserAuth();
 	}
 
 	//用户组列表
@@ -31,32 +32,35 @@ class Group {
 
 	//删除
 	public function remove() {
-		$userGroup = new UserGroup();
 		foreach ( (array) Request::post( 'id' ) as $id ) {
-			$userGroup->delete( $id );
-			//更改默认用户组
-			Db::table( 'user' )->where( 'groupid', $id )->update( [ 'groupid' => v( 'system.register.groupid' ) ] );
+			UserGroup::where( 'system_group', 0 )->delete( $id );
+			//更改用户组下的用户组为系统默认用户组
+			Db::table( 'user' )->where( 'groupid', $id )
+			  ->update( [ 'groupid' => v( 'config.register.groupid' ) ] );
 		}
-		message( '更新用户组成功', 'lists', 'success' );
+		message( '更新用户组成功', 'lists' );
 	}
 
 	//编辑用户组
 	public function post() {
-		$group = new UserGroup();
+		//组编号
+		$id = Request::get( 'id', 0 );
 		if ( IS_POST ) {
-			$group->id       = Request::post( 'id', 0 );
-			$group->name     = Request::post( 'name' );
-			$group->maxsite  = Request::post( 'maxsite', 1, 'intval' );
-			$group->daylimit = Request::post( 'daylimit', 7, 'intval' );
-			$group->package  = Request::post( 'package', [ ] );
-			$group->save();
+			$model             = $id ? UserGroup::find( $id ) : new UserGroup();
+			$model['name']     = Request::post( 'name' );
+			$model['maxsite']  = Request::post( 'maxsite', 1, 'intval' );
+			$model['daylimit'] = Request::post( 'daylimit', 7, 'intval' );
+			$model['package']  = Request::post( 'package', [ ] );
+			$model->save();
 			message( '用户组数据保存成功', 'lists', 'success' );
 		}
-		if ( $group = $group->find( Request::get( 'id' ) ) ) {
+		//系统所有套餐
+		$packages = \Package::getSystemAllPackageData();
+		//获取当前级资料包括为组定义的独立套餐
+		if ( $group = UserGroup::find( $id ) ) {
+			$group            = $group->toArray();
 			$group['package'] = unserialize( $group['package'] ) ?: [ ];
 		}
-		//系统所有套餐
-		$packages = service( 'package' )->getSystemAllPackageData();
 
 		return view()->with( [ 'packages' => $packages, 'group' => $group ] );
 	}

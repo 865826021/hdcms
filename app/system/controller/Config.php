@@ -9,7 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
 
-use system\model\User;
+use system\model\Config as ConfigModel;
 
 /**
  * 系统配置管理
@@ -18,34 +18,32 @@ use system\model\User;
  */
 class Config {
 	public function __construct() {
-		service( 'user' )->superUserAuth();
+		\User::superUserAuth();
 	}
 
 	//注册配置管理
 	public function register() {
-		$Config = new \system\model\Config();
-
 		if ( IS_POST ) {
-			$Config->id       = 1;
-			$Config->register = Request::post( 'register' );
-			$Config->save();
-			message( '保存成功', 'back', 'success' );
+			$model             = ConfigModel::first();
+			$model['register'] = Request::post( 'register' );
+			$model->save();
+			message( '注册设置保存成功', 'with' );
 		}
 		View::with( 'group', Db::table( 'user_group' )->get() );
-		View::with( 'field', v('config.register') );
+		View::with( 'field', v( 'config.register' ) );
 
 		return view();
 	}
 
 	//站点开/关设置
 	public function site() {
-		$Config = new \system\model\Config();
 		if ( IS_POST ) {
-			$Config->id   = 1;
-			$Config->site = Request::post( 'site' );
-			$Config->save();
-			message( '保存成功', 'back', 'success' );
+			$model         = ConfigModel::first();
+			$model['site'] = Request::post( 'site' );
+			$model->save();
+			message( '站点设置更新成功', 'with' );
 		}
-		return view()->with( 'field', v('config.site'));
+
+		return view()->with( 'field', v( 'config.site' ) );
 	}
 }

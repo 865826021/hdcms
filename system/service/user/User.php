@@ -172,7 +172,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth() {
-		if ( Session::get( 'admin_uid' ) ) {
+		if ( v( 'user' ) ) {
 			return true;
 		}
 		message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
@@ -187,8 +187,10 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function superUserAuth( $uid = 0 ) {
+		$uid = $uid ?: v( "user.info.uid" );
 		if ( ! $this->isSuperUser( $uid ) ) {
-			message( '您不是管理员,无法进行操作!', 'back', 'error' );
+			$url = v( 'user' ) ? 'back' : u( 'system.entry.login' );
+			message( '您不是系统管理员,无法进行操作!', $url, 'error' );
 		}
 
 		return true;
@@ -285,6 +287,7 @@ class User extends Common {
 				'site_user',//站点管理员
 				'user_permission',//用户管理权限
 				'user_profile',//用户字段信息
+				'log',//日志记录
 			];
 			foreach ( $relationDeleteTable as $table ) {
 				Db::table( $table )->where( 'uid', $uid )->delete();

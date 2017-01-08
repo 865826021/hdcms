@@ -29,14 +29,14 @@
 					<foreach from="$groups" value="$g">
 						<tr>
 							<td>
-								<if value="$g['id']!=v('system.register.groupid')">
+								<if value="$g['id']!=v('config.register.groupid') && !$g['system_group']">
 									<input type="checkbox" name="id[]" value="{{$g['id']}}">
 								</if>
 							</td>
 							<td>
 								{{$g['name']}}
 								<if value="$g['id']==v('system.register.groupid')">
-									 <span class="label label-success">默认组</span>
+									<span class="label label-success">默认组</span>
 								</if>
 							</td>
 							<td>{{$g['maxsite']}}</td>
@@ -62,7 +62,7 @@
 
 <script>
 	function del() {
-		require(['util'], function (util) {
+		require(['util', 'jquery'], function (util, $) {
 			util.confirm('确定删除所选用户组吗?', function () {
 				$.post('?s=system/group/remove', $('form').serialize(), function (res) {
 					if (res.valid == 1) {

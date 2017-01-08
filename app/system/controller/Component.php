@@ -42,8 +42,7 @@ class Component {
 
 	//字体列表
 	public function font() {
-		service( 'user' )->loginAuth();
-
+		\User::loginAuth();
 		return View::make();
 	}
 
@@ -109,7 +108,6 @@ class Component {
 
 	//选择用户
 	public function users() {
-
 		//登录检测
 		\User::loginAuth();
 		if (IS_POST ) {

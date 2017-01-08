@@ -94,7 +94,6 @@
 	ul.module-list {
 		padding : 0px;
 	}
-
 	ul.module-list li {
 		float      : left;
 		padding    : 8px;

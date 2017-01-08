@@ -4,6 +4,7 @@ use system\model\MemberFields;
 use system\model\MemberGroup;
 use system\model\SiteSetting;
 use system\service\Common;
+use system\model\Site as SiteModel;
 
 /**
  * 服务功能类
@@ -169,7 +170,8 @@ class Site extends Common {
 	 * @return array 站点列表
 	 */
 	public function getUserAllSite( $uid ) {
-		return $this->join( 'site_user', 'site.siteid', '=', 'site_user.siteid' )->where( 'site_user.uid', $uid )->get();
+		return SiteModel::join( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
+		                ->where( 'site_user.uid', $uid )->get();
 	}
 
 	/**
@@ -210,7 +212,7 @@ class Site extends Common {
 	 * @return bool
 	 */
 	public function updateAllCache() {
-		foreach ( $this->lists( 'siteid' ) as $siteid ) {
+		foreach ( SiteModel::lists( 'siteid' ) as $siteid ) {
 			$this->updateCache( $siteid );
 		}
 

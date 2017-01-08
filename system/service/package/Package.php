@@ -1,5 +1,8 @@
 <?php namespace system\service\package;
+
+use system\model\UserGroup;
 use system\service\Common;
+use system\model\Package as PackageModel;
 
 /**
  * Class Package
@@ -7,7 +10,7 @@ use system\service\Common;
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class Package extends Common{
+class Package extends Common {
 	/**
 	 * 获取站点拥有的套餐数据
 	 * 包括站长默认套餐+为站点独立设置的扩展套餐
@@ -105,7 +108,8 @@ class Package extends Common{
 	}
 
 	/**
-	 * 获取系统所有自定义套餐,不含 基础套餐与所有套餐
+	 * 获取系统所有自定义套餐
+	 * 不含基础套餐与所有套餐
 	 * @return array
 	 */
 	public function getSystemAllPackageData() {
@@ -152,10 +156,25 @@ class Package extends Common{
 				$packages[ $k ]['template'] = Db::table( 'template' )->whereIn( 'name', $names )->get() ?: [ ];
 			}
 		}
+		//当套餐编号有-1为拥有所有套餐
 		if ( in_array( - 1, $packageIds ) ) {
 			array_unshift( $packages, [ 'id' => - 1, 'name' => '所有服务', 'modules' => '', 'template' => '' ] );
 		}
 
 		return $packages;
+	}
+
+	/**
+	 * @param $id
+	 */
+	public function remove( $id ) {
+		//从数组中移除要删除的套餐编号
+		$groups = UserGroup::get();
+		foreach ( $groups as $group ) {
+			$package          = \Arr::del( unserialize( $group['package'] ), [ $id ] );
+			$group['package'] = $package;
+			$group->save();
+		}
+		return PackageModel::delete( $id );
 	}
 }

@@ -8,7 +8,8 @@
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="{{u('lists')}}">更新缓存</a></li>
     </ul>
-    <form action="{{__URL__}}" class="form-horizontal" method="post">
+    <form action="" class="form-horizontal" method="post">
+        {{csrf_field()}}
         <div class="form-group">
             <label class="col-sm-1 control-label">缓存类型</label>
 
@@ -24,7 +25,6 @@
                 </label>
             </div>
         </div>
-
         <button class="btn btn-primary col-sm-offset-1">提交更新</button>
     </form>
 </block>

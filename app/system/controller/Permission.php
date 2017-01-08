@@ -43,15 +43,22 @@ class Permission {
 					] );
 				}
 			}
+			record( '添加站点操作员' );
 			message( '站点操作员添加成功', '', 'success' );
 		}
 		message( '你没有操作站点的权限', '', 'error' );
 	}
 
-	//更改会员的站点角色
+	/**
+	 * 更改会员的站点角色
+	 * 需要站长或系统管理员才可以操作
+	 */
 	public function changeRole() {
 		if ( \User::isManage() ) {
-			Db::table( 'site_user' )->where( 'uid', $_POST['uid'] )->where( 'siteid', SITEID )->update( [ 'role' => $_POST['role'] ] );
+			$uid = \Request::post( 'uid' );
+			Db::table( 'site_user' )->where( 'uid', $uid )
+			  ->where( 'siteid', SITEID )->update( [ 'role' => $_POST['role'] ] );
+			record( '更改了站点管理员角色类型' );
 			message( '管理员角色更新成功', '', 'success' );
 		} else {
 			message( '你没有操作站点的权限', '', 'error' );

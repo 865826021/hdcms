@@ -31,28 +31,8 @@ class Initialize {
 		 * 不存在配置项时
 		 * 一般在系统初次安装时会发生这个情况
 		 */
-		if ( empty( $config ) ) {
-			$config = [
-				'site'     => [
-					'is_open'       => 1,
-					'enable_code'   => 0,
-					'close_message' => '网站维护中,请稍候访问',
-					'upload'        => [
-						'size' => 20000,
-						'type' => 'jpg,jpeg,gif,png,zip,rar,doc,txt,pem'
-					]
-				],
-				'register' => [
-					'is_open'     => 0,
-					'audit'       => 1,
-					'enable_code' => 0,
-					'groupid'     => 1
-				]
-			];
-		} else {
-			$config['site']     = json_decode( $config['site'], true );
-			$config['register'] = json_decode( $config['register'], true );
-		}
+		$config['site']     = json_decode( $config['site'], true );
+		$config['register'] = json_decode( $config['register'], true );
 		v( 'config', $config );
 	}
 

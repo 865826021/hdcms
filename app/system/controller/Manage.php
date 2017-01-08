@@ -9,7 +9,7 @@
  */
 class Manage {
 	/**
-	 * 系统设置管理
+	 * 系统设置图标列表菜单
 	 * @return mixed
 	 */
 	public function menu() {
@@ -23,9 +23,7 @@ class Manage {
 	 * @return mixed
 	 */
 	public function updateCache() {
-		if ( ! service( 'user' )->isSuperUser() ) {
-			message( '您不是系统管理员,无法进行操作', 'back', 'error' );
-		}
+		\User::isSuperUser();
 		if ( IS_POST ) {
 			//更新数据缓存
 			if ( isset( $_POST['data'] ) ) {
@@ -40,8 +38,8 @@ class Manage {
 				Dir::del( ROOT_PATH . '/storage/weixin' );
 			}
 			//更新所有站点缓存
-			service( 'site' )->updateAllCache();
-			message( '缓存更新成功', 'menu', 'success' );
+			\Site::updateAllCache();
+			message( '缓存更新成功', 'menu' );
 		}
 
 		return view();

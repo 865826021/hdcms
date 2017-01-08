@@ -10,6 +10,7 @@
 	</ul>
 
 	<form action="" class="form-horizontal ng-cloak" ng-cloak method="post" id="form" ng-controller="myController">
+		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				基本设置
@@ -67,6 +68,7 @@
 					<label for="" class="col-sm-2 control-label">上传类型</label>
 					<div class="col-sm-5">
 						<input type="text" class="form-control" ng-model="field.upload.type">
+						<span class="help-block">请用英文半角逗号分隔文件类型</span>
 					</div>
 				</div>
 			</div>

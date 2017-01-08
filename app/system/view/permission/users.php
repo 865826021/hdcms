@@ -99,11 +99,15 @@
 
 	//选择帐号操作员
 	function getUsers() {
-		require(['hdcms', 'jquery','util'], function (hdcms, $,util) {
+		require(['hdcms', 'jquery', 'util'], function (hdcms, $, util) {
 			//当前站点的管理员过滤掉不显示
-			var filterUid = '<?php echo implode(',',array_keys(User::getSiteRole(['owner','manage','operate'])));?>';
+			var filterUid = '<?php echo implode( ',', array_keys( User::getSiteRole( [
+				'owner',
+				'manage',
+				'operate'
+			] ) ) );?>';
 			hdcms.getUsers(function (uid) {
-				if (uid) {
+				if (uid.length > 0) {
 					$.post("?s=system/permission/addOperator&siteid={{SITEID}}", {uid: uid}, function (json) {
 						if (json.valid == 1) {
 							util.message(json.message, 'refresh', 'success');
@@ -112,14 +116,14 @@
 						}
 					}, 'json')
 				}
-			},filterUid);
+			}, filterUid);
 		})
 	}
 
 	//删除帐号
 	function deleteUser() {
-		require(['util','jquery'], function (util,$) {
-			var modalBox = util.modal({
+		require(['util', 'jquery'], function (util, $) {
+			util.modal({
 				title: '系统提示',
 				content: '确定从站点中删除选中的帐号吗?',
 				footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>\

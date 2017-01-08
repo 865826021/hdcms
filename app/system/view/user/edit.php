@@ -14,6 +14,7 @@
     </ul>
 
     <form action="" class="form-horizontal" method="post">
+        {{csrf_field()}}
         <input type="hidden" name="uid" value="{{$user['uid']}}">
         <h5 class="page-header">编辑用户帐号信息</h5>
         <div class="form-group">

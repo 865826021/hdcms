@@ -9,6 +9,9 @@
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
 
+use houdunwang\request\Request;
+use system\model\Menu as MenuModel;
+
 /**
  * 菜单管理
  * Class Menu
@@ -17,39 +20,31 @@ namespace app\system\controller;
  */
 class Menu {
 	public function __construct() {
-		if ( ! service( 'user' )->isSuperUser() ) {
-			message( '您不是系统管理员无法进行操作', 'back', 'error' );
-		}
+		\User::isSuperUser();
 	}
 
 	//编辑菜单
 	public function edit() {
-		$menu = new \system\model\Menu();
 		if ( IS_POST ) {
 			$data = json_decode( Request::post( 'menu' ) );
 			foreach ( $data as $m ) {
-				$d = [ ];
-				if ( ! empty( $m->id ) ) {
-					$d['id'] = $m->id;
-				}
-				$d['pid']        = intval( $m->pid );
-				$d['title']      = $m->title;
-				$d['permission'] = $m->permission;
-				$d['url']        = $m->url;
-				$d['append_url'] = $m->append_url;
-				$d['icon']       = $m->icon;
-				$d['orderby']    = intval( $m->orderby );
-				$d['is_display'] = $m->is_display;
-				$d['mark']       = $m->mark;
-				$d['is_system']  = $m->is_system;
-				if ( $d['mark'] && $d['title'] ) {
-					$menu->replace( $d );
-				}
+				$model = empty( $m->id ) ? new MenuModel() : MenuModel::find( $m->id );
+				$model['pid']        = intval( $m->pid );
+				$model['title']      = $m->title;
+				$model['permission'] = $m->permission;
+				$model['url']        = $m->url;
+				$model['append_url'] = $m->append_url;
+				$model['icon']       = $m->icon;
+				$model['orderby']    = intval( $m->orderby );
+				$model['is_display'] = $m->is_display;
+				$model['mark']       = $m->mark;
+				$model['is_system']  = $m->is_system;
+				$model->save();
 			}
-			message( '菜单更改成功' );
+			message( '菜单列表更新成功', 'with' );
 		}
-		$data  = $menu->get()->toArray();
-		$menus = Data::tree( $data, 'title', 'id', 'pid' );
+		$data  = MenuModel::get()->toArray();
+		$menus = \Arr::tree( $data, 'title', 'id', 'pid' );
 
 		return view()->with( 'menus', json_encode( $menus, JSON_UNESCAPED_UNICODE ) );
 	}
@@ -58,29 +53,28 @@ class Menu {
 	 * 更改显示状态
 	 */
 	public function changeDisplayState() {
-		$menu             = new \system\model\Menu();
-		$menu->id         = Request::post( 'id' );
-		$menu->is_display = Request::post( 'is_display' );
-		$menu->save();
-		ajax( [ 'valid' => TRUE, 'message' => '菜单更改成功' ] );
+		$model               = MenuModel::find( q( 'post.id' ) );
+		$model['id']         = Request::post( 'id' );
+		$model['is_display'] = Request::post( 'is_display' );
+		$model->save();
+		message( '菜单显示状态更改成功' );
 	}
 
 	/**
 	 * 删除菜单
 	 */
 	public function delMenu() {
-		$db = new \system\model\Menu();
 		$id = Request::post( 'id' );
-		if ( $db->where( 'id', $id )->where( 'is_system', 1 )->get() ) {
-			message( '系统菜单不允许删除', 'back', 'error' );
+		if ( MenuModel::where( 'id', $id )->where( 'is_system', 1 )->get() ) {
+			message( '系统菜单不允许删除', 'with' );
 		}
-		$data         = Db::table( 'menu' )->get();
-		$menu         = Data::channelList( $data, $_POST['id'], "&nbsp;", 'id', 'pid' );
+		$data         = MenuModel::get();
+		$menu         = \Arr::channelList( $data, $id, "&nbsp;", 'id', 'pid' );
 		$menu[]['id'] = $id;
 		foreach ( $menu as $m ) {
-			$db->where( 'id', $m['id'] )->delete();
+			MenuModel::where( 'id', $m['id'] )->delete();
 		}
-		ajax( [ 'valid' => TRUE, 'message' => '删除成功' ] );
+		message( '菜单删除成功' );
 	}
 
 }

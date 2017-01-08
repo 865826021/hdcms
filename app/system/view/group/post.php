@@ -17,8 +17,7 @@
 	<h5 class="page-header">用户组管理</h5>
 
 	<form action="" class="form-horizontal" method="post">
-		<input type="hidden" name="id" value="{{$group['id']}}">
-
+		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">基本信息</h3>
@@ -35,7 +34,7 @@
 					<label for="" class="col-sm-2 control-label">站点数量</label>
 
 					<div class="col-sm-10">
-						<input type="number" class="form-control" name="maxsite" value="{{$group['maxsite']}}">
+						<input type="number" class="form-control" name="maxsite" value="{{$group['maxsite']?:3}}">
 						<span class="help-block">限制站点的数量，为0则不允许添加。</span>
 					</div>
 				</div>
@@ -44,10 +43,10 @@
 
 					<div class="col-sm-10">
 						<div class="input-group">
-							<input type="text" class="form-control" name="daylimit" value="{{$group['daylimit']}}">
+							<input type="text" class="form-control" name="daylimit" value="{{$group['daylimit']?:30}}">
 							<span class="input-group-addon">天</span>
 						</div>
-						<span class="help-block">设置用户组的有效期限。0为不限制期限。到期后，该用户下的所有公众号只能使用 "基础服务"。</span>
+						<span class="help-block">设置用户组的有效期限, 到期后该用户组的所有公众号只能使用 "基础服务"。</span>
 					</div>
 				</div>
 			</div>

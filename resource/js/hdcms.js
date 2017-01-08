@@ -17,18 +17,18 @@ define('hdcms', ['bootstrap'], function () {
                 var modalObj = util.modal({
                     title: '选择用户',
                     width: 700,
+                    footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>\
+                <button type="button" class="btn btn-primary confirm" >确定</button>',
                     id: 'usersModal',
                     content: ["?s=system/component/users&single=0&siteid=" + siteId + "&filterUid=" + filterUid],
                     events: {
-                        'hidden.bs.modal': function () {
+                        'confirm': function () {
                             var bt = $("#getUsers").find("button[class*='primary']");
                             var uid = [];
                             bt.each(function (i) {
                                 uid.push($(this).attr('uid'));
                             })
                             callback(uid);
-                            //删除模态
-                            modalObj.remove();
                         }
                     }
                 })

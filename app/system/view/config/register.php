@@ -9,8 +9,8 @@
 		<li role="presentation" class="active"><a href="javascript:;">注册选项</a></li>
 	</ul>
 	<h5 class="page-header">注册设置</h5>
-
 	<form action="" class="form-horizontal ng-cloak" ng-cloak method="post" id="form" ng-controller="myController">
+		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-body">
 				<div class="form-group">

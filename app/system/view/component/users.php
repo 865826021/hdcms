@@ -26,9 +26,6 @@
     <tbody id="getUsers">
     </tbody>
 </table>
-<div class="modal-footer">
-    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-</div>
 <script>
     //加载用户
     function loadUser(username) {

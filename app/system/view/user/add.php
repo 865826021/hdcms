@@ -13,7 +13,8 @@
 
 		<h5 class="page-header">添加新用户</h5>
 	</if>
-	<form action="{{__URL__}}" class="form-horizontal ajaxfrom" method="post">
+	<form action="" class="form-horizontal ajaxfrom" method="post">
+		{{csrf_field()}}
 		<div class="form-group">
 			<label class="col-sm-2 control-label star">用户名</label>
 
