@@ -78,6 +78,7 @@ class Site {
 
 	//添加站点
 	public function addSite( \system\model\Site $site ) {
+		echo 33;exit;
 		//检测用户是否可以添加帐号
 		if ( ! \User::hasAddSite() ) {
 			message( '您可创建的站点数量已经用完,请联系管理员进行升级' );

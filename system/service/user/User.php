@@ -142,7 +142,7 @@ class User extends Common {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
 			$user                         = [ ];
-			$user['info']                 = Db::table( 'user' )->find( \Session::get('admin_uid') );
+			$user['info']                 = Db::table( 'user' )->find( \Session::get( 'admin_uid' ) );
 			$group                        = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
 			$user['group']                = $group ?: [ ];
 			$user['system']['super_user'] = $user['group']['id'] == 0;
@@ -305,19 +305,20 @@ class User extends Common {
 
 	/**
 	 * 设置站点的站长
+	 * 站长拥有所有权限
 	 *
-	 * @param int $siteid 站点编号
+	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
 	 *
 	 * @return int 自增主键
 	 */
-	public function setSiteOwner( $siteid, $uid ) {
+	public function setSiteOwner( $siteId, $uid ) {
 		//系统管理员不添加数据
 		if ( $this->isSuperUser( $uid ) ) {
 			return true;
 		}
 		$SiteUser           = new SiteUser();
-		$SiteUser['siteid'] = $siteid;
+		$SiteUser['siteid'] = $siteId;
 		$SiteUser['role']   = 'owner';
 		$SiteUser['uid']    = $uid;
 

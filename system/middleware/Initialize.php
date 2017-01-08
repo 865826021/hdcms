@@ -8,7 +8,7 @@ namespace system\middleware;
  */
 class Initialize {
 	//执行中间件
-	public function run() {
+	public function run() {return;
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );
 		//初始用户信息
