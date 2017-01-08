@@ -12,7 +12,10 @@
 	<script src="node_modules/hdjs/require.js"></script>
 	<script>
 		hdjs = {
-			base: 'node_modules/hdjs'
+			'base': 'node_modules/hdjs',
+			'uploader': '{{u("system/component/uploader")}}',
+			'filesLists': '{{u("system/component/filesLists")}}',
+			'removeImage': '{{u("system/component/removeImage")}}',
 		};
 	</script>
 	<script src="node_modules/hdjs/config.js"></script>
@@ -24,8 +27,9 @@
 			user: <?php echo json_encode( Session::get( 'user' ) );?>,
 			site: <?php echo v( 'site' ) ? json_encode( v( 'site' ) ) : '{}';?>,
 			root: "{{__ROOT__}}",
-			url: "{{__URL__}}"
+			url: "{{__URL__}}",
 		}
+		window.csrf_token = "{{csrf_token()}}";
 	</script>
 	<script>
 		if (navigator.appName == 'Microsoft Internet Explorer') {
@@ -161,13 +165,12 @@
 			var obj = util.modal({
 				title: '友情提示',//标题
 				content: '<div><i class="pull-left fa fa-4x fa-info-circle"></i>' +
-				'<div class="pull-left"><?php echo implode('<br/>',$errors);?></div>' +
+				'<div class="pull-left"><?php echo implode( '<br/>', $errors );?></div>' +
 				'<div class="clearfix"></div></div>',//内容
 				footer: '<button type="button" class="btn btn-default confirm" data-dismiss="modal">关闭</button>',//底部
 				width: 600,//宽度
-				class:'alert alert-info',
-				events: {
-				}
+				class: 'alert alert-info',
+				events: {}
 			});
 			//显示模态框
 			obj.modal('show');

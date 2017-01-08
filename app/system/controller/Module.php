@@ -14,15 +14,15 @@ use system\model\Modules;
 /**
  * 模块管理
  * Class Module
- * @package core\controller
- * @author 向军
+ * @package app\system\controller
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class Module {
 	protected $module;
 
 	public function __construct() {
-		service( 'user' )->superUserAuth();
-		$this->module = new Modules();
+		\User::superUserAuth();
 	}
 
 	//打开本地开发的模块
@@ -45,7 +45,7 @@ class Module {
 		$res  = json_decode( $res, 'true' );
 		$apps = [ ];
 		foreach ( $res['apps'] as $k => $v ) {
-			$v          = json_decode( $v['xml'], TRUE );
+			$v          = json_decode( $v['xml'], true );
 			$apps[ $k ] = $v;
 		}
 		//缓存
@@ -55,10 +55,11 @@ class Module {
 
 	//已经安装模块
 	public function installed() {
-		$modules = $this->module->where( 'is_system', 0 )->get()?:[];
+		$modules = Modules::where( 'is_system', 0 )->get() ?: [ ];
 		foreach ( $modules as $k => $m ) {
 			//本地模块
-			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ? "addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
+			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ?
+				"addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
 		}
 
 		return view()->with( [ 'modules' => $modules ] );
@@ -93,6 +94,7 @@ class Module {
 
 	//设置新模块
 	public function design() {
+		p($_SERVER);
 		if ( IS_POST ) {
 			//字段基本检测
 			Validate::make( [
@@ -111,19 +113,26 @@ class Module {
 			//模块标识转小写
 			$_POST['name'] = strtolower( $_POST['name'] );
 			//检查插件是否存在
-			if ( is_dir( 'module/' . $_POST['name'] ) || is_dir( 'addons/' . $_POST['name'] )
-			     || $this->module->where( 'name', $_POST['name'] )->first()
+			if ( is_dir( 'module/' . q( 'post.name' ) ) || is_dir( 'addons/' . q( 'post.name' ) )
+			     || Modules::where( 'name', q( 'post.name' ) )->first()
 			) {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
-			if ( ! mkdir( 'addons/' . $_POST['name'], 0755, TRUE ) ) {
+
+			//创建目录
+			if ( ! mkdir( 'addons/' . q( 'post.name' ), 0755, true ) ) {
 				message( '模块目录创建失败,请修改addons目录的权限', 'back', 'error' );
 			}
-			mkdir( 'addons/' . $_POST['name'] . '/template', 0755, TRUE );
+			mkdir( 'addons/' . q( 'post.name' ) . '/view' );
+			mkdir( 'addons/' . q( 'post.name' ) . '/controller' );
+			mkdir( 'addons/' . q( 'post.name' ) . '/model' );
+			mkdir( 'addons/' . q( 'post.name' ) . '/service' );
+			mkdir( 'addons/' . q( 'post.name' ) . '/api' );
 
 			//模块缩略图
-			$info = pathinfo( $_POST['thumb'] );
-			copy( $_POST['thumb'], 'addons/' . $_POST['name'] . '/thumb.' . $info['extension'] );
+			$info = pathinfo( q( 'post.thumb' ) );
+			copy( q( 'post.thumb' ), 'addons/' . q( 'post.name' ) . '/thumb.' . $info['extension'] );
+
 			$_POST['thumb'] = 'thumb.' . strtolower( $info['extension'] );
 			//封面图片
 			$info = pathinfo( $_POST['cover'] );
@@ -135,9 +144,9 @@ class Module {
 			$this->createMessageScript();
 			$this->createManifestFile();
 			message( '模块创建成功', 'prepared', 'success' );
-		} else {
-			return view();
 		}
+
+		return view();
 	}
 
 	//site.php脚本
@@ -151,8 +160,7 @@ class Module {
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
 
     //{$_POST['bindings']['web']['title'][$k]}
     public function doWeb{$do}() {
@@ -169,8 +177,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
 
     //{$_POST['bindings']['member']['title'][$k]}
     public function doWeb{$do}() {
@@ -187,8 +194,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
                 \n
     //{$_POST['bindings']['home']['title'][$k]}
     public function doWeb{$do}() {
@@ -205,8 +211,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
                     \n
     //{$_POST['bindings']['profile']['title'][$k]}
     public function doWeb{$do}() {
@@ -223,8 +228,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
 
     //{$_POST['bindings']['cover']['title'][$k]}
     public function doWeb{$do}() {
@@ -241,8 +245,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
                 \n
     //{$_POST['bindings']['rule']['title'][$k]}
     public function doSite{$do}() {
@@ -259,8 +262,7 @@ str;
 					continue;
 				}
 				$do = ucfirst( $do );
-				$site
-					.= <<<str
+				$site .= <<<str
                 \n
     //{$_POST['bindings']['business']['title'][$k]}
     public function doSite{$do}() {
@@ -271,8 +273,7 @@ str;
 		}
 
 		if ( ! empty( $site ) ) {
-			$site
-				= <<<str
+			$site = <<<str
 <?php namespace addons\\{$_POST['name']};
 /**
  * {$_POST['title']}模块业务定义
@@ -299,8 +300,7 @@ str;
 			$moduleScript = '';
 			if ( isset( $_POST['setting'] ) ) {
 				//创建模板文件
-				$tplScript
-					= <<<str
+				$tplScript = <<<str
 <extend file="resource/view/site"/>
 <block name="content">
 	<div class="panel panel-default">
@@ -327,8 +327,7 @@ str;
 str;
 				file_put_contents( 'addons/' . $_POST['name'] . '/template/setting.html', $tplScript );
 				//php脚本
-				$moduleScript
-					.= <<<str
+				$moduleScript .= <<<str
     public function settingsDisplay(\$settings) {
         //点击模块设置时将调用此方法呈现模块设置页面，\$settings 为模块设置参数, 结构为数组。这个参数系统针对不同公众账号独立保存。
         //在此呈现页面中自行处理post请求并保存设置参数（通过使用\$this->saveSettings()来实现）
@@ -365,8 +364,7 @@ str;
     }
 str;
 			}
-			$moduleScript
-				= <<<str
+			$moduleScript = <<<str
 <?php namespace addons\\{$_POST['name']};
 /**
  * {$_POST['title']}模块定义
@@ -389,8 +387,7 @@ str;
 	private function createMessageScript() {
 		//定阅消息
 		if ( ! empty( $_POST['subscribes'] ) ) {
-			$php
-				= <<<str
+			$php = <<<str
 <?php namespace addons\\{$_POST['name']};
 /**
  * {$_POST['title']}模块消息订阅器
@@ -412,8 +409,7 @@ str;
 		}
 		//直接处理的消息
 		if ( ! empty( $_POST['processors'] ) ) {
-			$php
-				= <<<str
+			$php = <<<str
 <?php namespace addons\\{$_POST['name']};
 /**
  * {$_POST['title']}模块消息处理器
@@ -449,7 +445,7 @@ str;
 							'title'    => $d['title'][ $k ],
 							'do'       => $d['do'][ $k ],
 							'data'     => $d['data'][ $k ],
-							'directly' => isset( $d['directly'][ $k ] ) ? $d['directly'][ $k ] : TRUE,
+							'directly' => isset( $d['directly'][ $k ] ) ? $d['directly'][ $k ] : true,
 						]
 					];
 				}
@@ -474,7 +470,7 @@ str;
 			],
 			'application' => [
 				'@attributes' => [
-					'setting' => isset( $_POST['setting'] ) ? TRUE : FALSE
+					'setting' => isset( $_POST['setting'] ) ? true : false
 				],
 				'name'        => [ '@cdata' => $_POST['name'] ],
 				'title'       => [ '@cdata' => $_POST['title'] ],
@@ -487,7 +483,7 @@ str;
 				'industry'    => [ '@cdata' => $_POST['industry'] ],
 				'thumb'       => [ '@cdata' => $_POST['thumb'] ],
 				'cover'       => [ '@cdata' => $_POST['cover'] ],
-				'rule'        => [ '@attributes' => [ 'embed' => isset( $_POST['rule'] ) ? $_POST['rule'] : FALSE ] ]
+				'rule'        => [ '@attributes' => [ 'embed' => isset( $_POST['rule'] ) ? $_POST['rule'] : false ] ]
 			],
 			'platform'    => $platformXml,
 			'bindings'    => $bindings,
@@ -496,7 +492,7 @@ str;
 			'uninstall'   => [ '@cdata' => $_POST['uninstall'] ],
 			'upgrade'     => [ '@cdata' => $_POST['upgrade'] ],
 		];
-		$manifest = Xml::toXml( 'manifest', $xml_data );
+		$manifest = \Xml::toXml( 'manifest', $xml_data );
 		file_put_contents( 'addons/' . $_POST['name'] . '/manifest.xml', $manifest );
 	}
 
@@ -615,7 +611,7 @@ str;
 					Db::table( 'package' )->where( 'name', $p['name'] )->update( $p );
 				}
 			}
-			service('site')->updateAllCache();
+			service( 'site' )->updateAllCache();
 			message( "模块安装成功", u( 'installed' ) );
 		}
 		$xmlFile = 'addons/' . $_GET['module'] . '/manifest.xml';
@@ -627,6 +623,7 @@ str;
 			go( u( 'download', [ 'module' => $_GET['module'] ] ) );
 		}
 		$package = Db::table( 'package' )->get();
+
 		return view()->with( 'module', $manifest['manifest'] )->with( 'package', $package );
 	}
 
@@ -635,7 +632,7 @@ str;
 		if ( IS_POST ) {
 			$module = q( 'get.module' );
 			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=addons&module=' . $module );
-			$app    = json_decode( $app, TRUE );
+			$app    = json_decode( $app, true );
 			if ( $app ) {
 				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=addons', [ 'file' => $app['data']['package'] ] );
 				file_put_contents( 'tmp.zip', $package );

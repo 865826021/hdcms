@@ -43,6 +43,7 @@ class Component {
 	//字体列表
 	public function font() {
 		\User::loginAuth();
+
 		return View::make();
 	}
 
@@ -51,7 +52,7 @@ class Component {
 		if ( ! v( 'user' ) ) {
 			message( '没有操作权限', 'back', 'error' );
 		}
-		$file = Upload::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->make();
+		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
 		if ( $file ) {
 			$data = [
 				'uid'        => v( 'user.info.uid' ) ?: v( 'user.member.uid' ),
@@ -68,7 +69,7 @@ class Component {
 			Db::table( 'core_attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
 		} else {
-			ajax( [ 'valid' => 0, 'message' => \Upload::getError() ] );
+			ajax( [ 'valid' => 0, 'message' => \File::getError() ] );
 		}
 	}
 
@@ -83,14 +84,17 @@ class Component {
 			//前台会员根据站点编号读取数据
 			$db->where( 'siteid', SITEID );
 		}
-		$data = $db->get();
-		if ( $data ) {
-			foreach ( $data as $k => $v ) {
+		$Res  = $db->paginate( 1 );
+		$data = [ ];
+		if ( $Res->toArray() ) {
+			foreach ( $Res as $k => $v ) {
 				$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );
-				$data[ $k ]['size']       = Tool::getSize( $v['size'] );
+				$data[ $k ]['size']       = \Tool::getSize( $v['size'] );
+				$data[ $k ]['url']        = __ROOT__ . '/' . $v['path'];
+				$data[ $k ]['path']       = __ROOT__ . '/' . $v['path'];
 			}
 		}
-		ajax( [ 'data' => $data ?: [ ], 'page' => $db->links() ] );
+		ajax( [ 'data' => $data, 'page' => $Res->links() ] );
 	}
 
 	//删除图片delWebuploader
@@ -110,7 +114,7 @@ class Component {
 	public function users() {
 		//登录检测
 		\User::loginAuth();
-		if (IS_POST ) {
+		if ( IS_POST ) {
 			//过滤不显示的用户
 			$filterUid = explode( ',', q( 'get.filterUid', '' ) );
 			$db        = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' );
