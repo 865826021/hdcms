@@ -1,6 +1,7 @@
 <?php namespace system\service\User;
 
 use system\service\Common;
+use system\model\User as UserModel;
 
 /**
  * 用户管理服务
@@ -238,6 +239,24 @@ class User extends Common {
 	}
 
 	/**
+	 * 获取站点管理员角色
+	 *
+	 * @param array $role 角色类型：owner: 所有者 manage: 管理员  operate: 操作员
+	 * @param int $siteId 站点编号
+	 *
+	 * @return mixed
+	 */
+	public function getSiteRole( array $role, $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
+		$field  = 'uid,groupid,username,role';
+		$users  = UserModel::join( 'site_user', 'user.uid', '=', 'site_user.uid' )
+		                   ->whereIn( 'role', $role )->where( 'siteid', $siteId )->lists( $field );
+
+		return $users ?: [ ];
+
+	}
+
+	/**
 	 * 获取站长信息
 	 *
 	 * @param int $siteId 站点编号
@@ -250,6 +269,32 @@ class User extends Common {
 		if ( $uid ) {
 			return Db::table( 'user' )->find( $uid );
 		}
+	}
+
+	/**
+	 * 删除用户
+	 *
+	 * @param int $uid 会员编号
+	 *
+	 * @return bool
+	 */
+	public function remove( $uid ) {
+		if ( $this->isSuperUser() ) {
+			$relationDeleteTable = [
+				'user',//用户表
+				'site_user',//站点管理员
+				'user_permission',//用户管理权限
+				'user_profile',//用户字段信息
+			];
+			foreach ( $relationDeleteTable as $table ) {
+				Db::table( $table )->where( 'uid', $uid )->delete();
+			}
+
+			return true;
+		}
+		$this->error = '只有系统管理员可以删除用户';
+
+		return false;
 	}
 
 	/**
@@ -297,7 +342,7 @@ class User extends Common {
 	 * @return string
 	 */
 	public function getRoleTitle( $siteid, $uid ) {
-		if ( ( new User() )->isSuperUser() ) {
+		if ( $this->isSuperUser() ) {
 			return '系统管理员';
 		}
 		$role = $this->where( 'siteid', $siteid )->where( 'uid', $uid )->pluck( 'role' );

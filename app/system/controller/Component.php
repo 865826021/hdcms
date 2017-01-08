@@ -76,7 +76,7 @@ class Component {
 	//获取文件列表webuploader
 	public function filesLists() {
 		$db = Db::table( 'core_attachment' )
-		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ))
+		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ) )
 		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
 		        ->where( 'user_type', v( 'user.system.user_type' ) )
 		        ->orderBy( 'id', 'DESC' );
@@ -109,10 +109,10 @@ class Component {
 
 	//选择用户
 	public function users() {
-		if ( ! Session::get( 'admin_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		if ( isset( $_GET['loadUser'] ) ) {
+
+		//登录检测
+		\User::loginAuth();
+		if (IS_POST ) {
 			//过滤不显示的用户
 			$filterUid = explode( ',', q( 'get.filterUid', '' ) );
 			$db        = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' );
@@ -152,7 +152,7 @@ class Component {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$path   = ROOT_PATH . '/resource/hdjs/component/ueditor';
-		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( $path . "/php/config.json" ) ), TRUE );
+		$CONFIG = json_decode( preg_replace( "/\/\*[\s\S]+?\*\//", "", file_get_contents( $path . "/php/config.json" ) ), true );
 		$action = $_GET['action'];
 		switch ( $action ) {
 			case 'config':

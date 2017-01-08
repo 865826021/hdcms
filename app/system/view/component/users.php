@@ -32,7 +32,7 @@
 <script>
     //加载用户
     function loadUser(username) {
-        $.get('?s=system/component/users&loadUser=1&siteid={{$_GET["siteid"]}}&filterUid={{$_GET["filterUid"]}}&username=' + (username ? username : ''), function (data) {
+        $.post('?s=system/component/users&siteid={{SITEID}}&filterUid={{Request::get("filterUid")}}&username=' + (username ? username : ''), function (data) {
             var tr = '';
             $(data).each(function (i) {
                 tr += '<tr>\

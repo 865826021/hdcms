@@ -1,50 +1,39 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace app\system\controller;
+<?php namespace app\system\controller;
 
-use system\model\Menu;
-use system\model\Modules;
-use system\model\Site;
 use system\model\User;
 use system\model\UserPermission;
-use web\auth;
 
 /**
  * 站点权限设置
  * Class Permission
- * @package core\controller
- * @author 向军
+ * @package app\system\controller
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class Permission {
-
 	public function __construct() {
-		service( 'user' )->loginAuth();
+		\User::loginAuth();
 	}
 
 	//站点管理员设置
 	public function users() {
-		$User = new User();
-		if ( ! service( 'user' )->isManage() ) {
+		if ( ! \User::isManage() ) {
 			message( '你没有站点的管理权限', 'back', 'error' );
 		}
 		//获取除站长外的站点操作员
-		$users = $User->join( 'site_user', 'user.uid', '=', 'site_user.uid' )->where( 'role', '<>', 'owner' )->andWhere( 'siteid', SITEID )->get();
+		$users = \User::getSiteRole( [ 'manage', 'operate' ] );
 		//站长数据
-		$owner = service( 'user' )->getSiteOwner( SITEID );
+		$owner = \User::getSiteOwner( SITEID );
 
 		return view()->with( [ 'users' => $users, 'owner' => $owner ] );
 	}
 
-	//添加操作员
+	/**
+	 * 添加站点操作员
+	 * 只有系统管理员或站长可以执行这个功能
+	 */
 	public function addOperator() {
-		if ( service( 'user' )->isManage() ) {
+		if ( \User::isManage() ) {
 			foreach ( q( 'post.uid', [ ] ) as $uid ) {
 				if ( ! Db::table( "site_user" )->where( "uid", $uid )->where( "siteid", SITEID )->get() ) {
 					Db::table( 'site_user' )->insert( [
@@ -61,7 +50,7 @@ class Permission {
 
 	//更改会员的站点角色
 	public function changeRole() {
-		if ( service( 'user' )->isManage() ) {
+		if ( \User::isManage() ) {
 			Db::table( 'site_user' )->where( 'uid', $_POST['uid'] )->where( 'siteid', SITEID )->update( [ 'role' => $_POST['role'] ] );
 			message( '管理员角色更新成功', '', 'success' );
 		} else {
@@ -71,9 +60,9 @@ class Permission {
 
 	//删除站点用户
 	public function removeSiteUser() {
-		if ( ( new User() )->isManage() ) {
-			Db::table( 'site_user' )->where( 'siteid', SITEID )->whereIn( 'uid', $_POST['uids'] )->delete();
-			message( '站点管理员删除成功', '', 'success' );
+		if ( \User::isManage() ) {
+			Db::table( 'site_user' )->where( 'siteid', SITEID )->whereIn( 'uid', Request::post( 'uids' ) )->delete();
+			message( '站点管理员删除成功' );
 		} else {
 			message( '你没有操作站点的权限', '', 'error' );
 		}
@@ -81,7 +70,7 @@ class Permission {
 
 	//设置菜单权限
 	public function menu() {
-		service( 'user' )->superUserAuth();
+		\User::superUserAuth();
 		//设置权限的用户
 		$uid = Request::get( 'fromuid' );
 		if ( IS_POST ) {
@@ -115,9 +104,9 @@ class Permission {
 		//读取菜单表
 		$menus = service( 'menu' )->getLevelMenuLists();
 		//获取原有权限
-		$permission = service( 'user' )->getUserAtSiteAccess( SITEID, $uid );
+		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
 		//获取可使用的模块
-		$modules = service( 'module' )->getSiteAllModules( SITEID, FALSE );
+		$modules = service( 'module' )->getSiteAllModules( SITEID, false );
 
 		//模块权限
 		return view()->with( [

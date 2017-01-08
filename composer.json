@@ -21,6 +21,9 @@
     "houdunwang/framework": "3.0.*"
   },
   "autoload": {
+    "files": [
+      "system/helper.php"
+    ],
     "psr-4": {
       "app\\": "app",
       "system\\": "system",

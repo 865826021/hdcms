@@ -16,6 +16,7 @@
 		};
 	</script>
 	<script src="node_modules/hdjs/config.js"></script>
+	<script src="resource/js/hdcms.js"></script>
 	<link href="resource/css/hdcms.css" rel="stylesheet">
 	<script>
 		window.system = {
@@ -153,5 +154,25 @@
 		}
 	})
 </script>
+<if value="!empty($errors)">
+	<script>
+		//错误消息提示
+		require(['util'], function (util) {
+			var obj = util.modal({
+				title: '友情提示',//标题
+				content: '<div><i class="pull-left fa fa-4x fa-info-circle"></i>' +
+				'<div class="pull-left"><?php echo implode('<br/>',$errors);?></div>' +
+				'<div class="clearfix"></div></div>',//内容
+				footer: '<button type="button" class="btn btn-default confirm" data-dismiss="modal">关闭</button>',//底部
+				width: 600,//宽度
+				class:'alert alert-info',
+				events: {
+				}
+			});
+			//显示模态框
+			obj.modal('show');
+		});
+	</script>
+</if>
 </body>
 </html>

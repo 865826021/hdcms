@@ -1,4 +1,5 @@
 <?php namespace system\service\site;
+
 use system\model\MemberFields;
 use system\model\MemberGroup;
 use system\model\SiteSetting;
@@ -11,7 +12,7 @@ use system\service\Common;
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class Site extends Common{
+class Site extends Common {
 	/**
 	 * 加载当前请求的站点缓存
 	 *
@@ -47,11 +48,40 @@ class Site extends Common{
 			"back_url"       => '',
 		];
 		//设置微信通信数据配置
-		c( 'weixin', array_merge( c( 'weixin' ), $config ) );
+		c( 'weixin', array_merge( c( 'wechat' ), $config ) );
 		//设置邮箱配置
 		c( 'mail', v( 'setting.smtp' ) );
 
-		return TRUE;
+		return true;
+	}
+
+	/**
+	 * 删除站点
+	 *
+	 * @param int $siteId 站点编号
+	 *
+	 * @return bool
+	 */
+	public function remove( $siteId ) {
+		/**
+		 * 删除所有包含siteid的表
+		 * 因为siteid在系统中是站点编号
+		 */
+		$tables = \Schema::getAllTableInfo();
+		foreach ( $tables['table'] as $name => $info ) {
+			$table = str_replace( c( 'database.prefix' ), '', $name );
+			//表中存在siteid字段时操作这个表
+			if ( \Schema::fieldExists( 'siteid', $table ) ) {
+				Db::table( $table )->where( 'siteid', $siteId )->delete();
+			}
+		}
+		//删除缓存
+		$keys = [ 'access', 'setting', 'wechat', 'site', 'modules', 'module_binding' ];
+		foreach ( $keys as $key ) {
+			d( "{$key}:{$siteId}", '[del]' );
+		}
+
+		return true;
 	}
 
 	/**
@@ -62,36 +92,48 @@ class Site extends Common{
 	 * @return bool
 	 */
 	public function has( $siteId ) {
-		return $this->where( 'siteid', $siteId )->get() ? TRUE : FALSE;
+		return $this->where( 'siteid', $siteId )->get() ? true : false;
 	}
 
 	/**
-	 * 初始化站点的会员字段信息数据
+	 * 新建站点时初始化站点的默认数据
 	 *
 	 * @param int $siteId 站点编号
 	 *
 	 * @return bool
 	 */
 	public function InitializationSiteTableData( $siteId ) {
-		$SiteSetting                    = new SiteSetting();
-		$SiteSetting['siteid']          = $siteId;
-		$SiteSetting['creditnames']     = [
+		/*
+		|--------------------------------------------------------------------------
+		| 站点设置
+		|--------------------------------------------------------------------------
+		*/
+		$SiteSetting                = new SiteSetting();
+		$SiteSetting['siteid']      = $siteId;
+		$SiteSetting['creditnames'] = [
 			'credit1' => [ 'title' => '积分', 'status' => 1 ],
 			'credit2' => [ 'title' => '余额', 'status' => 1 ],
 			'credit3' => [ 'title' => '', 'status' => 0 ],
 			'credit4' => [ 'title' => '', 'status' => 0 ],
 			'credit5' => [ 'title' => '', 'status' => 0 ],
 		];
-		$SiteSetting['register']        = [
+		//注册设置
+		$SiteSetting['register'] = [
 			'focusreg' => 0,
 			'item'     => 2
 		];
+		//积分策略
 		$SiteSetting['creditbehaviors'] = [
 			'activity' => 'credit1',
 			'currency' => 'credit2'
 		];
 		$SiteSetting->save();
-		//添加默认会员组
+
+		/*
+		|--------------------------------------------------------------------------
+		| 站点会员组设置
+		|--------------------------------------------------------------------------
+		*/
 		$MemberGroup              = new MemberGroup();
 		$MemberGroup['siteid']    = $siteId;
 		$MemberGroup['title']     = '会员';
@@ -99,7 +141,11 @@ class Site extends Common{
 		$MemberGroup['is_system'] = 1;
 		$MemberGroup->save();
 
-		//创建用户字段表数据
+		/*
+		|--------------------------------------------------------------------------
+		| 创建用户字段表数据
+		|--------------------------------------------------------------------------
+		*/
 		$memberField = new MemberFields();
 		$memberField->where( 'siteid', $siteId )->delete();
 		$profile_fields = Db::table( 'profile_fields' )->get();
@@ -112,7 +158,7 @@ class Site extends Common{
 			$memberField->insert( $d );
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -151,12 +197,12 @@ class Site extends Common{
 		$setting ['pay']             = unserialize( $setting['pay'] );
 		$data['setting']             = $setting;
 		//站点模块
-		$data['modules'] = \Module::getSiteAllModules( $siteId, FALSE );
+		$data['modules'] = \Module::getSiteAllModules( $siteId, false );
 		foreach ( $data as $key => $value ) {
 			d( "{$key}:{$siteId}", $value );
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -168,7 +214,7 @@ class Site extends Common{
 			$this->updateCache( $siteid );
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -186,7 +232,7 @@ class Site extends Common{
 	 *
 	 * @return array
 	 */
-	public function getSiteGroups( $siteid = NULL ) {
+	public function getSiteGroups( $siteid = null ) {
 		$siteid = $siteid ?: SITEID;
 
 		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get() ?: [ ];

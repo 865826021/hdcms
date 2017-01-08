@@ -89,13 +89,14 @@ class Site {
 			$site['domain']      = Request::post( 'domain' );
 			$site['module']      = Request::post( 'module' );
 			$siteId              = $site->save();
+
 			//添加站长数据,系统管理员不添加数据
 			\User::setSiteOwner( $siteId, v( 'user.info.uid' ) );
 			//创建用户字段表数据
 			\Site::InitializationSiteTableData( $siteId );
 			//更新站点缓存
 			\Site::updateCache( $siteId );
-			message( '站点添加成功', 'lists', 'error' );
+			message( '站点添加成功', 'lists' );
 		}
 
 		return view( 'site_setting' );
@@ -209,19 +210,18 @@ class Site {
 
 	//删除站点
 	public function remove() {
-		$Site = new \system\model\Site();
-		if ( service( 'user' )->isManage() ) {
-			$Site->remove( SITEID );
+		if ( \User::isManage() ) {
+			\Site::remove( SITEID );
 			Session::del( 'siteid' );
-			message( '网站删除成功', 'back', 'success' );
+			message( '网站删除成功', 'with' );
 		}
-		message( '你不是站长不可以删除网站', 'back', 'error' );
+		message( '你不是站长不可以删除网站', 'with' );
 	}
 
 	//编辑站点
 	public function edit() {
-		if ( ! service( 'user' )->isManage() ) {
-			message( '你没有编辑站点的权限', 'back', 'success' );
+		if ( ! \User::isManage() ) {
+			message( '你没有编辑站点的权限', 'with' );
 		}
 
 		if ( IS_POST ) {

@@ -54,17 +54,6 @@ class User extends Common {
 	];
 
 	/**
-	 * 删除用户时关联删除数据的表
-	 * @var array
-	 */
-	protected $relationDeleteTable = [
-		'user',//用户表
-		'site_user',//站点管理员
-		'user_permission',//用户管理权限
-		'user_profile',//用户字段信息
-	];
-
-	/**
 	 * 获取默认组
 	 */
 	protected function autoGroupId() {
@@ -82,18 +71,6 @@ class User extends Common {
 		$data['password'] = md5( Request::post( 'password' ) . $data['security'] );
 
 		return $data;
-	}
-
-	/**
-	 * 删除用户
-	 * @return bool
-	 */
-	public function remove() {
-		foreach ( $this->relationDeleteTable as $t ) {
-			Db::table( $t )->where( 'uid', $this['uid'] )->delete();
-		}
-
-		return true;
 	}
 
 	/**
