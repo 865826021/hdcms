@@ -1103,60 +1103,6 @@
         ]
     },
     {
-        "name": "houdunwang/route",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/route.git",
-            "reference": "c62167b5dd7fa972cde33fa744e1db9bfa29fe09"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/route/zipball/c62167b5dd7fa972cde33fa744e1db9bfa29fe09",
-            "reference": "c62167b5dd7fa972cde33fa744e1db9bfa29fe09",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/cache": "~1.0",
-            "houdunwang/config": "~1.0",
-            "houdunwang/container": "~1.0",
-            "houdunwang/controller": "~1.0",
-            "houdunwang/request": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 18:37:08",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\route\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "路由管理组件",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "router",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "路由器"
-        ]
-    },
-    {
         "name": "houdunwang/rbac",
         "version": "v1.0.4",
         "version_normalized": "1.0.4.0",
@@ -2059,18 +2005,72 @@
         ]
     },
     {
-        "name": "houdunwang/framework",
-        "version": "v3.0.50",
-        "version_normalized": "3.0.50.0",
+        "name": "houdunwang/route",
+        "version": "v1.0.5",
+        "version_normalized": "1.0.5.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/houdunwang/framework.git",
-            "reference": "f01f9336242f5e2361eea9acaa562e79ffbe1bcb"
+            "url": "https://github.com/houdunwang/route.git",
+            "reference": "66be5597b416ee6f2b1f4ce1ff7d86e262c6ba05"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/framework/zipball/f01f9336242f5e2361eea9acaa562e79ffbe1bcb",
-            "reference": "f01f9336242f5e2361eea9acaa562e79ffbe1bcb",
+            "url": "https://api.github.com/repos/houdunwang/route/zipball/66be5597b416ee6f2b1f4ce1ff7d86e262c6ba05",
+            "reference": "66be5597b416ee6f2b1f4ce1ff7d86e262c6ba05",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/cache": "~1.0",
+            "houdunwang/config": "~1.0",
+            "houdunwang/container": "~1.0",
+            "houdunwang/controller": "~1.0",
+            "houdunwang/request": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-08 05:35:49",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\route\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "路由管理组件",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "router",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "路由器"
+        ]
+    },
+    {
+        "name": "houdunwang/framework",
+        "version": "v3.0.51",
+        "version_normalized": "3.0.51.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/framework.git",
+            "reference": "0617983cf9ee137c342448af3a8e617aa7f625d8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/framework/zipball/0617983cf9ee137c342448af3a8e617aa7f625d8",
+            "reference": "0617983cf9ee137c342448af3a8e617aa7f625d8",
             "shasum": ""
         },
         "require": {
@@ -2117,7 +2117,7 @@
             "houdunwang/zip": "~1.0",
             "php": ">=5.4.0"
         },
-        "time": "2017-01-07 13:38:32",
+        "time": "2017-01-08 05:36:45",
         "type": "project",
         "installation-source": "dist",
         "autoload": {
