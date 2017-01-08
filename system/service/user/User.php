@@ -267,6 +267,9 @@ class User extends Common {
 
 	/**
 	 * 检测当前帐号是否能添加站点
+	 *
+	 * @param int $uid 用户编号
+	 *
 	 * @return bool
 	 */
 	public function hasAddSite( $uid = 0 ) {
