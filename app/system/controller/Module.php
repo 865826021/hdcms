@@ -94,7 +94,113 @@ class Module {
 
 	//设置新模块
 	public function design() {
-		p($_SERVER);
+		$xml = [
+			'manifest_code'      => '2.0',
+			'title'              => '',
+			'name'               => '',
+			'version'            => '',
+			'industry'           => '',
+			'resume'             => '',
+			'detail'             => '',
+			'author'             => '',
+			'url'                => '',
+			'setting'            => '',
+			'web'                => [
+				'entry'  => [
+					'title' => '',
+					'do'    => ''
+				],
+				'member' => [
+					[
+						'title' => '',
+						'do'    => ''
+					]
+				]
+			],
+			'mobile'             => [
+				'home'   => [
+					[
+						'title' => '',
+						'do'    => ''
+					]
+				],
+				'member' => [
+					[
+						'title' => '',
+						'do'    => ''
+					]
+				]
+			],
+			'subscribes'         => [
+				'text'        => true,
+				'image'       => true,
+				'voice'       => true,
+				'video'       => true,
+				'shortvideo'  => true,
+				'location'    => true,
+				'link'        => true,
+				'subscribe'   => true,
+				'unsubscribe' => true,
+				'scan'        => true,
+				'track'       => true,
+				'click'       => true,
+				'view'        => true
+			],
+			'processors'         => [
+				'text'        => true,
+				'image'       => true,
+				'voice'       => true,
+				'video'       => true,
+				'shortvideo'  => true,
+				'location'    => true,
+				'link'        => true,
+				'subscribe'   => true,
+				'unsubscribe' => true,
+				'scan'        => true,
+				'track'       => true,
+				'click'       => true,
+				'view'        => true
+			],
+			'cover'              => [
+				[
+					'title' => '',
+					'do'    => ''
+				]
+			],
+			'rule'               => [
+				[
+					'title' => '',
+					'do'    => ''
+				]
+			],
+			'business'           => [
+				[
+					'title'      => '',
+					'controller' => '',
+					'action'     => [
+						[
+							'title' => '',
+							'do'    => ''
+						]
+					]
+				]
+			],
+			'compatible_version' => [
+				'version2' => true
+			],
+			'thumb'              => '',
+			'install'            => [ '@cdata' => '' ],
+			'upgrade'            => [ '@cdata' => '' ]
+		];
+//		header( 'Content-Type: application/xml' );
+		file_put_contents('package.json',json_encode($xml,true));
+//		$xml =  \Xml::toXml( 'manifest', $xml);
+//		file_put_contents('package.xml',$xml);
+//		echo $xml;exit;
+//		echo \Xml::toSimpleXml( $xml );
+//		exit;
+
+
 		if ( IS_POST ) {
 			//字段基本检测
 			Validate::make( [
