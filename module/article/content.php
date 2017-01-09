@@ -159,7 +159,7 @@ class content extends hdSite {
 	}
 
 	//删除文章
-	public function doSiteArticleDel() {ato
+	public function doSiteArticleDel() {
 		model( 'WebArticle' )->del( Request::get( 'aid' ) );
 		message( '文章删除文章成功', 'back', 'success' );
 	}

@@ -12,9 +12,9 @@
         <li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
     </ul>
     <div class="clearfix">
-        <h5 class="page-header">安装 {{$module['application']['name']['@cdata']}}</h5>
+        <h5 class="page-header">安装 {{$module['name']}}</h5>
 
-        <div class="alert alert-info" role="alert">您正在安装 [{{$module['application']['title']['@cdata']}}] 模块. 请选择哪些公众号服务套餐组可使用 [{{$module['application']['title']['@cdata']}}] 模块功能 .</div>
+        <div class="alert alert-info" role="alert">您正在安装 [{{$module['title']}}] 模块. 请选择哪些公众号服务套餐组可使用 [{{$module['title']}}] 模块功能 .</div>
 
         <h5 class="page-header">可用的公众号服务套餐组
             <small>这里来定义哪些公众号服务套餐组可使用 测试模块 功能</small>
@@ -23,7 +23,8 @@
             <label for="" class="col-sm-2 control-label">公众号服务套餐组</label>
 
             <form action="" method="post">
-                <input type="hidden" name="module" value="{{$module['application']['name']['@cdata']}}">
+                {{csrf_field()}}
+                <input type="hidden" name="module" value="{{$module['name']}}">
 
                 <div class="col-sm-10">
                     <div class="checkbox">
@@ -49,10 +50,9 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">确定继续安装 [{{$module['application']['title']['@cdata']}}] 模块</button>
+                        <button type="submit" class="btn btn-primary">确定继续安装 [{{$module['title']}}] 模块</button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>

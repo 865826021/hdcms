@@ -14,7 +14,7 @@
 			</li>
 		</ul>
 		<form action="" class="form-horizontal form ng-cloak" ng-controller="ctrl" method="post">
-			@{{name}}
+			{{csrf_field()}}
 			<h5 class="page-header">模块基本信息
 				<small>这里来定义你自己模块的基本信息</small>
 			</h5>
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">发布页</label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">发布网址</label>
 
 				<div class="col-sm-10 col-xs-12">
 					<input type="text" class="form-control" ng-model="field.url">
@@ -78,16 +78,25 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">配置项</label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">模块配置</label>
 				<div class="col-sm-10 col-xs-12">
 					<label class="checkbox-inline">
-						<input type="checkbox" name="setting" value="true" ng-model="field.setting">
+						<input type="checkbox" value="true" ng-model="field.setting">
 						存在全局设置项
 					</label>
-					<span class="help-block">此模块是否存在配置参数, HDCMS会对每个模块设置独立的配置项, 模块间不影响。</span>
+					<span class="help-block">此模块是否存在配置参数, 系统会对每个模块设置独立的配置项模块间互不影响</span>
 				</div>
 			</div>
-
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">模板标签</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.tag">
+						设置模板标签
+					</label>
+					<span class="help-block">用于创建模板使用的自定义标签, 模板标签在 system/tag.php 文件中实现</span>
+				</div>
+			</div>
 			<h5 class="page-header">公众平台消息处理选项
 				<small>这里来定义公众平台消息相关处理</small>
 			</h5>
@@ -248,33 +257,28 @@
 			<h5 class="page-header">微信回复设置
 				<small>微信公众号回复内容设置</small>
 			</h5>
-			<div id="bindings-cover">
-				<div class="form-group" ng-repeat="v in field.cover">
+			<div ng-repeat="v in field.cover">
+				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">功能封面</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作附加数据</span>
-								<input class="form-control" ng-model="v.data" type="text" placeholder="操作附加数据">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 ">
-							<div style="margin-left:-15px;">
+
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
-									<input type="checkbox" ng-model="v.directly">无需登陆直接展示
-									<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
+									<a href="javascript:;" ng-click="delCover(v)" class="fa fa-times-circle"
+									   title="删除此操作"></a>
 								</label>
 							</div>
 						</div>
@@ -282,114 +286,123 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
-				<div class="col-sm-10 col-xs-12">
+				<div class="col-sm-10 col-xs-12 col-md-9 col-md-offset-1">
 					<div class="well well-sm">
-						<a href="javascript:;">添加操作<i class="fa fa-plus-circle" title="添加菜单"></i></a>
+						<a href="javascript:;" ng-click="addCover()">
+							添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i>
+						</a>
 					</div>
 					<span class="help-block">
-						功能封面是定义微站里一个独立功能的入口(手机端操作), 将呈现为一个图文消息,
+						功能封面是定义微站里一个独立功能的入口(微信客户端操作), 将呈现为一个图文消息,
 						点击后进入微站系统中对应的功能,
 					</span>
 					<span class="help-block"><strong>注意: 功能封面在 system/cover.php 文件中实现</strong></span>
 				</div>
 			</div>
-			<div ng-repeat="v in field.rule">
-				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">规则列表</label>
-					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">入口标识</span>
-								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作附加数据</span>
-								<input class="form-control" ng-model="v.data" type="text" placeholder="操作附加数据">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 ">
-							<div style="margin-left:-15px;">
-								<label class="checkbox-inline" style="vertical-align:bottom">
-									<input type="checkbox" ng-model="v.directly" value="true">无需登陆直接展示
-								</label>
-								<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">回复规则</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<div class="well well-sm">
-						<a href="javascript:;" onclick="addFeature('rule', '规则列表');">添加操作 <i class="fa fa-plus-circle"
-						                                                                     title="添加菜单"></i></a>
-					</div>
+					<label class="checkbox-inline">
+						<input type="checkbox" ng-model="field.rule"> 需要回复规则
+					</label>
 					<span class="help-block">
-                        规则列表是定义可重复使用或者可创建多次的活动的功能入口(管理后台Web操作),
-						每个活动对应一条规则. 一般呈现为图文消息, 点击后进入定义好的某次活动中.
-                    </span>
-					<span class="help-block"><strong>注意: 规则列表在 system/rule.php 文件中实现</strong></span>
+						注意: 如果需要回复规则, 那么模块必须能够处理文本类型消息,
+						模块安装后系统会自动添加 “回复规则列表” 菜单，用户可以设置关键字触发到模块中。
+					</span>
 				</div>
 			</div>
+
 			<!--业务功能-->
 			<h5 class="page-header">模块业务设置
 				<small>设置模块的业务功能菜单</small>
 			</h5>
-			<div id="bindings-business">
+			<div ng-repeat="(key,v) in field.business"
+			     style="padding-top: 20px;margin-bottom: 10px;background-color: #efefef;border:solid 1px #dedede;">
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">业务功能</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
-								<input class="form-control" name="bindings[business][title][]" type="text"
+								<input class="form-control" ng-model="v.title" type="text"
 								       placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
-								<input class="form-control" name="bindings[business][do][]" type="text"
-								       placeholder="请输入操作入口">
+								<input class="form-control" ng-model="v.controller" type="text"
+								       placeholder="请输入控制器文件名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作附加数据</span>
-								<input class="form-control" name="bindings[business][data][]" type="text"
-								       placeholder="操作附加数据">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div style="margin-left:-15px;">
-								<label class="checkbox-inline " style="vertical-align:bottom">
-									<input type="checkbox" name="bindings[business][directly][]" value="true">无需登陆直接展示
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
+								<label class="checkbox-inline" style="vertical-align:bottom">
+									<a href="javascript:;" ng-click="delBusiness(v)" class="fa fa-times-circle"
+									   title="删除此操作"></a>
 								</label>
-								<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
 							</div>
 						</div>
 					</div>
 				</div>
+				<!--动作方法-->
+				<div class="form-group" ng-repeat="d in v.action">
+					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">动作方法</label>
+					<div class="col-sm-10">
+						<div class="col-xs-12 col-sm-12 col-md-6">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">操作名称</span>
+								<input class="form-control" ng-model="d.title" type="text"
+								       placeholder="请输入中文操作名称">
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-5">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">入口标识</span>
+								<input class="form-control" ng-model="d.do" type="text" placeholder="请输入操作入口">
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
+								<label class="checkbox-inline" style="vertical-align:bottom">
+									<a href="javascript:;" ng-click="delBusinessAction(key,d)"
+									   class="fa fa-times-circle"
+									   title="删除此操作"></a>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-10 col-xs-12 col-md-9 col-md-offset-1">
+						<div class="well well-sm">
+							<a href="javascript:;" ng-click="addBusinessAction(v)">
+								添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!--动作方法end-->
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">权限标识</label>
+				<div class="col-sm-10 col-xs-12 col-md-12">
+					<div class="well well-sm">
+						<a href="javascript:;" ng-click="addBusiness()">
+							添加业务 <i class="fa fa-plus-circle" title="添加菜单"></i>
+						</a>
+					</div>
+				</div>
+			</div>
 
-				<div class="col-xs-12 col-sm-12 col-md-10 col-lg-11">
-					<textarea name="permission" cols="30" rows="6" class="form-control"
-					          placeholder="添加商品: shop_add"></textarea>
-					<span class="help-block">
-                        如果您设计的模块添加的自定义的控制器需要权限设置(后台管理使用)，您可以在这里输入权限标识，
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">权限标识</label>
+				<div class="col-xs-12 col-sm-12 col-md-10">
+					<textarea cols="30" rows="6" class="form-control" ng-model="field.permissions"
+					          placeholder="添加商品:shop_add"></textarea>
+					<span class="help-block col-md-11">
+                        如果您设计的模块添加的业务需要权限设置(后台管理使用)，您可以在这里输入权限标识，
 权限标识由：控制器名_方法名组成。例如,商城模块的添加商品权限标识：goods_add",说明:控制器名称为：goods,方法为：add,则对应标识为：goods_add
 ,多个权限标识使用换行隔开。模块方法中使用auth('goods_add')进行权限验证
                     </span>
@@ -410,37 +423,30 @@
 				</div>
 			</div>
 
-			<!--桌面导航设置-->
+			<!--模块入口设置-->
 			<h5 class="page-header">模块入口设置
-				<small></small>
+				<small>模块的入口导航设置</small>
 			</h5>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">入口导航</label>
 				<div class="col-sm-10">
-					<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+					<div class="col-xs-12 col-sm-12 col-md-6">
 						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 							<span class="input-group-addon">操作名称</span>
 							<input class="form-control" ng-model="field.web.entry.title" type="text"
 							       placeholder="请输入中文操作名称">
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-5 col-lg-3">
+					<div class="col-xs-12 col-sm-12 col-md-5">
 						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 							<span class="input-group-addon">入口标识</span>
 							<input class="form-control" ng-model="field.web.entry.do" type="text" placeholder="请输入操作入口">
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-3 ">
-						<div style="margin-left:-15px;">
-							<label class="checkbox-inline" style="vertical-align:bottom">
-								<input type="checkbox" ng-model="field.web.entry.directly">无需登陆直接展示
-							</label>
-						</div>
-					</div>
 					<span class="help-block" style="clear: both;">
 						在站点设置中设置模块为默认模块时, 通过站点域名进入后默认执行的动作。
 					</span>
-					<div class="alert alert-warning">
+					<div class="alert alert-warning col-md-11">
 						只有在站点设置中将模块定义为默认模块时本功能才有意义
 					</div>
 				</div>
@@ -452,28 +458,24 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">会员中心</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-1 col-lg-3">
-							<div style="margin-left:-15px;">
-								<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 ">
-							<div style="margin-left:-15px;">
+
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
-									<input type="checkbox" ng-model="v.directly">无需登陆直接展示
-									<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
+									<a href="javascript:;" ng-click="delWebMember(v)" class="fa fa-times-circle"
+									   title="删除此操作"></a>
 								</label>
 							</div>
 						</div>
@@ -481,10 +483,11 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
-				<div class="col-sm-10 col-xs-12">
+				<div class="col-sm-10 col-xs-12 col-md-9 col-md-offset-1">
 					<div class="well well-sm">
-						<a href="javascript:;">添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i></a>
+						<a href="javascript:;" ng-click="addWebMember()">
+							添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i>
+						</a>
 					</div>
 					<span class="help-block">在PC桌面端的会员中心上显示相关功能的链接入口</span>
 					<span class="help-block"><strong>注意: 桌面个人中心导航在 system/navigate.php 文件中实现</strong></span>
@@ -498,41 +501,34 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">首页导航</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.name" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作附加数据</span>
-								<input class="form-control" ng-model="v.data" type="text"
-								       placeholder="操作附加数据">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div style="margin-left:-15px;">
-								<label class="checkbox-inline " style="vertical-align:bottom">
-									<input type="checkbox" ng-model="v.directly">无需登陆直接展示
+
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
+								<label class="checkbox-inline" style="vertical-align:bottom">
+									<a href="javascript:;" ng-click="delMobileHome(v)" class="fa fa-times-circle"
+									   title="删除此操作"></a>
 								</label>
-								<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
-				<div class="col-sm-10 col-xs-12">
+				<div class="col-sm-10 col-xs-12 col-md-9 col-md-offset-1">
 					<div class="well well-sm">
-						<a href="javascript:;">
+						<a href="javascript:;" ng-click="addMobileHome()">
 							添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i>
 						</a>
 					</div>
@@ -547,41 +543,36 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">会员中心</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-6">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
+						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
-								<span class="input-group-addon">操作附加数据</span>
-								<input class="form-control" ng-model="v.data" type="text" placeholder="操作附加数据">
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-12 col-md-4 col-lg-3">
-							<div style="margin-left:-15px;">
-								<label class="checkbox-inline " style="vertical-align:bottom">
-									<input type="checkbox" ng-model="v.directly" value="true">无需登陆直接展示
+
+						<div class="col-xs-12 col-sm-12 col-md-1">
+							<div style="margin-left:-45px;">
+								<label class="checkbox-inline" style="vertical-align:bottom">
+									<a href="javascript:;" ng-click="delMobileMember(v)" class="fa fa-times-circle"
+									   title="删除此操作"></a>
 								</label>
-								<a href="javascript:;" class="fa fa-times-circle" title="删除此操作"></a>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
-				<div class="col-sm-10 col-xs-12">
+				<div class="col-sm-10 col-xs-12 col-md-9 col-md-offset-1">
 					<div class="well well-sm">
-						<a href="javascript:;" onclick="addFeature('profile', '微站个人中心导航');">添加操作 <i
-								class="fa fa-plus-circle" title="添加菜单"></i></a>
+						<a href="javascript:;" ng-click="addMobileMember()">
+							添加操作 <i class="fa fa-plus-circle" title="添加菜单"></i>
+						</a>
 					</div>
 					<span class="help-block">
                         在微站的个人中心上显示相关功能的链接入口(手机端操作), 一般用于个人信息, 或针对个人的数据的展示.
@@ -605,69 +596,65 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块缩略图</label>
 				<div class="col-sm-10">
 					<div class="input-group">
-						<input type="text" class="form-control" name="thumb" readonly="" value="">
+						<input type="text" class="form-control" readonly="" ng-model="field.thumb">
 						<div class="input-group-btn">
-							<button onclick="upImage(this)" class="btn btn-default" type="button">选择图片</button>
+							<button ng-click="uploadThumb()" class="btn btn-default" type="button">选择图片</button>
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail img-thumb" width="150">
+						<img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail img-thumb" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    onclick="removeImg(this)">×</em>
+						    ng-click="field.thumb='resource/images/nopic.jpg'">×</em>
 					</div>
-					<span class="help-block">用 48*48 的图片来让你的模块更吸引眼球吧</span>
+					<span class="help-block">用 80*80 的图片来让你的模块更吸引眼球吧</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">官网展示图</label>
 				<div class="col-sm-10">
 					<div class="input-group">
-						<input type="text" class="form-control" name="cover" readonly="" value="">
+						<input type="text" class="form-control" readonly="" ng-model="field.preview">
 						<div class="input-group-btn">
-							<button onclick="upCoverImage(this)" class="btn btn-default" type="button">选择图片</button>
+							<button ng-click="uploadPreview()" class="btn btn-default" type="button">选择图片</button>
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail img-cover" width="150">
+						<img ng-src="@{{field.preview}}" class="img-responsive img-thumbnail img-cover" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    onclick="removeImg(this)">×</em>
+						    ng-click="field.preview='resource/images/nopic.jpg'">×</em>
 					</div>
 					<span class="help-block">模块封面, 大小为 600*350, 更好的设计将会获得官方推荐位置</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">安装脚本</label>
-				<div class="col-sm-10 col-xs-12">
-					<textarea class="form-control" ng-model="field.install" rows="4"></textarea>
+				<div class="col-sm-10 col-xs-10">
+					<textarea class="form-control" ng-model="field.install" rows="5"></textarea>
 					<span class="help-block">当前模块全新安装时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: install.php</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">卸载脚本</label>
 				<div class="col-sm-10 col-xs-12">
-					<textarea class="form-control" ng-model="field.uninstall" rows="4"></textarea>
+					<textarea class="form-control" ng-model="field.uninstall" rows="5"></textarea>
 					<span class="help-block">当前模块卸载时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: uninstall.php</span>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">升级脚本</label>
 				<div class="col-sm-10 col-xs-12">
-					<textarea class="form-control" ng-model="field.upgrade" rows="4"></textarea>
+					<textarea class="form-control" ng-model="field.upgrade" rows="5"></textarea>
 					<span class="help-block">当前模块更新时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: upgrade.php. (推荐使用php脚本, 方便检测字段及兼容性)</span>
-					<input type="hidden" name="token" value="6708fa25">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
 				<div class="col-sm-10 col-xs-12">
-					<input name="method" type="hidden" value="download">
-					<input name="token" type="hidden" value="6708fa25">
-					<input type="submit" class="btn btn-primary" id="createBtn" name="submit"
-					       onclick="$(':hidden[name=method]').val('create');"
-					       value="生成模块模板">
+					<input type="submit" class="btn btn-primary" value="生成模块模板">
 					<p class="help-block">点此直接在源码目录 addons/<span class="identifie"></span> 处生成模块开发的模板文件, 方便快速开发</p>
 				</div>
 			</div>
+			<textarea name="data" ng-model="data" hidden="hidden"></textarea>
 		</form>
 	</div>
 </block>
@@ -687,56 +674,38 @@
 				$scope.field = {
 					"manifest_code": "2.0",
 					"title": "aaa",
-					"name": "标识",
-					"version": "版本",
+					"name": "hdcms",
+					"version": "1.0",
 					"industry": "business",
 					"resume": "resume",
 					"detail": "detail",
 					"author": "author",
 					"url": "url",
 					"setting": true,
+					"tag": true,
 					"web": {
 						"entry": {
-							"title": "title",
-							"do": "do",
-							"directly": true
+							"title": "桌面入口导航",
+							"do": "zuomianrukou",
 						},
 						"member": [
 							{
-								"title": "title",
-								"do": "do",
-								"directly": true
-							},
-							{
-								"title": "title",
-								"do": "do",
-								"directly": true
+								"title": "桌面会员中心",
+								"do": "zuomianmember",
 							}
 						]
 					},
 					"mobile": {
 						"home": [
 							{
-								"title": "title",
-								"do": "do",
-								"directly": true
-							},
-							{
-								"title": "title",
-								"do": "do",
-								"directly": true
+								"title": "移动端首页导航",
+								"do": "mobilesouye",
 							}
 						],
 						"member": [
 							{
-								"title": "title",
-								"do": "do",
-								"directly": true
-							},
-							{
-								"title": "title",
-								"do": "do",
-								"directly": true
+								"title": "移动端会员中心",
+								"do": "mobilemember",
 							}
 						]
 					},
@@ -772,44 +741,138 @@
 					},
 					"cover": [
 						{
-							"title": "title",
-							"do": "do",
-							"directly": true
+							"title": "功能封面1",
+							"do": "fengmian1",
 						},
 						{
-							"title": "title",
-							"do": "do",
-							"directly": true
+							"title": "功能封面2",
+							"do": "fengmian2",
 						}
 					],
-					"rule": [
-						{
-							"title": "",
-							"do": "",
-							"directly": true
-						}
-					],
+					"rule": true,
 					"business": [
 						{
-							"title": "",
-							"controller": "",
+							"title": "业务功能",
+							"controller": "business",
 							"action": [
 								{
-									"title": "",
-									"do": ""
+									"title": "控制器动作",
+									"do": "action"
 								}
 							]
 						}
 					],
+					"permissions": "",
 					"compatible_version": {
 						"version2": true
 					},
-					"thumb": "",
-					"install": "aa",
+					"thumb": "resource/images/nopic.jpg",
+					"preview": "resource/images/nopic.jpg",
+					"install": "",
 					"uninstall": "",
 					"upgrade": ""
 				};
+				$scope.uploadThumb = function () {
+					util.image(function (images) {
+						$scope.field.thumb = images[0];
+						$scope.$apply();
+					})
+				}
+
+				$scope.uploadPreview = function () {
+					util.image(function (images) {
+						$scope.field.preview = images[0];
+						$scope.$apply();
+					})
+				}
+
+				//封面导航
+				$scope.addCover = function () {
+					$scope.field.cover.push({"title": "", "do": ""});
+				}
+				$scope.delCover = function (item) {
+					$scope.field.cover = _.without($scope.field.cover, item);
+				}
+				//桌面会员导航
+				$scope.delWebMember = function (item) {
+					$scope.field.web.member = _.without($scope.field.web.member, item);
+				}
+				$scope.addWebMember = function () {
+					$scope.field.web.member.push({"title": "", "do": ""})
+				}
+				//移动端主页导航
+				$scope.addMobileHome = function () {
+					$scope.field.mobile.home.push({"title": "", "do": ""})
+				}
+				$scope.delMobileHome = function (item) {
+					$scope.field.mobile.home = _.without($scope.field.mobile.home, item);
+				}
+				//移动端会员中心导航
+				$scope.addMobileMember = function () {
+					$scope.field.mobile.member.push({"title": "", "do": ""})
+				}
+				$scope.delMobileMember = function (item) {
+					$scope.field.mobile.member = _.without($scope.field.mobile.member, item);
+				}
+				//业务管理
+				$scope.addBusiness = function () {
+					var business = {
+						"title": "",
+						"controller": "",
+						"action": [{
+							"title": "",
+							"do": "",
+							"directly": false
+						}]
+					}
+					$scope.field.business.push(business);
+				}
+				$scope.delBusiness = function (item) {
+					$scope.field.business = _.without($scope.field.business, item);
+				}
+				//添加业务动作
+				$scope.addBusinessAction = function (item) {
+					item.action.push({"title": "", "do": "", "directly": false});
+				}
+				$scope.delBusinessAction = function (key, item) {
+					$scope.field.business[key].action = _.without($scope.field.business[key].action, item);
+				}
+				$("form").submit(function () {
+					var msg = ''
+					if ($scope.field.title == '') {
+						msg += '模块名称不能为空<br/>';
+					}
+					if ($scope.field.name == '') {
+						msg += '模块标识不能为空<br/>';
+					}
+					if ($scope.field.resume == '') {
+						msg += '模块简述不能为空<br/>';
+					}
+					if ($scope.field.detail == '') {
+						msg += '模块介绍不能为空<br/>';
+					}
+					if ($scope.field.author == '') {
+						msg += '模块作者不能为空<br/>';
+					}
+					if ($scope.field.url == '') {
+						msg += '发布网址不能为空<br/>';
+					}
+					if ($scope.field.thumb == '') {
+						msg += '模块缩略图不能为空<br/>';
+					}
+					if ($scope.field.cover == '') {
+						msg += '模块封面图不能为空<br/>';
+					}
+
+					if (msg != '') {
+						util.message(msg, '', 'warning');
+						return false;
+					}
+					$scope.data = angular.toJson($scope.field);
+					$scope.$apply();
+				})
 			}])
+
 			angular.bootstrap(document.body, ['app']);
 		})
 

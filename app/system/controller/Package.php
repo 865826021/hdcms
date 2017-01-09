@@ -46,12 +46,11 @@ class Package {
 		//编辑时获取套餐
 		if ( $package = PackageModel::find( $id ) ) {
 			$package             = $package->toArray();
-			$package['modules']  = unserialize( $package['modules'] ) ?: [ ];
-			$package['template'] = unserialize( $package['template'] ) ?: [ ];
+			$package['modules']  = json_decode( $package['modules'] ,true) ?: [ ];
+			$package['template'] = json_decode( $package['template'] ,true) ?: [ ];
 		}
 		$modules   = Db::table( 'modules' )->orderBy( 'is_system', 'DESC' )->get();
 		$templates = Db::table( 'template' )->orderBy( 'is_system', 'DESC' )->get();
-
 		return view()->with( [
 			'modules'   => $modules,
 			'templates' => $templates,

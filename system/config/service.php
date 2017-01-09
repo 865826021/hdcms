@@ -13,6 +13,7 @@ return [
 		'system\service\package\PackageProvider',
 		'system\service\site\SiteProvider',
 		'system\service\module\ModuleProvider',
+		'system\service\cloud\CloudProvider',
 	],
 
 	/*
@@ -29,5 +30,6 @@ return [
 		'Package' => 'system\service\package\PackageFacade',
 		'Site'    => 'system\service\site\SiteFacade',
 		'Module'  => 'system\service\module\ModuleFacade',
+		'Cloud'   => 'system\service\cloud\CloudFacade',
 	]
 ];

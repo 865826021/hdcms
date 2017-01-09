@@ -175,6 +175,35 @@ class Package extends Common {
 			$group['package'] = $package;
 			$group->save();
 		}
+
 		return PackageModel::delete( $id );
+	}
+
+	/**
+	 * 从套餐中移除模块
+	 *
+	 * @param string $module 模块名
+	 *
+	 * @return bool
+	 */
+	public function removeModule( $module ) {
+		//更新套餐数据
+		$package = PackageModel::get();
+		if ( $package ) {
+			foreach ( $package as $p ) {
+				$modules = json_decode( $p['modules'], true ) ?: [ ];
+				if ( ( $k = array_search( $module, $modules ) ) !== false ) {
+					unset( $modules[ $k ] );
+				}
+//				dd($module);
+//				dd(json_encode($modules));
+				$p['template'] = json_decode( $p['template'], true ) ?: [ ];
+				$p['modules']  = $modules;
+
+				return $p->save();
+			}
+		}
+
+		return true;
 	}
 }

@@ -12,18 +12,16 @@
 		<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
 	</ul>
 	<h5 class="page-header">已购买的模块</h5>
-	<div id="myApp" ng-controller="ctrl" class="ng-cloak" ng-cloak>
+	<div id="myApp" ng-controller="ctrl" class="ng-cloak">
 		<div class="media" ng-repeat="a in cloudApps">
 			<div class="pull-right">
 				<div style="margin-right: 10px;">
-					<a href="{{u('install')}}&module=@{{a.manifest.application.name['@cdata']}}">安装模块</a>
+					<a href="">安装模块</a>
 				</div>
 			</div>
 			<div class="media-left">
 				<a href="#">
-					<img class="media-object"
-					     ng-src="{{dirname(c('api.cloud'))}}/packages/addons/@{{a.manifest.application.name['@cdata']}}/@{{a.manifest.application.thumb['@cdata']}}"
-					     style="width: 50px;height: 50px;">
+					<img class="media-object" ng-src="" style="width: 50px;height: 50px;">
 				</a>
 			</div>
 			<div class="media-body">
@@ -48,7 +46,7 @@
 				</div>
 				<div class="media-left">
 					<a href="#">
-						<img class="media-object" src="{{$local['cover']}}" style="width: 50px;height: 50px;">
+						<img class="media-object" src="addons/{{$local['name']}}/{{$local['thumb']}}" style="width: 50px;height: 50px;">
 					</a>
 				</div>
 				<div class="media-body">
@@ -102,7 +100,6 @@
 				$scope.cloudApps = [];
 				$http.get('{{u("getCloudModules")}}').success(function (res) {
 					$scope.cloudApps = res;
-					console.log(res);
 				});
 			}]);
 			angular.bootstrap(document.getElementById('myApp'), ['myApp']);

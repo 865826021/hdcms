@@ -1,5 +1,10 @@
 <?php namespace system\service\module;
 
+use system\model\Modules;
+use system\model\ModulesBindings;
+use system\model\ModuleSetting;
+use system\model\SiteModules;
+use system\model\UserPermission;
 /**
  * 模块管理服务
  * Class Module
@@ -8,15 +13,33 @@
  * @site www.houdunwang.com
  */
 class Module {
-	protected $industry
-		= [
-			'business'  => '主要业务',
-			'customer'  => '客户关系',
-			'marketing' => '营销与活动',
-			'tools'     => '常用服务与工具',
-			'industry'  => '行业解决方案',
-			'other'     => '其他'
-		];
+	//删除模块时的关联数据表
+	protected $relationTables = [
+		'rule',
+		'module_setting',
+		'site_modules',
+		'ticket_module',
+		'modules_bindings',
+	];
+	protected $industry = [
+		'business'  => '主要业务',
+		'customer'  => '客户关系',
+		'marketing' => '营销与活动',
+		'tools'     => '常用服务与工具',
+		'industry'  => '行业解决方案',
+		'other'     => '其他'
+	];
+
+	/**
+	 * 检测模块是否已经安装
+	 *
+	 * @param $module
+	 *
+	 * @return bool
+	 */
+	public function isInstall( $module ) {
+		return Modules::where( 'name', $module )->first() || is_dir( "module/{$module}" );
+	}
 
 	/**
 	 * 验证当前用户在当前站点
@@ -28,22 +51,23 @@ class Module {
 	public function verifyModuleAccess() {
 		//操作员验证
 		if ( ! service( 'user' )->isOperate() ) {
-			return FALSE;
+			return false;
 		}
 		if ( v( "module.is_system" ) == 1 ) {
-			return TRUE;
+			return true;
 		} else {
 			//站点是否含有模块
 			if ( ! $this->hasModule( SITEID, v( 'module.name' ) ) ) {
-				return FALSE;
+				return false;
 			}
 			//插件模块
-			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
+			$allowModules = UserPermission::where( 'siteid', SITEID )
+			                              ->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
 			if ( ! empty( $allowModules ) ) {
 				return in_array( v( 'module.name' ), $allowModules );
 			}
 
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -59,7 +83,7 @@ class Module {
 		static $instance = [ ];
 		$info = explode( '.', $module );
 		if ( ! isset( $instance[ $module ] ) ) {
-			$data                = Db::table( 'modules' )->where( 'name', $info[0] )->first();
+			$data                = Modules::where( 'name', $info[0] )->first();
 			$class               = 'addons\\' . $data['name'] . '\api';
 			$instance[ $module ] = new $class;
 		}
@@ -76,16 +100,16 @@ class Module {
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function hasModule( $siteid = NULL, $module = NULL ) {
+	public function hasModule( $siteid = null, $module = null ) {
 		$siteid = $siteid ?: SITEID;
 		$module = $module ?: v( 'module.name' );
 		if ( empty( $siteid ) || empty( $module ) ) {
-			return FALSE;
+			return false;
 		}
 		$modules = $this->getSiteAllModules( $siteid );
 		foreach ( $modules as $m ) {
 			if ( strtolower( $module ) == strtolower( $m['name'] ) ) {
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -100,7 +124,7 @@ class Module {
 	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function getSiteAllModules( $siteId = 0, $readFromCache = TRUE ) {
+	public function getSiteAllModules( $siteId = 0, $readFromCache = true ) {
 		$siteId = $siteId ?: SITEID;
 		if ( empty( $siteId ) ) {
 			throw new \Exception( '$siteid 参数错误' );
@@ -120,7 +144,7 @@ class Module {
 		$modules = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐
-			$modules = Db::table( 'modules' )->get() ?: [ ];
+			$modules = Modules::get() ?Modules::get()->toArray(): [ ];
 		} else {
 			$moduleNames = [ ];
 			foreach ( $package as $p ) {
@@ -133,12 +157,12 @@ class Module {
 			}
 		}
 		//加入系统模块
-		$modules = array_merge( $modules, Db::table( 'modules' )->where( 'is_system', 1 )->get() );
+		$modules = array_merge( $modules, Modules::where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = unserialize( $m['subscribes'] ) ?: [ ];
 			$m['processors']  = unserialize( $m['processors'] ) ?: [ ];
 			$m['permissions'] = array_filter( unserialize( $m['permissions'] ) ?: [ ] );
-			$res              = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get();
+			$res              = ModulesBindings::where( 'module', $m['name'] )->get();
 			$binds            = $res ?: [ ];
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
@@ -180,11 +204,11 @@ class Module {
 		/**
 		 * 插件模块列表
 		 */
-		$modules = Db::table( 'user_permission' )
-		             ->where( 'type', '<>', 'system' )
-		             ->where( 'siteid', $siteId )
-		             ->where( 'uid', $uid )
-		             ->lists( 'type' ) ?: [ ];
+
+		$modules = UserPermission::where( 'type', '<>', 'system' )
+		                         ->where( 'siteid', $siteId )
+		                         ->where( 'uid', $uid )
+		                         ->lists( 'type' ) ?: [ ];
 
 		//获取模块按行业类型
 		return $this->getModulesByIndustry( $modules );
@@ -237,7 +261,7 @@ class Module {
 	 */
 	public function getModuleConfig( $module = '' ) {
 		$module  = $module ?: v( 'module.name' );
-		$setting = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
+		$setting = ModuleSetting::where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
 
 		return $setting ? unserialize( $setting ) : [ ];
 	}
@@ -250,9 +274,9 @@ class Module {
 	 * @return array
 	 */
 	public function getSiteExtModules( $siteid ) {
-		$module = Db::table( 'site_modules' )->where( 'siteid', $siteid )->lists( 'module' );
+		$module = SiteModules::where( 'siteid', $siteid )->lists( 'module' );
 
-		return $module ? Db::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
+		return $module ? Modules::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
 	}
 
 	/**
@@ -263,6 +287,66 @@ class Module {
 	 * @return array
 	 */
 	public function getSiteExtModulesName( $siteId ) {
-		return Db::table( 'site_modules' )->where( 'siteid', $siteId )->lists( 'module' ) ?: [ ];
+		return SiteModules::where( 'siteid', $siteId )->lists( 'module' ) ?: [ ];
+	}
+
+	/**
+	 * 从系统中删除模块
+	 *
+	 * @param string $module 模块名称
+	 * @param bool $removeData 删除模块数据
+	 *
+	 * @return bool
+	 */
+	public function remove( $module, $removeData = false ) {
+		//删除封面关键词数据
+		if ( $removeData ) {
+			//执行卸载程序
+			$this->uninstall( $module );
+		}
+		//更新套餐数据
+		\Package::removeModule( $module );
+		foreach ( $this->relationTables as $t ) {
+			Db::table( $t )->where( 'module', $module )->delete();
+		}
+		Modules::where('name',$module)->delete();
+		//更新所有站点缓存
+		\Site::updateAllCache();
+
+		return true;
+	}
+
+	/**
+	 * 卸载模块时执行模块配置文件中的卸载SQL语句或文件
+	 *
+	 * @param string $module 模块名称
+	 *
+	 * @return bool
+	 */
+	public function uninstall( $module ) {
+		//本地安装的模块删除处理
+		$configFile = 'addons/' . $module . '/package.json';
+		if ( is_file( $configFile ) ) {
+			$config = json_decode( file_get_contents( $configFile ), true );
+			//卸载数据
+			$installSql = trim( $config['uninstall'] );
+			if ( ! empty( $installSql ) ) {
+				if ( preg_match( '/.php$/', $installSql ) ) {
+					$file = 'addons/' . $module . '/' . $installSql;
+					if ( ! is_file( $file ) ) {
+						$this->error = '卸载文件:' . $file . '不存在';
+
+						return false;
+					}
+					require $file;
+
+					return true;
+				} else {
+					return \Schema::sql( $installSql );
+				}
+			}
+		}
+
+		return true;
 	}
 }

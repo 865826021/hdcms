@@ -19,8 +19,9 @@ class Package extends Common {
 	protected $validate = [
 		[ 'name', 'required', '套餐名不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
+
 	protected $auto = [
-		[ 'modules', 'serialize', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
-		[ 'template', 'serialize', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'modules', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'template', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 	];
 }
