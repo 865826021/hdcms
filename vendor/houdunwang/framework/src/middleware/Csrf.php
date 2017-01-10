@@ -9,7 +9,7 @@ use houdunwang\config\Config;
  */
 class Csrf {
 	public function run() {
-		if ( ! IS_AJAX && Request::post() &&  Config::get( 'csrf.open' ) ) {
+		if ( ! IS_AJAX && IS_POST && Config::get( 'csrf.open' ) ) {
 			/**
 			 * 获取令牌值用于比较
 			 * 令牌不存在时生成新的令牌
