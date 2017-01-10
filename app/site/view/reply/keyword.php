@@ -37,9 +37,10 @@
 <div class="form-group">
 	<label class="col-sm-2 control-label">触发关键字</label>
 	<div class="col-sm-7 col-md-8" ng-repeat="key in rule.keyword" ng-if="key.type==1">
-		<input type="text" class="form-control" id="keywordInput" ng-model="key.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
+		<input type="text" class="form-control" id="keywordInput" ng-model="key.content"
+		       ng-blur="checkWxKeyword($event)">
 		<span class="help-block has_keyword"></span>
-        <span class="help-block">
+		<span class="help-block">
             当用户的对话内容符合以上的关键字定义时，会触发这个回复定义。多个关键字请使用逗号隔开。
             <a href="javascript:;" id="keywordEmotion">
 	            <i class="fa fa-github-alt"></i> 表情
@@ -61,15 +62,19 @@
 		<div class="panel panel-default tab-content">
 			<div class="panel-heading">
 				<ul class="nav nav-pills" role="tablist">
-					<li role="presentation" class="active"><a href="#contain" aria-controls="contain" role="tab" data-toggle="tab">包含关键词</a></li>
-					<li role="presentation"><a href="#regexp" aria-controls="regexp" role="tab" data-toggle="tab">正则表达式模式匹配</a></li>
-					<li role="presentation"><a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">直接托管</a></li>
+					<li role="presentation" class="active"><a href="#contain" aria-controls="contain" role="tab"
+					                                          data-toggle="tab">包含关键词</a></li>
+					<li role="presentation"><a href="#regexp" aria-controls="regexp" role="tab" data-toggle="tab">正则表达式模式匹配</a>
+					</li>
+					<li role="presentation"><a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">直接托管</a>
+					</li>
 				</ul>
 			</div>
 			<ul role="tabpanel" class="list-group tab-pane active" id="contain">
 				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==2">
 					<div class="col-xs-12 col-sm-8">
-						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
+						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content"
+						       onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
 						<span class="help-block has_keyword"></span>
 						<p class="form-control-static" ng-hide="item.edited" ng-bind="item.content"></p>
 					</div>
@@ -86,7 +91,8 @@
 			<ul role="tabpanel" class="list-group tab-pane " id="regexp">
 				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==3">
 					<div class="col-xs-12 col-sm-8">
-						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content" onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
+						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content"
+						       onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
 						<span class="help-block has_keyword"></span>
 						<p class="form-control-static" ng-hide="item.edited" ng-bind="item.content"></p>
 					</div>
@@ -118,7 +124,7 @@
 </div>
 <input type="hidden" name="keyword"/>
 <script>
-	require(['angular', 'underscore', 'util'], function (angular, _, util) {
+	require(['angular', 'underscore', 'util', 'jquery', 'hdcms'], function (angular, _, util, $, hdcms) {
 		angular.module('app', []).controller('ctrl', ['$scope', '$sce', function ($scope, $sce) {
 			//当前操作的关键词类型
 			$scope.currentKeyType = 'contain';
@@ -141,13 +147,13 @@
 					}
 				}
 			}
-			//如果没有触发关键字时添加触发关键字用于显示 触发关键字input表单
+			//如果没有触发关键字时添加触发关键字用于显示触发关键字input表单
 			var hasDefaultKeyword = false;
 			for (var i in $scope.rule.keyword) {
 				if ($scope.rule.keyword[i].type == 1) {
 					hasDefaultKeyword = true;
 				}
-				$scope.rule.keyword[i].edited=true;
+				$scope.rule.keyword[i].edited = true;
 			}
 			if (hasDefaultKeyword === false) {
 				$scope.rule.keyword.push({content: '', type: 1});
@@ -206,6 +212,18 @@
 			if (angular.isFunction(window.moduleController)) {
 				window.moduleController($scope, _, util);
 			}
+			//检测输入的关键词是否已经被使用
+			$scope.checkWxKeyword = function (elem, rid) {
+				var obj = $(elem.currentTarget);
+				hdcms.checkWxKeyword(obj.val(), rid, function (res) {
+					if (res.valid == 0) {
+						obj.next().html(res.message);
+					}else{
+						obj.next().html('');
+					}
+				})
+			}
+
 			//提交表单
 			$("#replyForm").submit(function () {
 				//验证关键词是否已经存在
@@ -221,7 +239,7 @@
 				}
 				//验证回复规则名称
 				if ($scope.rule.name == '') {
-					util.message('请输入回复规则名称', '', 'error');
+					util.message('请输入回复规则名称', '', 'warning');
 					return false;
 				}
 				if (angular.isFunction(window.validateForm)) {
@@ -241,10 +259,12 @@
 </script>
 <style>
 	/*表情选择框*/
-	.popover { max-width : none; }
+	.popover {
+		max-width: none;
+	}
 
 	.row {
-		margin-right : 0px;
-		margin-left  : 0px;
+		margin-right: 0px;
+		margin-left: 0px;
 	}
 </style>

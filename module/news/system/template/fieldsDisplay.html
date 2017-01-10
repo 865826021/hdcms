@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="module/news/template/reply.css">
+<link rel="stylesheet" href="{{__TEMPLATE__}}/reply.css">
 <div class="panel panel-default">
     <div class="panel-heading">
         回复内容
@@ -69,7 +69,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">排序</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" ng-model="activeItem.rank" placeholder="添加排序">
+                                        <input type="number" class="form-control" ng-model="activeItem.rank" placeholder="添加排序">
                                           <span class="help-block">
                                               排序只能在提交后显示。按照从大到小的顺序对图文排序
                                           </span>
@@ -106,7 +106,7 @@
                                     <div class="col-sm-10">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" ng-model="showContent" value="1">
+                                                <input type="checkbox" ng-model="activeItem.showContent" value="1">
                                                 是否编辑图文消息
                                             </label>
                                         </div>
@@ -115,13 +115,13 @@
                                       </span>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-show="showContent||activeItem.content">
+                                <div class="form-group" ng-show="activeItem.showContent||activeItem.content">
                                     <label class="col-sm-2 control-label">详情</label>
                                     <div class="col-sm-10">
                                         <textarea id="container" style="height:300px;width:100%;" ng-model="activeItem.content"></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" ng-if="!activeItem.showContent">
                                     <label class="col-sm-2 control-label">链接</label>
                                     <div class="col-sm-10">
                                         <div class="input-group">
@@ -300,6 +300,9 @@
             if ($.trim(v.description) == '') {
                 msg += "第"+pos+"个图文没有设置描述<br/>";
             }
+            if(v.showContent && $.trim(v.content)=='' ){
+                msg += "第"+pos+"个图文详情不能为空<br/>";
+            }
             angular.forEach(v.son_news, function (b) {
                 pos++;
                 if ($.trim(b.title) == '') {
@@ -310,6 +313,9 @@
                 }
                 if ($.trim(b.description) == '') {
                     msg += "第"+pos+"个图文没有设置描述<br/>";
+                }
+                if(b.showContent && $.trim(b.content)=='' ){
+                    msg += "第"+pos+"个图文详情不能为空<br/>";
                 }
             })
         }, val);

@@ -10,28 +10,27 @@ use system\model\ModuleSetting;
  */
 abstract class HdModule {
 	//模板目录
-	protected $template;
+	protected $view;
 	//配置项
 	protected $config;
 
 	//构造函数
 	public function __construct() {
-		$this->config   = service('module')->getModuleConfig();
-		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
-		define( '__TEMPLATE__', $this->template );
+		$this->config = \Module::getModuleConfig();
+		$this->view   = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/view';
+		define( '__TEMPLATE__', __ROOT__ . '/' . $this->view );
 	}
 
 	//保存模块配置
 	public function saveSettings( $field ) {
-		$id              = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->pluck( 'id' );
-		$data['siteid']  = SITEID;
-		$data['module']  = v( 'module.name' );
-		$data['status']  = 1;
-		$data['setting'] = serialize( $field );
-		if ( $id ) {
-			Db::table( 'module_setting' )->where( 'id', '=', $id )->update( $data );
-		} else {
-			Db::table( 'module_setting' )->insert( $data );
+		$model = ModuleSetting::where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->find();
+		if ( empty( $model ) ) {
+			$model = new ModuleSetting();
 		}
+		$model['siteid']  = SITEID;
+		$model['module']  = v( 'module.name' );
+		$model['status']  = 1;
+		$model['setting'] = $field;
+		$model->save();
 	}
 }

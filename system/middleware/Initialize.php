@@ -1,4 +1,5 @@
 <?php namespace system\middleware;
+use system\model\Modules;
 
 /**
  * CMS系统初始中间件
@@ -43,7 +44,7 @@ class Initialize {
 		 * 加载模块数据到全局变量窗口中
 		 */
 		if ( $name = q( 'get.m' ) ) {
-			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+			v( 'module', Modules::where( 'name', $name )->first() );
 		}
 
 		/**
@@ -51,7 +52,7 @@ class Initialize {
 		 * 而不是使用框架中的s变量
 		 * 所以当存在a变量时访问到扩展模块处理
 		 */
-		if ( ! empty( $_GET['a'] ) ) {
+		if ( Request::get( 'a' ) ) {
 			Request::get( 's', 'site/module/entry' );
 		}
 	}

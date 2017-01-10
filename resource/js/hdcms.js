@@ -116,10 +116,9 @@ define('hdcms', ['util', 'jquery'], function (util, $) {
          * @param content 关键词内容
          * @param rid 规则编号,编辑时使用用于排除这个规则号
          */
-        checkWxKeyword: function (obj, rid, callback) {
-            var con = $(obj).val();
-            $.post('?s=site/keyword/checkWxKeyword', {content: con, rid: rid ? rid : 0}, function (res) {
-                if ($.isFunction('callback')) {
+        checkWxKeyword: function (content, rid, callback) {
+            $.post('?s=site/keyword/checkWxKeyword', {content: content, rid: rid ? rid : 0}, function (res) {
+                if ($.isFunction(callback)) {
                     callback(res);
                 }
             }, 'json');

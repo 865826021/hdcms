@@ -16,24 +16,22 @@ namespace system\model;
  * @author 向军
  */
 class ReplyNews extends Common {
-	protected $table     = 'reply_news';
+	protected $table = 'reply_news';
 	protected $allowFill = [ '*' ];
-	protected $validate
-	                     = [
-			[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'title', 'required', '标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'thumb', 'required', '图文消息图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		];
-	protected $auto
-	                     = [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-			[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'author', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'content', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'rank', 'time', 'function', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'title', 'required', '标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'thumb', 'required', '图文消息图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'author', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'content', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'createtime', 'time', 'function', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+	];
 
 }

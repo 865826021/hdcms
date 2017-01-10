@@ -117,7 +117,7 @@ class Module {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
 			//创建目录
-			foreach ( [ 'controller', 'view', 'model', 'service', 'system/view' ] as $d ) {
+			foreach ( [ 'controller', 'template', 'model', 'service', 'system/template' ] as $d ) {
 				if ( ! mkdir( "{$dir}/{$d}", 0755, true ) ) {
 					message( '模块目录创建失败,请修改addons目录的权限', 'back', 'error' );
 				}

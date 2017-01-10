@@ -114,6 +114,7 @@ class Module {
 				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -172,7 +173,7 @@ class Module {
 			$modules[ $k ] = $m;
 		}
 		cache( "modules:{$siteId}", $modules );
-
+		p($modules);
 		return $cache[ $siteId ] = $modules;
 	}
 

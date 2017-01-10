@@ -1,13 +1,16 @@
 <?php namespace system\service\wx;
-/** .-------------------------------------------------------------------
-* |  Software: [HDPHP framework]
-* |      Site: www.hdphp.com
-* |-------------------------------------------------------------------
-* |    Author: 向军 <2300071698@qq.com>
-* |    WeChat: aihoudun
-* | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
-* '-------------------------------------------------------------------*/
 
+use system\model\Rule;
+use system\model\RuleKeyword;
+
+/** .-------------------------------------------------------------------
+ * |  Software: [HDPHP framework]
+ * |      Site: www.hdphp.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
 //服务功能类
 class Wx {
 	/**
@@ -29,10 +32,10 @@ class Wx {
 			}
 			Session::set( 'member', $user );
 
-			return TRUE;
+			return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -52,12 +55,12 @@ class Wx {
 	 * 保存回复规则
 	 *
 	 * @param $data =[
+	 *  rid=>'规则编号(编辑时需要设置)',
 	 *  name=>'规则名称',
 	 *  module=>'模块名称',
 	 *  rank=>'排序',
 	 *  status=>'是否开启'
 	 *  keywords=>[
-	 *      module=>'模块名称',
 	 *      content=>'关键词内容'
 	 *      type=>'关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
 	 *      rank=>'排序',
@@ -78,7 +81,7 @@ class Wx {
 		 * 添加回复关键词
 		 * 先删除旧的回复规则
 		 */
-		Db::table( 'rule_keyword' )->where( 'rid', $rid )->delete();
+		RuleKeyword::where( 'rid', $rid )->delete();
 		if ( isset( $data['keywords'] ) ) {
 			foreach ( $data['keywords'] as $keyword ) {
 				$Keyword = new RuleKeyword();
@@ -115,6 +118,6 @@ class Wx {
 			}
 		}
 
-		return TRUE;
+		return true;
 	}
 }
