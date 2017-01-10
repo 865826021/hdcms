@@ -17,9 +17,8 @@ namespace system\model;
  */
 class SitePackage extends Common {
 	protected $table = 'site_package';
-	protected $validate
-	                 = [
-			[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
-			[ 'package_id', 'required', '套餐编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'package_id', 'required', '套餐编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+	];
 }

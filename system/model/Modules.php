@@ -39,11 +39,11 @@ class Modules extends Common {
 	protected $auto = [
 		[ 'name', 'strtolower', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'is_system', 0, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
-		[ 'subscribes', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
-		[ 'processors', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+		[ 'subscribes', 'json_encode', 'function', self::NOT_EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'processors', 'json_encode', 'function', self::NOT_EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'setting', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'rule', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
-		[ 'permissions', 'serialize', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
+		[ 'permissions', 'json_encode', 'function', self::NOT_EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'locality', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 }

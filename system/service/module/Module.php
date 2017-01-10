@@ -5,6 +5,7 @@ use system\model\ModulesBindings;
 use system\model\ModuleSetting;
 use system\model\SiteModules;
 use system\model\UserPermission;
+
 /**
  * 模块管理服务
  * Class Module
@@ -50,9 +51,10 @@ class Module {
 	 */
 	public function verifyModuleAccess() {
 		//操作员验证
-		if ( ! service( 'user' )->isOperate() ) {
+		if ( ! \User::isOperate() ) {
 			return false;
 		}
+		//系统模块不受限制
 		if ( v( "module.is_system" ) == 1 ) {
 			return true;
 		} else {
@@ -94,19 +96,19 @@ class Module {
 	/**
 	 * 验证站点是否拥有模块
 	 *
-	 * @param string $siteid 站点编号
+	 * @param int $siteId 站点编号
 	 * @param string $module 模块名称
 	 *
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function hasModule( $siteid = null, $module = null ) {
-		$siteid = $siteid ?: SITEID;
+	public function hasModule( $siteId = 0, $module = '' ) {
+		$siteId = $siteId ?: SITEID;
 		$module = $module ?: v( 'module.name' );
-		if ( empty( $siteid ) || empty( $module ) ) {
+		if ( empty( $siteId ) || empty( $module ) ) {
 			return false;
 		}
-		$modules = $this->getSiteAllModules( $siteid );
+		$modules = $this->getSiteAllModules( $siteId );
 		foreach ( $modules as $m ) {
 			if ( strtolower( $module ) == strtolower( $m['name'] ) ) {
 				return true;
@@ -144,7 +146,7 @@ class Module {
 		$modules = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐
-			$modules = Modules::get() ?Modules::get()->toArray(): [ ];
+			$modules = Modules::get() ? Modules::get()->toArray() : [ ];
 		} else {
 			$moduleNames = [ ];
 			foreach ( $package as $p ) {
@@ -159,17 +161,17 @@ class Module {
 		//加入系统模块
 		$modules = array_merge( $modules, Modules::where( 'is_system', 1 )->get() );
 		foreach ( $modules as $k => $m ) {
-			$m['subscribes']  = unserialize( $m['subscribes'] ) ?: [ ];
-			$m['processors']  = unserialize( $m['processors'] ) ?: [ ];
-			$m['permissions'] = array_filter( unserialize( $m['permissions'] ) ?: [ ] );
-			$res              = ModulesBindings::where( 'module', $m['name'] )->get();
-			$binds            = $res ?: [ ];
+			$m['subscribes']  = json_decode( $m['subscribes'], true ) ?: [ ];
+			$m['processors']  = json_decode( $m['processors'], true ) ?: [ ];
+			$m['permissions'] = array_filter( json_decode( $m['permissions'], true ) ?: [ ] );
+			$binds            = ModulesBindings::where( 'module', $m['name'] )->get();
+			$binds            = $binds ?: [ ];
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
 			}
 			$modules[ $k ] = $m;
 		}
-		d( "modules:{$siteId}", $modules );
+		cache( "modules:{$siteId}", $modules );
 
 		return $cache[ $siteId ] = $modules;
 	}
@@ -179,15 +181,13 @@ class Module {
 	 * @return array
 	 */
 	public function currentUseModule() {
-		$menus = [ ];
 		foreach ( v( 'site.modules' ) as $v ) {
 			if ( $v['name'] == v( 'module.name' ) ) {
-				$menus = $v;
-				break;
+				return $v;
 			}
 		}
 
-		return $menus;
+		return [ ];
 	}
 
 	/**
@@ -269,14 +269,14 @@ class Module {
 	/**
 	 * 获取站点扩展模块数据
 	 *
-	 * @param $siteid 网站编号
+	 * @param string $siteId 网站编号
 	 *
 	 * @return array
 	 */
-	public function getSiteExtModules( $siteid ) {
-		$module = SiteModules::where( 'siteid', $siteid )->lists( 'module' );
+	public function getSiteExtModules( $siteId ) {
+		$module = SiteModules::where( 'siteid', $siteId )->lists( 'module' );
 
-		return $module ? Modules::table( 'modules' )->whereIn( 'name', $module )->get() : [ ];
+		return $module ? Modules::whereIn( 'name', $module )->get() : [ ];
 	}
 
 	/**
@@ -309,7 +309,7 @@ class Module {
 		foreach ( $this->relationTables as $t ) {
 			Db::table( $t )->where( 'module', $module )->delete();
 		}
-		Modules::where('name',$module)->delete();
+		Modules::where( 'name', $module )->delete();
 		//更新所有站点缓存
 		\Site::updateAllCache();
 

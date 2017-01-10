@@ -14,6 +14,9 @@ return [
 		'system\service\site\SiteProvider',
 		'system\service\module\ModuleProvider',
 		'system\service\cloud\CloudProvider',
+		'system\service\menu\MenuProvider',
+		'system\service\template\TemplateProvider',
+		'system\service\wx\WxProvider',
 	],
 
 	/*
@@ -25,11 +28,14 @@ return [
 	| 就是因为定义了视图服务的View外观所以我们不用实例化对象就可以使用
 	*/
 	'facades'   => [
-		'User'    => 'system\service\user\UserFacade',
-		'Member'  => 'system\service\member\MemberFacade',
-		'Package' => 'system\service\package\PackageFacade',
-		'Site'    => 'system\service\site\SiteFacade',
-		'Module'  => 'system\service\module\ModuleFacade',
-		'Cloud'   => 'system\service\cloud\CloudFacade',
+		'User'     => 'system\service\user\UserFacade',
+		'Member'   => 'system\service\member\MemberFacade',
+		'Package'  => 'system\service\package\PackageFacade',
+		'Site'     => 'system\service\site\SiteFacade',
+		'Module'   => 'system\service\module\ModuleFacade',
+		'Cloud'    => 'system\service\cloud\CloudFacade',
+		'Menu'     => 'system\service\menu\MenuFacade',
+		'Template' => 'system\service\template\TemplateFacade',
+		'Wx'       => 'system\service\wx\WxFacade',
 	]
 ];

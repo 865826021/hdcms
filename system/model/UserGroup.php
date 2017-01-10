@@ -15,6 +15,6 @@ class UserGroup extends Common {
 		[ 'daylimit', 'regexp:/^[1-9]\d*$/', '有效期限不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'package', 'serialize', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
+		[ 'package', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ]
 	];
 }

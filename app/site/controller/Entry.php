@@ -16,18 +16,16 @@ namespace app\site\controller;
  */
 class Entry {
 	public function __construct() {
-		service( 'user' )->loginAuth();
 		//验证站点权限
-		if ( ! service( 'user' )->isOperate() ) {
+		if ( ! \User::isOperate() ) {
 			message( '你没有管理站点的权限', 'system/site/lists', 'warning' );
 		}
-
 	}
 
 	//进入后台站点管理入口
 	public function refer() {
 		//获取系统菜单
-		$menu = service( 'menu' )->menus();
+		$menu = \Menu::all();
 		$cur  = current( $menu );
 		go( __ROOT__ . $cur['url'] );
 	}
@@ -35,15 +33,14 @@ class Entry {
 	//顶级菜单主页
 	public function home() {
 		//分配菜单
-		service( 'menu' )->assign();
-
-		return view( VIEW_PATH . '/home/' . q( 'get.p' ) . '.php' );
+		\Menu::assign();
+		return view( VIEW_PATH . '/home/' . Request::get( 'p' ) . '.php' );
 	}
 
 	//返回模块列表功能
 	public function package() {
 		//分配菜单
-		service( 'menu' )->assign();
+		\Menu::assign();
 
 		//分配菜单
 		return view();

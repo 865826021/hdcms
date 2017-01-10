@@ -18,7 +18,7 @@
 					<td>{{$m['title']}}</td>
 					<td>{{$m['name']}}</td>
 					<td>
-						<button class="btn btn-default pull-right" mid="{{$m['mid']}}" name="{{$m['name']}}">选择</button>
+						<button class="btn btn-default pull-right" mid="{{$m['mid']}}" title="{{$m['title']}}" name="{{$m['name']}}"">选择</button>
 					</td>
 				</tr>
 			</foreach>
@@ -40,7 +40,7 @@
 					<td>{{$t['title']}}</td>
 					<td>{{$t['name']}}</td>
 					<td>
-						<button class="btn btn-default pull-right" tid="{{$t['tid']}}" name="{{$t['name']}}">选择</button>
+						<button class="btn btn-default pull-right" tid="{{$t['tid']}}" title="{{$t['title']}}" name="{{$t['name']}}">选择</button>
 					</td>
 				</tr>
 			</foreach>

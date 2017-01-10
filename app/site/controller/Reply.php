@@ -10,12 +10,13 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\Rule;
-use system\model\RuleKeyword;
 
 /**
  * 关键词回复处理
- * Class reply
- * @package site\controller
+ * Class Reply
+ * @package app\site\controller
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
  */
 class Reply {
 	//模型
@@ -62,7 +63,7 @@ class Reply {
 	//添加/修改回复
 	public function post() {
 		if ( IS_POST ) {
-			$data             = json_decode( Request::post( 'keyword' ), TRUE );
+			$data             = json_decode( Request::post( 'keyword' ), true );
 			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
 			$data['module']   = v( 'module.name' );
 			$data['keywords'] = $data['keyword'];

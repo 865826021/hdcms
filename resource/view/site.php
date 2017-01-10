@@ -5,17 +5,25 @@
 	<title>HDCMS - 开源免费内容管理系统 - Powered by HDCMS.COM</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="{{__ROOT__}}/resource/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{__ROOT__}}/resource/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="{{__ROOT__}}/resource/hdjs/js/jquery.min.js"></script>
-	<script src="{{__ROOT__}}/resource/hdjs/app/util.js"></script>
-	<script src="{{__ROOT__}}/resource/hdjs/require.js"></script>
-	<script src="{{__ROOT__}}/resource/hdjs/app/config.js"></script>
-	<script src="{{__ROOT__}}/resource/js/common.js"></script>
-	<link href="{{__ROOT__}}/resource/css/site.css" rel="stylesheet">
+	<link href="node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<script src="node_modules/hdjs/js/jquery.min.js"></script>
+	<script src="node_modules/hdjs/app/util.js"></script>
+	<script src="node_modules/hdjs/require.js"></script>
+	<script>
+		hdjs = {
+			'base': 'node_modules/hdjs',
+			'uploader': '{{u("system/component/uploader")}}',
+			'filesLists': '{{u("system/component/filesLists")}}',
+			'removeImage': '{{u("system/component/removeImage")}}',
+		};
+	</script>
+	<script src="node_modules/hdjs/config.js"></script>
+	<script src="resource/js/hdcms.js"></script>
+	<link href="resource/css/hdcms.css" rel="stylesheet">
 	<script>
 		window.sys = {
-			attachment: 'attachment',
+			attachment: "{{__ROOT__}}/attachment",
 			uid: <?php echo v( 'user.info.uid' );?>,
 			siteid: <?php echo SITEID;?>,
 			root: "<?php echo __ROOT__;?>",
@@ -30,7 +38,7 @@
 		}
 	</script>
 </head>
-<body>
+<body class="site">
 <div class="container-fluid admin-top">
 	<!--导航-->
 	<nav class="navbar navbar-inverse">

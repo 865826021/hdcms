@@ -27,15 +27,4 @@ class SiteUser extends Common {
 	protected function validateRole( $field, $value, $params, $data ) {
 		return in_array( $value, [ 'owner', 'manage', 'operate' ] ) ? TRUE : FALSE;
 	}
-
-	/**
-	 * 删除站长
-	 *
-	 * @param $siteid
-	 *
-	 * @return bool
-	 */
-	public function remove( $siteid ) {
-		return $this->where( 'siteid', $siteid )->where( 'role', 'owner' )->delete();
-	}
 }

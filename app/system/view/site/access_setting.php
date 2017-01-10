@@ -22,18 +22,18 @@
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">网站站长</label>
-
 					<div class="col-sm-10">
 						<span class="label label-success" id="username">
 							<if value="$user['username']">
-								<i class="fa fa-times-circle" style="cursor: pointer" onclick="delOwner({{SITEID}})"></i>
+								<i class="fa fa-times-circle" style="cursor: pointer"
+								   onclick="delOwner({{SITEID}})"></i>
 							</if>
 							{{$user['username']}}
 						</span>
 						<input type="hidden" name="uid" value="{{$user['uid']}}">
 						<a href="javascript:;" onclick="selectUser()">选择用户</a> -
 						如果是新用户请先<a href="javascript:;" onclick="addUser()">添加</a>
-                        <span class="help-block">一个公众号只可拥有一个主管理员，管理员有管理公众号和添加操作员的权限
+						<span class="help-block">一个公众号只可拥有一个主管理员，管理员有管理公众号和添加操作员的权限
 未指定主管理员时将默认属于创始人，则公众号具有所有模块及模板权限</span>
 					</div>
 				</div>
@@ -60,12 +60,14 @@
 							<td>
 								<if value="$p['id']==0">
 									<input type="checkbox" checked="checked" disabled="disabled">
-								<elseif value="in_array($p['id'],$defaultPackage)">
-									<input type="checkbox" name="package_id[]" value="{{$p['id']}}" checked="checked" disabled="disabled">
-									<elseif value="in_array($p['id'],$extPackage)">
-										<input type="checkbox" name="package_id[]" value="{{$p['id']}}" checked="checked">
-										<else/>
-										<input type="checkbox" name="package_id[]" value="{{$p['id']}}">
+									<elseif value="in_array($p['id'],$defaultPackage)">
+										<input type="checkbox" name="package_id[]" value="{{$p['id']}}"
+										       checked="checked" disabled="disabled">
+										<elseif value="in_array($p['id'],$extPackage)">
+											<input type="checkbox" name="package_id[]" value="{{$p['id']}}"
+											       checked="checked">
+											<else/>
+											<input type="checkbox" name="package_id[]" value="{{$p['id']}}">
 								</if>
 							</td>
 							<td>{{$p['name']}}</td>
@@ -119,14 +121,14 @@
 				</table>
 			</div>
 		</div>
-			<button type="submit" class="btn btn-primary">保存</button>
+		<button type="submit" class="btn btn-primary">保存</button>
 	</form>
 </block>
 
 <script>
 	//选择管理员
 	function selectUser() {
-		require(['util'], function (util) {
+		require(['util', 'jquery'], function (util, $) {
 			//user 选中用户id 数组类型
 			util.modal({
 				title: '选择用户',
@@ -162,55 +164,41 @@
 	}
 	//专属附加权限
 	function extModules() {
-		require(['util'], function (util) {
-			var module = [];
-			var template = [];
+		require(['hdcms', 'jquery'], function (hdcms, $) {
+			var options = {
+				module: [],
+				template: []
+			}
+			//已经选中的模板与模板
 			$("#extModule input").each(function () {
-				module.push($(this).val());
+				options.module.push($(this).val());
 			});
 			$("#extTemplate input").each(function () {
-				template.push($(this).val());
+				options.template.push($(this).val());
 			});
-			url = '?s=system/component/ajaxModulesTemplate&module=' + module.join('|') + '&template=' + template.join('|');
-			var modalobj = util.modal({
-				id: 'modalList',
-				content: [url],
-				footer: '<button class="btn btn-primary confirm">确定</button>',
-				events: {
-					confirm: function () {
-						//选取模块
-						var mH = '';
-						//模板
-						var tH = '';
-						$(modalobj).find('#ajaxModulesTemplate .btn-primary').each(function (i) {
-							var title = $(this).parent().prev().prev().text();
-							var name = $(this).parent().prev().text();
-							if ($(this).attr('mid') > 0) {
-								//模块
-								mH += '<span class="label label-success">' + title + '</span>&nbsp;' +
-									'<input name="modules[]" value="' + $(this).attr('name') + '" type="hidden"/>';
-							} else {
-								//模板
-								tH += '<span class="label label-success">' + title + '</span>&nbsp;' +
-									'<input name="templates[]" value="' + $(this).attr('name') + '" type="hidden"/>';
-							}
-						});
-						$("#extModule").html(mH);
-						$("#extTemplate").html(tH);
-						modalobj.modal('hide');
-					}
-				},
-
-			})
+			hdcms.getModuleTemplate(function (json) {
+				var mHtml = ''
+				var tHtml = '';
+				$(json.module).each(function (i) {
+					mHtml += '<span class="label label-success">' + json.module[i]['title'] + '</span> ' +
+						'<input name="modules[]" value="' + json.module[i]['name'] + '" type="hidden"/>';
+				})
+				$(json.template).each(function (i) {
+					tHtml += '<span class="label label-success">' + json.template[i]['title'] + '</span> ' +
+						'<input name="templates[]" value="' + json.template[i]['name'] + '" type="hidden"/>';
+				})
+				$("#extModule").html(mHtml);
+				$("#extTemplate").html(tHtml);
+			}, options);
 		})
 	}
 </script>
 <style>
 	.nav li.normal {
-		background : #eee;
+		background: #eee;
 	}
 
 	.nav li.normal a, .nav li.normal a:active, .nav li.normal a:focus {
-		border : none;
+		border: none;
 	}
 </style>

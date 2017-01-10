@@ -59,7 +59,7 @@ class Group {
 		//获取当前级资料包括为组定义的独立套餐
 		if ( $group = UserGroup::find( $id ) ) {
 			$group            = $group->toArray();
-			$group['package'] = unserialize( $group['package'] ) ?: [ ];
+			$group['package'] = json_decode( $group['package'], true ) ?: [ ];
 		}
 
 		return view()->with( [ 'packages' => $packages, 'group' => $group ] );

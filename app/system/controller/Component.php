@@ -18,7 +18,7 @@ namespace app\system\controller;
 class Component {
 	//模块列表
 	public function moduleBrowser() {
-		service( 'user' )->loginAuth();
+		\User::loginAuth();
 		View::with( 'modules', v( 'site.modules' ) );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
 
@@ -66,7 +66,7 @@ class Component {
 				'user_type'  => v( 'user.system.user_type' ),
 				'data'       => Request::post( 'data', '' )
 			];
-			Db::table( 'core_attachment' )->insert( $data );
+			Db::table( 'attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
 		} else {
 			ajax( [ 'valid' => 0, 'message' => \File::getError() ] );
@@ -75,7 +75,7 @@ class Component {
 
 	//获取文件列表webuploader
 	public function filesLists() {
-		$db = Db::table( 'core_attachment' )
+		$db = Db::table( 'attachment' )
 		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ) )
 		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
 		        ->where( 'user_type', v( 'user.system.user_type' ) )
@@ -102,7 +102,7 @@ class Component {
 		if ( v( 'user.uid' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
-		$db   = Db::table( 'core_attachment' );
+		$db   = Db::table( 'attachment' );
 		$file = $db->where( 'id', $_POST['id'] )->where( 'uid', v( 'user.info.uid' ) )->first();
 		if ( is_file( $file['path'] ) ) {
 			unlink( $file['path'] );

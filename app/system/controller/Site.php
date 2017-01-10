@@ -1,9 +1,15 @@
 <?php namespace app\system\controller;
 
+use houdunwang\request\Request;
 use system\model\Modules;
 use system\model\Package;
+use system\model\SiteModules;
+use system\model\SitePackage;
+use system\model\SiteTemplate;
+use system\model\SiteUser;
 use system\model\SiteWechat;
 use system\model\User;
+use system\model\Site as SiteModel;
 
 /**
  * Class Site
@@ -102,61 +108,61 @@ class Site {
 		return view( 'site_setting' );
 	}
 
-	//权限设置
+	/**
+	 * 为站点设置权限
+	 * 默认站点使用站长的权限
+	 * 但我们可以为站点独立添加一些权限
+	 * @return mixed
+	 */
 	public function access_setting() {
 		//非系统管理员直接跳转到第四步,只有系统管理员可以设置用户扩展套餐与模块
-		service( 'user' )->superUserAuth();
-		$Site = new \system\model\Site();
+		\User::superUserAuth();
 		if ( IS_POST ) {
 			//站点允许使用的空间大小
-			Db::table( 'site' )->where( 'siteid', SITEID )->update( [ 'allfilesize' => q( 'post.allfilesize', 200, 'intval' ) ] );
+			$model                = SiteModel::find( SITEID );
+			$model['allfilesize'] = Request::post( 'allfilesize' );
+			$model->save();
 			//删除站点旧的套餐
-			Db::table( 'site_package' )->where( 'siteid', SITEID )->delete();
-			if ( $package_id = q( 'post.package_id', [ ] ) ) {
-				foreach ( $package_id as $id ) {
-					Db::table( 'site_package' )->insert( [ 'siteid' => SITEID, 'package_id' => $id, ] );
+			SitePackage::where( 'siteid', SITEID )->delete();
+			if ( $packageIds = Request::post( 'package_id', [ ] ) ) {
+				foreach ( $packageIds as $id ) {
+					SitePackage::insert( [ 'siteid' => SITEID, 'package_id' => $id, ] );
 				}
 			}
 			//添加扩展模块
-			Db::table( 'site_modules' )->where( 'siteid', SITEID )->delete();
-			if ( $modules = q( 'post.modules', [ ] ) ) {
+			SiteModules::where( 'siteid', SITEID )->delete();
+			if ( $modules = Request::post( 'modules', [ ] ) ) {
 				foreach ( $modules as $name ) {
-					Db::table( 'site_modules' )->insert( [ 'siteid' => SITEID, 'module' => $name, ] );
+					SiteModules::insert( [ 'siteid' => SITEID, 'module' => $name, ] );
 				}
 			}
 			//添加扩展模板
-			Db::table( 'site_template' )->where( 'siteid', SITEID )->delete();
-			if ( $templates = q( 'post.templates', [ ] ) ) {
+			SiteTemplate::where( 'siteid', SITEID )->delete();
+			if ( $templates = Request::post( 'templates', [ ] ) ) {
 				foreach ( $templates as $name ) {
-					Db::table( 'site_template' )->insert( [ 'siteid' => SITEID, 'template' => $name, ] );
+					SiteTemplate::insert( [ 'siteid' => SITEID, 'template' => $name, ] );
 				}
 			}
 			//设置站长
-			if ( $manage_id = q( 'post.uid', 0, 'intval' ) ) {
+			if ( $uid = Request::post( 'uid', 0, 'intval' ) ) {
 				//删除站点用户信息
-				Db::table( 'site_user' )->where( 'siteid', SITEID )->where( 'role', 'owner' )->orWhere( 'uid', '=', $manage_id )->delete();
+				SiteUser::where( 'siteid', SITEID )->where( 'role', 'owner' )->orWhere( 'uid', '=', $uid )->delete();
 				//设置站点管理员
-				Db::table( 'site_user' )->insert( [ 'siteid' => SITEID, 'uid' => $manage_id, 'role' => 'owner' ] );
+				SiteUser::insert( [ 'siteid' => SITEID, 'uid' => $uid, 'role' => 'owner' ] );
 			}
-			service( 'site' )->updateCache();
-			message( '站点信息修改成功', 'lists', 'success' );
+			\Site::updateCache();
+			message( '站点信息修改成功', 'with' );
 		}
-		//获取站长信息
-		$user = service( 'user' )->getSiteOwner( SITEID );
-		//获取系统所有套餐
-		$systemAllPackages = service( 'package' )->getSystemAllPackageData();
-		//扩展模块
-		$extModule   = service( 'module' )->getSiteExtModules( SITEID );
-		$extTemplate = service( 'template' )->getSiteExtTemplates( SITEID );
 
+		//获取站长信息
 		return view( 'access_setting' )->with( [
-			'systemAllPackages' => $systemAllPackages,
-			'extPackage'        => service( 'package' )->getSiteExtPackageIds( SITEID ),
-			'defaultPackage'    => service( 'package' )->getSiteDefaultPackageIds( SITEID ),
-			'extModule'         => $extModule,
-			'extTemplate'       => $extTemplate,
-			'user'              => $user,
-			'site'              => $Site->find( SITEID )
+			'systemAllPackages' => \Package::getSystemAllPackageData(),
+			'extPackage'        => \Package::getSiteExtPackageIds(),
+			'defaultPackage'    => \Package::getSiteDefaultPackageIds(),
+			'extModule'         => \Module::getSiteExtModules( SITEID ),
+			'extTemplate'       => \Template::getSiteExtTemplates( SITEID ),
+			'user'              => \User::getSiteOwner( SITEID ),
+			'site'              => SiteModel::find( SITEID )
 		] );
 	}
 
@@ -266,10 +272,13 @@ class Site {
 		}
 	}
 
-	//移除站长
+	/**
+	 * 移除站长
+	 * 只有系统管理员可以操作这个功能
+	 */
 	public function delOwner() {
-		service( 'user' )->superUserAuth();
-		model( 'SiteUser' )->remove( SITEID );
+		\User::superUserAuth();
+		SiteUser::where( 'siteid', SITEID )->where( 'role', 'owner' )->delete();
 		message( '删除站长成功', 'back', 'success' );
 	}
 }

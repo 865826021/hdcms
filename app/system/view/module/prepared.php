@@ -41,7 +41,7 @@
 			<div class="media">
 				<div class="pull-right">
 					<div style="margin-right: 10px;">
-						<a href="{{u('install',array('module'=>$local['name']))}}">安装模块</a>
+						<a class="btn btn-default btn-sm" href="{{u('install',array('module'=>$local['name']))}}">安装模块</a>
 					</div>
 				</div>
 				<div class="media-left">

@@ -17,7 +17,7 @@ namespace system\model;
 class Package extends Common {
 	protected $table = "package";
 	protected $validate = [
-		[ 'name', 'required', '套餐名不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'name', 'required', '套餐名不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 	];
 
 	protected $auto = [

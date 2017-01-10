@@ -77,16 +77,20 @@ class Package extends Common {
 	 *
 	 * @return mixed
 	 */
-	public function getSiteDefaultPackageIds( $siteId ) {
+	public function getSiteDefaultPackageIds( $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
 		static $cache = [ ];
 		if ( isset( $cache[ $siteId ] ) ) {
 			return $cache[ $siteId ];
 		}
 		//获取站长拥有的套餐
-		$sql = "SELECT ug.package FROM " . tablename( 'user' ) . " u " . "JOIN " . tablename( 'site_user' ) . " su ON u.uid=su.uid ";
-		$sql .= "JOIN " . tablename( 'user_group' ) . " ug ON u.groupid=ug.id " . "WHERE su.siteid={$siteId} AND su.role='owner'";
+		$sql = "SELECT ug.package FROM " .
+		       tablename( 'user' ) . " u JOIN " .
+		       tablename( 'user_group' ) . " ug ON u.groupid=ug.id JOIN " .
+		       tablename( 'site_user' ) . " su ON u.uid=su.uid " .
+		       "WHERE su.siteid={$siteId} AND su.role='owner'";
 		if ( $res = Db::query( $sql ) ) {
-			$cache[ $siteId ] = unserialize( $res[0]['package'] ) ?: [ ];
+			$cache[ $siteId ] = json_decode( $res[0]['package'], true ) ?: [ ];
 		} else {
 			//没有站长时即为系统管理员添加的站点,默认有所有权限
 			$cache[ $siteId ] = [ - 1 ];
@@ -97,13 +101,15 @@ class Package extends Common {
 
 	/**
 	 * 获取为站点自定义扩展套餐编号
-	 * 套餐由用户组套餐+站点扩展套餐构成
+	 * 站点使用的套餐由用户组套餐+站点扩展套餐构成
 	 *
 	 * @param int $siteId 站点编号
 	 *
 	 * @return array
 	 */
-	public function getSiteExtPackageIds( $siteId ) {
+	public function getSiteExtPackageIds( $siteId = 0 ) {
+		$siteId = $siteId ?: SITEID;
+
 		return Db::table( 'site_package' )->where( 'siteid', $siteId )->lists( 'package_id' ) ?: [ ];
 	}
 
@@ -195,10 +201,7 @@ class Package extends Common {
 				if ( ( $k = array_search( $module, $modules ) ) !== false ) {
 					unset( $modules[ $k ] );
 				}
-//				dd($module);
-//				dd(json_encode($modules));
-				$p['template'] = json_decode( $p['template'], true ) ?: [ ];
-				$p['modules']  = $modules;
+				$p['modules'] = $modules;
 
 				return $p->save();
 			}

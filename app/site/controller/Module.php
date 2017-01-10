@@ -9,13 +9,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-use system\model\Menu;
-use system\model\ModuleSetting;
 use system\model\ReplyCover;
-use system\model\Rule;
-use system\model\RuleKeyword;
-use system\model\User;
-
 /**
  * 模块动作访问处理
  * Class Module

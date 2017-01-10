@@ -37,9 +37,13 @@ class Module {
 	//将本地开发模块生成压缩包
 	public function createZip() {
 		$name = q( 'get.name' );
-		Zip::PclZip( "app.zip" );//设置压缩文件名
-		Zip::create( "addons/{$name}" );//压缩目录
-		\Tool::download( "app.zip", $name . '.zip' );
+		//更改当前目录
+		chdir( 'addons' );
+		//设置压缩文件名
+		\Zip::PclZip( $name . ".zip" );
+		//压缩目录
+		\Zip::create( "{$name}" );
+		\File::download( $name . ".zip", $name . '.zip' );
 	}
 
 	//获取云商店的模块
@@ -125,8 +129,8 @@ class Module {
 			$preview = $dir . '/cover.' . $info['extension'];
 			copy( $data['thumb'], $thumb );
 			copy( $data['preview'], $preview );
-			$data['thumb']   = '/thumb.' . $info['extension'];
-			$data['preview'] = '/cover.' . $info['extension'];
+			$data['thumb']   = 'thumb.' . $info['extension'];
+			$data['preview'] = 'cover.' . $info['extension'];
 
 			//初始创建模块需要的脚本文件
 			Config::make( $data );
@@ -169,26 +173,25 @@ class Module {
 				}
 			}
 			//整合添加到模块表中的数据
-			$moduleData             = [
-				'name'        => $config['name'],
-				'version'     => $config['version'],
-				'industry'    => $config['industry'],
-				'title'       => $config['title'],
-				'url'         => $config['url'],
-				'resume'      => $config['resume'],
-				'detail'      => $config['detail'],
-				'author'      => $config['author'],
-				'rule'        => $config['rule'],
-				'thumb'       => $config['thumb'],
-				'cover'       => $config['cover'],
-				'is_system'   => 0,
-				'subscribes'  => serialize( $config['subscribes'] ),
-				'processors'  => serialize( $config['processors'] ),
-				'setting'     => $config['setting'],
-				'permissions' => json_encode( preg_split( '/\n/', $config['permission'] ), true ),
-			];
-			$moduleData['locality'] = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
-			Modules::insert( $moduleData );
+			$model                = new Modules();
+			$model['name']        = $config['name'];
+			$model['version']     = $config['version'];
+			$model['industry']    = $config['industry'];
+			$model['title']       = $config['title'];
+			$model['url']         = $config['url'];
+			$model['resume']      = $config['resume'];
+			$model['detail']      = $config['detail'];
+			$model['author']      = $config['author'];
+			$model['rule']        = $config['rule'];
+			$model['thumb']       = $config['thumb'];
+			$model['cover']       = $config['cover'];
+			$model['is_system']   = 0;
+			$model['subscribes']  = $config['subscribes'];
+			$model['processors']  = $config['processors'];
+			$model['setting']     = $config['setting'];
+			$model['permissions'] = preg_split( '/\n/', $config['permission'] );
+			$model['locality']    = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
+			$model->save();
 			//添加模块动作表数据
 			if ( ! empty( $config['web']['entry'] ) ) {
 				$d           = $config['web']['entry'];
@@ -283,24 +286,10 @@ class Module {
 		View::make();
 	}
 
-	/**
-	 * 从远程应用模块缓存中获取模块
-	 *
-	 * @param $module
-	 *
-	 * @return mixed
-	 */
-	protected function getCacheModuleManifest( $module ) {
-		$apps = d( 'cloudModules' );
-		foreach ( $apps as $a ) {
-			if ( $a['name'] == $module ) {
-				return $a;
-			}
-		}
-	}
-
 	//卸载模块
 	public function uninstall() {
+		//更改错误为直接显示
+		c( 'validate.dispose', 'show' );
 		if ( ! isset( $_GET['confirm'] ) ) {
 			confirm( '卸载模块时同时删除模块数据吗？', u( 'uninstall', [
 				'confirm' => 1,
@@ -308,7 +297,7 @@ class Module {
 			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => Request::get( 'module' ) ] ) );
 		}
 		if ( ! \Module::remove( $_GET['module'], $_GET['confirm'] ) ) {
-			message( \Module::getError(), 'back', 'error' );
+			message( \Module::getError(), '', 'error' );
 		}
 		message( '模块卸载成功', u( 'installed' ) );
 	}
