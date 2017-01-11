@@ -70,8 +70,8 @@ class Menu {
 	 * 分配菜单数据到模板
 	 * @return mixed
 	 */
-	public function assign() {
-		$links = [
+	public function get() {
+		return [
 			//系统菜单数据
 			'menus'       => $this->all(),
 			//当前模块
@@ -79,6 +79,5 @@ class Menu {
 			//用户在站点可以使用的模块列表
 			'moduleLists' => \Module::getBySiteUser()
 		];
-		View::with( [ '_LINKS_' => $links ] );
 	}
 }

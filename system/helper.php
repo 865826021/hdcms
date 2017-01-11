@@ -46,3 +46,20 @@ function record( $message ) {
 
 	return Db::table( 'log' )->insert( $data );
 }
+
+/**
+ * 根据标识验证模块的访问权限
+ * 系统模块时使用 system标识验证,因为所有系统模块权限是统一管理的
+ * 插件模块是独立设置的,所以针对插件使用插件名标识进行验证
+ *
+ * @param $tag 权限标识
+ */
+function auth( $tag ) {
+	\User::auth( $tag );
+}
+
+function url( $action, $args = [ ] ) {
+	$info = preg_split( '#\.|/#', $action );
+	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=controller/" .
+	       implode( '/', $info ) . ($args?'&' . http_build_query( $args ):'');
+}

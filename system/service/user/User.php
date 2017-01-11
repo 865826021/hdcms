@@ -198,24 +198,73 @@ class User extends Common {
 
 	/**
 	 * 根据标识验证模块的访问权限
+	 * 系统模块时使用 system标识验证,因为所有系统模块权限是统一管理的
+	 * 插件模块是独立设置的,所以针对插件使用插件名标识进行验证
 	 *
 	 * @param string $identify 权限标识
-	 * @param string $type system 系统模块 / 插件模块的名称
 	 *
 	 * @return bool
 	 */
-	public function auth( $identify, $type ) {
-		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
-		if ( empty( $permission ) ) {
-			return true;
+	public function auth( $identify ) {
+		$status = true;
+		if ( $this->hasModule() === false ) {
+			$status = false;
+		} else {
+			$type       = v( 'module.name.is_system' ) ? 'system' : v( 'module.name' );
+			$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
+			if ( empty( $permission ) ) {
+				$status = true;
+			}
+			foreach ( $permission as $v ) {
+				if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
+					$status = true;
+				}
+			}
 		}
-		foreach ( $permission as $v ) {
-			if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
-				return true;
+		if ( $status === false ) {
+			message( '你没有访问权限', '', 'error' );
+		}
+
+		return true;
+	}
+
+	/**
+	 * 验证当前用户在当前站点
+	 * 能否使用当前模块
+	 * 具体模块动作需要使用权限标识独立验证
+	 * @return bool
+	 * @throws \Exception
+	 */
+	public function hasModule() {
+		static $isAuth = null;
+		//验证过的进行缓存,减少验证效次数
+		if ( ! is_null( $isAuth ) ) {
+			return $isAuth;
+		}
+		//操作员验证
+		if ( ! \User::isOperate() ) {
+			$isAuth = false;
+		} else {
+			//系统模块不受限制
+			if ( v( "module.is_system" ) == 1 ) {
+				$isAuth = true;
+			} else {
+				//站点是否含有模块
+				if ( ! $this->hasModule( SITEID, v( 'module.name' ) ) ) {
+					$isAuth = false;
+				} else {
+					//插件模块
+					$allowModules = UserPermission::where( 'siteid', SITEID )
+					                              ->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
+					if ( ! empty( $allowModules ) ) {
+						return $isAuth = in_array( v( 'module.name' ), $allowModules );
+					}
+					$isAuth = true;
+				}
 			}
 		}
 
-		return false;
+		return $isAuth;
 	}
 
 	/**

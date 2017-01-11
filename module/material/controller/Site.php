@@ -1,16 +1,6 @@
-<?php namespace module\material;
+<?php namespace module\material\controller;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-
-use module\hdSite;
-use module\material\model\Material;
+use module\HdController;
 
 /**
  * 微信素材管理
@@ -18,16 +8,12 @@ use module\material\model\Material;
  * @package module\material
  * @author 向军
  */
-class site extends hdSite {
-	protected $db;
-
-	public function __construct() {
-		parent::__construct();
-		$this->db = new Material();
-	}
-
-	//上传素材
-	public function doSiteUpload_material() {
+class Site extends HdController {
+	/**
+	 * 上传素材
+	 */
+	public function upload_material() {
+		p($_POST);
 		if ( ! is_file( $_POST['file'] ) ) {
 			message( '图片文件错误', '', 'error' );
 		}
@@ -48,9 +34,9 @@ class site extends hdSite {
 
 	//删除素材
 	public function doSiteDelMaterial() {
-		$id   = q( 'post.id' );
+		$id    = q( 'post.id' );
 		$model = $this->db->find( $id );
-		$data = Weixin::instance( 'material' )->delete( $model['media_id'] );
+		$data  = Weixin::instance( 'material' )->delete( $model['media_id'] );
 		if ( isset( $data['errcode'] ) ) {
 			message( $data['errmsg'], '', 'error' );
 		} else {
@@ -60,7 +46,7 @@ class site extends hdSite {
 	}
 
 	//图片
-	public function doSiteImage() {
+	public function image() {
 		$data = Db::table( 'material' )->orderBy( 'id', 'DESC' )->paginate( 20, 8 );
 
 		return view( $this->template . '/image.html' )->with( [ 'data' => $data ] );
@@ -80,7 +66,7 @@ class site extends hdSite {
 	public function doSiteNews() {
 		$data = Db::table( 'material' )->where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
 		foreach ( (array) $data as $k => $v ) {
-			$data[ $k ]['data'] = json_decode( $v['data'], TRUE );
+			$data[ $k ]['data'] = json_decode( $v['data'], true );
 		}
 		View::with( 'data', json_encode( $data, JSON_UNESCAPED_UNICODE ) );
 
@@ -256,7 +242,7 @@ str;
 		$id                          = q( 'post.id' );
 		$media_id                    = $this->db->where( 'id', $id )->pluck( 'media_id' );
 		$data                        = [ ];
-		$data['filter']['is_to_all'] = TRUE;
+		$data['filter']['is_to_all'] = true;
 		$data['filter']['group_id']  = 2;
 		$data['mpnews']['media_id']  = $media_id;
 		$data['msgtype']             = 'mpnews';

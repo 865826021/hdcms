@@ -1,4 +1,4 @@
-<?php namespace module\button;
+<?php namespace module\button\controller;
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
@@ -9,7 +9,8 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-use module\hdSite;
+use module\HdController;
+use system\model\Button;
 
 /**
  * 微信菜单
@@ -17,27 +18,24 @@ use module\hdSite;
  * @package module\menu
  * @author 向军
  */
-class site extends hdSite {
-	protected $db;
+class Site extends HdController {
 
 	public function __construct() {
 		parent::__construct();
-		$this->db = new \system\model\Button();
 	}
 
 	//菜单列表
-	public function doSiteLists() {
-		$data = $this->db->where( 'siteid', SITEID )->get();
+	public function lists() {
+		$data = Button::where( 'siteid', SITEID )->get();
 		View::with( 'data', $data );
 
 		return view( $this->template . '/lists.html' );
 	}
 
 	//删除菜单
-	public function doSiteRemove() {
-		$id     = q( 'get.id' );
-		$status = $this->db->where( 'id', $id )->where( 'siteid', SITEID )->delete();
-		if ( $status ) {
+	public function remove() {
+		$model  =Button::find(Request::get('id'));
+		if ( $model->destory() ) {
 			message( '删除菜单成功', 'back', 'success' );
 		}
 		message( '删除菜单失败', 'back', 'error' );
@@ -47,7 +45,7 @@ class site extends hdSite {
 	public function doSitePushWechat() {
 		$id   = q( 'get.id' );
 		$data = $this->db->where( 'id', $id )->pluck( 'data' );
-		$data = json_decode( $data, TRUE );
+		$data = json_decode( $data, true );
 		$data = $this->addHttp( $data );
 		$res  = \Weixin::instance( 'button' )->createButton( $data );
 		if ( $res['errcode'] == 0 ) {
@@ -59,21 +57,31 @@ class site extends hdSite {
 	}
 
 	//添加/编辑菜单
-	public function doSitePost() {
+	public function post() {
 		$id = q( 'get.id' );
 		if ( IS_POST ) {
-			$this->db['title']  = Request::post( 'title' );
-			$this->db['data']   = Request::post( 'data' );
-			$this->db['status'] = 0;
-			$this->db['id']     = Request::get( 'id' );
-			$this->db->save();
-			message( '添加菜单成功', site_url( 'lists' ), 'success' );
+			$model           = $id ? Button::find( $id ) : new Button();
+			$model['title']  = Request::post( 'title' );
+			$model['data']   = Request::post( 'data' );
+			$model['status'] = 0;
+			$model['id']     = Request::get( 'id' );
+			$model->save();
+			message( '添加菜单成功', url( 'site.lists' ), 'success' );
 		}
 		if ( $id ) {
-			$field = Db::table( 'button' )->where( 'id', $id )->first();
+			$field = Button::find( $id );
 		} else {
 			$field['title'] = '';
-			$data           = [ 'button' => [ [ 'type' => 'view', 'name' => '菜单名称', 'url' => '', 'sub_button' => [ ] ] ] ];
+			$data           = [
+				'button' => [
+					[
+						'type'       => 'view',
+						'name'       => '菜单名称',
+						'url'        => '',
+						'sub_button' => [ ]
+					]
+				]
+			];
 			$field['data']  = json_encode( $data, JSON_UNESCAPED_UNICODE );
 		}
 
@@ -99,5 +107,4 @@ class site extends hdSite {
 
 		return $data;
 	}
-
 }

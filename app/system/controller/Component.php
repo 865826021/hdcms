@@ -84,14 +84,14 @@ class Component {
 			//前台会员根据站点编号读取数据
 			$db->where( 'siteid', SITEID );
 		}
-		$Res  = $db->paginate( 1 );
+		$Res  = $db->paginate( 32 );
 		$data = [ ];
 		if ( $Res->toArray() ) {
 			foreach ( $Res as $k => $v ) {
 				$data[ $k ]['createtime'] = date( 'Y/m/d', $v['createtime'] );
 				$data[ $k ]['size']       = \Tool::getSize( $v['size'] );
 				$data[ $k ]['url']        = __ROOT__ . '/' . $v['path'];
-				$data[ $k ]['path']       = __ROOT__ . '/' . $v['path'];
+				$data[ $k ]['path']       = $v['path'];
 			}
 		}
 		ajax( [ 'data' => $data, 'page' => $Res->links() ] );

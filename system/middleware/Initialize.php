@@ -1,4 +1,6 @@
 <?php namespace system\middleware;
+
+use houdunwang\request\Request;
 use system\model\Modules;
 
 /**
@@ -43,7 +45,7 @@ class Initialize {
 		 * 初始化模块数据
 		 * 加载模块数据到全局变量窗口中
 		 */
-		if ( $name = q( 'get.m' ) ) {
+		if ( $name = Request::get( 'm' ) ) {
 			v( 'module', Modules::where( 'name', $name )->first() );
 		}
 
@@ -52,8 +54,8 @@ class Initialize {
 		 * 而不是使用框架中的s变量
 		 * 所以当存在a变量时访问到扩展模块处理
 		 */
-		if ( Request::get( 'a' ) ) {
-			Request::get( 's', 'site/module/entry' );
+		if ( Request::get( 'm' ) && Request::get( 'action' ) ) {
+			Request::set( 'get.s', 'site/entry/action' );
 		}
 	}
 

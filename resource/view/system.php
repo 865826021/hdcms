@@ -4,12 +4,13 @@
 	<meta charset="utf-8"/>
 	<title>HDCMS - 免费开源多站点管理系统</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="node_modules/hdjs/js/jquery.min.js"></script>
-	<script src="node_modules/hdjs/app/util.js"></script>
-	<script src="node_modules/hdjs/require.js"></script>
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
 	<script>
 		hdjs = {
 			'base': 'node_modules/hdjs',
@@ -18,9 +19,9 @@
 			'removeImage': '{{u("system/component/removeImage")}}',
 		};
 	</script>
-	<script src="node_modules/hdjs/config.js"></script>
-	<script src="resource/js/hdcms.js"></script>
-	<link href="resource/css/hdcms.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
+	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
+	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 	<script>
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",

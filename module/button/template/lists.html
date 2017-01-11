@@ -2,7 +2,7 @@
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
         <li class="active"><a href="#tab1">微信菜单管理</a></li>
-        <li><a href="{{site_url('post')}}">添加菜单</a></li>
+        <li><a href="{{url('site/post')}}">添加菜单</a></li>
     </ul>
     <form action="" method="post">
         <div class="panel panel-default">
@@ -35,9 +35,9 @@
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <if value="!$d['status']">
-                                        <a class="btn btn-default" href="{{site_url('pushWechat',['id'=>$d['id']])}}">推送到微信端</a>
+                                        <a class="btn btn-default" href="{{url('site.pushWechat',['id'=>$d['id']])}}">推送到微信端</a>
                                     </if>
-                                    <a class="btn btn-default" href="{{site_url('post',['id'=>$d['id']])}}">编辑</a>
+                                    <a class="btn btn-default" href="{{url('site.post',['id'=>$d['id']])}}">编辑</a>
                                     <a class="btn btn-default" href="javascript:del({{$d['id']}})">删除</a>
                                 </div>
                             </td>
@@ -52,7 +52,7 @@
     </form>
 </block>
 <style>
-    table{
+    table {
         table-layout: fixed;
     }
 </style>
@@ -66,9 +66,9 @@
 
     function del(id) {
         util.confirm('确定删除这个菜单吗?', function () {
-            $.get("{{site_url('remove')}}", {id: id}, function (res) {
+            $.get("{{url('site.remove')}}", {id: id}, function (res) {
                 if (res.valid) {
-                    location.reload(true);
+                    util.message('菜单删除成功', 'refresh', 'success');
                 } else {
                     util.message(res.message, '', 'error');
                 }

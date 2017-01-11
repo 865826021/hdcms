@@ -43,37 +43,6 @@ class Module {
 	}
 
 	/**
-	 * 验证当前用户在当前站点
-	 * 能否使用当前模块
-	 * 具体模块动作需要使用权限标识独立验证
-	 * @return bool
-	 * @throws \Exception
-	 */
-	public function verifyModuleAccess() {
-		//操作员验证
-		if ( ! \User::isOperate() ) {
-			return false;
-		}
-		//系统模块不受限制
-		if ( v( "module.is_system" ) == 1 ) {
-			return true;
-		} else {
-			//站点是否含有模块
-			if ( ! $this->hasModule( SITEID, v( 'module.name' ) ) ) {
-				return false;
-			}
-			//插件模块
-			$allowModules = UserPermission::where( 'siteid', SITEID )
-			                              ->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
-			if ( ! empty( $allowModules ) ) {
-				return in_array( v( 'module.name' ), $allowModules );
-			}
-
-			return true;
-		}
-	}
-
-	/**
 	 * 调用模块方法
 	 *
 	 * @param string $module 模块.方法
@@ -114,6 +83,7 @@ class Module {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -173,7 +143,7 @@ class Module {
 			$modules[ $k ] = $m;
 		}
 		cache( "modules:{$siteId}", $modules );
-		p($modules);
+
 		return $cache[ $siteId ] = $modules;
 	}
 

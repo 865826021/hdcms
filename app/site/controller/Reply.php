@@ -21,11 +21,9 @@ use system\model\RuleKeyword;
  */
 class Reply {
 	public function __construct() {
-		if ( ! \Module::verifyModuleAccess() ) {
+		if ( ! \User::hasModule() ) {
 			message( '你没有操作权限', 'back', 'error' );
 		}
-		//分配菜单
-		\Menu::assign();
 	}
 
 	/**

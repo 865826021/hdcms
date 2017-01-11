@@ -13,7 +13,7 @@ class Rule extends HdRule {
 
 	public function __construct() {
 		parent::__construct();
-		\User::auth( 'reply_news', 'system' );
+		auth( 'reply_news' );
 	}
 
 	public function fieldsDisplay( $rid = 0 ) {

@@ -2,10 +2,11 @@
 <link rel="stylesheet" href="{{__TEMPLATE__}}/css.css">
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{site_url('lists')}}">微信菜单管理</a></li>
+        <li><a href="{{url('site.lists')}}">微信菜单管理</a></li>
         <li class="active"><a href="javascript:;">添加菜单</a></li>
     </ul>
     <form action="" method="post" id="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl" onsuddbmit="return false;">
+        {{csrf_field()}}
         <div class="well clearfix">
             <div class="col-sm-8">
                 <h4><strong>菜单说明</strong></h4>
@@ -133,6 +134,7 @@
                 </div>
                 <textarea name="data" hidden="hidden"></textarea>
                 <button type="submit" class="btn btn-primary">保存菜单</button>
+                <br/><br/>
             </div>
         </div>
     </form>

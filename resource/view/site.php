@@ -4,29 +4,38 @@
 	<meta charset="utf-8"/>
 	<title>HDCMS - 开源免费内容管理系统 - Powered by HDCMS.COM</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="node_modules/hdjs/js/jquery.min.js"></script>
-	<script src="node_modules/hdjs/app/util.js"></script>
-	<script src="node_modules/hdjs/require.js"></script>
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
 	<script>
+		//HDJS组件需要的配置
 		hdjs = {
 			'base': 'node_modules/hdjs',
 			'uploader': '{{u("system/component/uploader")}}',
 			'filesLists': '{{u("system/component/filesLists")}}',
 			'removeImage': '{{u("system/component/removeImage")}}',
 		};
+		//为异步请求设置CSRF令牌
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
 	</script>
-	<script src="node_modules/hdjs/config.js"></script>
-	<script src="resource/js/hdcms.js"></script>
-	<link href="resource/css/hdcms.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
+	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
+	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 	<script>
-		window.sys = {
+		window.system = {
 			attachment: "{{__ROOT__}}/attachment",
-			uid: <?php echo v( 'user.info.uid' );?>,
-			siteid: <?php echo SITEID;?>,
+			user: <?php echo json_encode( Session::get( 'user' ) );?>,
 			root: "<?php echo __ROOT__;?>",
+			url: "{{__URL__}}",
+			siteid: <?php echo SITEID;?>,
 			module: "<?php echo v( 'module.name' );?>"
 		}
 	</script>
@@ -39,6 +48,7 @@
 	</script>
 </head>
 <body class="site">
+<?php $_LINKS_ = \Menu::get(); ?>
 <div class="container-fluid admin-top">
 	<!--导航-->
 	<nav class="navbar navbar-inverse">
@@ -71,7 +81,8 @@
 						   aria-expanded="false">
 							<i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i> 编辑当前账号资料</a>
+							<li><a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i>
+									编辑当前账号资料</a>
 							</li>
 							<li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
 						</ul>
@@ -111,19 +122,22 @@
 			</div>
 
 			<style>
-				.menu_action_type { width : 100%; border-bottom : solid 1px #dddddd; }
-
-				.menu_action_type .btn {
-					border        : none;
-					border-radius : 0px;
-					width         : 33.6%;
-					height        : 35px;
+				.menu_action_type {
+					width: 100%;
+					border-bottom: solid 1px #dddddd;
 				}
 
 				.menu_action_type .btn {
-					border-width : 0px 1px 0px 1px !important;
-					border-style : solid;
-					border-color : #dddddd;
+					border: none;
+					border-radius: 0px;
+					width: 33.6%;
+					height: 35px;
+				}
+
+				.menu_action_type .btn {
+					border-width: 0px 1px 0px 1px !important;
+					border-style: solid;
+					border-color: #dddddd;
 				}
 			</style>
 			<!--扩展模块动作 end-->
@@ -142,7 +156,8 @@
 							<foreach from="$d['_data']" value="$g">
 								<li menuid="{{$m['id']}}" class="list-group-item" dataHref="{{$g['url']}}">
 									<if value="$g['append_url']">
-										<a class="pull-right" dataHref="{{$g['append_url']}}" menuid="{{$m['id']}}"><i class="fa fa-plus"></i></a>
+										<a class="pull-right" dataHref="{{$g['append_url']}}" menuid="{{$m['id']}}"><i
+												class="fa fa-plus"></i></a>
 									</if>
 									{{$g['title']}}
 								</li>
@@ -164,7 +179,8 @@
 						<li class="list-group-item" dataHref="?s=site/entry/home&p=package&menuid=21">
 							<i class="fa fa-reply-all"></i> 返回模块列表
 						</li>
-						<li class="list-group-item" dataHref="?s=site/module/home&m=hd&m={{$_LINKS_['module']['name']}}">
+						<li class="list-group-item"
+						    dataHref="?s=site/module/home&m=hd&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-reply-all"></i> {{$_LINKS_['module']['title']}}
 						</li>
 					</ul>
@@ -186,7 +202,8 @@
 							</li>
 						</if>
 						<if value="$_LINKS_['module']['setting']">
-							<li class="list-group-item" dataHref="?s=site/module/setting&m={{$_LINKS_['module']['name']}}">
+							<li class="list-group-item"
+							    dataHref="?s=site/module/setting&m={{$_LINKS_['module']['name']}}">
 								<i class="fa fa-cog"></i> 参数设置
 							</li>
 						</if>
@@ -202,17 +219,20 @@
 				</if>
 				<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 					<if value="!empty($_LINKS_['module']['budings']['home'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=home&m={{$_LINKS_['module']['name']}}">
+						<li class="list-group-item"
+						    dataHref="?s=site/nav/lists&entry=home&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-home"></i> 微站首页导航
 						</li>
 					</if>
 					<if value="!empty($_LINKS_['module']['budings']['profile'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=profile&m={{$_LINKS_['module']['name']}}">
+						<li class="list-group-item"
+						    dataHref="?s=site/nav/lists&entry=profile&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-user"></i> 手机个人中心导航
 						</li>
 					</if>
 					<if value="!empty($_LINKS_['module']['budings']['member'])">
-						<li class="list-group-item" dataHref="?s=site/nav/lists&entry=member&m={{$_LINKS_['module']['name']}}">
+						<li class="list-group-item"
+						    dataHref="?s=site/nav/lists&entry=member&m={{$_LINKS_['module']['name']}}">
 							<i class="fa fa-user"></i> 桌面个人中心导航
 						</li>
 					</if>
@@ -227,7 +247,8 @@
 
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 						<foreach from="$_LINKS_['module']['budings']['cover']" value="$f">
-							<li class="list-group-item" dataHref="?s=site/module/cover&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
+							<li class="list-group-item"
+							    dataHref="?s=site/module/cover&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
 								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 							</li>
 						</foreach>
@@ -242,7 +263,8 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 						<foreach from="$_LINKS_['module']['budings']['business']" value="$f">
-							<li class="list-group-item" dataHref="?s=site/module/business&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
+							<li class="list-group-item"
+							    dataHref="?s=site/module/business&m={{$_LINKS_['module']['name']}}&bid={{$f['bid']}}">
 								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
 							</li>
 						</foreach>
@@ -259,7 +281,8 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_lists">
 						<foreach from="$d" value="$g">
-							<li class="list-group-item" data-type="module_menu" menuid="21" dataHref="?s=site/module/home&m={{$g['name']}}">
+							<li class="list-group-item" data-type="module_menu" menuid="21"
+							    dataHref="?s=site/module/home&m={{$g['name']}}">
 								{{$g['title']}}
 							</li>
 						</foreach>
@@ -326,7 +349,7 @@
 		location.reload(true);
 	}
 	//有模块访问时
-	if (window.sys.module && sessionStorage.getItem('menuid') == 21) {
+	if (window.system.module && sessionStorage.getItem('menuid') == 21) {
 		//显示模块展示菜单形式 默认/系统/组合
 		$('.menu_action_type').removeClass('hide');
 		//模块动作类型 1 默认 2 系统 3 复合
