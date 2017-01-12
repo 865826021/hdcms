@@ -47,7 +47,7 @@ trait Connection {
 		}
 		$dns            = $this->getDns();
 		$links[ $name ] = new PDO( $dns, $this->config['user'], $this->config['password'], [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
-
+//		die($_GET["echostr"]);
 		$links[ $name ]->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		$this->execute( "SET sql_mode = ''" );
 

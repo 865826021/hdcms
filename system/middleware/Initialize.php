@@ -19,7 +19,7 @@ class Initialize {
 		\User::initUserInfo();
 		//前台用户
 		\Member::initUserInfo();
-//		die($_GET["echostr"]);
+
 		//加载系统配置项,对是系统配置不是站点配置
 		$this->loadConfig();
 		//初始站点数据
