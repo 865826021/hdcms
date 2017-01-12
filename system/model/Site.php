@@ -23,6 +23,7 @@ class Site extends Common {
 	];
 	protected $auto = [
 		[ 'weid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'siteid', SITEID, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'allfilesize', 200, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'description', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

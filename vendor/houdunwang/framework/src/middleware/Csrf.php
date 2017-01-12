@@ -10,9 +10,6 @@ use houdunwang\request\Request;
  */
 class Csrf {
 	public function run() {
-//		p($_GET);
-//		p($_POST);
-//		VAR_DUMP(IS_POST);return;
 		//当为POST请求时并且为同域名时验证令牌
 		if ( Request::isDomain() && Config::get( 'csrf.open' ) && Request::post() ) {
 			//比较POST中提交的CSRF

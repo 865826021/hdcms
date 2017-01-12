@@ -2,7 +2,8 @@
 <block name="content">
 	<ul class="nav nav-tabs">
 		<li role="presentation" class="active"><a href="#">管理{{v('module.title')}}</a></li>
-		<li role="presentation"><a href="?s=site/reply/post&m={{v('module.name')}}"><i class="fa fa-plus"></i> 添加{{v('module.title')}}</a></li>
+		<li role="presentation"><a href="?s=site/reply/post&m={{v('module.name')}}"><i class="fa fa-plus"></i>
+				添加{{v('module.title')}}</a></li>
 	</ul>
 	<div class="panel panel-info">
 		<div class="panel-heading">
@@ -14,7 +15,8 @@
 					<label class="col-sm-2 control-label">状态</label>
 					<div class="col-sm-10">
 						<div class="btn-group" role="group" aria-label="...">
-							<a class="btn {{q('get.status')?'btn-default':'btn-primary'}}" href="?s=site/reply/lists&m={{v('module.name')}}">所有</a>
+							<a class="btn {{q('get.status')?'btn-default':'btn-primary'}}"
+							   href="?s=site/reply/lists&m={{v('module.name')}}">所有</a>
 							<a class="btn {{q('get.status')=='close'?'btn-primary':'btn-default'}}"
 							   href="?s=site/reply/lists&m={{v('module.name')}}&status=close">禁用</a>
 							<a class="btn {{q('get.status')=='open'?'btn-primary':'btn-default'}}"
@@ -54,8 +56,10 @@
 				</div>
 				<div class="panel-footer clearfix">
 					<div class="btn-group pull-right" role="group" aria-label="...">
-						<a href="?s=site/reply/post&m={{$r['module']}}&rid={{$r['rid']}}" class="btn btn-default"><i class="fa fa-edit"></i> 编辑</a>
-						<button type="button" onclick="removeRule('{{$r['rid']}}','{{$r['name']}}',this)" class="btn btn-default"><i
+						<a href="?s=site/reply/post&m={{$r['module']}}&rid={{$r['rid']}}" class="btn btn-default"><i
+								class="fa fa-edit"></i> 编辑</a>
+						<button type="button" onclick="removeRule('{{$r['rid']}}','{{$r['name']}}',this)"
+						        class="btn btn-default"><i
 								class="fa fa-times"></i> 删除
 						</button>
 					</div>
@@ -69,9 +73,9 @@
 	function removeRule(rid, title, obj) {
 		require(['util'], function (util) {
 			util.confirm('确定删除规则 [' + title + '] 吗?', function () {
-				$.get("?s=site/reply/remove&m={{v('module.name')}}&rid=" + rid, function (d) {
-					if (d.valid) {
-						util.message('删除成功', '', 'success');
+				$.get("?s=site/reply/remove&m={{v('module.name')}}&rid=" + rid, function (json) {
+					if (json.valid) {
+						util.message(json.message, '', 'success');
 						$(obj).parents('.panel').eq(0).remove();
 					}
 				})

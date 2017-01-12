@@ -1,17 +1,17 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="module/material/template/css.css">
+<link rel="stylesheet" href="{{__TEMPLATE__}}/css.css">
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{site_url('site/image')}}">图片素材列表</a></li>
-        <li class="active"><a href="{{site_url('site/news')}}">图文消息列表</a></li>
+        <li><a href="{{url('site/image')}}">图片素材列表</a></li>
+        <li class="active"><a href="{{url('site/news')}}">图文消息列表</a></li>
     </ul>
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
             <h3 class="panel-title pull-left" style="line-height: 2em;">图文列表</h3>
 
             <div class="btn-group pull-right" role="group" aria-label="...">
-                <a href="{{site_url('site/postNews')}}" class="btn btn-success btn-sm "><i class="fa fa-plus"></i> 新建图文消息</a>
-                <a href="{{site_url('site/syncNews')}}" class="btn btn-default btn-sm "><i class="fa fa-cloud-download"></i> 与微信服务器同步</a>
+                <a href="{{url('site/postNews')}}" class="btn btn-success btn-sm "><i class="fa fa-plus"></i> 新建图文消息</a>
+                <a href="{{url('site/syncNews')}}" class="btn btn-default btn-sm "><i class="fa fa-cloud-download"></i> 与微信服务器同步</a>
             </div>
 
         </div>
@@ -30,7 +30,7 @@
                             <div class="pic" style="background-image: url('@{{v.pic?v.pic:'resource/images/nopic.jpg'}}')"></div>
                         </li>
                         <li class="action">
-                            <a ng-href="{{site_url('site/PostNews')}}&id=@{{m.id}}"><i class="fa fa-trash-o"></i> 编辑</a>&nbsp;&nbsp;
+                            <a ng-href="{{url('site/PostNews')}}&id=@{{m.id}}"><i class="fa fa-trash-o"></i> 编辑</a>&nbsp;&nbsp;
                             <a href="javascript:;" ng-click="remove(m.id)"><i class="fa fa-pencil-square-o"></i> 删除</a>&nbsp;&nbsp;
                             <a href="javascript:;" ng-click="send(m.id)"><i class="fa fa-paper-plane-o"></i> 群发</a>&nbsp;&nbsp;
                             <a href="javascript:;" ng-click="preview(m.id)"><i class="fa fa-eye"></i> 预览</a>
@@ -48,7 +48,7 @@
             //群发图文
             $scope.send = function (id) {
                 util.confirm('确定发送消息吗?', function () {
-                    $.post('{{site_url("site/sendNews")}}', {id: id}, function (res) {
+                    $.post('{{url("site/sendNews")}}', {id: id}, function (res) {
                         if (res.valid == 1) {
                             util.message(res.message, '', 'success');
                         } else {
@@ -60,7 +60,7 @@
             //发送预览
             $scope.preview = function (id) {
                 var modalobj = util.modal({
-                    content: ['{{site_url("site/users")}}'],//加载的远程地址
+                    content: ['{{url("site/users")}}'],//加载的远程地址
                     title: '选择发送图文消息的粉丝',
                     width: 800,
                     show: true,
@@ -69,7 +69,7 @@
                         'shown.bs.modal': function () {
                             $("button.user").click(function () {
                                 var uid = $(this).attr('uid');
-                                $.post('{{site_url("site/preview")}}', {id: id, uid: uid}, function (res) {
+                                $.post('{{url("site/preview")}}', {id: id, uid: uid}, function (res) {
                                     if (res.valid == 1) {
                                         util.message(res.message, '', 'success');
                                     } else {
@@ -88,7 +88,7 @@
             //删除图文
             $scope.remove = function (id) {
                 util.confirm('确定删除吗?', function () {
-                    $.post('{{site_url("site/delNews")}}', {id: id}, function (res) {
+                    $.post('{{url("site/delNews")}}', {id: id}, function (res) {
                         if (res.valid == 1) {
                             util.message(res.message, 'refresh', 'success');
                         } else {

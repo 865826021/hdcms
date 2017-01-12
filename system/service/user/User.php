@@ -1,5 +1,6 @@
 <?php namespace system\service\User;
 
+use system\model\UserGroup;
 use system\service\Common;
 use system\model\User as UserModel;
 
@@ -143,9 +144,8 @@ class User extends Common {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
 			$user                         = [ ];
-			$user['info']                 = Db::table( 'user' )->find( \Session::get( 'admin_uid' ) );
-			$group                        = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
-			$user['group']                = $group ?: [ ];
+			$user['info']                 = UserModel::find( \Session::get( 'admin_uid' ) );
+			$user['group']                = UserGroup::where( 'id', $user['info']['groupid'] )->first();
 			$user['system']['super_user'] = $user['group']['id'] == 0;
 			$user['system']['user_type']  = 'admin';
 			v( 'user', $user );

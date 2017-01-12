@@ -68,7 +68,6 @@ class Base extends Error {
 		sort( $tmpArr, SORT_STRING );
 		$tmpStr = implode( $tmpArr );
 		$tmpStr = sha1( $tmpStr );
-
 		if ( $tmpStr == $signature ) {
 			echo $echoStr;
 			exit;
@@ -189,7 +188,7 @@ class Base extends Error {
 
 	//获取实例
 	public function instance( $type ) {
-		$class = '\wechat\build\\' . ucfirst( $type );
+		$class = '\houdunwang\weixin\build\\' . ucfirst( $type );
 
 		return new $class( self::$config );
 	}

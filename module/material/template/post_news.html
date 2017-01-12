@@ -1,10 +1,10 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="module/material/template/css.css">
+<link rel="stylesheet" href="{{__TEMPLATE__}}/css.css">
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{site_url('site/image')}}">图片素材列表</a></li>
-        <li><a href="{{site_url('site/news')}}">图文消息列表</a></li>
-        <li class="active"><a href="{{site_url('site/news')}}">编辑图文消息</a></li>
+        <li><a href="{{url('site/image')}}">图片素材列表</a></li>
+        <li><a href="{{url('site/news')}}">图文消息列表</a></li>
+        <li class="active"><a href="{{url('site/news')}}">编辑图文消息</a></li>
     </ul>
     <form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak">
         <div class="panel panel-default">
@@ -154,7 +154,7 @@
             $scope.upImage = function (obj) {
                 util.image(function (images) {
                     if (images[0]) {
-                        $.post('{{site_url("site/getMediaId")}}', {file: images[0]}, function (res) {
+                        $.post('{{url("site/getMediaId")}}', {file: images[0]}, function (res) {
                             if (res.valid == 1) {
                                 $scope.action.pic = images[0];
                                 $scope.action.thumb_media_id = res.media_id;

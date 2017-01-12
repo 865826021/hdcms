@@ -46,10 +46,10 @@ class Site extends Common {
 			"apiclient_cert" => v( 'site.setting.pay.weichat.apiclient_cert' ),
 			"apiclient_key"  => v( 'site.setting.pay.weichat.apiclient_key' ),
 			"rootca"         => v( 'site.setting.pay.weichat.rootca' ),
-			"back_url"       => '',
+			"back_url"       => ''
 		];
 		//设置微信通信数据配置
-		c( 'weixin', array_merge( c( 'wechat' ), $config ) );
+		c( 'wechat', array_merge( c( 'wechat' ), $config ) );
 		//设置邮箱配置
 		c( 'mail', v( 'setting.smtp' ) );
 
@@ -192,11 +192,11 @@ class Site extends Common {
 		//站点设置缓存
 		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteId )->first();
 		$setting                     = $setting ?: [ ];
-		$setting ['creditnames']     = unserialize( $setting['creditnames'] );
-		$setting ['creditbehaviors'] = unserialize( $setting['creditbehaviors'] );
-		$setting ['register']        = unserialize( $setting['register'] );
-		$setting ['smtp']            = unserialize( $setting['smtp'] );
-		$setting ['pay']             = unserialize( $setting['pay'] );
+		$setting ['creditnames']     = json_decode( $setting['creditnames'], true );
+		$setting ['creditbehaviors'] = json_decode( $setting['creditbehaviors'], true );
+		$setting ['register']        = json_decode( $setting['register'], true );
+		$setting ['smtp']            = json_decode( $setting['smtp'], true );
+		$setting ['pay']             = json_decode( $setting['pay'], true );
 		$data['setting']             = $setting;
 		//站点模块
 		$data['modules'] = \Module::getSiteAllModules( $siteId, false );

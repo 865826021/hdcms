@@ -1,6 +1,8 @@
 <?php namespace module\material\controller;
 
+use houdunwang\request\Request;
 use module\HdController;
+use module\material\model\Material;
 
 /**
  * 微信素材管理
@@ -13,21 +15,22 @@ class Site extends HdController {
 	 * 上传素材
 	 */
 	public function upload_material() {
-		p($_POST);
-		if ( ! is_file( $_POST['file'] ) ) {
-			message( '图片文件错误', '', 'error' );
+		$file = Request::post( 'file' );
+		if ( ! is_file( $file ) ) {
+			message( '文件不存在', '', 'error' );
 		}
 		$type = $_POST['type'];
-		$data = Weixin::instance( 'material' )->upload( $type, $_POST['file'], 0 );
+		$data = \WeChat::instance( 'material' )->upload( $type, $file, 0 );
 		if ( isset( $data['errcode'] ) ) {
 			message( $data['errmsg'], '', 'error' );
 		} else {
-			$tab['type']     = $type;
-			$tab['file']     = $_POST['file'];
-			$tab['media_id'] = $data['media_id'];
-			$tab['url']      = $data['url'];
-			$tab['status']   = 1;
-			$this->db->add( $tab );
+			$model             = new Material();
+			$model['type']     = $type;
+			$model['file']     = $_POST['file'];
+			$model['media_id'] = $data['media_id'];
+			$model['url']      = $data['url'];
+			$model['status']   = 1;
+			$model->save();
 			message( '保存成功', '', 'success' );
 		}
 	}
@@ -35,36 +38,36 @@ class Site extends HdController {
 	//删除素材
 	public function doSiteDelMaterial() {
 		$id    = q( 'post.id' );
-		$model = $this->db->find( $id );
-		$data  = Weixin::instance( 'material' )->delete( $model['media_id'] );
+		$model = Material::find( $id );
+		$data  = \WeChat::instance( 'material' )->delete( $model['media_id'] );
 		if ( isset( $data['errcode'] ) ) {
 			message( $data['errmsg'], '', 'error' );
 		} else {
 			$model->destory();
-			message( '删除成功', '', 'success' );
+			message( '素材删除成功', '', 'success' );
 		}
 	}
 
 	//图片
 	public function image() {
-		$data = Db::table( 'material' )->orderBy( 'id', 'DESC' )->paginate( 20, 8 );
+		$data = Material::orderBy( 'id', 'DESC' )->paginate( 20, 8 );
 
 		return view( $this->template . '/image.html' )->with( [ 'data' => $data ] );
 	}
 
 	//语音
-	public function doSiteVoice() {
+	public function voice() {
 		return view( $this->template . '/voice.html' );
 	}
 
 	//视频
-	public function doSiteVideo() {
+	public function video() {
 		return view( $this->template . '/video.html' );
 	}
 
 	//图文
-	public function doSiteNews() {
-		$data = Db::table( 'material' )->where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
+	public function news() {
+		$data = Material::where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
 		foreach ( (array) $data as $k => $v ) {
 			$data[ $k ]['data'] = json_decode( $v['data'], true );
 		}
@@ -74,15 +77,15 @@ class Site extends HdController {
 	}
 
 	//删除图文
-	public function doSiteDelNews() {
+	public function delNews() {
 		if ( IS_POST ) {
-			$data = $this->db->find( $_POST['id'] );
+			$data = Material::find( Request::post( 'id' ) );
 			if ( ! $data ) {
 				message( '图文消息不存在', '', 'error' );
 			}
-			$result = Weixin::instance( 'material' )->delete( $data['media_id'] );
+			$result = WeChat::instance( 'material' )->delete( $data['media_id'] );
 			if ( $result['errcode'] == 0 ) {
-				$this->db->where( 'id', $data['id'] )->delete();
+				Material::where( 'id', $data['id'] )->delete();
 				message( '图文消息删除成功', '', 'success' );
 			}
 			message( "图文消息删除失败," . $result['errmsg'], '', 'error' );
@@ -103,7 +106,7 @@ class Site extends HdController {
 				//返回素材的数量，取值在1到20之间
 				"count"  => 10
 			];
-			$result = Weixin::instance( 'material' )->lists( $param );
+			$result = WeChat::instance( 'material' )->lists( $param );
 			if ( isset( $result['errcode'] ) ) {
 				message( '同步图文消息失败' . $result['errmsg'], site_url( 'site/news' ), 'error' );
 			} else {
@@ -115,7 +118,7 @@ class Site extends HdController {
 					if ( ! $field ) {
 						//保存缩略图
 						foreach ( $v['content']['news_item'] as $n => $m ) {
-							$imgContent = Weixin::instance( 'material' )->getMaterial( $m['thumb_media_id'] );
+							$imgContent = WeChat::instance( 'material' )->getMaterial( $m['thumb_media_id'] );
 							$pic        = c( 'upload.path' ) . '/' . date( 'Y/m/d' ) . '/' . time() . mt_rand( 0, 999 ) . '.jpg';
 							file_put_contents( $pic, $imgContent );
 							$v['content']['news_item'][ $n ]['pic'] = $pic;
@@ -137,7 +140,7 @@ class Site extends HdController {
 	}
 
 	//添加图文
-	public function doSitePostNews() {
+	public function postNews() {
 		$id = q( 'get.id', 0, 'intval' );
 		if ( IS_POST ) {
 			$articles = json_decode( Request::post( 'data' ), JSON_UNESCAPED_UNICODE );
@@ -150,7 +153,7 @@ class Site extends HdController {
 						"index"    => $k,
 						"articles" => $v
 					];
-					$res      = Weixin::instance( 'material' )->editNews( $editData );
+					$res      = WeChat::instance( 'material' )->editNews( $editData );
 					if ( $res['errcode'] != 0 ) {
 						//推送到微信失败
 						message( $res['errmsg'], '', 'error' );
@@ -159,7 +162,7 @@ class Site extends HdController {
 				$media_id = $field['media_id'];
 			} else {
 				//新增时推送到微信
-				$res = Weixin::instance( 'material' )->addNews( $articles );
+				$res = WeChat::instance( 'material' )->addNews( $articles );
 				if ( ! isset( $res['media_id'] ) ) {
 					//推送到微信失败
 					message( $res['errmsg'], '', 'error' );
@@ -196,22 +199,20 @@ class Site extends HdController {
                 }]
             }
 str;
-
 		}
 
 		return view( $this->template . '/post_news.html' )->with( 'field', $field );
 	}
 
 	//根据文件获取微信media_id
-	public function doSiteGetMediaId() {
+	public function getMediaId() {
 		$file = q( 'post.file' );
-		$db   = Db::table( 'material' );
-		$res  = $db->where( 'file', $file )->first();
+		$res  = Material::where( 'file', $file )->first();
 		if ( $res ) {
 			return [ 'valid' => 1, 'media_id' => $res['media_id'] ];
 		} else {
 			//文件不存在时表示没有上传到微信,上传之哟.
-			$data = Weixin::instance( 'material' )->upload( 'image', $file, 0 );
+			$data = WeChat::instance( 'material' )->upload( 'image', $file, 0 );
 			if ( isset( $data['errcode'] ) ) {
 				return [ 'valid' => 0, 'message' => $data['errmsg'] ];
 			} else {
@@ -230,7 +231,7 @@ str;
 	}
 
 	//群发图文消息
-	public function doSiteUsers() {
+	public function users() {
 		$user = Db::table( 'member' )->where( 'openid', '<>', '' )->where( 'siteid', SITEID )->get();
 		View::with( 'user', $user );
 
@@ -238,15 +239,15 @@ str;
 	}
 
 	//群发图文消息
-	public function doSiteSendNews() {
+	public function sendNews() {
 		$id                          = q( 'post.id' );
-		$media_id                    = $this->db->where( 'id', $id )->pluck( 'media_id' );
+		$media_id                    = Material::where( 'id', $id )->pluck( 'media_id' );
 		$data                        = [ ];
 		$data['filter']['is_to_all'] = true;
 		$data['filter']['group_id']  = 2;
 		$data['mpnews']['media_id']  = $media_id;
 		$data['msgtype']             = 'mpnews';
-		$res                         = Weixin::instance( 'message' )->sendall( $data );
+		$res                         = WeChat::instance( 'message' )->sendall( $data );
 		if ( empty( $res['errcode'] ) ) {
 			message( '图文消息群发成功,真正到用户手机需要些时间', '', 'success' );
 		}
@@ -254,15 +255,15 @@ str;
 	}
 
 	//预览图文消息
-	public function doSitePreview() {
+	public function preview() {
 		$uid                        = q( 'post.uid' );
 		$id                         = q( 'post.id' );
 		$user                       = Db::table( 'member' )->find( $uid );
-		$material                   = $this->db->find( $id );
+		$material                   = Material::find( $id );
 		$data['touser']             = $user['openid'];
 		$data['mpnews']['media_id'] = $material['media_id'];
 		$data['msgtype']            = 'mpnews';
-		$res                        = Weixin::instance( 'message' )->preview( $data );
+		$res                        = WeChat::instance( 'message' )->preview( $data );
 		if ( empty( $res['errcode'] ) ) {
 			message( '发送消息成功,请查看微信客户端', '', 'success' );
 		} else {

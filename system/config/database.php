@@ -1,5 +1,5 @@
 <?php
-return [
+$config =  [
 	/*
 	|--------------------------------------------------------------------------
 	| 字段缓存目录
@@ -73,3 +73,5 @@ return [
 	*/
 	'prefix'      => 'hd_'
 ];
+
+return array_merge($config,include 'data/database.php');

@@ -6,10 +6,11 @@
         <li class="active">设置公众号基本信息</li>
     </ol>
     <ul class="nav nav-tabs nav-justified">
-        <li role="presentation" class="active"><a href="javascript:;">设置公众号信息</a></li>
-        <li role="presentation" class="normal"><a href="javascript:;">微信平台设置信息</a></li>
+        <li role="presentation" class="active"><a href="?s=system/site/wechat&step=wechat&siteid={{SITEID}}">设置公众号信息</a></li>
+        <li role="presentation"><a href="?s=system/site/wechat&step=explain&siteid={{SITEID}}">微信平台设置信息</a></li>
     </ul>
     <form action="" method="post" role="form" class="form-horizontal">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">设置公众号基本信息</h4>

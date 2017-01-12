@@ -66,12 +66,12 @@ class Reply {
 		$instance = new $class();
 		if ( IS_POST ) {
 			$data             = json_decode( Request::post( 'keyword' ), true );
+			$data['rid']      = isset( $data['rid'] ) ? $data['rid'] : 0;
 			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
 			$data['module']   = v( 'module.name' );
 			$data['keywords'] = $data['keyword'];
 			$rid              = \Wx::rule( $data );
-			//调用模块的执行方法
-			//字段验证
+			//调用模块的执行方法进行数据验证
 			if ( $msg = $instance->fieldsValidate( $rid ) ) {
 				message( $msg, 'back', 'error' );
 			}
@@ -103,6 +103,6 @@ class Reply {
 		            v( 'module.name' ) . '\system\Rule';
 		$instance = new $class();
 		$instance->ruleDeleted( $rid );
-		message( '删除成功', 'back', 'success' );
+		message( '文字回复删除成功', 'back', 'success' );
 	}
 }

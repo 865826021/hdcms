@@ -169,14 +169,21 @@ class Site {
 	//设置站点微信公众号
 	public function wechat() {
 		switch ( $_GET['step'] ) {
-			case 'add':
+			//修改微信公众号
+			case 'wechat':
 				//验证当前用户站点权限
-				if ( ! service( 'user' )->isOwner() ) {
+				if ( ! \User::isOwner() ) {
 					message( '您不是网站管理员无法操作' );
 				}
 				//微信帐号管理
 				if ( IS_POST ) {
-					$SiteWechatModel              = new SiteWechat();
+					if ( $weid = SiteWechat::where( 'siteid', SITEID )->pluck( 'weid' ) ) {
+						//编辑站点
+						$SiteWechatModel = SiteWechat::find( $weid );
+					} else {
+						//新增公众号
+						$SiteWechatModel = new SiteWechat();
+					}
 					$SiteWechatModel['siteid']    = SITEID;
 					$SiteWechatModel['wename']    = Request::post( 'wename' );
 					$SiteWechatModel['account']   = Request::post( 'account' );
@@ -188,29 +195,30 @@ class Site {
 					$SiteWechatModel['icon']      = Request::post( 'icon' );
 					$weid                         = $SiteWechatModel->save();
 					//设置站点微信记录编号
-					$Site           = new \system\model\Site();
-					$Site['siteid'] = SITEID;
-					$Site['weid']   = $weid;
+					$Site         = SiteModel::find( SITEID );
+					$Site['weid'] = $weid;
 					$Site->save();
 					//更新站点缓存
-					service( 'site' )->updateCache();
+					\Site::updateCache();
 					go( u( 'wechat', [ 'step' => 'explain', 'siteid' => SITEID ] ) );
 				}
-				$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
-				View::with( 'field', $wechat );
+				$wechat = SiteWechat::where( 'siteid', SITEID )->first();
+				//更新站点缓存
+				\Site::updateCache( SITEID );
 
-				return view( 'post_weixin' );
+				return view()->with( 'field', $wechat );
 			case 'explain':
 				//验证当前用户站点权限
-				if ( ! service( 'user' )->isOwner( SITEID ) ) {
-					message( '你没有管理该站点的权限' );
+				if ( ! \User::isOwner( SITEID ) ) {
+					message( '你没有管理该站点的权限', '', 'error' );
 				}
-				//更新站点缓存
-				service( 'site' )->updateCache( SITEID );
 				//引导页面
-				$wechat = model( 'SiteWechat' )->where( 'siteid', SITEID )->first();
-
-				return view( 'explain' )->with( [ 'wechat' => $wechat ] );
+				$wechat = SiteWechat::where( 'siteid', SITEID )->first();
+				if ( $wechat ) {
+					return view( 'explain' )->with( [ 'wechat' => $wechat ] );
+				} else {
+					message( '您还没有设置公众号信息', 'back', 'warning' );
+				}
 		}
 	}
 
@@ -232,39 +240,25 @@ class Site {
 
 		if ( IS_POST ) {
 			//更新站点数据
-			$site              = ( new \system\model\Site() )->find( SITEID );
+			$site              = SiteModel::find( SITEID );
 			$site->name        = Request::post( 'name' );
 			$site->description = Request::post( 'description' );
 			$site->domain      = Request::post( 'domain' );
 			$site->module      = Request::post( 'module' );
 			$site->save();
-			//更新微信数据
-			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( Request::post() );
-			//测试连接
-			$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
-			c( "weixin", $wechat );
-			//与微信官网通信绑定验证
-			$status = \Weixin::getAccessToken( '', true );
-			Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
-			if ( $status ) {
-				message( '恭喜, 公众号连接成功', 'lists', 'success' );
-			} else {
-				message( '公众号连接失败,请查看配置项', 'back', 'error' );
-			}
 		}
-		$site   = Db::table( 'site' )->where( 'siteid', SITEID )->first();
-		$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
+		$site = SiteModel::where( 'siteid', SITEID )->first();
 
-		return view()->with( [ 'site' => $site, 'wechat' => $wechat ] );
+		return view()->with( [ 'site' => $site ] );
 	}
 
 	//公众号连接测试
 	public function connect() {
 		//与微信官网通信绑定验证
-		$wechat = Db::table( 'site_wechat' )->where( 'siteid', SITEID )->first();
-		c( "weixin", $wechat );
-		$status = Weixin::getAccessToken();
-		Db::table( 'site_wechat' )->where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
+		$wechat = SiteWechat::where( 'siteid', SITEID )->first();
+		c( "wechat", $wechat );
+		$status = WeChat::getAccessToken();
+		SiteWechat::where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {
 			ajax( [ 'valid' => true, 'message' => '恭喜, 微信公众号接入成功' ] );
 		} else {

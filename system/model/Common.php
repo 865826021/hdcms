@@ -8,5 +8,4 @@ use houdunwang\model\Model;
  * @package system\model
  */
 abstract class Common extends Model {
-
 }

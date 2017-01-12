@@ -71,7 +71,7 @@ class Wx {
 	 * @return bool
 	 */
 	public function rule( $data ) {
-		$Rule = new Rule();
+		$Rule = ! empty( $data['rid'] ) ? Rule::find( $data['rid'] ) : new Rule();
 		foreach ( $data as $field => $v ) {
 			$Rule[ $field ] = $v;
 		}

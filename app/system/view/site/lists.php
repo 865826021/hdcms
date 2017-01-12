@@ -119,7 +119,7 @@
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
 							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
-								<a href="?s=system/site/wechat&step=add&siteid={{$s['siteid']}}"><i class="fa fa-comment-o"></i> 微信公众号</a>&nbsp;&nbsp;&nbsp;
+								<a href="?s=system/site/wechat&step=wechat&siteid={{$s['siteid']}}"><i class="fa fa-comment-o"></i> 微信公众号</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
 							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
