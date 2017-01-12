@@ -45,18 +45,8 @@ trait Connection {
 		if ( isset( $links[ $name ] ) ) {
 			return $links[ $name ];
 		}
-
-//		$dns            = $this->getDns();
-		try {
-			ob_start();
-			$links[ $name ] = new PDO( 'mysql:host=localhost;dbname=hdcms', 'hdcms', 'hdcms@)!!' );
-			ob_get_clean();
-			file_put_contents('a.php',33);
-		} catch (PDOException $e) {
-
-			echo 'Connection failed: ' . $e->getMessage();
-		}
-		die( $_GET["echostr"] );
+		$dns            = $this->getDns();
+		$links[ $name ] = new PDO( $dns, $this->config['user'], $this->config['password'], [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 
 		$links[ $name ]->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 		$this->execute( "SET sql_mode = ''" );
