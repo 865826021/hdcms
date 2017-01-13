@@ -21,6 +21,7 @@ class Api {
 		//与微信官网通信绑定验证
 		\WeChat::valid();
 		$this->instance = \WeChat::instance( 'message' );
+
 	}
 
 	/**
