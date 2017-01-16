@@ -35,7 +35,7 @@ class ComposerStaticInit3554e2617afb89628e1af61bfcb15420
         array (
             'houdunwang\\zip\\' => 15,
             'houdunwang\\xml\\' => 15,
-            'houdunwang\\weixin\\' => 18,
+            'houdunwang\\wechat\\' => 18,
             'houdunwang\\view\\' => 16,
             'houdunwang\\validate\\' => 20,
             'houdunwang\\tool\\' => 16,
@@ -100,9 +100,9 @@ class ComposerStaticInit3554e2617afb89628e1af61bfcb15420
         array (
             0 => __DIR__ . '/..' . '/houdunwang/xml/src',
         ),
-        'houdunwang\\weixin\\' => 
+        'houdunwang\\wechat\\' => 
         array (
-            0 => __DIR__ . '/..' . '/houdunwang/weixin/src',
+            0 => __DIR__ . '/..' . '/houdunwang/wechat/src',
         ),
         'houdunwang\\view\\' => 
         array (

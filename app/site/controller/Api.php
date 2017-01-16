@@ -107,23 +107,6 @@ class Api {
 	}
 
 	/**
-	 * 根据模块名执行模块处理消息任务
-	 *
-	 * @param string $module 模块名称
-	 * @param int $rid 规则编号,只有在文本消息时才会有值
-	 */
-	protected function moduleProcessing( $module, $rid = 0 ) {
-		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ).$module['name'].'\system\Processor';
-		if ( class_exists( $class ) ) {
-			$obj = new $class();
-			if ( $obj->handle( $rid ) === true ) {
-				//处理完成
-				exit;
-			}
-		}
-	}
-
-	/**
 	 * 没有任何模块处理消息时回复默认消息
 	 * @return mixed
 	 */
@@ -160,6 +143,23 @@ class Api {
 						return call_user_func_array( [ $instance, 'handle' ], [ ] );
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * 根据模块名执行模块处理消息任务
+	 *
+	 * @param string $module 模块名称
+	 * @param int $rid 规则编号,只有在文本消息时才会有值
+	 */
+	protected function moduleProcessing( $module, $rid = 0 ) {
+		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ).$module['name'].'\system\Processor';
+		if ( class_exists( $class ) ) {
+			$obj = new $class();
+			if ( $obj->handle( $rid ) === true ) {
+				//处理完成
+				exit;
 			}
 		}
 	}

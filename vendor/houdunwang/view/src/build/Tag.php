@@ -20,23 +20,22 @@ class Tag extends TagBase {
 	 * block 块标签
 	 * level 嵌套层次
 	 */
-	public $tags
-		= [
-			'foreach' => [ 'block' => true, 'level' => 5 ],
-			'list'    => [ 'block' => true, 'level' => 5 ],
-			'if'      => [ 'block' => true, 'level' => 5 ],
-			'elseif'  => [ 'block' => false ],
-			'else'    => [ 'block' => false ],
-			'js'      => [ 'block' => false ],
-			'css'     => [ 'block' => false ],
-			'include' => [ 'block' => false ],
-			'extend'  => [ 'block' => false ],
-			'blade'   => [ 'block' => false ],
-			'parent'  => [ 'block' => false ],
-			'block'   => [ 'block' => true, 'level' => 5 ],
-			'widget'  => [ 'block' => true, 'level' => 5 ],
-			'php'     => [ 'block' => true, 'level' => 5 ]
-		];
+	public $tags = [
+		'foreach' => [ 'block' => true, 'level' => 5 ],
+		'list'    => [ 'block' => true, 'level' => 5 ],
+		'if'      => [ 'block' => true, 'level' => 5 ],
+		'elseif'  => [ 'block' => false ],
+		'else'    => [ 'block' => false ],
+		'js'      => [ 'block' => false ],
+		'css'     => [ 'block' => false ],
+		'include' => [ 'block' => false ],
+		'extend'  => [ 'block' => false ],
+		'blade'   => [ 'block' => false ],
+		'parent'  => [ 'block' => false ],
+		'block'   => [ 'block' => true, 'level' => 5 ],
+		'widget'  => [ 'block' => true, 'level' => 5 ],
+		'php'     => [ 'block' => true, 'level' => 5 ]
+	];
 
 	//引入CSS文件
 	public function _css( $attr, $content, &$view ) {

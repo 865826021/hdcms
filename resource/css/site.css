@@ -10,6 +10,19 @@
   font-size: 14px;
   height: 43px;
 }
+.site .admin_menu .left-menu .menu_action_type {
+  width: 100%;
+  border-bottom: solid 1px #dddddd;
+}
+.site .admin_menu .left-menu .menu_action_type .btn {
+  border: none;
+  border-radius: 0px;
+  width: 33.6%;
+  height: 35px;
+  border-width: 0px 1px 0px 1px !important;
+  border-style: solid;
+  border-color: #dddddd;
+}
 .site .admin_menu .left-menu .panel {
   margin-bottom: 0px;
   border-radius: 0px;

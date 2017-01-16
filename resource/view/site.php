@@ -19,6 +19,14 @@
 			'filesLists': '{{u("system/component/filesLists")}}',
 			'removeImage': '{{u("system/component/removeImage")}}',
 		};
+		window.system = {
+			attachment: "{{__ROOT__}}/attachment",
+			user: <?php echo json_encode( Session::get( 'user' ) );?>,
+			root: "<?php echo __ROOT__;?>",
+			url: "{{__URL__}}",
+			siteid: <?php echo SITEID;?>,
+			module: "<?php echo v( 'module.name' );?>"
+		}
 		//为异步请求设置CSRF令牌
 		$.ajaxSetup({
 			headers: {
@@ -28,17 +36,8 @@
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
+	<script src="{{__ROOT__}}/resource/js/menu.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
-	<script>
-		window.system = {
-			attachment: "{{__ROOT__}}/attachment",
-			user: <?php echo json_encode( Session::get( 'user' ) );?>,
-			root: "<?php echo __ROOT__;?>",
-			url: "{{__URL__}}",
-			siteid: <?php echo SITEID;?>,
-			module: "<?php echo v( 'module.name' );?>"
-		}
-	</script>
 	<script>
 		if (navigator.appName == 'Microsoft Internet Explorer') {
 			if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
@@ -48,7 +47,7 @@
 	</script>
 </head>
 <body class="site">
-<?php $_LINKS_ = \Menu::get(); ?>
+<?php $_LINKS_ = \Menu::get();?>
 <div class="container-fluid admin-top">
 	<!--导航-->
 	<nav class="navbar navbar-inverse">
@@ -120,28 +119,7 @@
 				<button type="button" class="btn btn-default" onclick="changeModuleActionType(2);">系统</button>
 				<button type="button" class="btn btn-default" onclick="changeModuleActionType(3);">组合</button>
 			</div>
-
-			<style>
-				.menu_action_type {
-					width: 100%;
-					border-bottom: solid 1px #dddddd;
-				}
-
-				.menu_action_type .btn {
-					border: none;
-					border-radius: 0px;
-					width: 33.6%;
-					height: 35px;
-				}
-
-				.menu_action_type .btn {
-					border-width: 0px 1px 0px 1px !important;
-					border-style: solid;
-					border-color: #dddddd;
-				}
-			</style>
 			<!--扩展模块动作 end-->
-
 			<div class="panel panel-default" id="menus">
 				<!--系统菜单-->
 				<foreach from="$_LINKS_['menus']" value="$m">
@@ -166,7 +144,6 @@
 					</foreach>
 				</foreach>
 				<!--系统菜单 end-->
-
 				<!----------返回模块列表 start------------>
 				<if value="$_LINKS_['module']">
 					<div class="panel-heading hide module_back">
@@ -186,7 +163,6 @@
 					</ul>
 				</if>
 				<!----------返回模块列表 end------------>
-
 				<!------------------------模块菜单 start------------------------>
 				<if value="!empty($_LINKS_['module']['rule'])||!empty($_LINKS_['module']['setting'])">
 					<div class="panel-heading hide module_active">
@@ -244,7 +220,6 @@
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
 					</div>
-
 					<ul class="list-group menus collapse in hide module_active" aria-expanded="true">
 						<foreach from="$_LINKS_['module']['budings']['cover']" value="$f">
 							<li class="list-group-item"
@@ -317,93 +292,6 @@
 	<br>
 	Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
 </div>
-
-<script>
-	//链接跳转
-	$("[dataHref]").click(function (event) {
-		var url = $(this).attr('dataHref');
-		//记录当前点击的菜单
-		sessionStorage.setItem('dataHref', url);
-		if ($(this).attr('menuid')) {
-			sessionStorage.setItem('menuid', $(this).attr('menuid'));
-		}
-		location.href = url + '&menuid=' + sessionStorage.getItem('menuid');
-		//阻止冒泡
-		event.stopPropagation();
-	});
-	//记录顶级菜单编号
-	if (!sessionStorage.getItem('menuid')) {
-		sessionStorage.setItem('menuid', "{{key($_LINKS_['menus'])}}");
-	}
-	//设置顶级菜单为选中样式
-	if (sessionStorage.getItem('menuid')) {
-		$("#top_menu_" + sessionStorage.getItem('menuid')).addClass('active');
-	}
-	//设置左侧菜单点击样式
-	if (sessionStorage.getItem('dataHref')) {
-		$("li[dataHref='" + sessionStorage.getItem('dataHref') + "']").addClass('active');
-	}
-	//更改模块展示菜单形式 1 默认 2 系统 3 复合
-	function changeModuleActionType(type) {
-		sessionStorage.setItem('moduleActionType', type);
-		location.reload(true);
-	}
-	//有模块访问时
-	if (window.system.module && sessionStorage.getItem('menuid') == 21) {
-		//显示模块展示菜单形式 默认/系统/组合
-		$('.menu_action_type').removeClass('hide');
-		//模块动作类型 1 默认 2 系统 3 复合
-		moduleActionType = sessionStorage.getItem('moduleActionType');
-		if (!moduleActionType) {
-			moduleActionType = 1;
-		}
-		//设置点击按钮为蓝色
-		$('.menu_action_type button').eq(moduleActionType - 1).addClass('btn-primary');
-		switch (moduleActionType * 1) {
-			case 1:
-				//默认类型
-				$('.module_active').removeClass('hide');
-				$('.module_back').removeClass('hide');
-				break;
-			case 2:
-				//系统类型
-				$('.module_lists').removeClass('hide');
-				$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
-				break;
-			case 3:
-				//组合类型
-				$('.module_active').removeClass('hide');
-				$('.module_back').removeClass('hide');
-				$('.module_lists').removeClass('hide');
-				break;
-		}
-	} else {
-		//显示当前左侧菜单
-		$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
-		if (sessionStorage.getItem('menuid') == 21) {
-			$('.module_lists').removeClass('hide');
-		}
-	}
-
-	//搜索菜单
-	function searchMenu(obj) {
-		//搜索内容
-		var con = $(obj).val();
-		var menuid = sessionStorage.getItem('menuid');
-		$("[menuid='" + sessionStorage.getItem('menuid') + "']").addClass('hide');
-		$("#menus li[menuid=" + menuid + "]").each(function () {
-			if ($.trim($(this).text()).indexOf(con) >= 0) {
-				hasFind = true;
-				console.log($(this).parent().html());
-				$(this).parent().removeClass('hide').prev().removeClass('hide');
-				$(this).removeClass('hide');
-			}
-		});
-		if (con == '')
-			$("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
-	}
-</script>
-
 <if value="!empty($errors)">
 	<script>
 		//错误消息提示

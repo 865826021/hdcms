@@ -34,26 +34,11 @@ class Site extends HdController {
 
 	//删除菜单
 	public function remove() {
-		$model  =Button::find(Request::get('id'));
+		$model = Button::find( Request::get( 'id' ) );
 		if ( $model->destory() ) {
 			message( '删除菜单成功', 'back', 'success' );
 		}
 		message( '删除菜单失败', 'back', 'error' );
-	}
-
-	//推送到微信端
-	public function doSitePushWechat() {
-		$id   = q( 'get.id' );
-		$data = $this->db->where( 'id', $id )->pluck( 'data' );
-		$data = json_decode( $data, true );
-		$data = $this->addHttp( $data );
-		$res  = \Weixin::instance( 'button' )->createButton( $data );
-		if ( $res['errcode'] == 0 ) {
-			$this->db->whereNotIn( 'id', [ $id ] )->update( [ 'status' => 0 ] );
-			$this->db->where( 'id', $id )->update( [ 'status' => 1 ] );
-			message( '推送微信菜单成功', 'back', 'success' );
-		}
-		message( $res['errinfo'], 'back', 'error', 5 );
 	}
 
 	//添加/编辑菜单
@@ -86,6 +71,21 @@ class Site extends HdController {
 		}
 
 		return view( $this->template . '/post.html' )->with( 'field', $field );
+	}
+
+	//推送到微信端
+	public function pushWechat() {
+		$id   = Request::get( 'id' );
+		$data = Button::where( 'id', $id )->pluck( 'data' );
+		$data = json_decode( $data, true );
+		$data = $this->addHttp( $data );
+		$res  = \WeChat::instance( 'button' )->create( json_encode( $data, JSON_UNESCAPED_UNICODE ) );
+		if ( $res['errcode'] == 0 ) {
+			Button::whereNotIn( 'id', [ $id ] )->update( [ 'status' => 0 ] );
+			Button::where( 'id', $id )->update( [ 'status' => 1 ] );
+			message( '推送微信菜单成功', 'back', 'success' );
+		}
+		message( $res['errmsg'], 'back', 'error', 5 );
 	}
 
 	//url地址前添加http
