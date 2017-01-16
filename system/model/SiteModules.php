@@ -16,9 +16,11 @@ namespace system\model;
  */
 class SiteModules extends Common {
 	protected $table = 'site_modules';
-	protected $validate
-		= [
-			[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
-			[ 'module', 'required', '模块编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'siteid', 'required', '站点编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'module', 'required', '模块编号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
+	];
 }

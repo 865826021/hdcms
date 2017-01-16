@@ -1,4 +1,4 @@
-<?php namespace module\basic;
+<?php namespace module\basic\system;
 
 /**
  * 测试模块模块消息处理器
@@ -14,8 +14,6 @@ class processor extends hdProcessor {
 		$sql = "SELECT * FROM hd_reply_basic WHERE rid={$rid} ORDER BY rand()";
 		if ( $res = Db::query( $sql ) ) {
 			$this->text( $res[0]['content'] );
-
-			return true;
 		}
 	}
 }

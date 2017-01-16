@@ -19,8 +19,8 @@ class SiteSetting extends Common {
 	protected $allowFill = [ '*' ];
 	protected $validate = [ ];
 	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'grouplevel', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'default_template', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'welcome', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'default_message', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

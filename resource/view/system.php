@@ -4,7 +4,7 @@
 	<meta charset="utf-8"/>
 	<title>HDCMS - 免费开源多站点管理系统</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
 	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
@@ -29,9 +29,16 @@
 			root: "{{__ROOT__}}",
 			url: "{{__URL__}}",
 		}
-		window.csrf_token = "{{csrf_token()}}";
 	</script>
 	<script>
+		require(['jquery'], function ($) {
+			//为异步请求设置CSRF令牌
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		})
 		if (navigator.appName == 'Microsoft Internet Explorer') {
 			if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
 				alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');

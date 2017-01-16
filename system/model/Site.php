@@ -22,8 +22,8 @@ class Site extends Common {
 		[ 'description', 'required', '网站描述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'weid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
-		[ 'siteid', SITEID, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'allfilesize', 200, 'string', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'description', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

@@ -92,7 +92,7 @@ class Module {
 	 * 包括站点套餐内模块和为站点独立添加的模块
 	 *
 	 * @param int $siteId 站点编号
-	 * @param bool $readFromCache
+	 * @param bool $readFromCache 读取缓存数据
 	 *
 	 * @return array|mixed
 	 * @throws \Exception
@@ -131,6 +131,7 @@ class Module {
 		}
 		//加入系统模块
 		$modules = array_merge( $modules, Modules::where( 'is_system', 1 )->get() );
+		$cacheData   = [ ];
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = json_decode( $m['subscribes'], true ) ?: [ ];
 			$m['processors']  = json_decode( $m['processors'], true ) ?: [ ];
@@ -140,11 +141,11 @@ class Module {
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
 			}
-			$modules[ $k ] = $m;
+			$cacheData[ $m['name'] ] = $m;
 		}
-		cache( "modules:{$siteId}", $modules );
+		cache( "modules:{$siteId}", $cacheData );
 
-		return $cache[ $siteId ] = $modules;
+		return $cache[ $siteId ] = $cacheData;
 	}
 
 	/**

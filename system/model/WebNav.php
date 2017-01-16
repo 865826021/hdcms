@@ -10,28 +10,26 @@
 class WebNav extends Common {
 	protected $table = 'web_nav';
 	protected $allowFill = [ '*' ];
-	protected $validate
-		= [
-			[ 'name', 'required', '导航标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'url', 'required', '链接不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'orderby', 'num:0,255', '排序只能为0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-			[ 'entry', 'required', '导航类型不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-		];
-	protected $auto
-		= [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-			[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'css', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
-			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'category_cid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'position', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'position', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
-			[ 'orderby', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'icontype', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'entry', 'strtolower', 'function', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'name', 'required', '导航标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'url', 'required', '链接不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'orderby', 'num:0,255', '排序只能为0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'entry', 'required', '导航类型不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'css', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
+		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'category_cid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'position', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'position', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
+		[ 'orderby', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'icontype', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'entry', 'strtolower', 'function', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
+	];
 
 	/**
 	 * 获取菜单类型的中文标题

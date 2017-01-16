@@ -9,4 +9,7 @@
  */
 class TicketRecord extends Common {
 	protected $table = 'ticket_record';
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
+	];
 }

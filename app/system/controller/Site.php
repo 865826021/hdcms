@@ -237,7 +237,6 @@ class Site {
 		if ( ! \User::isManage() ) {
 			message( '你没有编辑站点的权限', 'with' );
 		}
-
 		if ( IS_POST ) {
 			//更新站点数据
 			$site              = SiteModel::find( SITEID );
@@ -248,6 +247,7 @@ class Site {
 			$site->save();
 		}
 		$site = SiteModel::where( 'siteid', SITEID )->first();
+		\Site::updateCache();
 
 		return view()->with( [ 'site' => $site ] );
 	}

@@ -17,13 +17,11 @@ namespace system\model;
  */
 class TicketModule extends Common {
 	protected $table = 'ticket_module';
-	protected $validate
-	                 = [
-			[ 'tid', 'required', '卡券tid不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'module', 'required', '模块不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		];
-	protected $auto
-	                 = [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'tid', 'required', '卡券tid不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'module', 'required', '模块不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+	];
 }

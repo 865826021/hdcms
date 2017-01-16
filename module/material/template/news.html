@@ -13,9 +13,7 @@
                 <a href="{{url('site/postNews')}}" class="btn btn-success btn-sm "><i class="fa fa-plus"></i> 新建图文消息</a>
                 <a href="{{url('site/syncNews')}}" class="btn btn-default btn-sm "><i class="fa fa-cloud-download"></i> 与微信服务器同步</a>
             </div>
-
         </div>
-
         <div class="panel-body ng-cloak" id="form" ng-controller="ctrl">
             <div class="news">
                 <div ng-repeat="(n,m) in data" class="lists">
@@ -44,7 +42,7 @@
 <script>
     require(['angular', 'util', 'underscore'], function (angular, util, _) {
         angular.module(['myApp'], []).controller('ctrl', ['$scope', function ($scope) {
-            $scope.data = angular.fromJson('{{$data}}');
+            $scope.data = <?php echo $data;?>;
             //群发图文
             $scope.send = function (id) {
                 util.confirm('确定发送消息吗?', function () {
@@ -87,8 +85,10 @@
             }
             //删除图文
             $scope.remove = function (id) {
-                util.confirm('确定删除吗?', function () {
+                util.confirm('确定删除图文消息吗?', function () {
+                    var loading =util.loading();
                     $.post('{{url("site/delNews")}}', {id: id}, function (res) {
+                        loading.modal('hide');
                         if (res.valid == 1) {
                             util.message(res.message, 'refresh', 'success');
                         } else {

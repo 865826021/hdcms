@@ -1,6 +1,7 @@
 <?php namespace system\model;
 
 /**
+ * 微站
  * Class Web
  * @package system\model
  * @author 向军 <2300071698@qq.com>
@@ -19,7 +20,7 @@ class Web extends Common {
 		[ 'thumb', 'required', '封面不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'domain', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 	];

@@ -1,8 +1,9 @@
 <?php namespace system\service\member;
+
 use system\service\Common;
 
 //服务功能类
-class Member extends Common{
+class Member extends Common {
 	protected $db;
 
 	public function __construct() {
@@ -15,7 +16,7 @@ class Member extends Common{
 			message( '请登录后操作', web_url( 'reg/login', [ ], 'uc' ), 'error' );
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	//初始用户信息
@@ -36,7 +37,7 @@ class Member extends Common{
 		$sql = "SELECT title,id FROM " . tablename( 'member' ) . " m JOIN " . tablename( 'member_group' ) . " g ON m.group_id = g.id WHERE m.uid={$uid}";
 		$d   = Db::query( $sql );
 
-		return $d ? $d[0] : NULL;
+		return $d ? $d[0] : null;
 	}
 
 	/**
@@ -51,7 +52,7 @@ class Member extends Common{
 			message( '当前站点中不存在此用户', 'back', 'error' );
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	//微信自动登录
@@ -74,7 +75,7 @@ class Member extends Common{
 				$user->save();
 				Session::set( 'member_uid', $user['uid'] );
 
-				return TRUE;
+				return true;
 			}
 		}
 	}
@@ -98,7 +99,7 @@ class Member extends Common{
 		}
 		Session::set( 'member_uid', $user['uid'] );
 
-		return TRUE;
+		return true;
 	}
 
 	//注册页面
@@ -147,7 +148,7 @@ class Member extends Common{
 
 		$member->save( $data );
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -162,7 +163,22 @@ class Member extends Common{
 	 * 默认会员组编号
 	 * @return mixed
 	 */
-	public function defaultGruopId() {
+	public function defaultGroupId() {
 		return Db::table( 'member_group' )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->pluck( 'id' );
+	}
+
+	/**
+	 * 根据密码获取密钥与加密后的密码数据及确认密码
+	 *
+	 * @param $password 密码
+	 *
+	 * @return array
+	 */
+	public function getPasswordAndSecurity( $password ) {
+		$data             = [ ];
+		$data['security'] = substr( md5( time() ), 0, 10 );
+		$data['password'] = md5( $password . $data['security'] );
+
+		return $data;
 	}
 }

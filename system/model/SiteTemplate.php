@@ -17,4 +17,7 @@ namespace system\model;
 class SiteTemplate extends Common {
 	protected $table    = 'site_template';
 	protected $validate = [ ];
+	protected $auto=[
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+	];
 }

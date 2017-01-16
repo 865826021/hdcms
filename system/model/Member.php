@@ -9,8 +9,16 @@
  */
 class Member extends Common {
 	protected $table = 'member';
+	protected $validate = [
+		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
+		[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'mobile', 'unique', '手机号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_UPDATE ],
+	];
 	protected $auto = [
-		[ 'siteid', 'getSiteid', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'mobile', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'email', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'icon', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
@@ -45,41 +53,18 @@ class Member extends Common {
 		[ 'residecity', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'residedist', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'access_token', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-	];
-	protected $validate = [
-		[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
-		[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'mobile', 'unique', '手机号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_UPDATE ],
-		[ 'group_id', 'required', '用户组不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ]
+		[ 'group_id', 'getDefaultGroupId', 'method', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 	];
 
-	protected function getSiteid() {
-		return SITEID;
+	protected function getDefaultGroupId() {
+		return \Member::defaultGroupId();
 	}
 
 	public function checkUid( $field, $value, $params, $data ) {
 		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? true : false;
 	}
 
-	protected $filter
-		= [
-			[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
-		];
-
-	/**
-	 * 根据密码获取密钥与加密后的密码数据及确认密码
-	 *
-	 * @return array
-	 */
-	public function getPasswordAndSecurity() {
-		$data             = [ ];
-		$data['security'] = substr( md5( time() ), 0, 10 );
-		$data['password'] = md5( Request::post( 'password' ) . $data['security'] );
-
-		return $data;
-	}
+	protected $filter = [
+		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
+	];
 }

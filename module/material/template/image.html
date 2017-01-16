@@ -78,13 +78,14 @@
     function upImage() {
         require(['util', 'jquery'], function (util, $) {
             util.image(function (images) {
+                util.loading();
                 $.ajax({
                     type: 'POST',
                     url: '{{url("site/upload_material")}}',
                     data: {type: 'image', file: images[0]},
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
+//                    headers: {
+//                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//                    },
                     dataType: 'JSON',
                     success: function (res) {
                         if (res.valid == 1) {

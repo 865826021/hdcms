@@ -4,6 +4,9 @@
 | HDCMS系统扩展函数库
 |--------------------------------------------------------------------------
 */
+function siteid() {
+	return SITEID;
+}
 
 /**
  * 站点缓存处理
@@ -60,6 +63,7 @@ function auth( $tag ) {
 
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
+
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=controller/" .
-	       implode( '/', $info ) . ($args?'&' . http_build_query( $args ):'');
+	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' );
 }

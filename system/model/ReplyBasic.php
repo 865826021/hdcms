@@ -16,16 +16,14 @@ namespace system\model;
  * @author 向军
  */
 class ReplyBasic extends Common {
-	protected $table            = 'reply_basic';
+	protected $table = 'reply_basic';
 	protected $denyInsertFields = [ 'id' ];
-	protected $validate
-	                            = [
-			[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'content', 'required', '回复内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		];
-	protected $auto
-	                            = [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'content', 'required', '回复内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+	];
 
 }

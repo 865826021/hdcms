@@ -3,6 +3,7 @@
 use houdunwang\request\Request;
 use module\HdController;
 use module\material\model\Material;
+use system\model\Member;
 
 /**
  * 微信素材管理
@@ -37,8 +38,7 @@ class Site extends HdController {
 
 	//删除素材
 	public function delMaterial() {
-		$id    = q( 'post.id' );
-		$model = Material::find( $id );
+		$model = Material::find( Request::post( 'id' ) );
 		$data  = \WeChat::instance( 'material' )->delete( $model['media_id'] );
 		if ( isset( $data['errcode'] ) ) {
 			message( $data['errmsg'], '', 'error' );
@@ -67,6 +67,11 @@ class Site extends HdController {
 
 	//图文
 	public function news() {
+		$model           = new Member();
+		$model['openid'] = 'aa';
+		$model->save();
+		exit;
+		p( v( 'site' ) );
 		$data = Material::where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
 		foreach ( (array) $data as $k => $v ) {
 			$data[ $k ]['data'] = json_decode( $v['data'], true );
@@ -97,7 +102,7 @@ class Site extends HdController {
 	//同步图文消息
 	public function syncNews() {
 		if ( isset( $_GET['pos'] ) ) {
-			$pos    = q( 'get.pos', 0 );
+			$pos    = Request::get( 'pos' );
 			$param  = [
 				//素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
 				"type"   => 'news',
@@ -106,16 +111,18 @@ class Site extends HdController {
 				//返回素材的数量，取值在1到20之间
 				"count"  => 10
 			];
-			$result = WeChat::instance( 'material' )->lists( $param );
+			$result = \WeChat::instance( 'material' )->lists( $param );
 			if ( isset( $result['errcode'] ) ) {
 				message( '同步图文消息失败' . $result['errmsg'], site_url( 'site/news' ), 'error' );
 			} else {
 				if ( empty( $result['item'] ) ) {
-					message( '全部同步完毕', site_url( 'site/news' ), 'success' );
+					message( '全部同步完毕', url( 'site/news' ), 'success' );
 				}
+				//创建上传目录
+				\Dir::create( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) );
 				foreach ( $result['item'] as $k => $v ) {
-					$field = $this->db->where( 'media_id', $v['media_id'] )->where( 'siteid', SITEID )->first();
-					if ( ! $field ) {
+					$field = Material::where( 'media_id', $v['media_id'] )->where( 'siteid', SITEID )->first();
+					if ( empty( $field ) ) {
 						//保存缩略图
 						foreach ( $v['content']['news_item'] as $n => $m ) {
 							$imgContent = WeChat::instance( 'material' )->getMaterial( $m['thumb_media_id'] );
@@ -123,33 +130,32 @@ class Site extends HdController {
 							file_put_contents( $pic, $imgContent );
 							$v['content']['news_item'][ $n ]['pic'] = $pic;
 						}
+						$model = new Material();
 						//本地不存在时添加到数据库
-						$data['articles'] = $v['content']['news_item'];
-						$tab['media_id']  = $v['media_id'];
-						$tab['type']      = 'news';
-						$tab['data']      = json_encode( $data, JSON_UNESCAPED_UNICODE );
-
-						$this->db->add( $tab );
+						$model['media_id'] = $v['media_id'];
+						$model['type']     = 'news';
+						$model['data']     = json_encode( $v['content']['news_item'], JSON_UNESCAPED_UNICODE );
+						$model->save();
 					}
 				}
 			}
 			$end = $pos + $result['item_count'];
-			message( "准备同步[{$pos} ~ {$end}]图文消息", site_url( 'site/syncNews', [ 'pos' => $end ] ), 'success' );
+			message( "准备同步[{$pos} ~ {$end}]图文消息", url( 'site/syncNews', [ 'pos' => $end ] ), 'success' );
 		}
-		message( '准备同步图文消息', site_url( 'site/syncNews', [ 'pos' => 0 ] ), 'success' );
+		message( '准备同步图文消息', url( 'site/syncNews', [ 'pos' => 0 ] ), 'success' );
 	}
 
 	//添加图文
 	public function postNews() {
-		$id = q( 'get.id', 0, 'intval' );
+		$id    = Request::get( 'id' );
+		$model = $id ? Material::find( $id ) : new Material();
 		if ( IS_POST ) {
 			$articles = json_decode( Request::post( 'data' ), JSON_UNESCAPED_UNICODE );
 			if ( $id ) {
 				//编辑时修改微信图文消息
 				foreach ( $articles['articles'] as $k => $v ) {
-					$field    = $this->db->find( $id );
 					$editData = [
-						"media_id" => $field['media_id'],
+						"media_id" => $model['media_id'],
 						"index"    => $k,
 						"articles" => $v
 					];
@@ -159,7 +165,7 @@ class Site extends HdController {
 						message( $res['errmsg'], '', 'error' );
 					}
 				}
-				$media_id = $field['media_id'];
+				$media_id = $model['media_id'];
 			} else {
 				//新增时推送到微信
 				$res = WeChat::instance( 'material' )->addNews( $articles );
@@ -169,23 +175,22 @@ class Site extends HdController {
 				}
 				$media_id = $res['media_id'];
 			}
-			$this->db['id']       = $id;
-			$this->db['type']     = 'news';
-			$this->db['data']     = Request::post( 'data' );
-			$this->db['media_id'] = $media_id;
-			$this->db['status']   = 1;
-			$this->db->save();
-			message( '图文消息保存成功', site_url( 'site/news' ), 'success' );
+			$model['id']       = $id;
+			$model['type']     = 'news';
+			$model['data']     = Request::post( 'data' );
+			$model['media_id'] = $media_id;
+			$model['status']   = 1;
+			$model->save();
+			message( '图文消息保存成功', url( 'site/news' ), 'success' );
 		}
 		if ( $id ) {
-			$field = $this->db->where( 'id', $id )->pluck( 'data' );
+			$field = $model['data'];
 			if ( ! $field ) {
 				message( '图文消息不存在', 'back', 'error' );
 			}
 		} else {
-			$author = v( 'site.name' );
-			$field
-			        = <<<str
+			$author = v( 'site.info.name' );
+			$field  = <<<str
 			{
                 "articles": [{
                     "title": '',
@@ -232,7 +237,7 @@ str;
 
 	//群发图文消息
 	public function users() {
-		$user = Db::table( 'member' )->where( 'openid', '<>', '' )->where( 'siteid', SITEID )->get();
+		$user = Member::where( 'openid', '<>', '' )->where( 'siteid', SITEID )->get();
 		View::with( 'user', $user );
 
 		return view( $this->template . '/users.html' );

@@ -9,4 +9,7 @@
  */
 class Wechat extends Common {
 	protected $table = 'site_wechat';
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
+	];
 }

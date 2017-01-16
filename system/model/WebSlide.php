@@ -17,6 +17,6 @@ class WebSlide extends Common {
 		[ 'displayorder', 'num:0,255', '排序只能为0~255', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
 	];
 }

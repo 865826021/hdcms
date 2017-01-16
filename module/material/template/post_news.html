@@ -7,6 +7,7 @@
         <li class="active"><a href="{{url('site/news')}}">编辑图文消息</a></li>
     </ul>
     <form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <h3 class="panel-title pull-left">图文消息管理</h3>

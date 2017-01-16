@@ -8,6 +8,9 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
+
+use system\model\Member;
+
 /**
  * 微信请求接口
  * Class api
@@ -21,7 +24,6 @@ class Api {
 		//与微信官网通信绑定验证
 		\WeChat::valid();
 		$this->instance = \WeChat::instance( 'message' );
-
 	}
 
 	/**
@@ -39,6 +41,8 @@ class Api {
 		if ( $this->instance->isClickEvent() ) {
 			$this->text( $message->EventKey );
 		}
+		//消息处理
+		$this->processing();
 		//默认消息回复
 		$this->defaultMessage();
 	}
@@ -52,8 +56,8 @@ class Api {
 	 */
 	protected function text( $content ) {
 		$content = trim( $content );
-		$sql     = "SELECT * FROM ".tablename( 'rule' ).' AS r INNER JOIN '.tablename( 'rule_keyword' )
-		          ." as k ON r.rid = k.rid WHERE k.status=1 AND k.siteid=".SITEID." ORDER BY k.rank DESC,type DESC";
+		$sql     = "SELECT * FROM " . tablename( 'rule' ) . ' AS r INNER JOIN ' . tablename( 'rule_keyword' )
+		           . " as k ON r.rid = k.rid WHERE k.status=1 AND k.siteid=" . SITEID . " ORDER BY k.rank DESC,type DESC";
 		$rules   = Db::query( $sql );
 		$content = strtolower( $content );
 		foreach ( $rules as $rule ) {
@@ -74,7 +78,7 @@ class Api {
 					break;
 				case 3:
 					//正则匹配
-					if ( preg_match( '/'.$rule['content'].'/i', $content ) ) {
+					if ( preg_match( '/' . $rule['content'] . '/i', $content ) ) {
 						$isFind = true;
 					}
 					break;
@@ -85,7 +89,7 @@ class Api {
 			}
 			//根据找到的模块执行处理消息动作
 			if ( $isFind === true ) {
-				$this->moduleProcessing( $rule['module'] );
+				$this->moduleProcessing( v( 'site.modules.' . $rule['module'] ),$rule['rid'] );
 			}
 		}
 	}
@@ -100,29 +104,26 @@ class Api {
 		$msgType = $this->msgType();
 		foreach ( v( 'site.modules' ) as $module ) {
 			//模块可以处理该消息类型时
-			if ( in_array( $msgType, $module['processors'] ) ) {
-				$this->moduleProcessing();
+			if ( \Arr::get( $module['processors'], $msgType ) ) {
+				$this->moduleProcessing( $module );
 			}
 		}
 	}
 
 	/**
-	 * 没有任何模块处理消息时回复默认消息
-	 * @return mixed
+	 * 根据模块名执行模块处理消息任务
+	 *
+	 * @param string $module 模块名称
+	 * @param int $rid 规则编号,只有在文本消息时才会有值
 	 */
-	protected function defaultMessage() {
-		//关注消息处理
-		if ( $this->instance->isSubscribeEvent() ) {
-			$this->text( v( 'site.setting.welcome' ) );
-			$this->instance->text( v( 'site.setting.welcome' ) );
-		} else {
-			/**
-			 * 没有任何模块处理这个消息时回复系统消息
-			 * 先看系统消息能不能做为关键词进行处理
-			 * 不能的话直接回复
-			 */
-			$this->text( v( 'site.setting.default_message' ) );
-			$this->instance->text( v( 'site.setting.default_message' ) );
+	protected function moduleProcessing( $module, $rid = 0 ) {
+		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\system\Processor';
+		if ( class_exists( $class ) ) {
+			$obj = new $class();
+			if ( $obj->handle( $rid ) === true ) {
+				//处理完成
+				exit;
+			}
 		}
 	}
 
@@ -135,31 +136,14 @@ class Api {
 		//根据获取的消息类型检测模型是否处理
 		$msgType = $this->msgType();
 		foreach ( v( 'site.modules' ) as $module ) {
-			if ( in_array( $msgType, $module['subscribes'] ) ) {
-				$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ).$module['name'].'\system\Subscribe';
+			if ( \Arr::get( $module['subscribes'], $msgType ) ) {
+				$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\system\Subscribe';
 				if ( class_exists( $class ) ) {
 					$instance = new $class;
 					if ( method_exists( $instance, 'handle' ) ) {
 						return call_user_func_array( [ $instance, 'handle' ], [ ] );
 					}
 				}
-			}
-		}
-	}
-
-	/**
-	 * 根据模块名执行模块处理消息任务
-	 *
-	 * @param string $module 模块名称
-	 * @param int $rid 规则编号,只有在文本消息时才会有值
-	 */
-	protected function moduleProcessing( $module, $rid = 0 ) {
-		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ).$module['name'].'\system\Processor';
-		if ( class_exists( $class ) ) {
-			$obj = new $class();
-			if ( $obj->handle( $rid ) === true ) {
-				//处理完成
-				exit;
 			}
 		}
 	}
@@ -173,5 +157,26 @@ class Api {
 		$message = $this->instance->getMessage();
 
 		return $message->MsgType == 'event' ? $message->Event : $message->MsgType;
+	}
+
+	/**
+	 * 没有任何模块处理消息时回复默认消息
+	 * @return mixed
+	 */
+	protected function defaultMessage() {
+		//关注消息处理
+		if ( $this->instance->isSubscribeEvent() ) {
+			//回复默认关注消息
+			$this->text( v( 'site.setting.welcome' ) );
+			$this->instance->text( v( 'site.setting.welcome' ) );
+		} else {
+			/**
+			 * 没有任何模块处理这个消息时回复系统消息
+			 * 先看系统消息能不能做为关键词进行处理
+			 * 不能的话直接回复
+			 */
+			$this->text( v( 'site.setting.default_message' ) );
+			$this->instance->text( v( 'site.setting.default_message' ) );
+		}
 	}
 }

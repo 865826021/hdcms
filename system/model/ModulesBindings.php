@@ -12,16 +12,12 @@ use houdunwang\model\Model;
 class ModulesBindings extends Model {
 	//数据表
 	protected $table = "modules_bindings";
-
 	//允许填充字段
 	protected $allowFill = [ ];
-
 	//禁止填充字段
 	protected $denyFill = [ ];
-
 	//自动验证
 	protected $validate = [
-		//['字段名','验证方法','提示信息',验证条件,验证时间]
 		[ 'title', 'required', '模块名称不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'entry', 'required', '动作类型不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'do', 'required', '动作不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
@@ -29,7 +25,6 @@ class ModulesBindings extends Model {
 
 	//自动完成
 	protected $auto = [
-		//['字段名','处理方法','方法类型',验证条件,验证时机]
 		[ 'controller', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'url', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'icon', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

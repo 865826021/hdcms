@@ -29,7 +29,7 @@ class Template extends Common {
 		//删除模板数据
 		$this->where( 'name', $name )->delete();
 		//更新套餐数据
-		$package = Db::table( 'package' )->get()?:[];
+		$package = Db::table( 'package' )->get() ?: [ ];
 		foreach ( $package as $p ) {
 			$p['template'] = unserialize( $p['template'] );
 			if ( $k = array_search( $name, $p['template'] ) ) {
@@ -42,9 +42,9 @@ class Template extends Common {
 		$siteids   = Db::table( 'site' )->lists( 'siteid' );
 		$siteModel = new Site();
 		foreach ( $siteids as $siteid ) {
-			service('site')->updateCache( $siteid );
+			service( 'site' )->updateCache( $siteid );
 		}
 
-		return TRUE;
+		return true;
 	}
 }

@@ -23,7 +23,7 @@ class MemberGroup extends Common {
 		[ 'rank', 'num:0,255', '排序数字为0~255', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'credit', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'isdefault', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

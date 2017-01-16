@@ -27,18 +27,20 @@
 			siteid: <?php echo SITEID;?>,
 			module: "<?php echo v( 'module.name' );?>"
 		}
-		//为异步请求设置CSRF令牌
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
 	<script src="{{__ROOT__}}/resource/js/menu.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 	<script>
+		require(['jquery'], function ($) {
+			//为异步请求设置CSRF令牌
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		})
 		if (navigator.appName == 'Microsoft Internet Explorer') {
 			if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
 				alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
@@ -47,7 +49,7 @@
 	</script>
 </head>
 <body class="site">
-<?php $_LINKS_ = \Menu::get();?>
+<?php $_LINKS_ = \Menu::get(); ?>
 <div class="container-fluid admin-top">
 	<!--导航-->
 	<nav class="navbar navbar-inverse">

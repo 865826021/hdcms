@@ -8,8 +8,5 @@
  */
 class UserProfile extends Common {
 	protected $table = 'user_profile';
-	protected $auto
-	                 = [
-			[ 'status', 'setPassword', 'method', 3, 3 ]
-		];
+
 }

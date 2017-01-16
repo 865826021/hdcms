@@ -16,22 +16,20 @@ namespace system\model;
  * @author 向军
  */
 class ReplyCover extends Common {
-	protected $table     = 'reply_cover';
+	protected $table = 'reply_cover';
 	protected $allowFill = [ '*' ];
-	protected $validate
-	                     = [
-			[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'title', 'required', '封面回复标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'description', 'required', '描述不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'thumb', 'required', '图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		];
-	protected $auto
-	                     = [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-			[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'do', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		];
+	protected $validate = [
+		[ 'rid', 'required', '回复规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'title', 'required', '封面回复标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'description', 'required', '描述不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'thumb', 'required', '图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+	];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'do', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'url', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+	];
 
 }

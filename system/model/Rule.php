@@ -18,13 +18,12 @@ namespace system\model;
 class Rule extends Common {
 	protected $table = 'rule';
 	protected $denyInsertFields = [ 'rid' ];
-	protected $validate
-		= [
-			[ 'rank', 'num:0,255', '排序数字在0~255之间', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'name', 'required', '规则名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'module', 'required', '模块字段不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-			[ 'rid', 'validateRid', '回复规则不属于本网站', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-		];
+	protected $validate = [
+		[ 'rank', 'num:0,255', '排序数字在0~255之间', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'name', 'required', '规则名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'module', 'required', '模块字段不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'rid', 'validateRid', '回复规则不属于本网站', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+	];
 
 	protected function validateRid( $field, $val ) {
 		$rule = Db::table( 'rule' )->where( 'rid', $val )->first();
@@ -35,10 +34,9 @@ class Rule extends Common {
 		return true;
 	}
 
-	protected $auto
-		= [
-			[ 'siteid', SITEID, 'string', self::MUST_AUTO, self::MODEL_BOTH ],
-			[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-			[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ]
-		];
+	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ]
+	];
 }

@@ -1,14 +1,14 @@
 <?php namespace module\material\model;
+
 use houdunwang\model\Model;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
+/**
+ * 素材管理
+ * Class Material
+ * @package module\material\model
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
+ */
 class Material extends Model {
 	protected $table = 'material';
 
