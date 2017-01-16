@@ -36,7 +36,7 @@ class Site extends HdController {
 	}
 
 	//删除素材
-	public function doSiteDelMaterial() {
+	public function delMaterial() {
 		$id    = q( 'post.id' );
 		$model = Material::find( $id );
 		$data  = \WeChat::instance( 'material' )->delete( $model['media_id'] );
@@ -95,7 +95,7 @@ class Site extends HdController {
 	}
 
 	//同步图文消息
-	public function doSiteSyncNews() {
+	public function syncNews() {
 		if ( isset( $_GET['pos'] ) ) {
 			$pos    = q( 'get.pos', 0 );
 			$param  = [
