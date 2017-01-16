@@ -152,8 +152,9 @@
             }
 
             //上传图片
-            $scope.upImage = function (obj) {
+            $scope.upImage = function () {
                 util.image(function (images) {
+                    var modal = util.loading();
                     if (images[0]) {
                         $.post('{{url("site/getMediaId")}}', {file: images[0]}, function (res) {
                             if (res.valid == 1) {
@@ -163,9 +164,10 @@
                                 util.message(res.message, '', 'error');
                             }
                             $scope.$apply();
+                            modal.modal('hide');
                         }, 'json');
                     }
-                })
+                });
             }
 
             //图文编辑器

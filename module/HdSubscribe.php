@@ -11,17 +11,21 @@ use system\model\ModuleSetting;
 abstract class hdSubscribe {
 	//配置项
 	protected $config;
+	//微信消息内容
+	protected $content;
+	//微信消息管理实例
+	protected $message;
 
 	public function __construct() {
-		$this->config = ( new ModuleSetting() )->getModuleConfig();
+		$this->config  = \Module::getModuleConfig();
+		$this->message = \WeChat::instance( 'message' );
+		$this->content = $this->message->getMessage();
 	}
 
+	//处理方法
 	abstract function handle();
 
-	public function __call( $method, $arguments ) {
-		$instance = \Weixin::instance( 'message' );
-		if ( method_exists( $instance, $method ) ) {
-			call_user_func_array( [ $instance, $method ], $arguments );
-		}
+	public function __call( $method, $arguments = [ ] ) {
+
 	}
 }

@@ -9,8 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
 
-use system\model\Member;
-
 /**
  * 微信请求接口
  * Class api

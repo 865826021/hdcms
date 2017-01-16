@@ -50,7 +50,7 @@ class Site extends HdController {
 
 	//图片
 	public function image() {
-		$data = Material::orderBy( 'id', 'DESC' )->paginate( 20, 8 );
+		$data = Material::orderBy( 'id', 'DESC' )->where( 'type', 'image' )->paginate( 20, 8 );
 
 		return view( $this->template . '/image.html' )->with( [ 'data' => $data ] );
 	}
@@ -67,11 +67,6 @@ class Site extends HdController {
 
 	//图文
 	public function news() {
-		$model           = new Member();
-		$model['openid'] = 'aa';
-		$model->save();
-		exit;
-		p( v( 'site' ) );
 		$data = Material::where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
 		foreach ( (array) $data as $k => $v ) {
 			$data[ $k ]['data'] = json_decode( $v['data'], true );
@@ -147,34 +142,21 @@ class Site extends HdController {
 
 	//添加图文
 	public function postNews() {
-		$id    = Request::get( 'id' );
-		$model = $id ? Material::find( $id ) : new Material();
+		$id = Request::get( 'id' );
+		$model = $id?Material::find($id):new Material();
 		if ( IS_POST ) {
-			$articles = json_decode( Request::post( 'data' ), JSON_UNESCAPED_UNICODE );
+			$articles = json_decode( Request::post( 'data' ), true );
 			if ( $id ) {
-				//编辑时修改微信图文消息
-				foreach ( $articles['articles'] as $k => $v ) {
-					$editData = [
-						"media_id" => $model['media_id'],
-						"index"    => $k,
-						"articles" => $v
-					];
-					$res      = WeChat::instance( 'material' )->editNews( $editData );
-					if ( $res['errcode'] != 0 ) {
-						//推送到微信失败
-						message( $res['errmsg'], '', 'error' );
-					}
-				}
-				$media_id = $model['media_id'];
-			} else {
-				//新增时推送到微信
-				$res = WeChat::instance( 'material' )->addNews( $articles );
-				if ( ! isset( $res['media_id'] ) ) {
-					//推送到微信失败
-					message( $res['errmsg'], '', 'error' );
-				}
-				$media_id = $res['media_id'];
+				//删除原图文消息
+				\WeChat::instance( 'material' )->delete( $model['media_id'] );
 			}
+			//新增时推送到微信
+			$res = \WeChat::instance( 'material' )->addNews( $articles );
+			if ( ! isset( $res['media_id'] ) ) {
+				//推送到微信失败
+				message( $res['errmsg'], '', 'error' );
+			}
+			$media_id          = $res['media_id'];
 			$model['id']       = $id;
 			$model['type']     = 'news';
 			$model['data']     = Request::post( 'data' );
@@ -211,24 +193,23 @@ str;
 
 	//根据文件获取微信media_id
 	public function getMediaId() {
-		$file = q( 'post.file' );
+		$file = Request::post( 'file' );
 		$res  = Material::where( 'file', $file )->first();
 		if ( $res ) {
 			return [ 'valid' => 1, 'media_id' => $res['media_id'] ];
 		} else {
 			//文件不存在时表示没有上传到微信,上传之哟.
-			$data = WeChat::instance( 'material' )->upload( 'image', $file, 0 );
+			$data = \WeChat::instance( 'material' )->upload( 'image', $file, 0 );
 			if ( isset( $data['errcode'] ) ) {
 				return [ 'valid' => 0, 'message' => $data['errmsg'] ];
 			} else {
-				$tab['type']       = 'image';
-				$tab['file']       = $file;
-				$tab['media_id']   = $data['media_id'];
-				$tab['url']        = $data['url'];
-				$tab['siteid']     = SITEID;
-				$tab['createtime'] = time();
-				$tab['status']     = 1;
-				$this->db->insert( $tab );
+				$model             = new Material();
+				$model['type']     = 'image';
+				$model['file']     = $file;
+				$model['media_id'] = $data['media_id'];
+				$model['url']      = $data['url'];
+				$model['status']   = 1;
+				$model->save();
 
 				return [ 'valid' => 1, 'media_id' => $data['media_id'] ];
 			}

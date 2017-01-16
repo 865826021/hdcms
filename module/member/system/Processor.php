@@ -13,10 +13,10 @@ class Processor extends hdProcessor {
 	//规则编号
 	public function handle( $rid ) {
 		//关注时添加粉丝信息
-		if ( $this->isSubscribeEvent() ) {
+		if ( $this->message->isSubscribeEvent() ) {
 			$model = new Member();
-			if ( $model->where( 'openid', $this->message->FromUserName )->first() ) {
-				$model['openid'] = $this->message->FromUserName;
+			if ( ! $model->where( 'openid', $this->content->FromUserName )->first() ) {
+				$model['openid'] = $this->content->FromUserName;
 				$model->save();
 			}
 		}
