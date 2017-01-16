@@ -1,10 +1,11 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="{{site_url('site/credit')}}">积分列表</a></li>
-        <li><a href="{{site_url('site/tactics')}}">积分策略</a></li>
+        <li class="active"><a href="{{url('site/credit')}}">积分列表</a></li>
+        <li><a href="{{url('site/tactics')}}">积分策略</a></li>
     </ul>
     <form action="" method="post">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-body">
                 <table class="table table-hover">

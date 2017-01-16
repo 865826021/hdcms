@@ -2,7 +2,7 @@
 <block name="content">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#">会员列表</a></li>
-        <li><a href="{{site_url('site/MemberPost')}}">添加会员</a></li>
+        <li><a href="{{url('site/MemberPost')}}">添加会员</a></li>
     </ul>
     <form action="" method="post" class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">
@@ -44,7 +44,7 @@
                                 <div class="btn-group pull-right" role="group" aria-label="...">
                                     <a href="javascript:;" data-type="credit1" data-uid="{{$d['uid']}}" onclick="util.tradeCredit(this)" class="btn btn-default">积分</a>
                                     <a href="javascript:;" data-type="credit2" data-uid="{{$d['uid']}}" onclick="util.tradeCredit(this)" class="btn btn-default">余额</a>
-                                    <a href="{{site_url('site/MemberEdit')}}&uid={{$d['uid']}}" class="btn btn-default">编辑</a>
+                                    <a href="{{url('site/MemberEdit')}}&uid={{$d['uid']}}" class="btn btn-default">编辑</a>
                                 </div>
                             </td>
                         </tr>

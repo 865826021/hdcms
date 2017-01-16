@@ -51,7 +51,7 @@ class Site extends Common {
 		//设置微信通信数据配置
 		c( 'wechat', array_merge( c( 'wechat' ), $config ) );
 		//设置邮箱配置
-		c( 'mail', v( 'setting.smtp' ) );
+		c( 'mail', v( 'site.setting.smtp' ) );
 
 		return true;
 	}

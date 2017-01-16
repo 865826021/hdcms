@@ -1,12 +1,12 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="{{site_url('site/MemberLists')}}">会员列表</a></li>
-        <li><a href="{{site_url('site/MemberPost')}}">添加会员</a></li>
+        <li><a href="{{url('site/MemberLists')}}">会员列表</a></li>
+        <li><a href="{{url('site/MemberPost')}}">添加会员</a></li>
         <li class="active"><a href="javascript:;">编辑会员</a></li>
     </ul>
 
-    <form action="{{site_url('changePassword')}}" method="post" role="form" class="form-horizontal">
+    <form action="{{url('changePassword')}}" method="post" role="form" class="form-horizontal">
         <input type="hidden" name="uid" value="{{$user['uid']}}">
         <div class="panel panel-default">
             <div class="panel-heading">

@@ -7,9 +7,9 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\member;
+namespace module\member\controller;
 
-use module\hdSite;
+use module\HdController;
 use system\model\Member;
 use system\model\MemberFields;
 use system\model\MemberGroup;
@@ -20,20 +20,18 @@ use system\model\MemberGroup;
  * @package module\member
  * @author 向军
  */
-class site extends hdSite {
-
+class site extends HdController {
 	//会员列表
-	public function doSiteMemberLists() {
+	public function memberLists() {
 		$data = Db::table( 'member' )
 		          ->join( 'member_group', 'member.group_id', '=', 'member_group.id' )
 		          ->where( 'member.siteid', SITEID )
 		          ->paginate( 20, 8 );
-
 		return view( $this->template . '/member_lists.html' )->with( 'data', $data );
 	}
 
 	//编辑用户信息
-	public function doSiteMemberEdit() {
+	public function memberEdit() {
 		$uid    = Request::get( 'uid' );
 		$member = new Member();
 		if ( IS_POST ) {

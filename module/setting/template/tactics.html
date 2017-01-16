@@ -1,10 +1,11 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="?a=setting/site/credit&t=site">积分列表</a></li>
+        <li><a href="{{url('site.credit')}}">积分列表</a></li>
         <li class="active"><a href="#">积分策略</a></li>
     </ul>
     <form action="" method="post" class="form-horizontal">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
                 积分行为参数
@@ -30,7 +31,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="" class="col-sm-2 control-label">交易&支付(余额)</label>
+                    <label class="col-sm-2 control-label">交易&支付(余额)</label>
                     <div class="col-sm-10">
                         <select name="creditbehaviors[currency]" class="form-control">
                             <foreach from="v('site.setting.creditnames')" key="$name" value="$v">
