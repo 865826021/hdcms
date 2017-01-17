@@ -6,7 +6,8 @@
         <li class="active"><a href="javascript:;">编辑会员</a></li>
     </ul>
 
-    <form action="{{url('changePassword')}}" method="post" role="form" class="form-horizontal">
+    <form action="{{url('site.changePassword')}}" method="post" role="form" class="form-horizontal">
+        {{csrf_field()}}
         <input type="hidden" name="uid" value="{{$user['uid']}}">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -34,6 +35,7 @@
         </div>
     </form>
     <form action="" method="post" role="form" class="form-horizontal">
+        {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
                 基本资料

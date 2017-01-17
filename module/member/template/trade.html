@@ -1,4 +1,5 @@
 <form action="" method="post" id="changeCreditForm">
+    {{csrf_field()}}
     <input type="hidden" name="type" value="{{$type}}">
     <table class="table table-hover table-bordered">
         <tbody>
@@ -9,9 +10,9 @@
             </td>
         </tr>
         <tr>
-            <td>修改{{v( "setting.creditnames.$type.title" )}}(增减)</td>
+            <td>修改{{v( "site.setting.creditnames.$type.title" )}}(增减)</td>
             <td>
-                <input type="number" class="form-control" name="num">
+                <input type="number" class="form-control" name="num" value="0">
                 输入500,则标识增加500;输入-500则表示减少500
             </td>
         </tr>

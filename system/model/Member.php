@@ -9,6 +9,9 @@
  */
 class Member extends Common {
 	protected $table = 'member';
+	protected $filter = [
+		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
+	];
 	protected $validate = [
 		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 		[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
@@ -64,7 +67,5 @@ class Member extends Common {
 		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? true : false;
 	}
 
-	protected $filter = [
-		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
-	];
+
 }

@@ -8,7 +8,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
 	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
 	<script>

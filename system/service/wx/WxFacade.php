@@ -1,4 +1,4 @@
-<?php namespace system\service\Wx;
+<?php namespace system\service\wx;
 use houdunwang\framework\build\Facade;
 
 //外观构造类

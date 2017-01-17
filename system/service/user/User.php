@@ -1,4 +1,4 @@
-<?php namespace system\service\User;
+<?php namespace system\service\user;
 
 use system\model\UserGroup;
 use system\service\Common;

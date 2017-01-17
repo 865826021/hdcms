@@ -1,4 +1,4 @@
-<?php namespace system\service\Member;
+<?php namespace system\service\member;
 use houdunwang\framework\build\Facade;
 
 //外观构造类

@@ -1,4 +1,4 @@
-<?php namespace system\service\Template;
+<?php namespace system\service\template;
 use houdunwang\framework\build\Provider;
 
 class TemplateProvider extends Provider {

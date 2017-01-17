@@ -19,6 +19,7 @@ class MemberGroup extends Common {
 	protected $validate = [
 		[ 'siteid', 'required', '站点编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'title', 'required', '组名不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'title', 'unique', '会员组名称已经被使用', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'is_system', 'exists', '不允许设置is_system字段', self::EXIST_VALIDATE, self::MODEL_UPDATE ],
 		[ 'rank', 'num:0,255', '排序数字为0~255', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];

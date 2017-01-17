@@ -1,10 +1,10 @@
-<?php namespace system\service\menu;
+<?php namespace system\service\credit;
 use houdunwang\framework\build\Facade;
 
 //外观构造类
-class MenuFacade extends Facade{
+class CreditFacade extends Facade{
 
 	public static function getFacadeAccessor(){
-		return 'Menu';
+		return 'Credit';
 	}
 }

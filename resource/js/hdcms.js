@@ -3,8 +3,8 @@
  | HDCMS公共函数库
  |--------------------------------------------------------------------------
  */
-define('hdcms', ['util', 'jquery'], function (util, $) {
-    return {
+(function (window) {
+    hdcms = {
         /**
          * 获取站点的用户列表
          * @param $callback 回调函数
@@ -122,6 +122,32 @@ define('hdcms', ['util', 'jquery'], function (util, $) {
                     callback(res);
                 }
             }, 'json');
+        },
+        /**
+         * 修改会员积分/余额
+         * @param obj
+         */
+        tradeCredit: function (obj) {
+            require(['util', 'jquery'], function (util, $) {
+                //会员编号
+                var uid = $(obj).data('uid');
+                //积分类型 credit1积分  credit2余额
+                var type = $(obj).data('type');
+                util.modal({
+                    content: ['?m=member&action=controller/site/trade&uid=' + uid + "&type=" + type],//加载的远程地址
+                    title: '会员积分操作',
+                    width: 800,
+                    //直接显示
+                    show: true
+                });
+            })
         }
     }
-});
+    if (typeof define === "function" && define.amd) {
+        define('hdcms',['bootstrap'], function () {
+            return hdcms;
+        });
+    } else {
+        window.hdcms = util;
+    }
+})(window);

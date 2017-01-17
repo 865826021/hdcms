@@ -175,6 +175,10 @@ class Member extends Common {
 	 * @return array
 	 */
 	public function getPasswordAndSecurity( $password ) {
+		$data = [ 'security' => '', 'password' => '' ];
+		if ( empty( $password ) ) {
+			return $data;
+		}
 		$data             = [ ];
 		$data['security'] = substr( md5( time() ), 0, 10 );
 		$data['password'] = md5( $password . $data['security'] );

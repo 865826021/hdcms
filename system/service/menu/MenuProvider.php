@@ -1,4 +1,4 @@
-<?php namespace system\service\Menu;
+<?php namespace system\service\menu;
 use houdunwang\framework\build\Provider;
 
 class MenuProvider extends Provider {

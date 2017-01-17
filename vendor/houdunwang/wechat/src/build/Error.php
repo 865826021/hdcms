@@ -1,5 +1,12 @@
 <?php namespace houdunwang\wechat\build;
 
+/**
+ * 错误处理
+ * Class Error
+ * @package houdunwang\wechat\build
+ * @author 向军 <2300071698@qq.com>
+ * @site www.houdunwang.com
+ */
 class Error {
 	public $error
 		= [

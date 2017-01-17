@@ -1,4 +1,4 @@
-<?php namespace system\service\Package;
+<?php namespace system\service\package;
 use houdunwang\framework\build\Provider;
 
 class PackageProvider extends Provider {

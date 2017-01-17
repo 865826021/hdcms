@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace module\member\controller;
 
+use houdunwang\request\Request;
 use module\HdController;
 use system\model\Member;
 use system\model\MemberFields;
@@ -27,39 +28,41 @@ class site extends HdController {
 		          ->join( 'member_group', 'member.group_id', '=', 'member_group.id' )
 		          ->where( 'member.siteid', SITEID )
 		          ->paginate( 20, 8 );
+
 		return view( $this->template . '/member_lists.html' )->with( 'data', $data );
 	}
 
 	//编辑用户信息
 	public function memberEdit() {
-		$uid    = Request::get( 'uid' );
-		$member = new Member();
+		$model = Member::find( Request::get( 'uid' ) );
 		if ( IS_POST ) {
 			foreach ( Request::post() as $k => $v ) {
-				$member[ $k ] = $v;
+				$model[ $k ] = $v;
 			}
-			$member->save();
+			$model->save();
 			message( '编辑用户资料成功', 'back', 'success' );
 		}
 
-		return view( $this->template . '/member_edit.html' )->with( 'user', $member->find( $uid ) );
+		return view( $this->template . '/member_edit.html' )->with( 'user', $model );
 	}
 
 	//添加会员
-	public function doSiteMemberPost() {
+	public function memberPost() {
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'password', 'confirm:password2', '两次密码输入不一致' ]
 			] );
 			//保存到模型数据
-			$member = new Member();
+			$model = new Member();
 			foreach ( Request::post() as $k => $v ) {
-				$member[ $k ] = $v;
+				$model[ $k ] = $v;
 			}
 			//密码处理
-			$member->setPasswordAndSecurity();
-			$uid = $member->save();
-			message( '添加会员成功', site_url( 'MemberEdit', [ 'uid' => $uid ] ), 'success' );
+			$passInfo          = \Member::getPasswordAndSecurity( Request::post( 'password' ) );
+			$model['password'] = $passInfo['password'];
+			$model['security'] = $passInfo['security'];
+			$uid               = $model->save();
+			message( '添加会员成功', url( 'site.MemberEdit', [ 'uid' => $uid ] ), 'success' );
 		}
 		$group = Db::table( 'member_group' )->where( 'siteid', SITEID )->get();
 
@@ -67,16 +70,16 @@ class site extends HdController {
 	}
 
 	//修改密码
-	public function doSiteChangePassword() {
+	public function changePassword() {
 		Validate::make( [
 			[ 'password', 'required', '密码不能为空' ],
 			[ 'password', 'confirm:password2', '两次密码不一致' ],
 		] );
-		$member           = new Member();
-		$member->uid      = Request::post( 'uid' );
-		$member->password = Request::post( 'password' );
-		$member->setPasswordAndSecurity();
-		$member->save();
+		$passInfo          = \Member::getPasswordAndSecurity( Request::post( 'password' ) );
+		$model             = Member::find( Request::post( 'uid' ) );
+		$model['password'] = $passInfo['password'];
+		$model['security'] = $passInfo['security'];
+		$model->save();
 		message( '密码更新成功', 'back', 'success' );
 	}
 
@@ -128,7 +131,7 @@ class site extends HdController {
 	}
 
 	//会员组列表
-	public function doSiteGroupLists() {
+	public function groupLists() {
 		$model = new MemberGroup();
 		if ( IS_POST ) {
 			foreach ( Request::post( 'id' ) as $k => $id ) {
@@ -169,51 +172,47 @@ class site extends HdController {
 	}
 
 	//添加会员组
-	public function doSiteGroupPost() {
-		$model = new MemberGroup();
+	public function groupPost() {
 		$id    = Request::get( 'id' );
+		$model = $id ? MemberGroup::find( $id ) : new MemberGroup();
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'title', 'required', '会员组名称不能为空' ],
-				[ 'credit', 'required', '积分数量不能为空' ],
+				[ 'credit', 'isnull', '积分数量不能为空' ],
 			] );
 			$model['id']     = $id;
 			$model['title']  = Request::post( 'title' );
 			$model['credit'] = Request::post( 'credit' );
 			$model->save();
-			message( '会员组资料保存成功', site_url( 'GroupLists' ) );
+			message( '会员组资料保存成功', url( 'site.groupLists' ) );
 		}
-		$field = Db::table( 'member_group' )->where( 'id', $id )->first();
 
-		return view( $this->template . '/group_post.html' )->with( 'field', $field );
+		return view( $this->template . '/group_post.html' )->with( 'field', $model );
 	}
 
 	//设置默认组
-	public function doSiteSetDefaultGroup() {
-		$model = new MemberGroup();
-		$id    = q( 'get.id' );
-		$group = $model->where( 'siteid', SITEID )->find( $id );
-		if ( empty( $group ) ) {
+	public function setDefaultGroup() {
+		$model = MemberGroup::where( 'siteid', SITEID )->where( 'id', Request::get( 'id' ) )->first();
+		if ( empty( $model ) ) {
 			message( '会员组不存在', '', 'error' );
 		}
-		if ( $group['credit'] != 0 ) {
+		if ( $model['credit'] != 0 ) {
 			message( '默认会员组初始积分必须为0', '', 'error' );
 		}
-		$model->update( [ 'isdefault' => 0 ] );
-		if ( ! $model->save( [ 'id' => $id, 'isdefault' => 1 ] ) ) {
-			message( $model->getError(), 'back', 'error' );
-		}
+		$model['isdefault'] = 0;
+		$model->save();
 		message( '默认会员组设置成功', '', 'success' );
 	}
 
 	//修改会员积分/余额
-	public function doSiteTrade() {
+	public function trade() {
 		//会员编号
 		$uid = Request::get( 'uid' );
 		//1 积分 2 余额
 		$type = Request::get( 'type' );
 		if ( IS_POST ) {
 			Validate::make( [
+				[ 'num', 'required', '积分数量不能为空' ],
 				[ 'remark', 'required', '备注不能为空' ],
 				[ 'remark', 'num', '更改数量必须为数字' ],
 			] );
@@ -222,9 +221,8 @@ class site extends HdController {
 			$data['uid']        = $uid;
 			$data['credittype'] = $type;
 			$data['num']        = Request::post( 'num' );
-			$data['operator']   = v( 'user.info.uid' );
 			$data['remark']     = Request::post( 'remark' );
-			service( 'credit' )->changeCredit( $data );
+			\Credit::change( $data );
 			message( v( "setting.creditnames.$type.title" ) . '更改成功', '', 'success' );
 		}
 

@@ -1,7 +1,7 @@
-<?php namespace system\service\wx;
+<?php namespace system\service\credit;
 use houdunwang\framework\build\Provider;
 
-class WxProvider extends Provider {
+class CreditProvider extends Provider {
 	//延迟加载
 	public $defer = true;
 
@@ -10,8 +10,8 @@ class WxProvider extends Provider {
 	}
 
 	public function register() {
-		$this->app->single( 'Wx', function ( $app ) {
-			return new Wx($app);
+		$this->app->single( 'Credit', function ( $app ) {
+			return new Credit($app);
 		} );
 	}
 }
