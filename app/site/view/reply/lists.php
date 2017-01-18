@@ -10,7 +10,8 @@
 			<h3 class="panel-title">筛选</h3>
 		</div>
 		<div class="panel-body">
-			<form action="{{__URL__}}" method="post" role="form" class="form-horizontal">
+			<form action="" method="post" role="form" class="form-horizontal">
+				{{csrf_field()}}
 				<div class="form-group">
 					<label class="col-sm-2 control-label">状态</label>
 					<div class="col-sm-10">

@@ -130,14 +130,13 @@ class Module {
 			}
 		}
 		//加入系统模块
-		$modules = array_merge( $modules, Modules::where( 'is_system', 1 )->get() );
-		$cacheData   = [ ];
+		$modules   = array_merge( $modules, Modules::where( 'is_system', 1 )->get()->toArray() );
+		$cacheData = [ ];
 		foreach ( $modules as $k => $m ) {
 			$m['subscribes']  = json_decode( $m['subscribes'], true ) ?: [ ];
 			$m['processors']  = json_decode( $m['processors'], true ) ?: [ ];
 			$m['permissions'] = array_filter( json_decode( $m['permissions'], true ) ?: [ ] );
-			$binds            = ModulesBindings::where( 'module', $m['name'] )->get();
-			$binds            = $binds ?: [ ];
+			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get() ?: [ ];
 			foreach ( $binds as $b ) {
 				$m['budings'][ $b['entry'] ][] = $b;
 			}

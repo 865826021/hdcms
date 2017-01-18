@@ -17,7 +17,8 @@ return [
 		'system\service\menu\MenuProvider',
 		'system\service\template\TemplateProvider',
 		'system\service\wx\WxProvider',
-		'system\service\credit\CreditProvider'
+		'system\service\credit\CreditProvider',
+		'system\service\ticket\TicketProvider'
 	],
 
 	/*
@@ -39,5 +40,6 @@ return [
 		'Template' => 'system\service\template\TemplateFacade',
 		'Wx'       => 'system\service\wx\WxFacade',
 		'Credit'   => 'system\service\credit\CreditFacade',
+		'Ticket'   => 'system\service\ticket\TicketFacade',
 	]
 ];

@@ -12,7 +12,7 @@ namespace houdunwang\validate\build;
 class VaAction {
 	//字段为空时验证失败
 	public function isnull( $field, $value, $params, $data ) {
-		return empty( $data[ $field ] ) ?  false:true;
+		return empty( $data[ $field ] ) ? false : true;
 	}
 
 	//验证字段是否存在

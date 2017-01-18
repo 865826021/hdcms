@@ -31,7 +31,7 @@ class Reply {
 	 * @return mixed
 	 */
 	public function lists() {
-		$db = Rule::where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) );
+		$db = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) );
 		if ( $status = Request::get( 'status' ) ) {
 			$db->where( 'status', $status == 'close' ? 0 : 1 );
 		}
@@ -39,7 +39,7 @@ class Reply {
 		$data  = [ ];
 		//回复关键词
 		foreach ( $rules as $k => $v ) {
-			$v['keywords'] = RuleKeyword::where( 'rid', $v['rid'] )->lists( 'content' );
+			$v['keywords'] = Db::table( 'rule_keyword' )->where( 'rid', $v['rid'] )->lists( 'content' ) ?: [ ];
 			//按关键词搜索
 			if ( $con = Request::post( 'content' ) ) {
 				if ( ! in_array( $con, $v['keywords'] ) ) {
@@ -85,7 +85,7 @@ class Reply {
 			if ( empty( $data ) ) {
 				message( '回复规则不存在', 'lists', 'error' );
 			}
-			$data['keyword'] = Db::table('rule_keyword')->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
+			$data['keyword'] = Db::table( 'rule_keyword' )->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
 			View::with( 'rule', $data );
 		}
 

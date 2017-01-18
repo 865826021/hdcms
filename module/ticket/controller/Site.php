@@ -7,9 +7,9 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\ticket;
+namespace module\ticket\controller;
 
-use module\hdSite;
+use module\HdController;
 use system\model\Ticket;
 use system\model\TicketGroups;
 use system\model\TicketModule;
@@ -20,17 +20,14 @@ use system\model\TicketRecord;
  * Class site
  * @package module\ticket
  */
-class site extends hdSite {
-	//	protected $names = [ 1 => '折扣券', 2 => '代金券' ];
-
+class site extends HdController {
 	public function __construct() {
 		parent::__construct();
-		//		$this->db = new Ticket();
-		View::with( 'ticket_name', service( 'ticket' )->getTitleByType( q( 'get.type' ) ) );
+		View::with( 'ticket_name', \Ticket::title( Request::get( "type" ) ) );
 	}
 
 	//折扣券列表
-	public function doSitelists() {
+	public function lists() {
 		$sql = "SELECT t.*, count(r.id) as usertotal FROM " . tablename( 'ticket' ) . " t ";
 		$sql .= "LEFT JOIN " . tablename( 'ticket_record' ) . " r ";
 		$sql .= "ON t.tid=r.tid WHERE t.type=" . q( 'get.type' ) . " GROUP BY t.tid";
@@ -41,7 +38,7 @@ class site extends hdSite {
 	}
 
 	//添加折扣券
-	public function doSitepost() {
+	public function post() {
 		$tid    = Request::get( 'tid', 0, 'intval' );
 		$ticket = new Ticket();
 		if ( IS_POST ) {
@@ -88,7 +85,7 @@ class site extends hdSite {
 				$ticketGroups['group_id'] = $group_id;
 				$ticketGroups->save();
 			}
-			message( '卡券数据更新成功', site_url( 'lists', [ 'type' => q( 'type' ) ] ) );
+			message( '卡券数据更新成功', url( 'lists', [ 'type' => q( 'type' ) ] ) );
 		}
 		//文字描述
 		if ( q( 'get.type' ) == 1 ) {
@@ -114,11 +111,11 @@ class site extends hdSite {
 		}
 		$field = Db::table( 'ticket' )->find( $tid );
 		//所有会员组
-		$groups = service( 'site' )->getSiteGroups();
+		$groups = \Site::getSiteGroups();
 		//卡券可使用的模块
-		$modules = service( 'ticket' )->getTicketModules( $tid );
+		$modules = \Ticket::getTicketModules( $tid );
 		//卡券可使用的会员组
-		$groupsIds = service( 'ticket' )->getTicketGroupIds( $tid );
+		$groupsIds = \Ticket::getTicketGroupIds( $tid );
 		View::with( [
 			'msg'       => $msg,
 			'field'     => $field,
@@ -184,6 +181,7 @@ class site extends hdSite {
 		View::with( 'ticket', $ticket );
 		View::with( 'data', $data );
 		View::with( 'page', $page );
+
 		return view( $this->template . '/charge.html' );
 	}
 

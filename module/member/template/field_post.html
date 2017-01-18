@@ -1,10 +1,11 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li><a href="{{site_url('site/Fieldlists')}}">字段管理</a></li>
+        <li><a href="{{url('site/Fieldlists')}}">字段管理</a></li>
         <li class="active"><a href="javascript:;"><i class="fa fa-plus"></i> 编辑字段</a></li>
     </ul>
     <form action="" method="post" role="form" class="form-horizontal">
+        {{csrf_field()}}
         <input type="hidden" name="id" value="{{$_GET['id']}}">
         <div class="panel panel-default">
             <div class="panel-heading">编辑字段</div>

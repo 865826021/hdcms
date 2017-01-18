@@ -111,31 +111,27 @@ class site extends HdController {
 	}
 
 	//会员字段编辑
-	public function doSiteFieldPost() {
-		$id    = Request::get( 'id', 0, 'intval' );
-		$model = new MemberFields();
-		$field = Db::table( 'member_fields' )->where( 'siteid', SITEID )->find( $id );
-		if ( empty( $field ) ) {
+	public function fieldPost() {
+		$model = MemberFields::find( Request::get( 'id' ) );
+		if ( empty( $model ) ) {
 			message( '你编辑的字段不存在', 'back', 'error' );
 		}
 		if ( IS_POST ) {
-			$model['id']      = Request::get( 'id' );
 			$model['orderby'] = Request::post( 'orderby' );
 			$model['title']   = Request::post( 'title' );
 			$model['status']  = Request::post( 'status' );
 			$model->save();
-			message( '修改字段成功', site_url( 'FieldLists' ), 'success' );
+			message( '修改字段成功', url( 'site.fieldLists' ), 'success' );
 		}
 
-		return view( $this->template . '/field_post.html' )->with( 'field', $field );
+		return view( $this->template . '/field_post.html' )->with( 'field', $model );
 	}
 
 	//会员组列表
 	public function groupLists() {
-		$model = new MemberGroup();
 		if ( IS_POST ) {
 			foreach ( Request::post( 'id' ) as $k => $id ) {
-				$model['id']     = $id;
+				$model           = MemberGroup::find( $id );
 				$model['title']  = $_POST['title'][ $k ];
 				$model['credit'] = $_POST['credit'][ $k ];
 				$model['rank']   = min( 255, intval( $_POST['rank'][ $k ] ) );
@@ -145,7 +141,7 @@ class site extends HdController {
 			Db::table( 'site_setting' )->where( 'siteid', SITEID )->update( [
 				'grouplevel' => $_POST['grouplevel']
 			] );
-			service( 'site' )->updateCache();
+			\Site::updateCache();
 			message( '更改会组资料更新成功', 'refresh', 'success' );
 		}
 		$sql    = "SELECT count(*) as user_count,m.uid,g.* FROM " . tablename( 'member_group' ) . " g LEFT JOIN " . tablename( 'member' ) . " m ON g.id=m.group_id WHERE g.siteid=" . SITEID . " GROUP BY g.id ORDER BY g.rank DESC,g.id";

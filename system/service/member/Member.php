@@ -59,7 +59,7 @@ class Member extends Common {
 	public function weixinLogin() {
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 ) {
 			//认证订阅号或服务号,并且开启自动登录时获取微信帐户openid自动登录
-			if ( $info = \Weixin::instance( 'oauth' )->snsapiUserinfo() ) {
+			if ( $info = \WeChat::instance( 'oauth' )->snsapiUserinfo() ) {
 				$user = $this->db->where( 'openid', $info['openid'] )->first();
 				if ( ! $user ) {
 					//帐号不存在时使用openid添加帐号
@@ -82,7 +82,7 @@ class Member extends Common {
 
 	//根据access_token获取用户信息
 	public function getUserInfoByAccessToken( $access_token ) {
-		$res = $this->db->where( 'access_token', $access_token )->first();
+		$res = Db::table( 'member' )->where( 'access_token', $access_token )->first();
 
 		return $res ? [ 'valid' => 1, 'data' => $res ] : [ 'valid' => 0, 'message' => '用户不存在' ];
 	}
