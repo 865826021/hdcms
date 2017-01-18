@@ -273,7 +273,6 @@ if ( ! function_exists( 'method_field' ) ) {
 		return "<input type='hidden' name='_method' value='" . strtoupper( $type ) . "'/>\r\n";
 	}
 }
-
 if ( ! function_exists( 'csrf_token' ) ) {
 	/**
 	 * CSRF 值

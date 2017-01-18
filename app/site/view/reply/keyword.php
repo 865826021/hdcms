@@ -62,11 +62,20 @@
 		<div class="panel panel-default tab-content">
 			<div class="panel-heading">
 				<ul class="nav nav-pills" role="tablist">
-					<li role="presentation" class="active"><a href="#contain" aria-controls="contain" role="tab"
-					                                          data-toggle="tab">包含关键词</a></li>
-					<li role="presentation"><a href="#regexp" aria-controls="regexp" role="tab" data-toggle="tab">正则表达式模式匹配</a>
+					<li role="presentation" class="active">
+						<a href="#contain" aria-controls="contain" role="tab" data-toggle="tab">
+							包含关键词
+						</a>
 					</li>
-					<li role="presentation"><a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">直接托管</a>
+					<li role="presentation">
+						<a href="#regexp" aria-controls="regexp" role="tab" data-toggle="tab">
+							正则表达式模式匹配
+						</a>
+					</li>
+					<li role="presentation">
+						<a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">
+							直接托管
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -74,7 +83,7 @@
 				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==2">
 					<div class="col-xs-12 col-sm-8">
 						<input type="text" class="form-control" ng-show="item.edited" ng-model="item.content"
-						       onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})">
+						       onblur="util.checkWxKeyword(this,{{q('get.rid',0)}})"/>
 						<span class="help-block has_keyword"></span>
 						<p class="form-control-static" ng-hide="item.edited" ng-bind="item.content"></p>
 					</div>

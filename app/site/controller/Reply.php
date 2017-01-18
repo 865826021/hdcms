@@ -81,11 +81,11 @@ class Reply {
 		}
 		//获取关键词回复
 		if ( $rid = Request::get( 'rid' ) ) {
-			$data = Rule::where( 'rid', $rid )->first();
+			$data = Rule::where( 'rid', $rid )->first()->toArray();
 			if ( empty( $data ) ) {
 				message( '回复规则不存在', 'lists', 'error' );
 			}
-			$data['keyword'] = RuleKeyword::orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
+			$data['keyword'] = Db::table('rule_keyword')->orderBy( 'id', 'asc' )->where( 'rid', $rid )->get();
 			View::with( 'rule', $data );
 		}
 

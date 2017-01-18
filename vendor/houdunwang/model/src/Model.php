@@ -516,7 +516,15 @@ class Model implements ArrayAccess, Iterator {
 
 					return $Collection;
 				default:
-					return $this;
+					/**
+					 * 返回值为查询构造器对象时
+					 * 返回模型实例
+					 */
+					if ( is_object( $result ) && is_a( $result, 'houdunwang\db\Query' ) ) {
+						return $this;
+					}
+
+					return $result;
 			}
 		}
 	}

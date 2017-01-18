@@ -95,7 +95,7 @@ class site extends HdController {
 	}
 
 	//会员字段管理
-	public function doSiteFieldlists() {
+	public function fieldlists() {
 		if ( IS_POST ) {
 			foreach ( Request::post( 'member_fields' ) as $id => $d ) {
 				$d['id']      = $id;

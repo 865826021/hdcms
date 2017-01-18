@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">字段管理</a></li>
+        <li role="presentation" class="active"><a href="javascript:;">字段管理</a></li>
     </ul>
     <form action="" method="post">
         <div class="panel panel-default">
@@ -32,7 +32,7 @@
                                 <input type="checkbox" name="member_fields[{{$d['id']}}][status]" value="1" {{$d['status']?'checked="checked"':''}}>
                             </td>
                             <td>
-                                <a href="{{site_url('FieldPost',['id'=>$d['id']])}}" class="btn btn-primary">编辑</a>
+                                <a href="{{url('site.fieldPost',['id'=>$d['id']])}}" class="btn btn-primary">编辑</a>
                             </td>
                         </tr>
                     </foreach>

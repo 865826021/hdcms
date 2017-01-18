@@ -39,6 +39,7 @@
 		</div>
 	</div>
 	<form action="" method="post" class="form-horizontal" role="form">
+		{{csrf_field()}}
 		<foreach from="$data" value="$r">
 			<div class="panel panel-default">
 				<div class="panel-heading">

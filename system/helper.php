@@ -64,6 +64,6 @@ function auth( $tag ) {
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
 
-	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=controller/" .
+	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' );
 }
