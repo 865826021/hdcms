@@ -1,14 +1,14 @@
 <?php namespace system\model;
 
 /**
- * 微站导航菜单
+ * 导航菜单管理
  * Class WebNav
  * @package system\model
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class WebNav extends Common {
-	protected $table = 'web_nav';
+class Navigation extends Common {
+	protected $table = 'navigation';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
 		[ 'name', 'required', '导航标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
@@ -38,7 +38,7 @@ class WebNav extends Common {
 	 *
 	 * @return mixed
 	 */
-	public function getEntryTitle( $entry ) {
+	public function title( $entry ) {
 		$menu = [ 'home' => '微站首页导航', 'profile' => '手机会员中心导航', 'member' => '桌面会员中心导航' ];
 
 		return $menu[ $entry ];

@@ -89,7 +89,7 @@ class Ticket {
 	}
 
 	/**
-	 * 获取指定卡券允许使用的用户组
+	 * 获取指定卡券允许使用的用户组编号
 	 *
 	 * @param int $tid 卡券编号
 	 *
@@ -120,20 +120,6 @@ class Ticket {
 	}
 
 	/**
-	 * 核销卡券
-	 *
-	 * @param string $id 编号
-	 *
-	 * @return bool
-	 */
-	public function verification( $id ) {
-		$data['id']     = $id;
-		$data['status'] = 2;
-
-		return $this->save( $data );
-	}
-
-	/**
 	 * 获取会员卡券兑换数量
 	 *
 	 * @param int $tid 卡券编号
@@ -142,6 +128,6 @@ class Ticket {
 	 * @return mixed
 	 */
 	public function getNumByTid( $tid, $uid ) {
-		return $this->where( 'tid', $tid )->where( 'uid', $uid )->count();
+		return Db::table( 'ticket_record' )->where( 'tid', $tid )->where( 'uid', $uid )->count();
 	}
 }

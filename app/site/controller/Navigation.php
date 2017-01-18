@@ -13,12 +13,12 @@ use system\model\Web;
 use system\model\WebNav;
 
 /**
- * 导航菜单设置
+ * 导航菜单管理
  * Class Nav
  * @package web\site\controller
  * @author 向军
  */
-class Nav {
+class Navigation {
 	protected $webid;
 	protected $web;
 	protected $webNav;
@@ -44,7 +44,7 @@ class Nav {
 	//菜单列表管理
 	public function lists() {
 		if ( IS_POST ) {
-			$data = json_decode( Request::post( 'data' ), TRUE );
+			$data = json_decode( Request::post( 'data' ), true );
 			foreach ( $data as $k => $nav ) {
 				foreach ( $nav as $field => $value ) {
 					$this->webNav[ $field ] = $value;
@@ -65,16 +65,16 @@ class Nav {
 		if ( v( 'module.name' ) ) {
 			//模块菜单
 			$webNav = Db::table( 'web_nav' )
-			         ->where( 'web_id', $this->webid )
-			         ->where( 'entry', q( 'get.entry' ) )
-			         ->where( 'module', v( 'module.name' ) )
-			         ->get()?:[];
+			            ->where( 'web_id', $this->webid )
+			            ->where( 'entry', q( 'get.entry' ) )
+			            ->where( 'module', v( 'module.name' ) )
+			            ->get() ?: [ ];
 			//从模块动作中移除已经在菜单中存在的的菜单
 			$modulesBindings = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', q( 'get.entry' ) )->get();
 			foreach ( $modulesBindings as $k => $v ) {
 				$modulesBindings[ $k ]['url'] = "?a={$v['module']}/site/{$v['do']}&t=web&siteid=" . SITEID . '&m=' . v( 'module.name' );
 				foreach ( $webNav as $n ) {
-					if ( $n['url']==$modulesBindings[ $k ]['url']  ) {
+					if ( $n['url'] == $modulesBindings[ $k ]['url'] ) {
 						unset( $modulesBindings[ $k ] );
 					}
 				}
@@ -104,7 +104,7 @@ class Nav {
 		}
 		if ( $nav ) {
 			foreach ( $nav as $k => $v ) {
-				$nav[ $k ]['css'] = json_decode( $v['css'], TRUE );
+				$nav[ $k ]['css'] = json_decode( $v['css'], true );
 			}
 		}
 		//模块时将模块菜单添加进去
@@ -129,7 +129,7 @@ class Nav {
 	//添加&修改
 	public function post() {
 		if ( IS_POST ) {
-			$data                = json_decode( $_POST['data'], TRUE );
+			$data                = json_decode( $_POST['data'], true );
 			$data['css']['size'] = min( intval( $data['css']['size'] ), 100 );
 			$this->webNav->save( $data );
 			message( '保存导航数据成功', $_POST['__HISTORY__'], 'success' );
@@ -142,7 +142,7 @@ class Nav {
 		         ->get();
 		if ( $this->id ) {
 			$field        = Db::table( 'web_nav' )->where( 'id', $this->id )->first();
-			$field['css'] = empty( $field['css'] ) ? [ ] : json_decode( $field['css'], TRUE );
+			$field['css'] = empty( $field['css'] ) ? [ ] : json_decode( $field['css'], true );
 		} else {
 			//新增数据时初始化导航数据,只有通过官网添加导航链接才有效,模块的只有编辑操作,所以模块一定有数据
 			$field['siteid']   = SITEID;

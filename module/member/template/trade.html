@@ -33,10 +33,12 @@
 <script>
     $("#changeCreditForm").submit(function () {
         var data = $(this).serialize();
+        var loading = util.loading();
         $.post("{{__URL__}}", data, function (response) {
             if (response.valid) {
-                util.message(response.message, 'refresh', 'success');
+                util.message('数据更新成功, 页面将重新加载', 'refresh', 'success', 1);
             } else {
+                loading.modal('hide');
                 util.message(response.message, '', 'error');
             }
         }, 'json');

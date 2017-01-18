@@ -209,44 +209,6 @@
                 }
             });
         });
-        return;
-        require(['util', 'jquery'], function (util, $) {
-            util.modal({
-                content: ['?s=system/component/moduleList'],//加载的远程地址
-                title: '选择适用模块',
-                width: 600,
-                id: 'module',
-                show: true,//直接显示
-                footer: '<button type="button" class="btn btn-primary confirm">保存</button>',
-                events: {
-                    //显示时选择模块
-                    'shown.bs.modal': function () {
-                        var moduleName = $("#modules td");
-                        if (moduleName.length > 0) {
-                            moduleName.each(function (i) {
-                                $("[title='" + $(this).text() + "']").attr('checked', true);
-                            });
-                        }
-                    },
-                    confirm: function (modalobj) {
-                        var checkbox = $(modalobj).find("input:checked");
-                        var html = '';
-                        if (checkbox.length > 0) {
-                            html = '<table id="modules" class="table" style="margin-top:10px;margin-bottom:0px;"><tbody><tr>';
-                            $.each(checkbox, function (i) {
-                                var module_name = $(this).attr('module_name');
-                                html += '<td>' + $(this).attr('title') +
-                                        '<input type="hidden" name="module[]" value="' + module_name + '"/>' +
-                                        '</td>';
-                            });
-                            html += '</tr></tbody></table>';
-                        }
-                        $(obj).next('table').remove().end().after(html);
-                        modalobj.modal('hide');
-                    }
-                }
-            });
-        });
     }
     //提交表单
     function post() {

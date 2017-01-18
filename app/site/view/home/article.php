@@ -12,7 +12,7 @@
                 <p>
                     <strong>{{v("site.wechat.wename")}}</strong>
                     <span class="label label-success">
-                        <?php echo service('WeChat')->chatNameBylevel(v('site.wechat.level')) ?>
+                        <?php echo \Wx::chatNameBylevel(v('site.wechat.level')) ?>
                     </span>
                     &nbsp;&nbsp;&nbsp;
                     <if value="v('site.wechat.is_connect')">

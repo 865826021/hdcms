@@ -35,9 +35,11 @@ class Credit {
 	 * @return bool
 	 */
 	public function change( array $data ) {
-		if ( empty( $data['credittype'] ) || empty( $data['num'] ) || empty( $data['remark'] ) ) {
-			message( '积分变动参数错误', 'back', 'error' );
+		if ( empty( $data['credittype'] ) ) {
+			message( '积分类型不能为空', 'back', 'error' );
 		}
+		$data['remark'] = isset( $data['remark'] ) ? $data['remark'] : '';
+		$data['num']    = isset( $data['num'] ) ? intval( $data['num'] ) : 0;
 		$data['uid']    = isset( $data['uid'] ) ? $data['uid'] : v( 'user.info.uid' );
 		$data['module'] = v( 'module.name' );
 		//检测用户

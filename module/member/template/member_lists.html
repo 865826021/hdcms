@@ -42,9 +42,12 @@
                             </td>
                             <td>
                                 <div class="btn-group pull-right" role="group" aria-label="...">
-                                    <a href="javascript:;" data-type="credit1" data-uid="{{$d['uid']}}" onclick="hdcms.tradeCredit(this)" class="btn btn-default">积分</a>
-                                    <a href="javascript:;" data-type="credit2" data-uid="{{$d['uid']}}" onclick="hdcms.tradeCredit(this)" class="btn btn-default">余额</a>
-                                    <a href="{{url('site/MemberEdit')}}&uid={{$d['uid']}}" class="btn btn-default">编辑</a>
+                                    <a href="javascript:;" data-type="credit1" data-uid="{{$d['uid']}}"
+                                       onclick="trade(this)" class="btn btn-default">积分</a>
+                                    <a href="javascript:;" data-type="credit2" data-uid="{{$d['uid']}}"
+                                       onclick="trade(this)" class="btn btn-default">余额</a>
+                                    <a href="{{url('site/MemberEdit')}}&uid={{$d['uid']}}"
+                                       class="btn btn-default">编辑</a>
                                 </div>
                             </td>
                         </tr>
@@ -60,6 +63,22 @@
     </form>
 </block>
 <script>
+    //修改会员积分/余额
+    function trade(obj) {
+        require(['util', 'jquery'], function (util, $) {
+            //会员编号
+            var uid = $(obj).data('uid');
+            //积分类型 credit1积分  credit2余额
+            var type = $(obj).data('type');
+            util.modal({
+                content: ['?m=member&action=site/trade&uid=' + uid + "&type=" + type],//加载的远程地址
+                title: '会员积分操作',
+                width: 800,
+                //直接显示
+                show: true
+            });
+        })
+    }
     function del() {
         require(['util'], function (util) {
             if ($("[name*='uid']:checked").length == 0) {
@@ -67,7 +86,7 @@
                 return;
             }
             util.confirm('确定删除用户吗?', function () {
-                $.post("{{site_url('delete')}}", $("form").serialize(), function (res) {
+                $.post("{{url('site.delete')}}", $("form").serialize(), function (res) {
                     if (res.valid == 1) {
                         util.message(res.message, 'refresh', 'success');
                     } else {

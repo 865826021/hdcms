@@ -58,7 +58,7 @@ class Template {
 		}
 		$db = Db::table( 'template' );
 		//获取站点可使用的所有套餐
-		$package   = service( 'package' )->getSiteAllPackageData( $siteId );
+		$package   = \Package::getSiteAllPackageData( $siteId );
 		$templates = [ ];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐时可以使用模板

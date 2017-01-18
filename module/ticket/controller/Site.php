@@ -39,8 +39,8 @@ class site extends HdController {
 
 	//添加折扣券
 	public function post() {
-		$tid    = Request::get( 'tid', 0, 'intval' );
-		$ticket = new Ticket();
+		$tid   = Request::get( 'tid', 0, 'intval' );
+		$model = $tid ? Ticket::find( $tid ) : new Ticket();
 		if ( IS_POST ) {
 			//表单验证
 			switch ( Request::get( 'type' ) ) {
@@ -48,13 +48,13 @@ class site extends HdController {
 					//折扣券
 					Validate::make( [
 						[ 'condition', 'regexp:/^[0-9\.]+$/', '"满多少钱可使用"只能为数字' ],
-						[ 'discount', 'regexp:/^0\.\d$/', '"折扣"只能为0-1的小数' ],
+						[ 'discount', 'num:0,1', '"折扣"只能为0-1的小数' ],
 					] );
 					break;
 				case 2:
 					Validate::make( [
 						[ 'condition', 'regexp:/^[0-9\.]+$/', '"使用条件"只能为数字' ],
-						[ 'discount', 'regexp:/^[0-9\.]+$/', '"代金券面额"只能为数字' ],
+						[ 'discount', 'num:0,1', '"代金券面额"只能为数字' ],
 					] );
 					if ( $_POST['condition'] < $_POST['discount'] ) {
 						message( '代金券面额必须少于使用条件的金额。', 'back', 'error' );
@@ -63,15 +63,13 @@ class site extends HdController {
 					break;
 			}
 
-			$ticket['tid'] = $tid;
-			foreach ( Request::post() as $k => $v ) {
-				$ticket[ $k ] = $v;
+			foreach ( (array) Request::post() as $k => $v ) {
+				$model[ $k ] = $v;
 			}
-			$insertTid = $ticket->save();
-			$tid       = $tid ?: $insertTid;
+			$model->save();
 			//模块设置
 			$ticketModule = new TicketModule();
-			$ticketModule->where( 'tid', $tid )->delete();
+			$ticketModule->where( 'tid', $model['tid'] )->delete();
 			foreach ( Request::post( 'module', [ ] ) as $module ) {
 				$ticketModule['tid']    = $tid;
 				$ticketModule['module'] = $module;
@@ -81,19 +79,19 @@ class site extends HdController {
 			$ticketGroups = new TicketGroups();
 			$ticketGroups->where( 'siteid', SITEID )->where( 'tid', $tid )->delete();
 			foreach ( Request::post( 'groups', [ ] ) as $group_id ) {
-				$ticketGroups['tid']      = $tid;
+				$ticketGroups['tid']      = $model['tid'];
 				$ticketGroups['group_id'] = $group_id;
 				$ticketGroups->save();
 			}
-			message( '卡券数据更新成功', url( 'lists', [ 'type' => q( 'type' ) ] ) );
+			message( '卡券数据更新成功', url( 'site.lists', [ 'type' => q( 'type' ) ] ) );
 		}
 		//文字描述
-		if ( q( 'get.type' ) == 1 ) {
+		if ( Request::get( 'type' ) == 1 ) {
 			$msg = [
 				'module'      => [ 'title' => '折扣券' ],
 				'title'       => [ 'title' => '折扣券名称', 'help' => '' ],
 				'condition'   => [ 'title' => '满多少钱可打折', 'help' => '请填写整数。默认订单金额大于0元就可以使用' ],
-				'discount'    => [ 'title' => '折扣', 'help' => '请填写0-1的小数。' ],
+				'discount'    => [ 'title' => '折扣', 'help' => '请填写0-1的小数比如: 0.5' ],
 				'description' => [ 'title' => '折扣券说明', 'help' => '' ],
 				'amount'      => [ 'title' => '折扣券总数量', 'help' => '此设置项设置折扣券的总发行数量。' ],
 				'limit'       => [ 'title' => '每人可使用数量', 'help' => '此设置项设置每个用户可领取此折扣券数量。' ],
@@ -109,7 +107,6 @@ class site extends HdController {
 				'limit'       => [ 'title' => '每人可使用数量', 'help' => '此设置项设置每个用户可领取此代金券数量。' ],
 			];
 		}
-		$field = Db::table( 'ticket' )->find( $tid );
 		//所有会员组
 		$groups = \Site::getSiteGroups();
 		//卡券可使用的模块
@@ -118,7 +115,7 @@ class site extends HdController {
 		$groupsIds = \Ticket::getTicketGroupIds( $tid );
 		View::with( [
 			'msg'       => $msg,
-			'field'     => $field,
+			'field'     => $model,
 			'groups'    => $groups,
 			'modules'   => $modules,
 			'groupsIds' => $groupsIds
@@ -128,7 +125,7 @@ class site extends HdController {
 	}
 
 	//删除卡券
-	public function doSiteDel() {
+	public function del() {
 		$tid = Request::get( 'tid' );
 		$res = Db::table( 'ticket_record' )->where( 'siteid', SITEID )->where( 'tid', $tid )->get();
 		if ( $res ) {
@@ -139,7 +136,7 @@ class site extends HdController {
 	}
 
 	//卡券核销列表
-	public function doSitecharge() {
+	public function charge() {
 		//分页数据
 		$db = Db::table( 'member' );
 		$db->field( "ticket_record.id,member.uid,ticket.title,ticket.thumb,ticket.condition,ticket.discount,user.username,ticket_record.createtime,ticket_record.usetime,ticket_record.status" );
@@ -186,23 +183,18 @@ class site extends HdController {
 	}
 
 	//核销卡券
-	public function doSiteVerification() {
-		$id    = q( 'get.id', 0, 'intval' );
-		$model = new TicketRecord();
-		if ( $model->verification( $id ) ) {
-			message( '卡券核销成功', 'back', 'success' );
-		}
-		message( $model->getError(), 'back', 'error' );
+	public function verification() {
+		$model           = TicketRecord::find( Request::get( 'id' ) );
+		$model['status'] = 2;
+		$model->save();
+		message( '卡券核销成功', 'back', 'success' );
 	}
 
 	//删除会员卡券兑换记录
-	public function doSiteRemove() {
-		$id    = q( 'get.id', 0, 'intval' );
-		$model = new TicketRecord();
-		if ( $model->delete( $id ) ) {
-			message( '卡券删除成功', 'back', 'success' );
-		}
-		message( $model->getError(), 'back', 'error' );
+	public function remove() {
+		$model = TicketRecord::find( Request::get( 'id' ) );
+		$model->destory();
+		message( '卡券删除成功', 'back', 'success' );
 	}
 }
 

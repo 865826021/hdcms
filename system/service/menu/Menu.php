@@ -36,7 +36,7 @@ class Menu {
 		                ->where( 'uid', v( 'user.info.uid' ) )
 		                ->where( 'type', 'system' )
 		                ->pluck( 'permission' );
-		$menus      = Db::table( 'menu' )->get();
+		$menus      = Db::table( 'menu' )->orderBy('id','asc')->get();
 		if ( $permission ) {
 			$permission = explode( '|', $permission );
 			$tmp        = $menus;
@@ -47,7 +47,6 @@ class Menu {
 			}
 		}
 		$menus = \Arr::channelLevel( $menus, 0, '', 'id', 'pid' );
-
 		//移除没有三级菜单的一级与二级菜单
 		$tmp = $menus;
 		foreach ( $tmp as $k => $t ) {

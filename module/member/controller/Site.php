@@ -208,7 +208,7 @@ class site extends HdController {
 		$type = Request::get( 'type' );
 		if ( IS_POST ) {
 			Validate::make( [
-				[ 'num', 'required', '积分数量不能为空' ],
+				[ 'num', 'regexp:/^\-?\d+$/', '积分数量不能为空' ],
 				[ 'remark', 'required', '备注不能为空' ],
 				[ 'remark', 'num', '更改数量必须为数字' ],
 			] );

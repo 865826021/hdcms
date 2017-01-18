@@ -65,12 +65,6 @@
 							</a>
 						</li>
 					</foreach>
-					<li>
-						<a href="http://doc.hdcms.com" target="_blank"><i class="fa fa-w fa-file-code-o"></i> 在线文档</a>
-					</li>
-					<li>
-						<a href="http://bbs.houdunwang.com" target="_blank"><i class="fa fa-w fa-forumbee"></i> 论坛讨论</a>
-					</li>
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
