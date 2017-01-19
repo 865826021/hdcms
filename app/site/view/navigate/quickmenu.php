@@ -3,10 +3,10 @@
 <link rel="stylesheet" href="ucenter/mobile/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="?a=ucenter/post&t=site&m=article">微站会员中心</a></li>
 		<li class="active"><a href="javascript:;">微站快捷导航</a></li>
 	</ul>
 	<form action="" method="post" id="form" class="ng-cloak form-horizontal ng-cloak" ng-cloak ng-controller="commonCtrl" ng-submit="submit()">
+		{{csrf_field()}}
 		<div class="well clearfix">
 			<div class="col-sm-8">
 				<h4><strong>快捷导航</strong></h4>
@@ -15,13 +15,13 @@
 			<div class="col-sm-4 text-right">
 				<div class="checkbox">
 					<label>
-						<input type="checkbox" ng-model="menu.status" ng-value="1" class="bootstrap-switch" ng-checked="menu.status">
+						<input type="checkbox" ng-model="menu.status" ng-value="1" class="bootstrap-switch" ng-checked="menu.status==1">
 						开启
 					</label>
 				</div>
 			</div>
 		</div>
-		<div class="quickmenu clearfix">
+		<div class="quickmenuBox clearfix">
 			<div class="mobile_view col-sm-4">
 				<div class="mobile-header text-center">
 					<img src="resource/images/mobile_head_t.png" style="margin-top: 20px;">
@@ -131,20 +131,17 @@
 					"web_id": 0,
 					"title": "类型:快捷导航",
 					"description": "",
-					"type": 1,
+					"type": 'quickmenu',
 					"status": 1,
 					"params": {
 						"style": "quickmenu_normal",
-						"menus": [
-							{title:'aa',url:'',submenus:[]},
-							{title:'bb',url:'',submenus:[]}
-						],
+						"menus": [],
 						"modules": [],
 						"has_home_button": 1,
-						"has_ucenter": 1,
-						"has_home": 1,
-						"has_special": 1,
-						"has_article": 1
+						"has_ucenter": 0,
+						"has_home": 0,
+						"has_special": 0,
+						"has_article": 0
 					}
 				};
 			}

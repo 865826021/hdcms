@@ -12,7 +12,7 @@
                 <p>
                     <strong>{{v("site.wechat.wename")}}</strong>
                     <span class="label label-success">
-                        <?php echo service('WeChat')->chatNameBylevel(v('site.wechat.level')) ?>
+                        <?php echo \Wx::chatNameBylevel(v('site.wechat.level')) ?>
                     </span>
                     &nbsp;&nbsp;&nbsp;
                     <if value="v('site.wechat.is_connect')">
@@ -20,14 +20,6 @@
                             <i class="fa fa-check-circle"></i> 接入成功
                        </span>
                     </if>
-                </p>
-                <p>
-                    <strong>接口地址:</strong>
-                    <span>{{__ROOT__}}/index.php?s=site/api/deal&siteid={{SITEID}}</span>
-                </p>
-                <p>
-                    <strong>Token:</strong>
-                    <span>{{v('site.wechat.token')}}</span>
                 </p>
             </div>
         </div>

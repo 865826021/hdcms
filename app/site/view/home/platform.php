@@ -21,14 +21,6 @@
                        </span>
                     </if>
                 </p>
-                <p>
-                    <strong>接口地址:</strong>
-                    <span>{{__ROOT__}}/index.php?s=site/api/deal&siteid={{SITEID}}</span>
-                </p>
-                <p>
-                    <strong>Token:</strong>
-                    <span>{{v('site.wechat.token')}}</span>
-                </p>
             </div>
         </div>
     </div>

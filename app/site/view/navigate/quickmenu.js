@@ -94,23 +94,21 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms','jquery-ui'], func
                     <div class="home" ng-if="menu.params.has_home_button">\
                         <a href="?a=entry/home&m=article&t=web&siteid=' + system.siteid + '&mobile=1"><i class="fa fa-home"></i></a>\
                     </div>\
-                    <ul>\
-                        <li ng-repeat="v in menu.params.menus">\
-                            <a ng-href="{{v.url}}" ng-if="v.submenus.length==0" ng-bind="v.title"></a>\
-                            <a href="javascript:;" ng-if="v.submenus.length>0">\
-                                <i class="fa fa-bars" ng-if="v.submenus.length>0"></i> {{v.title}}\
-                            </a>\
-                            <div class="sub-menus" ng-if="v.submenus.length>0">\
-                                    <a ng-href="{{m.url}}" ng-repeat="m in v.submenus" ng-bind="m.title"></a>\
-                            </div>\
-                        </li>\
-                    </ul>\
+                    <dl ng-repeat="v in menu.params.menus">\
+                            <dt href="javascript:;">\
+                                <span ng-if="v.submenus.length>0"><i class="fa fa-bars"></i> {{v.title}}</span>\
+                                <a ng-href="{{v.url}}" ng-if="v.submenus.length==0" ng-bind="v.title"></a>\
+                            </dt>\
+                            <dd class="sub-menus" ng-if="v.submenus.length>0" ng-repeat="m in v.submenus">\
+                                    <a ng-href="{{m.url}}" ng-bind="m.title"></a>\
+                            </dd>\
+                    </dl>\
                 </div>\
             </div>');
         //编辑区域
         $templateCache.put('quickmenu_normal_edit.html', '' +
         '<div class="checkbox"><label>\
-            <input type="checkbox" value="1" ng-model="menu.params.has_home_button" ng-checked="menu.params.has_home_button">\
+            <input type="checkbox" ng-value="1" ng-model="menu.params.has_home_button" ng-checked="menu.params.has_home_button==1">\
                         显示文章首页按钮\
             </label>\
         </div>\

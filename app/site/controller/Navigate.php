@@ -180,18 +180,19 @@ class Navigate {
 
 	//快捷导航
 	public function quickmenu() {
-		$webPage = new Page();
+
 		if ( IS_POST ) {
-			$data = json_decode( $_POST['data'], true );
-			$webPage->save( $data );
+			$data  = json_decode( $_POST['data'], true );
+			$model = empty( $data['id'] ) ? new Page() : Page::find( $data['id'] );
+			$model->save( $data );
 			message( '保存快捷菜单成功', 'refresh', 'success' );
 		}
-		$field = Db::table( 'page' )->where( 'siteid', SITEID )->where( 'type', 1 )->first() ?: [ ];
+		$field = Db::table( 'page' )->where( 'siteid', SITEID )->where( 'type', 'quickmenu' )->first();
 		if ( $field ) {
-			$field           = Arr::string_to_int( $field );
-			$field['params'] = json_decode( $field['params'] );
+			$field           = Arr::stringToInt( $field );
+			$field['params'] = json_decode( $field['params'],true );
 		}
 
-		return view( )->with( 'field', $field );
+		return view()->with( 'field', $field );
 	}
 }
