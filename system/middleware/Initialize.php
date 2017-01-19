@@ -46,9 +46,8 @@ class Initialize {
 		 * 加载模块数据到全局变量窗口中
 		 */
 		if ( $name = Request::get( 'm' ) ) {
-			v( 'module', Modules::where( 'name', $name )->first() );
+			v( 'module', Db::table('modules')->where( 'name', $name )->first() );
 		}
-
 		/**
 		 * 扩展模块单独使用变量访问
 		 * 而不是使用框架中的s变量

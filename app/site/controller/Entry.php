@@ -15,13 +15,6 @@ namespace app\site\controller;
  * @author 向军
  */
 class Entry {
-	public function __construct() {
-		//验证站点权限
-		if ( ! \User::isOperate() ) {
-			message( '你没有管理站点的权限', 'system/site/lists', 'warning' );
-		}
-	}
-
 	/**
 	 * 执行模块动作
 	 * 动作分为系统动作与控制器动作

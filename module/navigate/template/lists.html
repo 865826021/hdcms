@@ -5,8 +5,8 @@
 		<li class="active">
 			<a href="javascript:;"><?=\Navigate::title( );?></a>
 		</li>
-		<if value="Request::get('m')=='article'">
-			<li><a href="{{u('site/navigate/post',['m'=>'article'])}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
+		<if value="Request::get('entry')=='home'">
+			<li><a href="{{url('navigate.post')}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
 		</if>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
@@ -131,7 +131,7 @@
 			})
 			//选择站点
 			$scope.changeWeb = function () {
-				location.replace("?s=site/navigate/lists&entry=home&m=article&webid=" + $scope.webid);
+				location.replace("?m=navigate&action=navigate/lists&entry=home&webid=" + $scope.webid);
 			}
 			//选择链接
 			$scope.url = {
@@ -147,7 +147,7 @@
 			$scope.del = function (id) {
 				util.confirm('确定删除菜单吗?', function () {
 					var nav = $scope.nav;
-					$.get('?s=site/nav/del', {id: id}, function (res) {
+					$.get("{{url('navigate.del')}}", {id: id}, function (res) {
 						if (res.valid) {
 							util.message(res.message, 'refresh', 'success')
 						} else {

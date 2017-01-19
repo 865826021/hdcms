@@ -37,7 +37,7 @@
 
 							<div class="col-sm-10">
 								<p class="form-control-static copy">
-									<a href="javascript:;" class="text-info copy">{{__ROOT__}}/index.php?s=site/api/deal&siteid={{$wechat['siteid']}}</a>
+									<a href="javascript:;" class="text-info copy">{{__ROOT__}}/index.php?m=wechat&action=api/handle&siteid={{$wechat['siteid']}}</a>
 								</p>
 							</div>
 						</div>

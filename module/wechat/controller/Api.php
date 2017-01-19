@@ -7,12 +7,12 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace app\site\controller;
+namespace module\wechat\controller;
 
 /**
  * 微信请求接口
  * Class api
- * @package module\controller
+ * @package module\wechat\controller
  * @author 向军
  */
 class Api {
@@ -21,13 +21,14 @@ class Api {
 	public function __construct() {
 		//与微信官网通信绑定验证
 		\WeChat::valid();
+
 		$this->instance = \WeChat::instance( 'message' );
 	}
 
 	/**
 	 * 接口业务处理
 	 */
-	public function deal() {
+	public function handle() {
 		//消息定阅处理
 		$this->subscribe();
 		//文本消息时进行处理
@@ -87,7 +88,7 @@ class Api {
 			}
 			//根据找到的模块执行处理消息动作
 			if ( $isFind === true ) {
-				$this->moduleProcessing( v( 'site.modules.' . $rule['module'] ),$rule['rid'] );
+				$this->moduleProcessing( v( 'site.modules.' . $rule['module'] ), $rule['rid'] );
 			}
 		}
 	}

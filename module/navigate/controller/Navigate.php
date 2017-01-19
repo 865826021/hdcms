@@ -1,4 +1,4 @@
-<?php namespace app\site\controller;
+<?php namespace module\navigate\controller;
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
@@ -10,6 +10,7 @@
  * '-------------------------------------------------------------------*/
 
 use houdunwang\request\Request;
+use module\HdController;
 use system\model\Navigate as NavigateModel;
 
 /**
@@ -18,29 +19,24 @@ use system\model\Navigate as NavigateModel;
  * @package web\site\controller
  * @author 向军
  */
-class Navigate {
+class Navigate extends HdController {
 	//官网编号
 	protected $webid;
 	//菜单编号
 	protected $id;
-	//模块名称
-	protected $module;
 
 	public function __construct() {
+		parent::__construct();
 		//验证操作员权限
 		\User::isOperate();
 		$this->webid  = Request::get( 'webid' );
 		$this->id     = Request::get( 'id' );
-		$this->module = Request::get( 'm' );
-		if ( empty( $this->module ) ) {
-			message( '模块不存在,无法进行操作', 'back', 'error' );
-		}
 		/**
 		 * 没有站点编号时设置站点编号
 		 * 在前台添加菜单时使用
 		 * 因为添加菜单只能给微站首页添加必须有这个字段
 		 */
-		if ( empty($this->webid)|| ! \Web::has( $this->webid ) ) {
+		if ( empty( $this->webid ) || ! \Web::has( $this->webid ) ) {
 			$this->webid = Db::table( 'web' )->where( 'siteid', SITEID )->pluck( 'id' );
 		}
 		if ( $this->id && ! NavigateModel::where( 'siteid', SITEID )->where( 'id', $this->id )->get() ) {
@@ -125,8 +121,7 @@ class Navigate {
 		View::with( 'nav', Arr::stringToInt( $nav ) );
 		View::with( 'template', $template );
 		View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
-
-		return View::make();
+		return view( $this->template . '/lists.html' );
 	}
 
 	/**
@@ -136,9 +131,6 @@ class Navigate {
 	 * @return mixed
 	 */
 	public function post() {
-		if ( empty( $this->webid ) ) {
-			message( '缺少站点编号无法进行操作', 'back', 'error' );
-		}
 		if ( IS_POST ) {
 			$data                = json_decode( $_POST['data'], true );
 			$model               = empty( $data['id'] ) ? new NavigateModel() : NavigateModel::find( $data['id'] );
@@ -149,7 +141,7 @@ class Navigate {
 				'm'     => 'article',
 				'webid' => $data['webid']
 			] );
-			message( '保存导航数据成功', $url, 'success' );
+			message( '保存导航数据成功', url('navigate/lists',['entry'=>'home','webid'=>$this->webid]), 'success' );
 		}
 		//站点列表
 		$web = Db::table( 'web' )
@@ -177,12 +169,12 @@ class Navigate {
 		View::with( 'web', Arr::stringToInt( $web ) );
 		View::with( 'field', Arr::stringToInt( $field ) );
 
-		return view();
+		return view( $this->template . '/post.html' );
 	}
 
 	//删除菜单
 	public function del() {
-		$this->webNav->delete( $this->id );
+		NavigateModel::delete( $this->id );
 		message( '菜单删除成功', 'back', 'success' );
 	}
 }

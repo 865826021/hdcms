@@ -256,8 +256,8 @@ class Site {
 	public function connect() {
 		//与微信官网通信绑定验证
 		$wechat = SiteWechat::where( 'siteid', SITEID )->first();
-		c( "wechat", $wechat );
-		$status = WeChat::getAccessToken();
+		c( "wechat", $wechat?$wechat->toArray():[] );
+		$status = \WeChat::getAccessToken();
 		SiteWechat::where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {
 			ajax( [ 'valid' => true, 'message' => '恭喜, 微信公众号接入成功' ] );
