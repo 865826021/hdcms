@@ -36,7 +36,7 @@
 					</div>
 					<!--组件列表-->
 					<div id="module-lists" style="position: relative" dnd-list="modules.all">
-						<div ng-repeat="m in modules.all" index="@{{m.index}}" ng-if="m['id'] && m['id']!='UCheader'"
+						<div ng-repeat="m in modules.all" index="@{{m.index}}" ng-show="m['id'] && m['id']!='UCheader'"
 						     dnd-draggable="m"
 						     dnd-moved="modules.all.splice($index, 1)"
 						     ng-class="{'module_item':true,module_active:m.index==modules.active.index}"
@@ -48,7 +48,7 @@
 				<div class="app-module-list clearfix">
 					<div class="arrow-top"></div>
 					<ul ng-controller="moduleManage">
-						<li ng-repeat="v in modules.config" ng-if="!v.issystem && v.id !='UCheader'" ng-click="addWidget(v['id'])">
+						<li ng-repeat="v in modules.config" ng-show="!v.issystem && v.id !='UCheader'" ng-click="addWidget(v['id'])">
 							<a href="javascript:;" class="btn btn-default" ng-bind="v.name"></a>
 						</li>
 					</ul>
@@ -72,13 +72,13 @@
 		</div>
 	</form>
 </block>
-
 <script>
 	require(['angular','{{__TEMPLATE__}}/js/wapeditor.js'], function (angular) {
-		var rid = '{{$rid}}';
-		modules = <?php echo $modules ?: '[{"id":"UCheader","name":"会员主页","params":{"title":"会员中心","bgImage":"","description":"","thumb":""},"issystem":1,"index":0,"displayorder":0}]';?>;
+		//回复规则编号;
+		window.rid = {{$rid}};
+		window.modules = {{$modules}};
 		//动态菜单
-		menus = <?php echo json_encode($menusData);?>;
+		menus = {{$menus}};
 		$(function () {
 			angular.bootstrap(document.getElementById('form'), ['app']);
 		});

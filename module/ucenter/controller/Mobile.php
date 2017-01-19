@@ -1,7 +1,7 @@
 <?php namespace module\ucenter\controller;
 
 use module\HdController;
-use system\model\WebPage;
+use system\model\Page;
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDPHP framework]
@@ -22,9 +22,10 @@ class Mobile extends HdController {
 	 * 移动端界面设置
 	 */
 	public function post() {
-		$webPage = new WebPage();
+		$webPage = new Page();
 		if ( IS_POST ) {
-			$modules = json_decode( $_POST['modules'], TRUE );
+			$modules = json_decode( $_POST['modules'], true );
+			p($modules);exit;
 			//会员中心数据
 			if ( empty( $modules[0]['params']['thumb'] ) ) {
 				message( '封面图片不能为空', 'back', 'error' );
@@ -39,7 +40,7 @@ class Mobile extends HdController {
 			$data['id']          = empty( $res['id'] ) ? 0 : $res['id'];
 			$webPage->save( $data );
 			//添加菜单,首先删除原菜单
-			$menus = json_decode( $_POST['menus'], TRUE );
+			$menus = json_decode( $_POST['menus'], true );
 			//删除旧的菜单
 			$webNavModel = new WebNav();
 			$webNavModel->where( 'siteid', SITEID )->where( 'entry', 'profile' )->delete();
@@ -60,7 +61,7 @@ class Mobile extends HdController {
 			$ucenter = $modules[0]['params'];
 			//添加回复规则
 			$rule['rid']    = $rid;
-			$rule['name']   = '##会员中心##';
+			$rule['name']   = '##移动会员中心##';
 			$rule['module'] = 'cover';
 			//回复关键词
 			$rule['keywords'] = [ [ 'content' => $ucenter['keyword'] ] ];
@@ -78,6 +79,9 @@ class Mobile extends HdController {
 		}
 		//模块
 		$modules = $webPage->where( 'siteid', SITEID )->where( 'type', 3 )->pluck( 'params' );
+		if ( empty( $modules ) ) {
+			$modules = '[{"id":"UCheader","name":"会员主页","params":{"title":"会员中心","bgImage":"","description":"","thumb":"","keyword":""},"issystem":1,"index":0,"displayorder":0}]';
+		}
 		//菜单
 		$menusData = Db::table( 'navigate' )
 		               ->where( 'siteid', SITEID )
@@ -88,10 +92,10 @@ class Mobile extends HdController {
 		               ->get() ?: [ ];
 		//将CSS样式返序列化,用于显示图标等信息
 		foreach ( $menusData as $k => $v ) {
-			$menusData[ $k ]['css'] = json_decode( $v['css'], TRUE );
+			$menusData[ $k ]['css'] = json_decode( $v['css'], true );
 		}
-		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##会员中心##' )->pluck( 'rid' ) );
-		View::with( [ 'modules' => $modules, 'menusData' => $menusData ] );
+		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##移动会员中心##' )->pluck( 'rid' ) ?: 0 );
+		View::with( [ 'modules' =>  $modules , 'menus' => json_encode($menusData) ] );
 
 		return view( $this->template . '/mobile_post.html' );
 	}

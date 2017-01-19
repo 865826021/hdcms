@@ -113,28 +113,30 @@
     }
   }
 
+  .deleteIcoBox{
+    position      : relative;
+    &:hover {
+      .delete-ico {
+        display : block;
+      }
+    }
+    .delete-ico {
+      position  : absolute;
+      right     : -10px;
+      top       : -10px;
+      font-size : 22px;
+      opacity   : .5;
+      cursor    : pointer;
+      z-index   : 999;
+    }
+  }
   //文本导航
   .textnav {
     .navBox {
-      position      : relative;
       border        : solid 1px #dddddd;
       padding       : 10px;
       background    : #ffffff;
       margin-bottom : 10px;
-      &:hover {
-        .delete-ico {
-          display : block;
-        }
-      }
-      .delete-ico {
-        position  : absolute;
-        right     : -10px;
-        top       : -10px;
-        font-size : 22px;
-        opacity   : .5;
-        cursor    : pointer;
-        z-index   : 999;
-      }
     }
     //添加导航的按钮
     .addTextNav {

@@ -1,4 +1,4 @@
-define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], function (angular, $, _, util,hdcms) {
+define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'jquery-ui'], function (angular, $, _, util, hdcms) {
     require(['angular.drag']);
     var m = angular.module('app', ['dndLists']);
     //服务
@@ -30,10 +30,26 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                 len = this.modules.all.length;
                 switch (id) {
                     case 'wireLine':
-                        data = {id: 'wireLine', name: '辅助空白', params: [{height: 20}], issystem: 0, orderby: len, index: len};
+                        data = {
+                            id: 'wireLine',
+                            name: '辅助空白',
+                            params: [{height: 20}],
+                            issystem: 0,
+                            orderby: len,
+                            index: len
+                        };
+                        //要执行下行代码才可以调出滑块的
+                        $(".slider").slider();
                         break;
                     case 'textNav':
-                        data = {id: 'textNav', name: '文本导航', params: [{title: '', url: ''}], issystem: 0, orderby: len, index: len};
+                        data = {
+                            id: 'textNav',
+                            name: '文本导航',
+                            params: [{title: '', url: ''}],
+                            issystem: 0,
+                            orderby: len,
+                            index: len
+                        };
                         break;
                 }
                 this.modules.all.push(data);
@@ -41,6 +57,7 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                 this.updateIndex();
                 //编辑框位置
                 $("#" + data.id).css({'margin-top': $("#module-lists").position().top + $("#module-lists").height() - 20});
+
             },
             //删除组件
             delWidget: function (index) {
@@ -91,14 +108,14 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
         })
         //添加菜单
         $scope.addMenu = function () {
-            $scope.menus.push({icon: 'fa fa-cubes', name: '', url: '',css:{"icon":"fa fa-external-link"}});
+            $scope.menus.push({icon: 'fa fa-cubes', name: '', url: '', css: {"icon": "fa fa-external-link"}});
         };
         //删除菜单
         $scope.delMenu = function (item) {
             $scope.menus = _.without($scope.menus, item);
         };
         //提交表单
-        $scope.submit = function () {
+        $('form').submit(function(){
             widgets = [];
             for (var i = 0; i < $scope.modules.all.length; i++) {
                 if ($scope.modules.all[i].id == 'UCheader') {
@@ -113,17 +130,37 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
             var modules = "<textarea name='modules' hidden='hidden'>" + angular.toJson(widgets) + "</textarea>";
             $('form').append(modules);
             var f = $("#module-lists").find('div').remove('.module-edit-action').html();
-            f = f.replace(/<\!\-\-([^-]*?)\-\->/g, "");
-            f = f.replace(/ng\-[a-zA-Z-]+=\"[^\"]*\"/g, "");
-            f = f.replace(/ng\-[a-zA-Z]+/g, "");
-            f = f.replace(/[\t\n\n\r]/g, "");
-            f = f.replace(/>\s+</g, "><")
+            if (f) {
+                f = f.replace(/<\!\-\-([^-]*?)\-\->/g, "");
+                f = f.replace(/ng\-[a-zA-Z-]+=\"[^\"]*\"/g, "");
+                f = f.replace(/ng\-[a-zA-Z]+/g, "");
+                f = f.replace(/[\t\n\n\r]/g, "");
+                f = f.replace(/>\s+</g, "><");
+            }
+            var msg='';
+            if($.trim(widgets[0].params.title)==''){
+                msg+='页面名称不能为空<br/>';
+            }
+            if($.trim(widgets[0].params.description)==''){
+                msg+='页面描述不能为空<br/>';
+            }
+            if($.trim(widgets[0].params.keyword)==''){
+                msg+='微信回复关键词不能为空<br/>';
+            }
+            if($.trim(widgets[0].params.thumb)==''){
+                msg+='封面图片不能为空<br/>';
+            }
+            if(msg){
+                util.message(msg,'','warning');
+                return false;
+            }
             var html = "<textarea name='html' hidden='hidden'>" + f + "</textarea>";
             $('form').append(html);
             //菜单
             var menus = "<textarea name='menus' hidden='hidden'>" + angular.toJson($scope.menus) + "</textarea>";
             $('form').append(menus);
-        }
+
+        });
         //选择系统菜单
         $scope.link = {
             system: function () {
@@ -153,13 +190,13 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
             });
         }
         //检测微信关键字
-        $scope.checkWxKeyword=function(event,item){
+        $scope.checkWxKeyword = function (event) {
             //HTML元素
             var obj = $(event.target);
-            hdcms.checkWxKeyword(item.params.keyword,'',function(res){
+            hdcms.checkWxKeyword(uc.modules.active.params.keyword, window.rid, function (res) {
                 if (res.valid == 0) {
                     obj.next().html(res.message);
-                }else{
+                } else {
                     obj.next().html('');
                 }
             });
@@ -203,9 +240,10 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
             uc.modules.active.params.push({title: '', url: ''});
         }
         $scope.remove = function (item) {
+            var index = _.indexOf(uc.modules.all,uc.modules.active);
             uc.modules.active.params = _.without(uc.modules.active.params, item);
-            if (uc.modules.active.params.length == 0) {
-                uc.delWidget(uc.modules.active);
+            if (index) {
+                uc.delWidget(index);
             }
         }
     }]);
@@ -261,7 +299,7 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                     <div class="form-group">\
                         <label class="col-sm-3 control-label star">页面名称</label>\
                         <div class="col-sm-9">\
-                            <input type="text" class="form-control" ng-model="active.params.title" required="required">\
+                            <input type="text" class="form-control" ng-model="active.params.title">\
                         </div>\
                     </div>\
                     <div class="form-group">\
@@ -274,7 +312,7 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                     <div class="form-group">\
                         <label class="col-sm-3 control-label star">触发关键字</label>\
                         <div class="col-sm-9">\
-                            <input type="text" class="form-control" ng-model="active.params.keyword" required="required" ng-blur="checkWxKeyword($event,active)">\
+                            <input type="text" class="form-control" ng-model="active.params.keyword" ng-blur="checkWxKeyword($event)">\
                             <span class="help-block keyword-error"></span>\
                             <span class="help-block">用户触发关键字，系统回复此页面的图文链接</span>\
                         </div>\
@@ -285,7 +323,7 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                             <input type="hidden" ng-model="active.params.thumb"/>\
                             <button ng-click="thumb()" class="btn btn-default" type="button">选择图片</button>\
                             <div class="input-group" style="margin-top:5px;" ng-show="active.params.thumb">\
-                                <img ng-if="active.params.thumb" ng-src="{{active.params.thumb}}" class="img-responsive img-thumbnail" width="150">\
+                                <img ng-show="active.params.thumb" ng-src="{{active.params.thumb}}" class="img-responsive img-thumbnail" width="150">\
                                 <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片" ng-click="active.params.thumb=\'\'">×</em>\
                             </div>\
                         </div>\
@@ -293,7 +331,7 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
                     <div class="form-group">\
                         <label class="col-sm-3 control-label star">页面描述</label>\
                         <div class="col-sm-9">\
-                            <input type="text" class="form-control" ng-model="active.params.description" required="required">\
+                            <input type="text" class="form-control" ng-model="active.params.description">\
                         </div>\
                     </div>\
                     <div class="page-header">\
@@ -370,9 +408,9 @@ define(['angular', 'bootstrap', 'underscore', 'util','hdcms', 'jquery-ui'], func
             </div>\
         ');
         $templateCache.put('widget-textnav-editor.html', '\
-            <div ng-controller="textNavCtrl" class="navTextEditor textnav">\
+            <div ng-controller="textNavCtrl" class="navTextEditor textnav deleteIcoBox">\
                 <div class="navBox" ng-repeat="m in modules.active.params">\
-                    <i class="fa fa-times-circle delete-ico" ng-click="remove(m)"></i>\
+                    <i class="fa fa-times-circle delete-ico" ng-click="remove()"></i>\
                     <div class="form-group">\
                         <label class="col-sm-2 control-label">标题</label>\
                         <div class="col-sm-10">\
