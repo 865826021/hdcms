@@ -209,7 +209,7 @@ if ( ! function_exists( 'message' ) ) {
 					break;
 				case 'back':
 					//有回调地址时回调,没有时返回主页
-					$url = 'window.history.go(-1)';
+					$url = "location.replace('" . __HISTORY__ . "')";
 					break;
 				case 'refresh':
 					$url = "location.replace('" . __URL__ . "')";

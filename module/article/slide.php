@@ -35,42 +35,8 @@ class slide extends hdSite {
 		}
 	}
 
-	//列表
-	public function doSiteLists() {
-		if ( IS_POST ) {
-			foreach ( Request::post( 'slide' ) as $id => $order ) {
-				$this->webSlide['displayorder'] = $order;
-				$this->webSlide['id']           = $id;
-				$this->webSlide->save();
-			}
-			message( '修改幻灯片成功', 'refresh', 'success' );
-		}
-		$data = $this->webSlide->where( 'web_id', $this->webid )->get();
-		View::with( 'data', $data );
 
-		return View::make( $this->template . '/slide/lists.php' );
-	}
 
-	//添加&修改
-	public function doSitePost() {
-		$slideId = Request::get( 'id' );
-		if ( IS_POST ) {
-			$this->webSlide['web_id'] = $this->webid;
-			$this->webSlide['id']     = $slideId;
-			foreach ( Request::post() as $k => $v ) {
-				$this->webSlide[ $k ] = $v;
-			}
-			$this->webSlide->save();
-			message( '幻灯片保存成功', site_url( 'lists', [ 'webid' => $this->webid ] ), 'success' );
-		}
-		$field = $this->webSlide->find( $slideId );
-		//官网列表
-		$web = $this->web->find( $this->webid );
-		View::with( 'field', $field );
-		View::with( [ 'web' => $web ] );
-
-		return View::make( $this->template . '/slide/post.php' );
-	}
 
 	//删除
 	public function doSiteRemove() {

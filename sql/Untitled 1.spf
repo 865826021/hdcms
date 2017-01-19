@@ -43,6 +43,8 @@
 		<dict>
 			<key>connectionEncoding</key>
 			<string>utf8</string>
+			<key>contentFilter</key>
+			<dict/>
 			<key>contentPageNumber</key>
 			<integer>1</integer>
 			<key>contentSelection</key>
@@ -72,7 +74,7 @@
 			<key>queries</key>
 			<string>SELECT * FROM hd_member_group  WHERE title = '会员' AND id &lt;&gt; 2</string>
 			<key>table</key>
-			<string>hd_navigation</string>
+			<string>hd_web</string>
 			<key>view</key>
 			<string>SP_VIEW_STATUS</string>
 			<key>windowVerticalDividerPosition</key>

@@ -12,6 +12,8 @@ namespace module\article\controller;
 
 
 use module\HdController;
+use system\model\ReplyCover;
+use system\model\Web;
 
 class Site extends HdController {
 	//站点管理
@@ -25,39 +27,56 @@ class Site extends HdController {
 		return View::with( 'data', $data )->make( $this->template . '/site_lists.html' );
 	}
 
+	//设置默认站点
+	public function setDefault() {
+		$webid = Request::get( 'webid' );
+		Web::where( 'siteid', siteid() )->update( [ 'is_default' => 0 ] );
+		Web::where( 'siteid', siteid() )->where( 'id', $webid )->update( [ 'is_default' => 1 ] );
+		message( '默认站点设置成功', 'back', 'success' );
+	}
+
+	//删除站点
+	public function del() {
+		\Web::del( Request::get( 'webid' ) );
+		message( '站点删除成功', '', 'success' );
+	}
+
 	//添加站点
 	public function post() {
+		$id    = Request::get( 'webid' );
+		$model = $id ? Web::find( $id ) : new Web();
 		if ( IS_POST ) {
-			$data              = json_decode( $_POST['data'], true );
-			$data['site_info'] = $_POST['data'];
-			$insertId          = $this->web->save( $data );
-			$web['id']         = $this->webid ?: $insertId;
+			$data                   = json_decode( $_POST['data'], true );
+			$model['title']         = $data['title'];
+			$model['status']        = $data['status'];
+			$model['thumb']         = $data['thumb'];
+			$model['template_name'] = $data['template_name'];
+			$model['site_info']     = Request::post( 'data' );
+			$model->save();
 			//添加回复规则
 			$rule             = [ ];
-			$rule['rid']      = Db::table( 'reply_cover' )->where( 'web_id', $web['id'] )->pluck( 'rid' );
+			$rule['rid']      = Db::table( 'reply_cover' )->where( 'web_id', $model['id'] )->pluck( 'rid' );
 			$rule['module']   = 'cover';
-			$rule['name']     = '微站:' . $data['title'];
-			$rule['keywords'] = [
-				[
-					'content' => $data['keyword'],
-				]
-			];
-			$rid              = service( 'WeChat' )->rule( $rule );
+			$rule['name']     = 'article:' . $model['id'];
+			$rule['keywords'] = [ [ 'content' => $data['keyword'], ] ];
+			$rid              = \Wx::rule( $rule );
 			//添加封面回复
 			$replyCover = new ReplyCover();
 			$replyCover->where( 'rid', $rid )->delete();
-			$data['web_id'] = $web['id'];
-			$data['rid']    = $rid;
-			$data['module'] = 'article';
-			$data['url']    = '?a=entry/home&m=article&t=web&siteid=' . SITEID . '&webid=' . $web['id'];
-			$replyCover->save( $data );
-			message( '保存站点数据成功', site_url( 'site' ), 'success' );
+			$replyCover['web_id']      = $model['id'];
+			$replyCover['rid']         = $rid;
+			$replyCover['title']       = $data['title'];
+			$replyCover['description'] = $data['description'];
+			$replyCover['thumb']       = $data['thumb'];
+			$replyCover['module']      = 'article';
+			$replyCover['url']         = '?m=article&action=entry/home&webid=' . $model['id'];
+			$replyCover->save();
+			message( '保存站点数据成功', url( 'site.lists' ), 'success' );
 		}
-		if ( $this->webid ) {
+		if ( $id ) {
 			//编辑数据时
-			$web         = $this->web->find( $this->webid );
-			$field       = json_decode( $web['site_info'], true );
-			$field['id'] = $this->webid;
+			$field       = json_decode( $model['site_info'], true );
+			$field['id'] = $model['id'];
 		}
 		View::with( 'field', isset( $field ) ? json_encode( $field, JSON_UNESCAPED_UNICODE ) : '' );
 

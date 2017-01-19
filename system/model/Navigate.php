@@ -7,18 +7,18 @@
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class Navigation extends Common {
-	protected $table = 'navigation';
+class Navigate extends Common {
+	protected $table = 'navigate';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'name', 'required', '导航标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'name', 'required', '导航名称不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'url', 'required', '链接不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'orderby', 'num:0,255', '排序只能为0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'entry', 'required', '导航类型不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
-		[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'webid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'css', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
@@ -31,16 +31,4 @@ class Navigation extends Common {
 		[ 'entry', 'strtolower', 'function', self::NOT_EMPTY_AUTO, self::MODEL_BOTH ],
 	];
 
-	/**
-	 * 获取菜单类型的中文标题
-	 *
-	 * @param string $entry 类型标识
-	 *
-	 * @return mixed
-	 */
-	public function title( $entry ) {
-		$menu = [ 'home' => '微站首页导航', 'profile' => '手机会员中心导航', 'member' => '桌面会员中心导航' ];
-
-		return $menu[ $entry ];
-	}
 }

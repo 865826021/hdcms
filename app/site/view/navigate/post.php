@@ -1,12 +1,12 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表 </a></li>
+		<li><a href="{{url('site.lists',['a'=>'article'])}}">返回站点列表 </a></li>
 		<li><a href="javascript:history.back();">导航菜单列表</a></li>
 		<li class="active"><a href="javascript:;">添加导航菜单</a></li>
 	</ul>
 	<form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-controller="MyController" ng-cloak>
-		<input type="hidden" name="__HISTORY__" value="{{__HISTORY__}}">
+		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">微站导航菜单</div>
 			<div class="panel-body">
@@ -14,7 +14,8 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">分配到微站</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-model="field.web_id" ng-options="a.id as a.title for a in web">
+							<select class="form-control" ng-model="field.web_id"
+							        ng-options="a.id as a.title for a in web">
 								<option value="">选择站点</option>
 							</select>
 						</div>
@@ -22,10 +23,11 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">导航显示位置</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-model="field.position" ng-options="a.position as a.title for a in position_data">
+							<select class="form-control" ng-model="field.position"
+							        ng-options="a.position as a.title for a in position_data">
 								<option value="">不显示</option>
 							</select>
-                        <span class="help-block">
+							<span class="help-block">
                             设置位置后可以将导航菜单显示到模板对应的位置中。（可以同时设置多个导航在同一个位置中，会根据排序大小依次显示），显示的位置必须要有模板支持。
                         </span>
 						</div>
@@ -61,8 +63,11 @@
 						<div class="input-group">
 							<input type="text" class="form-control" ng-model="field.url">
 							<div class="input-group-btn">
-								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-								        aria-expanded="false">选择链接 <span class="caret"></span></button>
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+								        aria-haspopup="true"
+								        aria-expanded="false">
+									选择链接 <span class="caret"></span>
+								</button>
 								<ul class="dropdown-menu dropdown-menu-right">
 									<li><a href="javascript:;" ng-click="getUrl.systemLink()">系统菜单</a></li>
 								</ul>
@@ -101,10 +106,10 @@
 						<div class="col-sm-9">
 							<div class="input-group" style="width: 300px;">
 								<input type="text" class="form-control iconfontinput" ng-model="field.css.icon">
-                                <span class="input-group-addon iconfontspan" style="border-left: none">
+								<span class="input-group-addon iconfontspan" style="border-left: none">
                                     <i class="@{{field.css.icon}}"></i>
                                 </span>
-                              <span class="input-group-btn">
+								<span class="input-group-btn">
                                 <button class="btn btn-default" type="button" ng-click="upFont()">选择图标</button>
                               </span>
 							</div>
@@ -148,7 +153,8 @@
 								</div>
 							</div>
 							<div class="input-group" style="margin-top:5px;" ng-if="field.css.image">
-								<img ng-src="@{{field.css.image}}" class="img-responsive img-thumbnail iconimg" width="150">
+								<img ng-src="@{{field.css.image}}" class="img-responsive img-thumbnail iconimg"
+								     width="150">
 								<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
 								    ng-click="removeImageIcon()">×</em>
 							</div>
@@ -164,10 +170,10 @@
 </block>
 
 <script>
-	require(['angular', 'util'], function (angular, util) {
+	require(['angular', 'util', 'hdcms', 'jquery'], function (angular, util, hdcms, $) {
 		angular.module('myApp', []).controller('MyController', ['$scope', function ($scope) {
-			$scope.web = <?php echo json_encode( $web,JSON_UNESCAPED_UNICODE );?>;
-			$scope.field = <?php echo json_encode( $field,JSON_UNESCAPED_UNICODE );?>;
+			$scope.web = <?php echo json_encode( $web, JSON_UNESCAPED_UNICODE );?>;
+			$scope.field = <?php echo json_encode( $field, JSON_UNESCAPED_UNICODE );?>;
 
 			//设置导航显示位置
 			$scope.getTemplatePositon = function () {
@@ -192,7 +198,7 @@
 			//选择链接
 			$scope.getUrl = {
 				systemLink: function () {
-					util.linkBrowser(function (link) {
+					hdcms.link.system(function (link) {
 						$scope.field.url = link;
 						$scope.$apply();
 					});

@@ -62,7 +62,6 @@
                                 template.push(item);
                             }
                         });
-                        console.log(template);
                         callback({module: module, template: template});
                         modalobj.modal('hide');
                     }
@@ -74,25 +73,27 @@
          * 选择系统菜单
          * @param callback
          */
-        linkBrowser: function (callback) {
-            var modalobj = util.modal({
-                content: ['?s=system/component/linkBrowser'],
-                title: '请选择链接',
-                width: 600,
-                show: true,//直接显示
-                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>'
-            });
-            window.selectLinkComplete = function (link) {
-                if ($.isFunction(callback)) {
-                    callback(link);
-                    modalobj.modal('hide');
+        link: {
+            system: function (callback) {
+                var modalobj = util.modal({
+                    content: ['?s=site/link/system'],
+                    title: '请选择链接',
+                    width: 600,
+                    show: true,//直接显示
+                    footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>'
+                });
+                window.selectSystemLinkComplete = function (link) {
+                    if ($.isFunction(callback)) {
+                        callback(link);
+                        modalobj.modal('hide');
+                    }
                 }
             }
         },
         /**
          * 模块选择
          * @param callback
-         * @param mid
+         * @param mid 已经使用的模块如 1,2,3以逗号分隔
          */
         moduleBrowser: function (callback, mid) {
             var modalobj = util.modal({
@@ -102,13 +103,29 @@
                 show: true,//直接显示
                 footer: '<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="confirmModuleSelectHandler()">确定</button>'
             });
-            modalobj.on('hidden.bs.modal', function () {
-                modalobj.remove();
-            });
             window.selectModuleComplete = function (link) {
                 if ($.isFunction(callback)) {
                     callback(link);
                 }
+            }
+        },
+        /**
+         * 选择站点模板列表
+         * 系统根据站点套餐权限显示模板列表
+         * @param callback
+         */
+        siteTemplateBrowser: function (callback) {
+            var modalobj = util.modal({
+                content: ["?s=system/component/siteTemplateBrowser"],
+                title: '选择模板风格',
+                width: 850,
+                show: true
+            });
+            window.selectTemplateComplete = function (data) {
+                if ($.isFunction(callback)) {
+                    callback(data);
+                }
+                modalobj.modal('hide');
             }
         },
         /**
@@ -122,10 +139,24 @@
                     callback(res);
                 }
             }, 'json');
+        },
+        /**
+         * 预览图片
+         * @param url 图片URL地址
+         */
+        preview:function(url){
+            require(['util'],function(util){
+                util.modal({
+                    title:'图片预览',
+                    width:700,
+                    height:500,
+                    content:'<div style="text-align: center"><img style="max-width: 650px;max-height: 500px;" src="'+url+'"/></div>'
+                })
+            })
         }
     }
     if (typeof define === "function" && define.amd) {
-        define('hdcms',['bootstrap'], function () {
+        define('hdcms', ['bootstrap'], function () {
             return hdcms;
         });
     } else {

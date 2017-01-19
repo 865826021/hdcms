@@ -1,27 +1,25 @@
 <?php
 /** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
+ * |  Software: [HDPHP framework]
+ * |      Site: www.hdphp.com  www.hdcms.com
  * |-------------------------------------------------------------------
  * |    Author: 向军 <2300071698@qq.com>
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\article;
 
-use module\hdSite;
-use system\model\ReplyCover;
-use system\model\Rule;
-use system\model\RuleKeyword;
-use system\model\WebNav;
-use system\model\WebPage;
+namespace app\site\controller;
 
 /**
- * 会员中心设置
- * Class ucenter
- * @package module\article
- * @author 向军
+ * 系统连接管理
+ * Class Link
+ * @package app\site\controller
  */
-class ucenter extends hdSite {
+class Link {
+	//加载系统链接
+	public function system() {
+		\User::loginAuth();
 
+		return view();
+	}
 }

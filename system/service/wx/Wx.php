@@ -61,10 +61,12 @@ class Wx {
 	 *  rank=>'排序',
 	 *  status=>'是否开启'
 	 *  keywords=>[
-	 *      content=>'关键词内容'
-	 *      type=>'关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
-	 *      rank=>'排序',
-	 *      status=>'是否开启'
+	 *      [
+	 *          content=>'关键词内容'
+	 *          type=>'关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
+	 *          rank=>'排序',
+	 *          status=>'是否开启'
+	 *      ]
 	 *  ]
 	 * ];
 	 *
@@ -84,12 +86,12 @@ class Wx {
 		RuleKeyword::where( 'rid', $rid )->delete();
 		if ( isset( $data['keywords'] ) ) {
 			foreach ( $data['keywords'] as $keyword ) {
-				$Keyword = new RuleKeyword();
+				$keywordModel = new RuleKeyword();
 				foreach ( $keyword as $field => $value ) {
-					$Keyword[ $field ] = $value;
+					$keywordModel[ $field ] = $value;
 				}
-				$Keyword['rid'] = $rid;
-				$Keyword->save();
+				$keywordModel['rid'] = $rid;
+				$keywordModel->save();
 			}
 		}
 

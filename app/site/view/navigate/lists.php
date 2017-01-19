@@ -1,20 +1,19 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{site_url('manage/site','','article')}}">返回站点列表 </a></li>
+		<li><a href="{{url('site.lists',['m'=>'article'])}}">返回站点列表 </a></li>
 		<li class="active">
-			<a href="javascript:;"><?php echo model( 'WebNav' )->getEntryTitle( q( 'get.entry' ) ); ?>菜单</a>
+			<a href="javascript:;"><?=\Navigate::title( );?></a>
 		</li>
-		<if value="empty($_GET['m'])">
-			<li><a href="{{u('site/nav/post')}}&webid={{$_GET['webid']}}&entry={{$_GET['entry']}}">添加菜单</a></li>
+		<if value="Request::get('m')=='article'">
+			<li><a href="{{u('site/navigate/post',['m'=>'article'])}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
 		</if>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
-		<if value="q('get.entry')=='home'">
+		{{csrf_field()}}
+		<if value="Request::get('entry')=='home'">
 			<div class="panel panel-info">
-				<div class="panel-heading">
-					筛选
-				</div>
+				<div class="panel-heading">筛选</div>
 				<div class="panel-body">
 					<div class="form-group">
 						<label class="col-sm-2 control-label">站点</label>
@@ -37,7 +36,7 @@
 		</if>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				这里提供了能够显示的导航菜单, 你可以选择性的自定义或显示隐藏
+				这里提供了能够显示的导航菜单, 你可以选择性的自定义或显示隐藏, 所有操作更改后需要点击保存按钮才有效。
 			</div>
 			<div class="panel-body">
 				<table class="table table-hover">
@@ -48,19 +47,19 @@
 						<th>标题</th>
 						<th width="250">链接</th>
 						<th width="120">排序</th>
-						<if value="!v('module.name')">
+						<if value="Request::get('entry')=='home'">
 							<!--模块链接时不显示位置,位置在文章系统有效-->
 							<th width="90">位置</th>
 						</if>
 						<th>是否在微站上显示</th>
-						<th width="100">操作</th>
+						<th width="150">操作</th>
 					</tr>
 					</thead>
 					<tbody>
 					<tr ng-repeat="(key,field) in nav">
 						<td ng-bind="field.id"></td>
 						<td>
-							<i ng-if="field.icontype==1" class="@{{field.css.icon}} fa-2x" style="color:@{{field.css.color}}"></i>
+							<i ng-click="upFont(field)" ng-if="field.icontype==1" class="@{{field.css.icon}} fa-2x" style="color:@{{field.css.color}}"></i>
 							<img ng-if="field.icontype==2" ng-src="@{{field.css.image}}" style="width:35px;">
 						</td>
 						<td>
@@ -81,7 +80,7 @@
 						<td>
 							<input type="text" class="form-control" ng-model="field.orderby"/>
 						</td>
-						<if value="!v('module.name')">
+						<if value="Request::get('entry')=='home'">
 							<!--模块链接时不显示位置,位置在文章系统有效-->
 							<td>
 								<select class="form-control" ng-options="a.position as a.title for a in template.template_position" ng-model="field.position">
@@ -93,8 +92,12 @@
 							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
 						</td>
 						<td ng-if="field.id">
-							<a href="?s=site/nav/post&webid={{$_GET['webid']}}&entry=@{{field.entry}}&id=@{{field.id}}&m=@{{field.module}}">编辑</a> -
-							<a href="javascript:;" ng-click="del(field.id)">删除</a>
+							<div class="btn-group">
+								<a href="?s=site/navigate/post&m=article&webid={{Request::get('webid')}}&entry={{$_GET['m']}}&id=@{{field.id}}" class="btn btn-default">
+									编辑
+								</a>
+								<a href="javascript:;" ng-click="del(field.id)" class="btn btn-default">删除</a>
+							</div>
 						</td>
 						<td ng-if="!field.id"></td>
 					</tr>
@@ -103,7 +106,7 @@
 			</div>
 		</div>
 		<input type="hidden" name="data">
-		<button type="submit" class="btn btn-primary">确定</button>
+		<button type="submit" class="btn btn-primary">保存修改</button>
 	</form>
 </block>
 <style>
@@ -112,7 +115,7 @@
 	}
 </style>
 <script>
-	require(['util', 'angular', 'underscore'], function (util, angular, _) {
+	require(['util', 'angular', 'underscore','hdcms'], function (util, angular, _,hdcms) {
 		angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
 			$scope.webid = <?php echo $webid;?>;
 			$scope.web = <?php echo json_encode( $web );?>;
@@ -123,25 +126,24 @@
 				position.push({position: i, title: '位置' + i});
 			}
 			$scope.template.template_position = position;
-
 			$('form').submit(function () {
 				$("[name='data']").val(angular.toJson($scope.nav));
 			})
-
 			//选择站点
 			$scope.changeWeb = function () {
-				location.replace("?s=site/nav/lists&entry={{$_GET['entry']}}&m={{$_GET['m']}}&webid=" + $scope.webid);
+				location.replace("?s=site/navigate/lists&entry=home&m=article&webid=" + $scope.webid);
 			}
 			//选择链接
 			$scope.url = {
 				//获取系统链接
 				linkBrowsers: function (field) {
-					util.linkBrowser(function (link) {
+					hdcms.link.system(function (link) {
 						field.url = link;
 						$scope.$apply();
 					});
 				}
 			}
+			//删除菜单
 			$scope.del = function (id) {
 				util.confirm('确定删除菜单吗?', function () {
 					var nav = $scope.nav;
@@ -154,6 +156,13 @@
 					}, 'json');
 				})
 			}
+			//选择系统图标
+			$scope.upFont = function (item) {
+				util.font(function (icon) {
+					item.css.icon = icon;
+					$scope.$apply();
+				});
+			};
 			//更改状态
 			require(['bootstrap.switch', 'util'], function ($, util) {
 				$(".bootstrap-switch").bootstrapSwitch();
@@ -161,15 +170,6 @@
 					var data = $scope.nav[$(this).attr('data')];
 					if (!data)return;
 					data.status = state ? 1 : 0;
-					$.post("?s=site/nav/changeStatus", {data: data}, function (res) {
-						if (res.valid == 0) {
-							util.message(res.message, '', 'error');
-						} else {
-							window.setTimeout(function () {
-								location.reload(true);
-							}, 300);
-						}
-					}, 'json');
 				});
 			});
 		}]);

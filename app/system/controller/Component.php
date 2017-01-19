@@ -25,11 +25,11 @@ class Component {
 		return view();
 	}
 
-	//加载系统链接
-	public function linkBrowser() {
-		service( 'user' )->loginAuth();
+	//选择站点模板模板
+	public function siteTemplateBrowser() {
+		$data = \Template::getSiteAllTemplate();
 
-		return view();
+		return view()->with( 'data', $data );
 	}
 
 	//模块列表

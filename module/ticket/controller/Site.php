@@ -68,9 +68,9 @@ class site extends HdController {
 			}
 			$model->save();
 			//模块设置
-			$ticketModule = new TicketModule();
-			$ticketModule->where( 'tid', $model['tid'] )->delete();
+			Db::table( 'ticket_module' )->where( 'tid', $model['tid'] )->delete();
 			foreach ( Request::post( 'module', [ ] ) as $module ) {
+				$ticketModule           = new TicketModule();
 				$ticketModule['tid']    = $tid;
 				$ticketModule['module'] = $module;
 				$ticketModule->save();
@@ -109,8 +109,8 @@ class site extends HdController {
 		}
 		//所有会员组
 		$groups = \Site::getSiteGroups();
-		//卡券可使用的模块
-		$modules = \Ticket::getTicketModules( $tid );
+		//卡券已经使用的模块
+		$modules      = \Ticket::getTicketModules( $tid );
 		//卡券可使用的会员组
 		$groupsIds = \Ticket::getTicketGroupIds( $tid );
 		View::with( [

@@ -61,9 +61,15 @@ function auth( $tag ) {
 	\User::auth( $tag );
 }
 
+/**
+ * 模块访问权限验证
+ */
+function moduleVerify() {
+	\User::moduleVerify();
+}
+
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
-
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' );
 }

@@ -21,19 +21,15 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">可用模块</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-10 ">
                         <button type="button" class="btn btn-default" onclick="selectModule(this)">选择模块</button>
                         <if value="$modules">
-                            <table class="table" id="modules" style="margin-top:10px;margin-bottom:0px;">
-                                <tbody>
-                                <tr>
-                                    <foreach from="$modules" value="$m">
-                                        <td>{{$m['title']}}<input type="hidden" name="module[]" value="{{$m['name']}}">
-                                        </td>
-                                    </foreach>
-                                </tr>
-                                </tbody>
-                            </table>
+                         <div class="modules">
+                             <foreach from="$modules" value="$m">
+                                <span class="label label-info" style="margin:5px;display:inline-block;">{{$m['title']}}</span>
+                                <input type="hidden" mid="{{$m['mid']}}" name="module[]" value="{{$m['name']}}">
+                             </foreach>
+                         </div>
                         </if>
                     </div>
                 </div>
@@ -195,19 +191,22 @@
 
     //选择模块
     function selectModule(obj) {
+        //获取已经使用的模块编号
+        var useMids =[];
+        $(".modules input").each(function(i){
+            useMids.push($(this).attr('mid'));
+        })
         require(['hdcms'],function(hdcms){
             hdcms.moduleBrowser(function(modules){
                 if (modules.length > 0) {
-                    html = '<table id="modules" class="table" style="margin-top:10px;margin-bottom:0px;"><tbody><tr>';
+                    html = '';
                     $.each(modules, function (i) {
-                        html += '<td>' + modules[i].title +
-                                '<input type="hidden" name="module[]" value="' + modules[i].name + '"/>' +
-                                '</td>';
+                        html += '<span class="label label-info" style="margin:5px;display:inline-block;">' + modules[i].title +'</span>'+
+                                '<input type="hidden" mid="'+modules[i].mid+'" name="module[]" value="' + modules[i].name + '"/>';
                     });
-                    html += '</tr></tbody></table>';
-                    $(obj).next('table').remove().end().after(html);
+                    $('.modules').html(html);
                 }
-            });
+            },useMids.join(','));
         });
     }
     //提交表单

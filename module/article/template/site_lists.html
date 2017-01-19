@@ -9,14 +9,14 @@
 			<h3 class="panel-title">可用的微站 </h3>
 		</div>
 		<div class="panel-body">
-			<table class="table table-hover">
+			<table class="table table-hover" style="table-layout: fixed">
 				<thead>
 				<tr>
 					<th>微站名称</th>
 					<th>关键字</th>
 					<th>风格</th>
 					<th>模板</th>
-					<th width="260">操作</th>
+					<th width="300">操作</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -24,7 +24,7 @@
 					<tr>
 						<td>
 							{{$d['title']}}
-							<if value="$key eq 0">
+							<if value="$d['is_default']==1">
 								<span class="label label-success">默认站点</span>
 							</if>
 						</td>
@@ -32,14 +32,25 @@
 						<td>{{$d['site_info']['template_title']}}</td>
 						<td>theme/{{$d['site_info']['template_name']}}</td>
 						<td>
-							<a href="{{site_url('sitePost')}}&webid={{$d['id']}}">编辑</a>
-							<a href="{{site_url('slide/lists')}}&webid={{$d['id']}}">幻灯片</a>
-							<a href="{{u('site/nav/lists')}}&entry=home&webid={{$d['id']}}">微站导航菜单</a>
-							<a href="javascript:;" url="{{__ROOT__}}/{{$d['url']}}&t=web" class="copy">复制链接</a>
-							<a href="javascript:preview('{{$d['url']}}&t=web&mobile=1');">预览</a>
-							<if value="$key gt 0">
-								<a href="javascript:;" onclick="del({{$d['id']}})">删除</a>
-							</if>
+							<div class="btn-group">
+								<a href="{{url('site.post')}}&webid={{$d['id']}}" class="btn btn-default btn-sm">编辑</a>
+								<a href="javascript:preview('{{$d['url']}}&t=web&mobile=1');" class="btn btn-default btn-sm">预览</a>
+								<a href="{{url('slide/lists')}}&webid={{$d['id']}}" class="btn btn-default btn-sm">幻灯片</a>
+								<div class="btn-group">
+									<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+										其他操作 <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<if value="$d['is_default']==0">
+											<li><a href="{{url('site.setDefault')}}&webid={{$d['id']}}">默认站点</a></li>
+										</if>
+										<li><a href="javascript:;" url="{{__ROOT__}}/{{$d['url']}}&t=web" class="copy">复制链接</a></li>
+										<li class="divider"></li>
+										<li><a href="?s=site/navigate/lists&entry=home&m={{$_GET['m']}}&webid={{$d['id']}}">微站导航菜单</a></li>
+										<li><a href="javascript:;" onclick="del({{$d['id']}})">删除</a></li>
+									</ul>
+								</div>
+							</div>
 						</td>
 					</tr>
 				</foreach>
@@ -55,18 +66,21 @@
 	}
 </style>
 <script>
+	//复制站点链接
 	require(['util'], function (util) {
 		$('.copy').each(function () {
 			var This = this;
-			util.zclip(This, $(This).attr('url'))
+			util.zclip(This, $(This).attr('url'),function(elem,content){
+				util.message('复制成功','','success',2);
+			})
 		});
 	});
 	//删除站点
 	function del(webid) {
 		util.confirm('确定删除该站点吗?', function () {
-			$.get("{{site_url('del')}}", {webid: webid}, function (res) {
+			$.get("{{url('site.del')}}", {webid: webid}, function (res) {
 				if (res.valid) {
-					util.message(res.message, 'refresh', 'success');
+					util.message(res.message, 'refresh', 'success',2);
 				} else {
 					util.message(res.message, '', 'error');
 				}
@@ -88,5 +102,4 @@
 			obj.modal('show');
 		});
 	}
-
 </script>

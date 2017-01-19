@@ -1,11 +1,12 @@
 <extend file="resource/view/site"/>
 <link rel="stylesheet" href="ucenter/mobile/css/ucenter.css">
-<link rel="stylesheet" href="{{__TEMPLATE__}}/ucenter/css.css">
+<link rel="stylesheet" href="{{__TEMPLATE__}}/css/css.css">
 <block name="content">
 	<form action="" method="post" id="form" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
+		{{csrf_field()}}
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="javascript:;">微站会员中心</a></li>
-			<li><a href="{{site_url('quickmenu/post')}}">微站快捷导航</a></li>
+			<li><a href="{{url('quickmenu/post')}}">微站快捷导航</a></li>
 		</ul>
 		<div class="app clearfix">
 			<div id="mobile" class="col-sm-4 ucenter">
@@ -73,11 +74,11 @@
 </block>
 
 <script>
-	require(['wapeditor'], function () {
-		rid = '{{$rid}}';
+	require(['angular','{{__TEMPLATE__}}/js/wapeditor.js'], function (angular) {
+		var rid = '{{$rid}}';
 		modules = <?php echo $modules ?: '[{"id":"UCheader","name":"会员主页","params":{"title":"会员中心","bgImage":"","description":"","thumb":""},"issystem":1,"index":0,"displayorder":0}]';?>;
 		//动态菜单
-		menus = <?php echo json_encode( $menusData );?>;
+		menus = <?php echo json_encode($menusData);?>;
 		$(function () {
 			angular.bootstrap(document.getElementById('form'), ['app']);
 		});

@@ -34,6 +34,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function isSuperUser( $uid = 0 ) {
+		$this->loginAuth();
 		$uid  = $uid ?: v( "user.info.uid" );
 		$user = Db::table( 'user' )->find( $uid );
 
@@ -50,6 +51,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function isOwner( $siteId = 0, $uid = 0 ) {
+		$this->loginAuth();
 		$siteId = $siteId ?: SITEID;
 		$uid    = $uid ?: v( "user.info.uid" );
 
@@ -70,6 +72,7 @@ class User extends Common {
 	 * @return bool|string
 	 */
 	public function isManage( $siteId = null, $uid = null ) {
+		$this->loginAuth();
 		$siteId = $siteId ?: SITEID;
 		$uid    = $uid ?: v( "user.info.uid" );
 
@@ -94,6 +97,7 @@ class User extends Common {
 	 * @return bool|string
 	 */
 	public function isOperate( $siteId = 0, $uid = 0 ) {
+		$this->loginAuth();
 		$siteId = $siteId ?: SITEID;
 		$uid    = $uid ?: v( "user.info.uid" );
 
@@ -133,7 +137,7 @@ class User extends Common {
 		$data['lastip']   = Request::ip();
 		$data['lasttime'] = time();
 		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
-		Session::set( "admin_uid", $user['uid'] );
+		\Session::set( "admin_uid", $user['uid'] );
 		$this->initUserInfo();
 
 		return true;
@@ -197,38 +201,6 @@ class User extends Common {
 	}
 
 	/**
-	 * 根据标识验证模块的访问权限
-	 * 系统模块时使用 system标识验证,因为所有系统模块权限是统一管理的
-	 * 插件模块是独立设置的,所以针对插件使用插件名标识进行验证
-	 *
-	 * @param string $identify 权限标识
-	 *
-	 * @return bool
-	 */
-	public function auth( $identify ) {
-		$status = true;
-		if ( $this->hasModule() === false ) {
-			$status = false;
-		} else {
-			$type       = v( 'module.name.is_system' ) ? 'system' : v( 'module.name' );
-			$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
-			if ( empty( $permission ) ) {
-				$status = true;
-			}
-			foreach ( $permission as $v ) {
-				if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
-					$status = true;
-				}
-			}
-		}
-		if ( $status === false ) {
-			message( '你没有访问权限', '', 'error' );
-		}
-
-		return true;
-	}
-
-	/**
 	 * 验证当前用户在当前站点
 	 * 能否使用当前模块
 	 * 具体模块动作需要使用权限标识独立验证
@@ -268,25 +240,47 @@ class User extends Common {
 	}
 
 	/**
-	 * 根据权限标识验证访问权限
+	 * 根据标识验证模块的访问权限
+	 * 系统模块时使用 system标识验证,因为所有系统模块权限是统一管理的
+	 * 插件模块是独立设置的,所以针对插件使用插件名标识进行验证
 	 *
-	 * @param string $identify 验证标识
-	 * @param string $module 类型 system系统模块或模块英文标识
+	 * @param string $identify 权限标识
 	 *
 	 * @return bool
 	 */
-	public function verify( $identify, $module = null ) {
-		$module     = $module ?: 'system';
-		$permission = Db::table( 'user_permission' )
-		                ->where( 'uid', Session::get( 'user.uid' ) )
-		                ->where( 'siteid', SITEID )
-		                ->where( 'type', $module )
-		                ->pluck( 'permission' );
-		if ( empty( $permission ) || in_array( $identify, explode( '|', $permission ) ) ) {
-			return true;
+	public function auth( $identify ) {
+		$this->loginAuth();
+		$status = true;
+		if ( $this->hasModule() === false ) {
+			$status = false;
+		} else {
+			$type       = v( 'module.name.is_system' ) ? 'system' : v( 'module.name' );
+			$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
+			if ( empty( $permission ) ) {
+				$status = true;
+			}
+			foreach ( $permission as $v ) {
+				if ( $v['type'] == $type && in_array( $identify, explode( '|', $v['permission'] ) ) ) {
+					$status = true;
+				}
+			}
+		}
+		if ( $status === false ) {
+			message( '你没有访问权限', '', 'error' );
 		}
 
-		return false;
+		return true;
+	}
+
+	/**
+	 * 模块访问验证
+	 * 当前站点不能使用这个模块或用户没有管理权限时
+	 * 验证将失败
+	 */
+	public function moduleVerify() {
+		if ( ! \Module::hasModule() || ! $this->isOperate() ) {
+			message( '你没有访问模块的权限', 'back', 'error' );
+		}
 	}
 
 	/**
@@ -436,7 +430,7 @@ class User extends Common {
 		$uid      = $uid ?: v( 'user.info.uid' );
 		$group_id = Db::table( 'user' )->where( 'uid', $uid )->pluck( 'groupid' );
 
-		return $this->find( $group_id );
+		return Db::table( 'user_group' )->find( $group_id );
 	}
 
 	/**
@@ -450,7 +444,7 @@ class User extends Common {
 	public function getUserAtSiteAccess( $siteId = 0, $uid = 0 ) {
 		$siteId     = $siteId ?: SITEID;
 		$uid        = $uid ?: v( 'user.info.uid' );
-		$permission = model( 'UserPermission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [ ];
+		$permission = Db( 'user_permission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [ ];
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}
