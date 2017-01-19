@@ -1,5 +1,5 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="module/article/template/quickmenu/css.css">
+<link rel="stylesheet" href="{{__VIEW__}}/navigate/quickmenu.css">
 <link rel="stylesheet" href="ucenter/mobile/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
@@ -13,7 +13,12 @@
 				<p>微站的各个页面可以通过导航串联起来。通过精心设置的导航，方便访问者在页面或是栏目间快速切换，引导访问者前往您期望的页面。</p>
 			</div>
 			<div class="col-sm-4 text-right">
-				<input type="checkbox" name="status" value="1" class="bootstrap-switch" ng-checked="menu.status">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="menu.status" ng-value="1" class="bootstrap-switch" ng-checked="menu.status">
+						开启
+					</label>
+				</div>
 			</div>
 		</div>
 		<div class="quickmenu clearfix">
@@ -32,13 +37,18 @@
 			</div>
 			<div class="slide col-sm-6" style="margin: 80px 0px 0px 10px;">
 				<div class="well">
-					<!--将导航应用在以下页面:-->
-					<!--					<div style="margin-top: 10px;">-->
-					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter"> 会员中心</label>-->
-					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页</label>-->
-					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_special"> 专题页</label>-->
-					<!--						<label class="checkbox-inline"><input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类</label>-->
-					<!--					</div>-->
+					将导航应用在以下页面:
+					<div style="margin-top: 10px;">
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-true-value="1" ng-model="menu.params.has_ucenter">会员中心
+						</label>
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-true-value="1" ng-model="menu.params.has_home"> 微站主页
+						</label>
+						<label class="checkbox-inline">
+							<input type="checkbox" ng-true-value="1" ng-model="menu.params.has_article"> 文章及分类
+						</label>
+					</div>
 					<div style="margin-top: 10px;">
 						将导航隐藏在以下模块:
 						<a href="javascript:;" ng-click="moduleBrowsers(this)">选择模块</a>
@@ -103,20 +113,17 @@
 	.quickmenu_normal {
 		position : absolute;
 	}
-
 	.quickmenu_normal .sub-menus {
 		display : block !important;
 	}
 </style>
 <script>
-	//阻止菜单的点击事件
-	$(function () {
-		$('.quickmenu').delegate('a', 'click', function () {
-			return false;
-		});
-	})
-	require(['../../js/quickmenu'], function () {
+	require(['{{__VIEW__}}/navigate/quickmenu.js'], function () {
 		$(function () {
+			//阻止菜单的点击事件
+			$('.quickmenu').delegate('a', 'click', function () {
+				return false;
+			});
 			menu =<?php echo $field?json_encode( $field ):'false';?>;
 			if (!menu) {
 				menu = {
@@ -128,7 +135,10 @@
 					"status": 1,
 					"params": {
 						"style": "quickmenu_normal",
-						"menus": [],
+						"menus": [
+							{title:'aa',url:'',submenus:[]},
+							{title:'bb',url:'',submenus:[]}
+						],
 						"modules": [],
 						"has_home_button": 1,
 						"has_ucenter": 1,

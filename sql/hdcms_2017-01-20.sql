@@ -902,4 +902,771 @@ VALUES
 UNLOCK TABLES;
 
 
-# Dump of 
+# Dump of table hd_reply_cover
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_reply_cover`;
+
+CREATE TABLE `hd_reply_cover` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `web_id` int(11) unsigned NOT NULL COMMENT '微站编号',
+  `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
+  `module` varchar(45) NOT NULL COMMENT '模块名称',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
+  `description` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
+  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
+  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '链接地址',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`),
+  KEY `rid` (`rid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块封面关键词回复内容';
+
+LOCK TABLES `hd_reply_cover` WRITE;
+/*!40000 ALTER TABLE `hd_reply_cover` DISABLE KEYS */;
+
+INSERT INTO `hd_reply_cover` (`id`, `siteid`, `web_id`, `rid`, `module`, `title`, `description`, `thumb`, `url`)
+VALUES
+	(5,13,9,2,'article','a','aaa','attachment/2017/01/17/10161484588738.jpg','?m=article&action=entry/home&webid=9'),
+	(6,13,10,3,'article','b','sdfds','attachment/2017/01/18/33401484742012.png','?m=article&action=entry/home&webid=10'),
+	(15,13,0,4,'ucenter','会员中心','abc','attachment/2017/01/17/10161484588738.jpg','?m=ucenter&action=entry/home&siteid=13');
+
+/*!40000 ALTER TABLE `hd_reply_cover` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_reply_image
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_reply_image`;
+
+CREATE TABLE `hd_reply_image` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
+  `title` varchar(100) NOT NULL COMMENT '标题',
+  `description` varchar(255) NOT NULL COMMENT '描述',
+  `mediaid` varchar(255) NOT NULL COMMENT '微信medicaid',
+  `createtime` int(10) unsigned NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `rid` (`rid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+
+
+# Dump of table hd_reply_news
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_reply_news`;
+
+CREATE TABLE `hd_reply_news` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
+  `pid` int(10) unsigned NOT NULL COMMENT '父级',
+  `title` varchar(100) DEFAULT NULL COMMENT '标题',
+  `author` varchar(45) DEFAULT NULL COMMENT '作者',
+  `description` varchar(255) NOT NULL COMMENT '描述',
+  `thumb` varchar(255) NOT NULL COMMENT '缩略图',
+  `content` mediumtext NOT NULL COMMENT '内容',
+  `url` varchar(255) NOT NULL COMMENT '链接地址',
+  `rank` tinyint(255) unsigned NOT NULL COMMENT '排序',
+  `createtime` int(10) unsigned NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`),
+  KEY `rid` (`rid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='图文回复';
+
+
+
+# Dump of table hd_rule
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_rule`;
+
+CREATE TABLE `hd_rule` (
+  `rid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `name` varchar(200) NOT NULL DEFAULT '' COMMENT '规则名称',
+  `module` varchar(80) NOT NULL DEFAULT '' COMMENT '模块名称',
+  `rank` tinyint(3) unsigned NOT NULL COMMENT '排序',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '是否禁用',
+  PRIMARY KEY (`rid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则';
+
+LOCK TABLES `hd_rule` WRITE;
+/*!40000 ALTER TABLE `hd_rule` DISABLE KEYS */;
+
+INSERT INTO `hd_rule` (`rid`, `siteid`, `name`, `module`, `rank`, `status`)
+VALUES
+	(2,13,'article:9','cover',0,1),
+	(3,13,'article:10','cover',0,1),
+	(4,13,'##移动端会员中心##','cover',0,1),
+	(5,13,'sdfdsdsf','basic',0,1);
+
+/*!40000 ALTER TABLE `hd_rule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_rule_keyword
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_rule_keyword`;
+
+CREATE TABLE `hd_rule_keyword` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `content` varchar(200) NOT NULL COMMENT '关键词内容',
+  `type` varchar(45) NOT NULL COMMENT '关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
+  `rank` tinyint(3) unsigned NOT NULL COMMENT '排序',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '是否开启',
+  PRIMARY KEY (`id`),
+  KEY `rid` (`rid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则关键词';
+
+LOCK TABLES `hd_rule_keyword` WRITE;
+/*!40000 ALTER TABLE `hd_rule_keyword` DISABLE KEYS */;
+
+INSERT INTO `hd_rule_keyword` (`id`, `rid`, `siteid`, `content`, `type`, `rank`, `status`)
+VALUES
+	(4,2,13,'a','1',0,1),
+	(5,3,13,'b','1',0,1),
+	(21,4,13,'uc','1',0,1),
+	(22,5,13,'sdfsd','1',0,1);
+
+/*!40000 ALTER TABLE `hd_rule_keyword` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_session
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_session`;
+
+CREATE TABLE `hd_session` (
+  `session_id` char(50) NOT NULL DEFAULT '',
+  `data` mediumtext COMMENT 'session数据',
+  `atime` int(10) DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='SESSION数据表';
+
+LOCK TABLES `hd_session` WRITE;
+/*!40000 ALTER TABLE `hd_session` DISABLE KEYS */;
+
+INSERT INTO `hd_session` (`session_id`, `data`, `atime`)
+VALUES
+	('hdphp12040d9dc9b91eebd70b70d7c285a93481114','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"3a761cc8ebccfb7b8d70fe48a6ac5ddc\";}',1484844331),
+	('hdphp1ddb9759fcb44ca676699fcd143d9e2c69202','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"0c4bf84e5d3f3d57c07ead6a7fccff28\";}',1484844499),
+	('hdphp20a05d055d7cb850bdb7f6d03336bd9743502','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b87f3f855f8628d8ef9675a392d8beb9\";}',1484844581),
+	('hdphp2bb1a37e791226cc4d0d3f08fd64619057170','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"f33d4c658bd9194e0a211f2f709dc007\";}',1484844522),
+	('hdphp38cea959778255885b52d68cb00963b759956','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"72090706760e51b7e4d04c661c6f6c12\";}',1484844648),
+	('hdphp3efa521f434d0af3bc7efc0fa780fd8942111','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"544482691ff83dbb8b3245952535ffc7\";}',1484844766),
+	('hdphp541b37f41ec1a366fc4577c1a684ae5126227','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"402da8cf3fa240a613eec64ec665bcef\";}',1484844476),
+	('hdphp60af2fbe8c25e3b7e61e635f61b47b30776','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"8458fef72b9a983d01ec6d34d991a989\";}',1484844488),
+	('hdphp6b697755d46538ca119acda8a34fd2d769979','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"58e4d17ff1bb2f1a5408e9f71ac1f780\";}',1484844779),
+	('hdphp7252ac93d1e68ca0d95359b0ffcaf2c239940','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"c2068c6af953768866327a703e28d178\";}',1484844634),
+	('hdphp735dc087fc1fe9f6c7d36218d23f3f7b55142','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b760038a3465a5b6917bf338a79ea73b\";}',1484844323),
+	('hdphp73e6cfb2f5749440d1f155228acd094356733','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"dff50bb6cc2d1f75e03cc9b7b3e1e387\";}',1484844678),
+	('hdphp75a4270b9878d48290eb01d4933db6a47637','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"80c225c466a5df0da5e12a6e6f94e97f\";}',1484844535),
+	('hdphp825a52485bf1ca5fb315ff4927de6f5217213','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"af8effddf56c79eeae4766e71d83e782\";}',1484844414),
+	('hdphp8b41aa250460d94ef4bc64451f81c6dc95192','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"84314a0c5631cfe5f3e67ebab8bfeb9e\";}',1484846793),
+	('hdphp8c5022f9f25204671cda482cd84aeb3c8559','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b213e67cf3c455dc021be4fb06e6ad60\";}',1484844359),
+	('hdphp9128d1424e90a713dfe0d26a2cc49ea815426','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"55db10f23f45cede2c2a582a2b7138cc\";}',1484844417),
+	('hdphpa120f0ec2ec2889fb7486350ae14424d38053','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"de1c74ea69f39adc3cfe02a374e98b21\";}',1484844274),
+	('hdphpa3246faa48fecea962acabda3ddca39395046','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"57fc5f07163c5ff38acc87310b5c3fae\";}',1484844376),
+	('hdphpb3f5b14768de0ec9f8221f1875a9b48e85243','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"365853fb420fcaa90210c4c06af08d21\";}',1484844509),
+	('hdphpb40281c3b13409a0c5c7cbb93ef9451f38475','a:3:{s:10:\"csrf_token\";s:32:\"b4c789d25982381656d5ecde205ab66d\";s:9:\"admin_uid\";s:1:\"1\";s:6:\"siteid\";i:13;}',1484847402),
+	('hdphpc5b93fc8efc5fcc9d8a0d381f098e91c50595','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"0c9172fb15aa606f8b53a604de4ebc02\";}',1484844254),
+	('hdphpd96702aa5581e45551d60508ec89e8d722389','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"f70234d88fd55ebbb7306024018e6185\";}',1484844446),
+	('hdphpe14b04746a8e15b63ddf178b537db71598234','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7c8358c949d0c618bbe2844060f74e6c\";}',1484844213),
+	('hdphped958cc7d23abb2ffbbdb47011232ac555874','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"3aef4ce6ec3894ee27e5cbd0bab09e4f\";}',1484844716),
+	('hdphpf130321aa54e3e8c6e4d264770ee7e7577620','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7d44f95251441ae59e01c9fb08ff3e1d\";}',1484846811),
+	('hdphpff9338871435fc1e4e342c0f948c649790120','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7f489bd9c9cccdfde182ec6a35c7abe8\";}',1484844272);
+
+/*!40000 ALTER TABLE `hd_session` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_site
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site`;
+
+CREATE TABLE `hd_site` (
+  `siteid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL COMMENT '站点名称',
+  `weid` int(10) unsigned NOT NULL COMMENT '微信编号',
+  `allfilesize` int(11) NOT NULL COMMENT '服务器可使用的空间大小',
+  `createtime` int(10) unsigned NOT NULL COMMENT '站点创建时间',
+  `description` varchar(300) NOT NULL DEFAULT '' COMMENT '描述',
+  `domain` varchar(100) NOT NULL DEFAULT '' COMMENT '域名',
+  `module` char(20) NOT NULL DEFAULT '' COMMENT '通过域名访问时的默认模块',
+  PRIMARY KEY (`siteid`),
+  KEY `weid` (`weid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点信息';
+
+LOCK TABLES `hd_site` WRITE;
+/*!40000 ALTER TABLE `hd_site` DISABLE KEYS */;
+
+INSERT INTO `hd_site` (`siteid`, `name`, `weid`, `allfilesize`, `createtime`, `description`, `domain`, `module`)
+VALUES
+	(13,'测试',1,200,1483872635,'测试','','');
+
+/*!40000 ALTER TABLE `hd_site` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_site_modules
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_modules`;
+
+CREATE TABLE `hd_site_modules` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `module` varchar(45) DEFAULT NULL COMMENT '模块名称',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模块';
+
+LOCK TABLES `hd_site_modules` WRITE;
+/*!40000 ALTER TABLE `hd_site_modules` DISABLE KEYS */;
+
+INSERT INTO `hd_site_modules` (`id`, `siteid`, `module`)
+VALUES
+	(2,13,'tom');
+
+/*!40000 ALTER TABLE `hd_site_modules` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_site_package
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_package`;
+
+CREATE TABLE `hd_site_package` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `package_id` int(10) NOT NULL COMMENT '套餐编号',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点可以使用的套餐';
+
+
+
+# Dump of table hd_site_setting
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_setting`;
+
+CREATE TABLE `hd_site_setting` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `grouplevel` tinyint(1) unsigned NOT NULL COMMENT '会员组变更设置 1 不自动变更   2根据总积分多少自动升降   3 根据总积分多少只升不降',
+  `default_template` tinyint(1) unsigned NOT NULL COMMENT '默认网站模板',
+  `creditnames` varchar(1000) NOT NULL COMMENT '积分名称',
+  `creditbehaviors` varchar(1000) NOT NULL COMMENT '积分策略',
+  `welcome` varchar(60) NOT NULL COMMENT '用户添加公众帐号时发送的欢迎信息',
+  `default_message` varchar(60) NOT NULL COMMENT '系统不知道该如何回复粉丝的消息时默认发送的内容',
+  `register` varchar(2000) NOT NULL DEFAULT '' COMMENT '注册设置',
+  `smtp` varchar(2000) NOT NULL DEFAULT '' COMMENT '邮件通知',
+  `pay` varchar(2000) NOT NULL DEFAULT '' COMMENT '支付设置',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点设置';
+
+LOCK TABLES `hd_site_setting` WRITE;
+/*!40000 ALTER TABLE `hd_site_setting` DISABLE KEYS */;
+
+INSERT INTO `hd_site_setting` (`id`, `siteid`, `grouplevel`, `default_template`, `creditnames`, `creditbehaviors`, `welcome`, `default_message`, `register`, `smtp`, `pay`)
+VALUES
+	(14,13,1,1,'{\"credit1\":{\"title\":\"\\u79ef\\u5206\",\"status\":1},\"credit2\":{\"title\":\"\\u4f59\\u989d\",\"status\":1},\"credit3\":{\"title\":\"\",\"status\":0},\"credit4\":{\"title\":\"\",\"status\":0},\"credit5\":{\"title\":\"\",\"status\":0}}','{\"activity\":\"credit2\",\"currency\":\"credit2\"}','感谢加入后盾人大家庭','/冷汗你说的我不明白。 可以咨询古老师：13910959565','{\"focusreg\":\"0\",\"item\":\"3\"}','{\"host\":\"localhost\",\"port\":\"\",\"ssl\":\"0\",\"username\":\"admin\",\"password\":\"admin888\",\"fromname\":\"\",\"frommail\":\"\",\"testing\":\"1\",\"testusername\":\"\"}','{\"weichat\":{\"open\":\"1\",\"version\":\"1\",\"mch_id\":\"\",\"key\":\"\",\"partnerid\":\"\",\"partnerkey\":\"\",\"paysignkey\":\"\",\"apiclient_cert\":\"\",\"apiclient_key\":\"\",\"rootca\":\"\"}}');
+
+/*!40000 ALTER TABLE `hd_site_setting` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_site_template
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_template`;
+
+CREATE TABLE `hd_site_template` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `template` varchar(45) NOT NULL DEFAULT '' COMMENT '模块名称',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模板';
+
+
+
+# Dump of table hd_site_user
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_user`;
+
+CREATE TABLE `hd_site_user` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned DEFAULT NULL COMMENT '用户id',
+  `siteid` int(10) unsigned DEFAULT NULL COMMENT '站点id',
+  `role` varchar(20) DEFAULT NULL COMMENT '角色类型：owner: 所有者 manage: 管理员  operate: 操作员',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点管理员';
+
+LOCK TABLES `hd_site_user` WRITE;
+/*!40000 ALTER TABLE `hd_site_user` DISABLE KEYS */;
+
+INSERT INTO `hd_site_user` (`id`, `uid`, `siteid`, `role`)
+VALUES
+	(22,4,13,'operate'),
+	(34,3,13,'owner');
+
+/*!40000 ALTER TABLE `hd_site_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_site_wechat
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_site_wechat`;
+
+CREATE TABLE `hd_site_wechat` (
+  `weid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `wename` varchar(45) NOT NULL COMMENT '微信名称',
+  `account` varchar(45) NOT NULL COMMENT '公众号帐号',
+  `original` varchar(45) NOT NULL COMMENT '原始ID',
+  `level` tinyint(1) unsigned NOT NULL COMMENT '级别 1:普通订阅号 2:普通服务号 3:认证订阅号 4:认证服务号/认证媒体/政府订阅号',
+  `appid` varchar(100) NOT NULL COMMENT 'AppId',
+  `appsecret` varchar(100) NOT NULL COMMENT 'AppSecret',
+  `qrcode` varchar(200) NOT NULL COMMENT '二维码图片',
+  `icon` varchar(200) NOT NULL COMMENT '头像',
+  `is_connect` tinyint(1) NOT NULL COMMENT '公众号接入状态',
+  `token` varchar(50) NOT NULL DEFAULT '' COMMENT '微信平台token',
+  `encodingaeskey` varchar(50) NOT NULL DEFAULT '' COMMENT '微信平台encodingaeskey',
+  PRIMARY KEY (`weid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信帐号';
+
+LOCK TABLES `hd_site_wechat` WRITE;
+/*!40000 ALTER TABLE `hd_site_wechat` DISABLE KEYS */;
+
+INSERT INTO `hd_site_wechat` (`weid`, `siteid`, `wename`, `account`, `original`, `level`, `appid`, `appsecret`, `qrcode`, `icon`, `is_connect`, `token`, `encodingaeskey`)
+VALUES
+	(1,13,'后盾','aihoudun','gh_65598c47b2b9',4,'wxc47243ed572e273d','af4a6cae06eb0ebab1b65ffbf49554a4','attachment/2017/01/16/20381484576124.jpg','attachment/2017/01/12/52951484151583.png',1,'9b790164e573e4d1b2','9b790164e573e4d1b2ff34c6db96e5d69b790164e57');
+
+/*!40000 ALTER TABLE `hd_site_wechat` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_template
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_template`;
+
+CREATE TABLE `hd_template` (
+  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL COMMENT '模板名称',
+  `title` varchar(200) NOT NULL COMMENT '中文标题',
+  `version` varchar(45) NOT NULL COMMENT '版本号',
+  `resume` varchar(500) NOT NULL DEFAULT '' COMMENT '模板描述',
+  `author` varchar(45) NOT NULL COMMENT '作者',
+  `url` varchar(300) NOT NULL COMMENT '发布页URL地址',
+  `industry` varchar(45) NOT NULL DEFAULT '' COMMENT '行业类型 hotel(酒店) car(汽车) tour(旅游) real(房地产) medical(医疗) 教育(edu) beauty(美容健身) photography(婚纱摄影) other(其他行业)',
+  `position` tinyint(4) unsigned NOT NULL COMMENT '位置 ',
+  `is_system` tinyint(1) unsigned NOT NULL COMMENT '系统模板',
+  `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模板缩略图',
+  `is_default` tinyint(1) unsigned NOT NULL COMMENT '默认模板',
+  `locality` tinyint(1) unsigned NOT NULL COMMENT '本地模板',
+  `module` char(20) DEFAULT NULL COMMENT '模块名称,只为指定模块指定',
+  PRIMARY KEY (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点模板';
+
+LOCK TABLES `hd_template` WRITE;
+/*!40000 ALTER TABLE `hd_template` DISABLE KEYS */;
+
+INSERT INTO `hd_template` (`tid`, `name`, `title`, `version`, `resume`, `author`, `url`, `industry`, `position`, `is_system`, `thumb`, `is_default`, `locality`, `module`)
+VALUES
+	(1,'default','默认模板','1.9','HDCMS 默认模板','后盾人','http://open.hdcms.com','other',10,1,'thumb.jpg',0,1,'article');
+
+/*!40000 ALTER TABLE `hd_template` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_ticket
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_ticket`;
+
+CREATE TABLE `hd_ticket` (
+  `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点',
+  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '名称',
+  `sn` varchar(45) NOT NULL COMMENT 'SN',
+  `type` tinyint(1) unsigned NOT NULL COMMENT '1 代金券 2 折扣券',
+  `condition` decimal(10,2) NOT NULL COMMENT '满多少钱可以使用',
+  `discount` decimal(10,2) NOT NULL COMMENT '可享受的折扣或现金优惠',
+  `thumb` varchar(300) NOT NULL COMMENT '缩略图',
+  `description` text NOT NULL COMMENT '文字描述',
+  `credittype` varchar(20) NOT NULL COMMENT '积分类型',
+  `credit` int(10) unsigned NOT NULL COMMENT '积分数量',
+  `starttime` int(10) unsigned NOT NULL COMMENT '开始时间',
+  `endtime` int(10) unsigned NOT NULL COMMENT '结束时间',
+  `limit` int(10) unsigned NOT NULL COMMENT '每人可使用的数量',
+  `amount` int(10) unsigned NOT NULL COMMENT '券的总数量',
+  PRIMARY KEY (`tid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='折扣券';
+
+LOCK TABLES `hd_ticket` WRITE;
+/*!40000 ALTER TABLE `hd_ticket` DISABLE KEYS */;
+
+INSERT INTO `hd_ticket` (`tid`, `siteid`, `title`, `sn`, `type`, `condition`, `discount`, `thumb`, `description`, `credittype`, `credit`, `starttime`, `endtime`, `limit`, `amount`)
+VALUES
+	(2,13,'无可奈何花落去','HD707057DD78CF693',1,11.00,0.20,'attachment/2017/01/17/1661484588709.png','<p>dsfdfssdf</p>','credit1',111,1480521600,1483113600,12,1211);
+
+/*!40000 ALTER TABLE `hd_ticket` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_ticket_groups
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_ticket_groups`;
+
+CREATE TABLE `hd_ticket_groups` (
+  `tgid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点id',
+  `tid` int(10) unsigned NOT NULL COMMENT '优惠券或代金券编号',
+  `group_id` int(10) unsigned NOT NULL COMMENT '会员组编号',
+  PRIMARY KEY (`tgid`),
+  KEY `siteid` (`siteid`),
+  KEY `tid` (`tid`),
+  KEY `group_id` (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='代金券和优惠券可使用的会员组';
+
+LOCK TABLES `hd_ticket_groups` WRITE;
+/*!40000 ALTER TABLE `hd_ticket_groups` DISABLE KEYS */;
+
+INSERT INTO `hd_ticket_groups` (`tgid`, `siteid`, `tid`, `group_id`)
+VALUES
+	(12,13,2,3);
+
+/*!40000 ALTER TABLE `hd_ticket_groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_ticket_module
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_ticket_module`;
+
+CREATE TABLE `hd_ticket_module` (
+  `tmid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tid` int(10) unsigned NOT NULL COMMENT '券编号',
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `module` varchar(100) NOT NULL DEFAULT '' COMMENT '模块名称',
+  PRIMARY KEY (`tmid`),
+  KEY `tid` (`tid`),
+  KEY `siteid` (`siteid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='代金券或优惠券可使用的模块';
+
+LOCK TABLES `hd_ticket_module` WRITE;
+/*!40000 ALTER TABLE `hd_ticket_module` DISABLE KEYS */;
+
+INSERT INTO `hd_ticket_module` (`tmid`, `tid`, `siteid`, `module`)
+VALUES
+	(1,0,13,'member'),
+	(32,2,13,'basic'),
+	(33,2,13,'news'),
+	(34,2,13,'member');
+
+/*!40000 ALTER TABLE `hd_ticket_module` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_ticket_record
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_ticket_record`;
+
+CREATE TABLE `hd_ticket_record` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `tid` int(10) unsigned NOT NULL COMMENT '卡券编号',
+  `uid` int(11) NOT NULL COMMENT '会员编号',
+  `createtime` int(10) NOT NULL COMMENT '兑换卡券时间',
+  `usetime` int(10) NOT NULL COMMENT '使用时间',
+  `module` varchar(45) NOT NULL COMMENT '使用模块 system 为系统核销',
+  `remark` varchar(200) NOT NULL COMMENT '备注',
+  `status` tinyint(1) NOT NULL COMMENT '状态 1 未使用 2 使用',
+  `manage` int(10) unsigned NOT NULL COMMENT '核销员编号',
+  PRIMARY KEY (`id`),
+  KEY `tid` (`tid`),
+  KEY `uid` (`uid`),
+  KEY `siteid` (`siteid`),
+  KEY `manage` (`manage`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='折扣券与代金券使用记录';
+
+
+
+# Dump of table hd_user
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_user`;
+
+CREATE TABLE `hd_user` (
+  `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `groupid` int(11) NOT NULL,
+  `username` char(30) NOT NULL COMMENT '用户名',
+  `password` char(50) NOT NULL COMMENT '密码',
+  `security` varchar(15) NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  `regtime` int(10) NOT NULL COMMENT '注册时间',
+  `regip` varchar(15) NOT NULL COMMENT '注册ip',
+  `lasttime` int(10) NOT NULL COMMENT '最后登录时间',
+  `lastip` varchar(15) NOT NULL COMMENT '最后登录ip',
+  `starttime` int(10) NOT NULL COMMENT '会员开始时间',
+  `endtime` int(10) NOT NULL COMMENT '会员到期时间',
+  `qq` varchar(20) NOT NULL DEFAULT '' COMMENT 'QQ号',
+  `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
+  `email` varchar(20) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `mobile_valid` tinyint(1) NOT NULL COMMENT '手机验证',
+  `email_valid` tinyint(1) NOT NULL COMMENT '邮箱验证',
+  `remark` varchar(300) NOT NULL COMMENT '备注',
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `username` (`username`),
+  KEY `groupid` (`groupid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户';
+
+LOCK TABLES `hd_user` WRITE;
+/*!40000 ALTER TABLE `hd_user` DISABLE KEYS */;
+
+INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `mobile_valid`, `email_valid`, `remark`)
+VALUES
+	(1,0,'admin','357b48c0258090c9e8dc82d9146397bc','87a5026221',1,1465771582,'123.119.83.235',1484830443,'222.130.180.77',0,0,'232323','','',0,0,''),
+	(2,1,'sdf','','',1,0,'',0,'',0,-28800,'','','',0,0,''),
+	(3,1,'hdxj','f3c7bd94fad8aff363111c637dc61882','e3db7892d8',1,1483802870,'0.0.0.0',1483802882,'0.0.0.0',1483802870,1484323200,'','','',0,0,''),
+	(4,1,'sina','9f94700ee3c183c6d5c0570a5812651e','a8e3b9f509',1,1483886758,'0.0.0.0',1483886758,'0.0.0.0',1483886758,1484491558,'23892398','18711655565','sdksdlksdl@ds.com',0,0,'');
+
+/*!40000 ALTER TABLE `hd_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_user_group
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_user_group`;
+
+CREATE TABLE `hd_user_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL DEFAULT '' COMMENT '组名',
+  `maxsite` int(11) NOT NULL COMMENT '站点数量',
+  `daylimit` int(11) NOT NULL COMMENT '有效期限',
+  `package` varchar(2000) NOT NULL DEFAULT '' COMMENT '可使用的公众服务套餐',
+  `system_group` tinyint(1) NOT NULL COMMENT '系统用户组',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员组';
+
+LOCK TABLES `hd_user_group` WRITE;
+/*!40000 ALTER TABLE `hd_user_group` DISABLE KEYS */;
+
+INSERT INTO `hd_user_group` (`id`, `name`, `maxsite`, `daylimit`, `package`, `system_group`)
+VALUES
+	(1,'体验组',3,30,'[\"-1\",\"7\"]',1),
+	(6,'ff',3,30,'[\"-1\",\"7\"]',0);
+
+/*!40000 ALTER TABLE `hd_user_group` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_user_permission
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_user_permission`;
+
+CREATE TABLE `hd_user_permission` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `siteid` int(10) unsigned NOT NULL,
+  `type` varchar(10) NOT NULL COMMENT 'system 系统  具体模块名如houdun guaguaka',
+  `permission` varchar(1000) NOT NULL COMMENT '权限内容以|分隔',
+  PRIMARY KEY (`id`),
+  KEY `uid` (`uid`),
+  KEY `siteid` (`siteid`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户权限分配';
+
+
+
+# Dump of table hd_user_profile
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_user_profile`;
+
+CREATE TABLE `hd_user_profile` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `qq` varchar(15) NOT NULL DEFAULT '',
+  `realname` varchar(15) NOT NULL DEFAULT '' COMMENT '真实姓名',
+  `nickname` varchar(45) NOT NULL DEFAULT '' COMMENT '昵称',
+  `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号码',
+  `telephone` varchar(15) NOT NULL DEFAULT '' COMMENT '固定电话',
+  `vip` tinyint(3) unsigned NOT NULL COMMENT 'VIP级别',
+  `address` varchar(255) NOT NULL DEFAULT '' COMMENT '邮寄地址',
+  `zipcode` varchar(10) NOT NULL DEFAULT '' COMMENT '邮编',
+  `alipay` varchar(45) NOT NULL DEFAULT '' COMMENT '阿里帐号',
+  `msn` varchar(45) NOT NULL DEFAULT '' COMMENT 'msn帐号',
+  `taobao` varchar(45) NOT NULL DEFAULT '' COMMENT '淘宝帐号',
+  `email` varchar(45) NOT NULL DEFAULT '' COMMENT '邮箱',
+  `site` varchar(45) NOT NULL DEFAULT '' COMMENT '个人站点',
+  `nationality` varchar(45) NOT NULL DEFAULT '' COMMENT '国籍',
+  `introduce` varchar(200) NOT NULL DEFAULT '' COMMENT '自我介绍',
+  `gender` varchar(10) NOT NULL DEFAULT '' COMMENT '性别',
+  `graduateschool` varchar(45) NOT NULL DEFAULT '' COMMENT '毕业学校',
+  `height` varchar(10) NOT NULL DEFAULT '' COMMENT '身高',
+  `weight` varchar(10) NOT NULL DEFAULT '' COMMENT '体重',
+  `bloodtype` varchar(5) NOT NULL DEFAULT '' COMMENT '血型',
+  `birthyear` smallint(6) NOT NULL COMMENT '出生年',
+  `birthmonth` tinyint(3) unsigned NOT NULL COMMENT '出生月',
+  `birthday` tinyint(3) unsigned NOT NULL COMMENT '出生日',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uid` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='用户信息表';
+
+
+
+# Dump of table hd_web
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_web`;
+
+CREATE TABLE `hd_web` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点id',
+  `title` varchar(50) NOT NULL COMMENT '标题',
+  `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
+  `site_info` text NOT NULL COMMENT '序列化的数据',
+  `is_default` tinyint(1) NOT NULL COMMENT '默认站点',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`),
+  KEY `template_name` (`template_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点表';
+
+LOCK TABLES `hd_web` WRITE;
+/*!40000 ALTER TABLE `hd_web` DISABLE KEYS */;
+
+INSERT INTO `hd_web` (`id`, `siteid`, `title`, `template_name`, `status`, `site_info`, `is_default`)
+VALUES
+	(9,13,'a','default',1,'{\"rid\":0,\"status\":1,\"is_default\":0,\"title\":\"a\",\"template_tid\":\"1\",\"template_title\":\"默认模板\",\"template_name\":\"default\",\"template_thumb\":\"thumb.jpg\",\"keyword\":\"a\",\"thumb\":\"attachment/2017/01/17/10161484588738.jpg\",\"description\":\"aaa\",\"footer\":\"aaa\",\"id\":\"9\"}',1),
+	(10,13,'b','default',1,'{\"rid\":0,\"status\":1,\"is_default\":0,\"title\":\"b\",\"template_tid\":\"1\",\"template_title\":\"默认模板\",\"template_name\":\"default\",\"template_thumb\":\"thumb.jpg\",\"thumb\":\"attachment/2017/01/18/33401484742012.png\",\"keyword\":\"b\",\"description\":\"sdfds\"}',0);
+
+/*!40000 ALTER TABLE `hd_web` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table hd_web_article
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_web_article`;
+
+CREATE TABLE `hd_web_article` (
+  `aid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `rid` int(10) unsigned NOT NULL COMMENT '微信规则编号',
+  `keyword` varchar(30) NOT NULL COMMENT '微信回复关键词',
+  `iscommend` tinyint(1) unsigned NOT NULL COMMENT '推荐',
+  `ishot` tinyint(1) unsigned NOT NULL COMMENT '头条',
+  `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
+  `title` varchar(145) NOT NULL COMMENT '标题',
+  `category_cid` int(10) unsigned NOT NULL COMMENT '栏目编号',
+  `description` varchar(255) NOT NULL COMMENT '描述',
+  `content` mediumtext NOT NULL,
+  `source` varchar(45) NOT NULL COMMENT '来源',
+  `author` varchar(45) NOT NULL COMMENT '作者',
+  `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
+  `linkurl` varchar(145) NOT NULL COMMENT '外部链接地址',
+  `createtime` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `click` mediumint(8) unsigned NOT NULL COMMENT '点击数',
+  `thumb` varchar(300) NOT NULL COMMENT '缩略图',
+  `web_id` int(10) NOT NULL COMMENT '站点编号',
+  PRIMARY KEY (`aid`),
+  KEY `siteid` (`siteid`),
+  KEY `category_cid` (`category_cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点文章';
+
+
+
+# Dump of table hd_web_category
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_web_category`;
+
+CREATE TABLE `hd_web_category` (
+  `cid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL,
+  `title` varchar(100) NOT NULL COMMENT '栏目标题',
+  `pid` int(10) unsigned NOT NULL COMMENT '父级编号',
+  `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  `icontype` tinyint(1) NOT NULL COMMENT '1 图标 2 图片',
+  `description` varchar(255) NOT NULL COMMENT '栏目描述',
+  `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
+  `linkurl` varchar(300) NOT NULL COMMENT '外部链接',
+  `ishomepage` tinyint(1) unsigned NOT NULL COMMENT '封面栏目',
+  `css` varchar(500) NOT NULL COMMENT 'css样式',
+  `web_id` int(11) NOT NULL COMMENT '选择添加到站点首页导航时的站点编号，只对微站首页导航有效',
+  PRIMARY KEY (`cid`),
+  KEY `siteid` (`siteid`),
+  KEY `template_name` (`template_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='文章分类';
+
+
+
+# Dump of table hd_web_slide
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `hd_web_slide`;
+
+CREATE TABLE `hd_web_slide` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
+  `web_id` int(10) unsigned NOT NULL COMMENT '官网编号',
+  `title` varchar(200) NOT NULL COMMENT '标题',
+  `url` varchar(255) NOT NULL COMMENT '链接',
+  `thumb` varchar(255) NOT NULL COMMENT '缩略图',
+  `displayorder` tinyint(4) unsigned NOT NULL COMMENT '排序',
+  PRIMARY KEY (`id`),
+  KEY `siteid` (`siteid`),
+  KEY `web_id` (`web_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='幻灯图片';
+
+LOCK TABLES `hd_web_slide` WRITE;
+/*!40000 ALTER TABLE `hd_web_slide` DISABLE KEYS */;
+
+INSERT INTO `hd_web_slide` (`id`, `siteid`, `web_id`, `title`, `url`, `thumb`, `displayorder`)
+VALUES
+	(1,13,9,'fdsdsffsd','dfsfsd','attachment/2017/01/17/1661484588709.png',0),
+	(2,13,9,'aa','?m=article&action=entry/home&siteid=13','attachment/2017/01/17/86581484588663.jpg',0),
+	(3,13,9,'bbb','?m=article&action=entry/home&siteid=13','attachment/2017/01/18/6401484745051.jpg',0);
+
+/*!40000 ALTER TABLE `hd_web_slide` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

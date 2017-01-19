@@ -11,6 +11,7 @@
 
 use houdunwang\request\Request;
 use system\model\Navigate as NavigateModel;
+use system\model\Page;
 
 /**
  * 导航菜单管理
@@ -120,7 +121,7 @@ class Navigate {
 		View::with( 'template', $template );
 		View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
 
-		return view(  );
+		return view();
 	}
 
 	/**
@@ -168,12 +169,29 @@ class Navigate {
 		View::with( 'web', Arr::stringToInt( $web ) );
 		View::with( 'field', Arr::stringToInt( $field ) );
 
-		return view(  );
+		return view();
 	}
 
 	//删除菜单
 	public function del() {
 		NavigateModel::delete( $this->id );
 		message( '菜单删除成功', 'back', 'success' );
+	}
+
+	//快捷导航
+	public function quickmenu() {
+		$webPage = new Page();
+		if ( IS_POST ) {
+			$data = json_decode( $_POST['data'], true );
+			$webPage->save( $data );
+			message( '保存快捷菜单成功', 'refresh', 'success' );
+		}
+		$field = Db::table( 'page' )->where( 'siteid', SITEID )->where( 'type', 1 )->first() ?: [ ];
+		if ( $field ) {
+			$field           = Arr::string_to_int( $field );
+			$field['params'] = json_decode( $field['params'] );
+		}
+
+		return view( )->with( 'field', $field );
 	}
 }
