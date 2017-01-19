@@ -7,8 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\wechat\controller;
-
+namespace app\site\controller;
 /**
  * 微信请求接口
  * Class api

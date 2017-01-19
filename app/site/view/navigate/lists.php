@@ -1,12 +1,12 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{url('site.lists',['m'=>'article'])}}">返回站点列表 </a></li>
+		<li><a href="?m=article&action=site/lists">返回站点列表 </a></li>
 		<li class="active">
 			<a href="javascript:;"><?=\Navigate::title( );?></a>
 		</li>
 		<if value="Request::get('entry')=='home'">
-			<li><a href="{{url('navigate.post')}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
+			<li><a href="{{u('site.navigate.post')}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
 		</if>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
@@ -131,7 +131,7 @@
 			})
 			//选择站点
 			$scope.changeWeb = function () {
-				location.replace("?m=navigate&action=navigate/lists&entry=home&webid=" + $scope.webid);
+				location.replace("?s=site/navigate/lists&entry=home&webid=" + $scope.webid);
 			}
 			//选择链接
 			$scope.url = {

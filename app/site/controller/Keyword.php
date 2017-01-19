@@ -45,7 +45,7 @@ class Keyword {
 
 	//获取关键词
 	public function getKeywords() {
-		$key = q( 'post.key' );
+		$key = Request::post( 'key' );
 		if ( $key ) {
 			$content = Db::table( 'rule_keyword' )->where( "content LIKE '%$key%'" )->where( 'siteid', SITEID )->where( 'status', 1 )->get();
 		} else {

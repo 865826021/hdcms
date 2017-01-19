@@ -9,6 +9,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 use system\model\Rule;
+
 /**
  * 关键词回复处理
  * Class Reply

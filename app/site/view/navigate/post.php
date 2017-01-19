@@ -1,7 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{url('site.lists',['a'=>'article'])}}">返回站点列表 </a></li>
+		<li><a href="?m=article&action=site/lists">返回站点列表 </a></li>
 		<li><a href="javascript:history.back();">导航菜单列表</a></li>
 		<li class="active"><a href="javascript:;">添加导航菜单</a></li>
 	</ul>
@@ -14,7 +14,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">分配到微站</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-model="field.web_id"
+							<select class="form-control" ng-model="field.webid"
 							        ng-options="a.id as a.title for a in web">
 								<option value="">选择站点</option>
 							</select>
@@ -181,7 +181,7 @@
 				var len = 0;
 				//编辑站点时根据当前导航所在站点显示站点位置
 				for (var i = 0; i < $scope.web.length; i++) {
-					if ($scope.field.web_id == $scope.web[i].id) {
+					if ($scope.field.webid == $scope.web[i].id) {
 						len = $scope.web[i].position;
 					}
 				}
@@ -192,7 +192,7 @@
 			}
 			$scope.getTemplatePositon();
 			//监测站点更改来获取导航显示位置
-			$scope.$watch('field.web_id', function (newValue, newOld) {
+			$scope.$watch('field.webid', function (newValue, newOld) {
 				$scope.getTemplatePositon();
 			});
 			//选择链接
@@ -234,6 +234,7 @@
 			//提交表单
 			$('form').submit(function () {
 				var msg = '';
+
 				if (!$scope.field.name) {
 					msg += '导航名称不能为空<br/>';
 				}

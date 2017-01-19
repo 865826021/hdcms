@@ -1,4 +1,4 @@
-<?php namespace module\navigate\controller;
+<?php namespace app\site\controller;
 
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
@@ -10,7 +10,6 @@
  * '-------------------------------------------------------------------*/
 
 use houdunwang\request\Request;
-use module\HdController;
 use system\model\Navigate as NavigateModel;
 
 /**
@@ -19,18 +18,17 @@ use system\model\Navigate as NavigateModel;
  * @package web\site\controller
  * @author 向军
  */
-class Navigate extends HdController {
+class Navigate {
 	//官网编号
 	protected $webid;
 	//菜单编号
 	protected $id;
 
 	public function __construct() {
-		parent::__construct();
 		//验证操作员权限
 		\User::isOperate();
-		$this->webid  = Request::get( 'webid' );
-		$this->id     = Request::get( 'id' );
+		$this->webid = Request::get( 'webid' );
+		$this->id    = Request::get( 'id' );
 		/**
 		 * 没有站点编号时设置站点编号
 		 * 在前台添加菜单时使用
@@ -121,7 +119,8 @@ class Navigate extends HdController {
 		View::with( 'nav', Arr::stringToInt( $nav ) );
 		View::with( 'template', $template );
 		View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
-		return view( $this->template . '/lists.html' );
+
+		return view(  );
 	}
 
 	/**
@@ -141,7 +140,7 @@ class Navigate extends HdController {
 				'm'     => 'article',
 				'webid' => $data['webid']
 			] );
-			message( '保存导航数据成功', url('navigate/lists',['entry'=>'home','webid'=>$this->webid]), 'success' );
+			message( '保存导航数据成功', u( 'lists', [ 'entry' => 'home', 'webid' => $this->webid ] ), 'success' );
 		}
 		//站点列表
 		$web = Db::table( 'web' )
@@ -169,7 +168,7 @@ class Navigate extends HdController {
 		View::with( 'web', Arr::stringToInt( $web ) );
 		View::with( 'field', Arr::stringToInt( $field ) );
 
-		return view( $this->template . '/post.html' );
+		return view(  );
 	}
 
 	//删除菜单
