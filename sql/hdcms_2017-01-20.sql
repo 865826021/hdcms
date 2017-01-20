@@ -7,7 +7,7 @@
 #
 # Host: dev.hdcms.com (MySQL 5.5.48)
 # Database: hdcms
-# Generation Time: 2017-01-19 17:37:11 +0000
+# Generation Time: 2017-01-20 14:05:33 +0000
 # ************************************************************
 
 
@@ -537,12 +537,12 @@ LOCK TABLES `hd_menu` WRITE;
 
 INSERT INTO `hd_menu` (`id`, `pid`, `title`, `permission`, `url`, `append_url`, `icon`, `orderby`, `is_display`, `is_system`, `mark`)
 VALUES
-	(1,0,'微信功能','','?s=site/entry/home&p=platform','','fa fa-comments-o',0,1,1,'platform'),
+	(1,0,'微信功能','','?s=site/entry/home','','fa fa-comments-o',0,1,1,'platform'),
 	(2,1,'基本功能','','','','',0,1,1,'platform'),
 	(3,2,'文字回复','reply_basic','?s=site/reply/lists&m=basic','?s=site/reply/post&m=basic','fa fa-plus',0,1,1,'platform'),
 	(27,10000,'管理','','','','',0,1,1,'package'),
 	(30,2,'图文回复','reply_news','?s=site/reply/lists&m=news','?s=site/reply/post&m=news','fa fa-plus',0,1,1,'platform'),
-	(32,0,'会员粉丝','','?s=site/entry/home&p=member','','fa fa-cubes',10,1,1,'member'),
+	(32,0,'会员粉丝','','?s=site/entry/home','','fa fa-cubes',10,1,1,'member'),
 	(33,32,'会员中心','','','','fa fa-cubes',0,1,1,'member'),
 	(35,33,'会员','users','?m=member&action=site/memberlists','?m=member&action=controller/site/MemberPost','fa fa-cubes',0,1,1,'member'),
 	(36,33,'会员组','member_groups','?m=member&action=site/groupLists','?m=member&action=controller/site/groupPost','fa fa-cubes',0,1,1,'member'),
@@ -558,7 +558,7 @@ VALUES
 	(67,66,'积分设置','setting_credit','?m=setting&action=site/credit','','fa fa-cubes',0,1,1,'feature'),
 	(68,66,'注册设置','setting_register','?m=setting&action=site/register','','fa fa-cubes',0,1,1,'feature'),
 	(70,66,'邮件通知设置','setting_mail','?m=setting&action=site/mail','','fa fa-cubes',0,1,1,'feature'),
-	(71,0,'文章系统','','?s=site/entry/home&p=article','','fa fa-cubes',0,1,1,'article'),
+	(71,0,'文章系统','','?s=site/entry/home','','fa fa-cubes',0,1,1,'article'),
 	(72,71,'官网管理','','?s=article/home/welcome','','fa fa-cubes',0,1,1,'article'),
 	(73,72,'官网模板','article_site_template','?m=article&action=template/lists','','fa fa-cubes',0,1,1,'article'),
 	(74,71,'内容管理','','','','fa fa-cubes',0,1,1,'article'),
@@ -570,14 +570,14 @@ VALUES
 	(81,27,'扩展功能管理','package_managa','?s=site/entry/package','','fa fa-cubes',0,1,1,'package'),
 	(82,1,'高级功能','','','','fa fa-cubes',0,1,1,'platform'),
 	(84,33,'会员字段管理','member_fields','?m=member&action=site/fieldlists','','fa fa-cubes',0,1,1,'member'),
-	(85,78,'微站快捷导航','article_quick_menu','?a=quickmenu/post&t=site&m=article','','fa fa-cubes',0,1,1,'article'),
+	(85,78,'微站快捷导航','article_quick_menu','?s=site/navigate/quickmenu','','fa fa-cubes',0,1,1,'article'),
 	(86,82,'微信菜单','menus_lists','?m=button&action=site/lists','','fa fa-cubes',0,1,1,'platform'),
 	(87,1,'微信素材','','','','fa fa-cubes',0,1,1,'platform'),
 	(88,87,'素材&群发','material','?m=material&action=site/image','','fa fa-cubes',0,1,1,'platform'),
-	(100,0,'系统设置','','?s=site/entry/home&p=feature','','fa fa-comments-o',20,1,1,'feature'),
-	(10000,0,'扩展模块','','?s=site/entry/home&p=package','','fa fa-arrows',100,1,1,'package'),
-	(10002,74,'模型管理','model_manage','?m=article&action=model/lists','?m=article&action=model/post','fa fa-cubes',0,1,1,NULL),
-	(10003,72,'导航菜单','navigate_lists','?s=site/navigate/lists&entry=home','?s=site/navigate/post&entry=home','',0,1,0,NULL);
+	(100,0,'系统设置','','?s=site/entry/home','','fa fa-comments-o',20,1,1,'feature'),
+	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package'),
+	(10002,74,'模型管理','model_manage','?m=article&action=model/lists','?m=article&action=model/post','fa fa-cubes',0,1,1,'article'),
+	(10003,72,'导航菜单','navigate_lists','?s=site/navigate/lists&entry=home','?s=site/navigate/post&entry=home','',0,1,0,'article');
 
 /*!40000 ALTER TABLE `hd_menu` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -796,6 +796,15 @@ CREATE TABLE `hd_page` (
   KEY `web_id` (`webid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微官网页面(快捷导航/专题页面)';
 
+LOCK TABLES `hd_page` WRITE;
+/*!40000 ALTER TABLE `hd_page` DISABLE KEYS */;
+
+INSERT INTO `hd_page` (`id`, `siteid`, `webid`, `title`, `description`, `params`, `html`, `type`, `status`, `createtime`)
+VALUES
+	(1,13,0,'类型:快捷导航','','{\"style\":\"quickmenu_normal\",\"menus\":[{\"title\":\"sdf\",\"url\":\"sdf\",\"submenus\":[]}],\"modules\":[],\"has_home_button\":1,\"has_ucenter\":1,\"has_home\":0,\"has_special\":0,\"has_article\":0}','<div class=\"quickmenu \"><div class=\"normal \" ><div class=\"home \" ><a href=\"?a=entry/home&amp;m=article&amp;t=web&amp;siteid=13&amp;mobile=1\"><i class=\"fa fa-home\"></i></a></div><dl  class=\"\"><dt href=\"javascript:;\"><a    class=\" \" href=\"sdf\">sdf</a></dt></dl></div></div>','quickmenu',1,1484860606);
+
+/*!40000 ALTER TABLE `hd_page` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table hd_pay
@@ -1059,33 +1068,8 @@ LOCK TABLES `hd_session` WRITE;
 
 INSERT INTO `hd_session` (`session_id`, `data`, `atime`)
 VALUES
-	('hdphp12040d9dc9b91eebd70b70d7c285a93481114','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"3a761cc8ebccfb7b8d70fe48a6ac5ddc\";}',1484844331),
-	('hdphp1ddb9759fcb44ca676699fcd143d9e2c69202','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"0c4bf84e5d3f3d57c07ead6a7fccff28\";}',1484844499),
-	('hdphp20a05d055d7cb850bdb7f6d03336bd9743502','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b87f3f855f8628d8ef9675a392d8beb9\";}',1484844581),
-	('hdphp2bb1a37e791226cc4d0d3f08fd64619057170','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"f33d4c658bd9194e0a211f2f709dc007\";}',1484844522),
-	('hdphp38cea959778255885b52d68cb00963b759956','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"72090706760e51b7e4d04c661c6f6c12\";}',1484844648),
-	('hdphp3efa521f434d0af3bc7efc0fa780fd8942111','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"544482691ff83dbb8b3245952535ffc7\";}',1484844766),
-	('hdphp541b37f41ec1a366fc4577c1a684ae5126227','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"402da8cf3fa240a613eec64ec665bcef\";}',1484844476),
-	('hdphp60af2fbe8c25e3b7e61e635f61b47b30776','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"8458fef72b9a983d01ec6d34d991a989\";}',1484844488),
-	('hdphp6b697755d46538ca119acda8a34fd2d769979','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"58e4d17ff1bb2f1a5408e9f71ac1f780\";}',1484844779),
-	('hdphp7252ac93d1e68ca0d95359b0ffcaf2c239940','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"c2068c6af953768866327a703e28d178\";}',1484844634),
-	('hdphp735dc087fc1fe9f6c7d36218d23f3f7b55142','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b760038a3465a5b6917bf338a79ea73b\";}',1484844323),
-	('hdphp73e6cfb2f5749440d1f155228acd094356733','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"dff50bb6cc2d1f75e03cc9b7b3e1e387\";}',1484844678),
-	('hdphp75a4270b9878d48290eb01d4933db6a47637','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"80c225c466a5df0da5e12a6e6f94e97f\";}',1484844535),
-	('hdphp825a52485bf1ca5fb315ff4927de6f5217213','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"af8effddf56c79eeae4766e71d83e782\";}',1484844414),
-	('hdphp8b41aa250460d94ef4bc64451f81c6dc95192','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"84314a0c5631cfe5f3e67ebab8bfeb9e\";}',1484846793),
-	('hdphp8c5022f9f25204671cda482cd84aeb3c8559','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"b213e67cf3c455dc021be4fb06e6ad60\";}',1484844359),
-	('hdphp9128d1424e90a713dfe0d26a2cc49ea815426','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"55db10f23f45cede2c2a582a2b7138cc\";}',1484844417),
-	('hdphpa120f0ec2ec2889fb7486350ae14424d38053','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"de1c74ea69f39adc3cfe02a374e98b21\";}',1484844274),
-	('hdphpa3246faa48fecea962acabda3ddca39395046','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"57fc5f07163c5ff38acc87310b5c3fae\";}',1484844376),
-	('hdphpb3f5b14768de0ec9f8221f1875a9b48e85243','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"365853fb420fcaa90210c4c06af08d21\";}',1484844509),
-	('hdphpb40281c3b13409a0c5c7cbb93ef9451f38475','a:3:{s:10:\"csrf_token\";s:32:\"b4c789d25982381656d5ecde205ab66d\";s:9:\"admin_uid\";s:1:\"1\";s:6:\"siteid\";i:13;}',1484847402),
-	('hdphpc5b93fc8efc5fcc9d8a0d381f098e91c50595','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"0c9172fb15aa606f8b53a604de4ebc02\";}',1484844254),
-	('hdphpd96702aa5581e45551d60508ec89e8d722389','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"f70234d88fd55ebbb7306024018e6185\";}',1484844446),
-	('hdphpe14b04746a8e15b63ddf178b537db71598234','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7c8358c949d0c618bbe2844060f74e6c\";}',1484844213),
-	('hdphped958cc7d23abb2ffbbdb47011232ac555874','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"3aef4ce6ec3894ee27e5cbd0bab09e4f\";}',1484844716),
-	('hdphpf130321aa54e3e8c6e4d264770ee7e7577620','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7d44f95251441ae59e01c9fb08ff3e1d\";}',1484846811),
-	('hdphpff9338871435fc1e4e342c0f948c649790120','a:2:{s:6:\"siteid\";i:13;s:10:\"csrf_token\";s:32:\"7f489bd9c9cccdfde182ec6a35c7abe8\";}',1484844272);
+	('hdphp172ac5965eade923eef797f0edd24eba64763','a:1:{s:10:\"csrf_token\";s:32:\"0e6b385d821229b0c20944456f1d3f02\";}',1484920528),
+	('hdphpd487bcce8b4db6886ac39a405837564669607','a:3:{s:10:\"csrf_token\";s:32:\"877def61fa9c80687bab448d0552ad6c\";s:9:\"admin_uid\";s:1:\"1\";s:6:\"siteid\";i:13;}',1484921133);
 
 /*!40000 ALTER TABLE `hd_session` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1452,7 +1436,7 @@ LOCK TABLES `hd_user` WRITE;
 
 INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `mobile_valid`, `email_valid`, `remark`)
 VALUES
-	(1,0,'admin','357b48c0258090c9e8dc82d9146397bc','87a5026221',1,1465771582,'123.119.83.235',1484830443,'222.130.180.77',0,0,'232323','','',0,0,''),
+	(1,0,'admin','357b48c0258090c9e8dc82d9146397bc','87a5026221',1,1465771582,'123.119.83.235',1484921067,'124.64.82.21',0,0,'232323','','',0,0,''),
 	(2,1,'sdf','','',1,0,'',0,'',0,-28800,'','','',0,0,''),
 	(3,1,'hdxj','f3c7bd94fad8aff363111c637dc61882','e3db7892d8',1,1483802870,'0.0.0.0',1483802882,'0.0.0.0',1483802870,1484323200,'','','',0,0,''),
 	(4,1,'sina','9f94700ee3c183c6d5c0570a5812651e','a8e3b9f509',1,1483886758,'0.0.0.0',1483886758,'0.0.0.0',1483886758,1484491558,'23892398','18711655565','sdksdlksdl@ds.com',0,0,'');

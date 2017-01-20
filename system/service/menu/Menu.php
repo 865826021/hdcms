@@ -70,7 +70,6 @@ class Menu {
 	 * @return mixed
 	 */
 	public function get() {
-		p(\Module::getBySiteUser());
 		return [
 			//系统菜单数据
 			'menus'       => $this->all(),

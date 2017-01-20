@@ -1,5 +1,5 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="{{__VIEW__}}/navigate/quickmenu.css">
+<link rel="stylesheet" href="{{__VIEW__}}/navigate/css/quickmenu.css">
 <link rel="stylesheet" href="ucenter/mobile/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
@@ -118,7 +118,7 @@
 	}
 </style>
 <script>
-	require(['{{__VIEW__}}/navigate/quickmenu.js'], function () {
+	require(['{{__VIEW__}}/navigate/js/quickmenu.js'], function () {
 		$(function () {
 			//阻止菜单的点击事件
 			$('.quickmenu').delegate('a', 'click', function () {

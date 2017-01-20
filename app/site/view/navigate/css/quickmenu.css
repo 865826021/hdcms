@@ -34,11 +34,11 @@
   margin: 10px 0 10px;
 }
 .quickmenu_normal_img {
-  background: url("quickmenu.png") 0 0 no-repeat;
+  background: url("../images/quickmenu.png") 0 0 no-repeat;
   height: 40px;
 }
 .quickmenu_shop_img {
-  background: url("quickmenu.png") 0px -40px no-repeat;
+  background: url("../images/quickmenu.png") 0px -40px no-repeat;
   height: 40px;
 }
 .quickmenu_normal_setting .add-top-menu {

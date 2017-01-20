@@ -1,90 +1,115 @@
-require(['domReady'], function (domReady) {
-    domReady(function () {
-        require(['jquery'], function ($) {
-            //链接跳转
-            $("[dataHref]").click(function (event) {
-                var url = $(this).attr('dataHref');
-                //记录当前点击的菜单
-                sessionStorage.setItem('dataHref', url);
-                if ($(this).attr('menuid')) {
-                    sessionStorage.setItem('menuid', $(this).attr('menuid'));
-                }
-                location.href = url + '&menuid=' + sessionStorage.getItem('menuid');
-                //阻止冒泡
-                event.stopPropagation();
-            });
-            //记录顶级菜单编号
-            if (!sessionStorage.getItem('menuid')) {
-                sessionStorage.setItem('menuid', "{{key($_LINKS_['menus'])}}");
-            }
-            //设置顶级菜单为选中样式
-            if (sessionStorage.getItem('menuid')) {
-                $("#top_menu_" + sessionStorage.getItem('menuid')).addClass('active');
-            }
-            //设置左侧菜单点击样式
-            if (sessionStorage.getItem('dataHref')) {
-                $("li[dataHref='" + sessionStorage.getItem('dataHref') + "']").addClass('active');
-            }
-            //更改模块展示菜单形式 1 默认 2 系统 3 复合
-            function changeModuleActionType(type) {
-                sessionStorage.setItem('moduleActionType', type);
-                location.reload(true);
-            }
-
-            //有模块访问时
-            if (window.system.module && sessionStorage.getItem('menuid') == 21) {
-                //显示模块展示菜单形式 默认/系统/组合
-                $('.menu_action_type').removeClass('hide');
-                //模块动作类型 1 默认 2 系统 3 复合
-                moduleActionType = sessionStorage.getItem('moduleActionType');
+/**
+ * 后台站点菜单管理
+ * @type {{mark: string, menuid: string, bootstrap: Window.hdMenus.bootstrap, system: Window.hdMenus.system, search: Window.hdMenus.search}}
+ */
+window.hdMenus = {
+    //菜单组标识
+    mark: '',
+    //菜单编号
+    menuid: '',
+    //初始化菜单
+    bootstrap: function () {
+        This = this;
+        require(['jquery', 'util'], function ($, util) {
+            This.setMark(util);
+            This.setMenuId(util);
+            //改变当前点击的顶部菜单选中样式
+            $(".top_menu a[mark='" + This.mark + "']").parent().addClass('active');
+            //设置左侧菜单按钮背景样式
+            $("[menuid='" + This.menuid + "']").addClass('active');
+            //当mark为extModule时显示模块动作菜单按钮
+            if (This.mark == 'package' && util.get('m')) {
+                $('.module_action_type').removeClass('hide');
+                var moduleActionType = sessionStorage.getItem('module_action_type');
                 if (!moduleActionType) {
-                    moduleActionType = 1;
+                    moduleActionType = 'default';
+                    sessionStorage.setItem('module_action_type', 'default');
                 }
-                //设置点击按钮为蓝色
-                $('.menu_action_type button').eq(moduleActionType - 1).addClass('btn-primary');
-                switch (moduleActionType * 1) {
-                    case 1:
-                        //默认类型
-                        $('.module_active').removeClass('hide');
-                        $('.module_back').removeClass('hide');
+                //按钮加背景色
+                $('.module_action_type button').removeClass('btn-primary').addClass('btn-default');
+                $('.module_action_type .' + moduleActionType).removeClass('btn-default').addClass('btn-primary');
+                //初次展示时没有类型时设置为默认类型
+                switch (moduleActionType) {
+                    case 'default':
+                        $(".module_action").removeClass('hide').addClass('currentMenu');
                         break;
-                    case 2:
-                        //系统类型
-                        $('.module_lists').removeClass('hide');
-                        $("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
+                    case 'system':
+                        $("[mark='package']").not('.module_action').removeClass('hide').addClass('currentMenu');
                         break;
-                    case 3:
-                        //组合类型
-                        $('.module_active').removeClass('hide');
-                        $('.module_back').removeClass('hide');
-                        $('.module_lists').removeClass('hide');
+                    case 'group':
+                        $("[mark='package']").removeClass('hide').addClass('currentMenu');
                         break;
                 }
             } else {
-                //显示当前左侧菜单
-                $("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
-                if (sessionStorage.getItem('menuid') == 21) {
-                    $('.module_lists').removeClass('hide');
-                }
+                //设置左侧系统菜单显示,并打上当前菜单标记
+                $("[mark='" + This.mark + "']").removeClass('hide').addClass('currentMenu');
             }
         })
-    });
-});
-
-//搜索菜单
-function searchMenu(obj) {
-    //搜索内容
-    var con = $(obj).val();
-    var menuid = sessionStorage.getItem('menuid');
-    $("[menuid='" + sessionStorage.getItem('menuid') + "']").addClass('hide');
-    $("#menus li[menuid=" + menuid + "]").each(function () {
-        if ($.trim($(this).text()).indexOf(con) >= 0) {
-            hasFind = true;
-            console.log($(this).parent().html());
-            $(this).parent().removeClass('hide').prev().removeClass('hide');
-            $(this).removeClass('hide');
+    },
+    /**
+     * 更改模块动作类型
+     * @param type default system group三种类型
+     */
+    changeModuleActionType: function (type) {
+        sessionStorage.setItem('module_action_type', type);
+        location.reload(true);
+    },
+    /**
+     * 获取菜单组标识
+     * 菜单标识主要用来决定显示哪个左侧菜单
+     * @param util util组件
+     */
+    setMark: function (util) {
+        var mark = util.get('mark')
+        if (!mark) {
+            mark = sessionStorage.getItem('hdMenusMark');
+            if (!mark) {
+                mark = localStorage.getItem('hdMenusMark');
+            }
         }
-    });
-    if (con == '')
-        $("[menuid='" + sessionStorage.getItem('menuid') + "']").removeClass('hide');
+        this.mark = mark;
+        sessionStorage.setItem('hdMenusMark', mark);
+        localStorage.setItem('hdMenusMark', mark);
+    },
+    /**
+     * 当前点击菜单编号
+     * 系统会为左侧的菜单包括模块菜单都设置编号
+     * menuid 主要用来设置当前点击菜单的背景色
+     * @param util
+     */
+    setMenuId: function (util) {
+        var menuid = sessionStorage.getItem('hdMenusmenuId');
+        if (!menuid) {
+            menuid = localStorage.getItem('hdMenusmenuId');
+        }
+        sessionStorage.setItem('hdMenusmenuId', menuid);
+        localStorage.setItem('hdMenusmenuId', menuid);
+        this.menuid = menuid;
+    },
+    //系统菜单事件
+    system: function (elem) {
+        this.menuid = $(elem).attr('menuid');
+        this.mark = $(elem).attr('mark');
+        var url = $(elem).attr('url');
+        sessionStorage.setItem('hdMenusmenuId', this.menuid);
+        sessionStorage.setItem('hdMenusMark', this.mark);
+        location.href = url + '&mark=' + this.mark;
+    },
+    //搜索菜单
+    search: function (elem) {
+        //搜索内容
+        var con = $(elem).val();
+        //让所有当前菜单先隐藏
+        $(".currentMenu").addClass('hide');
+        $("li.currentMenu").each(function () {
+            if ($.trim($(this).text()).indexOf(con) >= 0) {
+                $(this).parent().removeClass('hide').prev('.currentMenu').eq(0).removeClass('hide');
+                $(this).removeClass('hide');
+            }
+        });
+        if (con == '')
+            $(".currentMenu").removeClass('hide');
+    }
 }
+//初始化
+hdMenus.bootstrap();

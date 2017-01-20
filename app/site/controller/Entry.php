@@ -29,31 +29,23 @@ class Entry {
 		return call_user_func_array( [ new $class(), $action ], [ ] );
 	}
 
-//	//进入后台站点管理入口
-//	public function refer() {
-//		//获取系统菜单
-//		$menu = \Menu::all();
-//		$cur  = current( $menu );
-//		go( __ROOT__ . $cur['url'] );
-//	}
-
 	/**
 	 * 站点入口管理主页
 	 * @return mixed
 	 */
 	public function home() {
 		\User::isOperate();
-		if ( ! $p = Request::get( 'p' ) ) {
+		if ( ! $mark = Request::get( 'mark' ) ) {
 			//获取系统菜单
 			$menu = \Menu::all();
 			if ( empty( $menu ) ) {
 				message( '站点没有可访问的模块', 'back', 'error' );
 			}
-			$cur = current( $menu );
-			go( __ROOT__ . $cur['url'] );
+			$current = current( $menu );
+			$mark =$current['mark'] ;
 		}
 
-		return view( VIEW_PATH . '/home/' . $p . '.php' );
+		return view( VIEW_PATH . '/entry/home/' . $mark . '.php' );
 	}
 
 	/**

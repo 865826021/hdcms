@@ -58,8 +58,9 @@
 					</li>
 					<if value="v('site')">
 						<li>
-							<a href="?s=site/entry/home&siteid={{SITEID}}" target="_blank"><i class="fa fa-share"></i>
-								继续管理公众号 ({{v('site.info.name')}})</a>
+							<a href="?s=site/entry/home&siteid={{SITEID}}" target="_blank">
+								<i class="fa fa-share"></i> 继续管理公众号 ({{v('site.info.name')}})
+							</a>
 						</li>
 					</if>
 					<li>

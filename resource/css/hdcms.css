@@ -127,16 +127,16 @@ h3 {
 .site ol.breadcrumb {
   background: #f9f9f9 !important;
 }
-.site .admin_menu .left-menu div#search-menu input {
+.site .admin_menu .left-menu div.search-menu input {
   border-radius: 0;
   font-size: 14px;
   height: 43px;
 }
-.site .admin_menu .left-menu .menu_action_type {
+.site .admin_menu .left-menu .module_action_type {
   width: 100%;
   border-bottom: solid 1px #dddddd;
 }
-.site .admin_menu .left-menu .menu_action_type .btn {
+.site .admin_menu .left-menu .module_action_type .btn {
   border: none;
   border-radius: 0px;
   width: 33.6%;
