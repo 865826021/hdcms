@@ -16,21 +16,16 @@ abstract class HdModule {
 
 	//构造函数
 	public function __construct() {
-		$this->config = \Module::getModuleConfig();
-		$this->template   = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
+		$this->config   = \Module::getModuleConfig();
+		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
 		define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
 	}
 
 	//保存模块配置
-	public function saveSettings( $field ) {
-		$model = ModuleSetting::where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->find();
-		if ( empty( $model ) ) {
-			$model = new ModuleSetting();
-		}
-		$model['siteid']  = SITEID;
-		$model['module']  = v( 'module.name' );
-		$model['status']  = 1;
-		$model['setting'] = $field;
+	public function saveConfig( $field ) {
+		$id              = Db::table( 'module_setting' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->pluck( 'id' );
+		$model           = $id ? ModuleSetting::find( $id ) : new ModuleSetting();
+		$model['config'] = $field;
 		$model->save();
 	}
 }

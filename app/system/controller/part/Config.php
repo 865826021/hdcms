@@ -16,7 +16,7 @@ class Config {
 
 	protected static function php( $data ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\system;
 
 /**
  * 模块配置管理
@@ -31,13 +31,13 @@ class Config extends hdModule {
 	public function settingsDisplay() {
 		if ( IS_POST ) {
 			//将新配置数据保存
-			\$this->saveConfig();
+			\$this->saveConfig( Request::post() );
 			message( '更新配置项成功', 'refresh', 'success' );
 		}
 		//分配
-		\View::with( 'field', \$this->getConfig() );
+		\View::with( 'field', \$this->config );
 
-		return view( \$this->template . '/setting.html' );
+		return view( \$this->template . '/config.html' );
 	}
 }
 php;

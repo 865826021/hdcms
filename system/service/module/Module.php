@@ -235,10 +235,10 @@ class Module {
 	 * @return array
 	 */
 	public function getModuleConfig( $module = '' ) {
-		$module  = $module ?: v( 'module.name' );
-		$setting = ModuleSetting::where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'setting' );
+		$module = $module ?: v( 'module.name' );
+		$config = ModuleSetting::where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'config' );
 
-		return $setting ? unserialize( $setting ) : [ ];
+		return $config ? json_decode( $config, true ) : [ ];
 	}
 
 	/**
