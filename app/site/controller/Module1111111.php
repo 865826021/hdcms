@@ -38,16 +38,7 @@ class Module {
 		}
 	}
 
-	//模块主页
-	public function home() {
-		if ( ! service( 'module' )->verifyModuleAccess() ) {
-			message( '你没有操作权限', 'back', 'error' );
-		}
-		//后台分配菜单
-		service( 'menu' )->assign();
 
-		return view();
-	}
 
 	//模块配置
 	public function setting() {

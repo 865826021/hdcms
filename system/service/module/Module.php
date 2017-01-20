@@ -153,7 +153,7 @@ class Module {
 	 */
 	public function currentUseModule() {
 		foreach ( v( 'site.modules' ) as $v ) {
-			if ( $v['name'] == v( 'module.name' ) ) {
+			if ( $v['name'] == v( 'module.name' ) && v( 'module.is_system' ) == 0 ) {
 				return $v;
 			}
 		}

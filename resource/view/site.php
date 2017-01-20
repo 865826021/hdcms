@@ -75,8 +75,10 @@
 						   aria-expanded="false">
 							<i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i>
-									编辑当前账号资料</a>
+							<li>
+								<a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i>
+									编辑当前账号资料
+								</a>
 							</li>
 							<li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
 						</ul>

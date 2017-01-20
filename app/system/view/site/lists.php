@@ -66,7 +66,7 @@
                             </span>
 						</div>
 						<div class="col-xs-6 text-right">
-							<a href="?s=site/entry/refer&siteid={{$s['siteid']}}" class="text-info">
+							<a href="?s=site/entry/home&siteid={{$s['siteid']}}" class="text-info">
 								<strong><i class="fa fa-cog"></i> 管理站点</strong>
 							</a>
 						</div>
