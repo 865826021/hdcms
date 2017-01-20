@@ -24,6 +24,7 @@ class Tag extends TagBase {
 		'foreach' => [ 'block' => true, 'level' => 5 ],
 		'list'    => [ 'block' => true, 'level' => 5 ],
 		'if'      => [ 'block' => true, 'level' => 5 ],
+		'form'    => [ 'block' => true, 'level' => 5 ],
 		'elseif'  => [ 'block' => false ],
 		'else'    => [ 'block' => false ],
 		'js'      => [ 'block' => false ],
@@ -49,6 +50,15 @@ class Tag extends TagBase {
 		$attr['file'] = $this->replaceConst( $attr['file'] );
 
 		return "<script type=\"text/javascript\" src=\"{$attr['file']}\"></script>";
+	}
+
+	//为表单添加令牌
+	public function _form( $attr, $content ) {
+		$html = '<form ';
+		foreach ( $attr as $k => $v ) {
+			$html .= $k . '="' . $v . '" ';
+		}
+		return $html . '>' . PHP_EOL . csrf_field() . $content . "</form>";
 	}
 
 	//list标签

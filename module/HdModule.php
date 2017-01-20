@@ -10,15 +10,15 @@ use system\model\ModuleSetting;
  */
 abstract class HdModule {
 	//模板目录
-	protected $view;
+	protected $template;
 	//配置项
 	protected $config;
 
 	//构造函数
 	public function __construct() {
 		$this->config = \Module::getModuleConfig();
-		$this->view   = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/view';
-		define( '__TEMPLATE__', __ROOT__ . '/' . $this->view );
+		$this->template   = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
+		define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
 	}
 
 	//保存模块配置

@@ -10,6 +10,7 @@
  * '-------------------------------------------------------------------*/
 
 use system\model\ReplyCover;
+
 /**
  * 模块动作访问处理
  * Class Module
@@ -30,7 +31,7 @@ class Module {
 		}
 		if ( $action = q( 'get.a' ) ) {
 			$info             = explode( '/', $action );
-			$this->module     = count( $info ) == 3 ? array_shift( $info ) : NULL;
+			$this->module     = count( $info ) == 3 ? array_shift( $info ) : null;
 			$this->controller = $info[0];
 			$this->action     = $info[1];
 		} else {
@@ -39,22 +40,18 @@ class Module {
 	}
 
 
-
 	//模块配置
 	public function setting() {
-		service( 'user' )->loginAuth();
-		if ( ! service( 'module' )->verifyModuleAccess() ) {
-			message( '你没有操作权限', 'back', 'error' );
-		}
+		\User::loginAuth();
+		moduleVerify();
 		//后台分配菜单
-		service( 'menu' )->assign();
-		$class = '\addons\\' . v( 'module.name' ) . '\module';
+		$class = '\addons\\' . v( 'module.name' ) . '\system\Config';
 		if ( ! class_exists( $class ) || ! method_exists( $class, 'settingsDisplay' ) ) {
 			message( '访问的模块不存在', 'back', 'error' );
 		}
 		View::with( 'module_action_name', '参数设置' );
 		$obj     = new $class();
-		$setting = service('module')->getModuleConfig( v( 'module.name' ) );
+		$setting = \Module::getModuleConfig( v( 'module.name' ) );
 
 		return $obj->settingsDisplay( $setting );
 	}
@@ -78,7 +75,7 @@ class Module {
 				[ 'description', 'required', '描述不能为空' ],
 				[ 'thumb', 'required', '封面图片不能为空' ]
 			] );
-			$data             = json_decode( $_POST['keyword'], TRUE );
+			$data             = json_decode( $_POST['keyword'], true );
 			$data['rid']      = $replyCover->where( 'module', v( 'module.name' ) )->where( 'do', $moduleBindings['do'] )->pluck( 'rid' );
 			$data['module']   = 'cover';
 			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
