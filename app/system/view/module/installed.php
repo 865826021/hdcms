@@ -13,7 +13,6 @@
 			<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
 		</ul>
 		<h5 class="page-header">菜单列表</h5>
-
 		<nav role="navigation" class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
@@ -62,7 +61,7 @@
 				</div>
 				<div class="media-left">
 					<a href="#">
-						<img class="media-object" src="{{$m['cover']}}" style="width: 50px;height: 50px;"/>
+						<img class="media-object" src="addons/{{$m['name']}}/{{$m['thumb']}}" style="width: 50px;height: 50px;"/>
 					</a>
 				</div>
 				<div class="media-body">

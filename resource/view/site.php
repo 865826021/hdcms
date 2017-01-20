@@ -114,13 +114,20 @@
 	<div class="row">
 		<div class="col-xs-12 col-sm-3 col-lg-2 left-menu">
 			<div class="search-menu">
-				<input class="form-control input-lg" type="text" placeholder="输入菜单名称可快速查找" onkeyup="hdMenus.search(this)">
+				<input class="form-control input-lg" type="text" placeholder="输入菜单名称可快速查找"
+				       onkeyup="hdMenus.search(this)">
 			</div>
 			<!--扩展模块动作 start-->
 			<div class="btn-group hide module_action_type">
-				<button type="button" class="btn btn-default default" onclick="hdMenus.changeModuleActionType('default');">默认</button>
-				<button type="button" class="btn btn-default system" onclick="hdMenus.changeModuleActionType('system');">系统</button>
-				<button type="button" class="btn btn-default group" onclick="hdMenus.changeModuleActionType('group');">组合</button>
+				<button type="button" class="btn btn-default default"
+				        onclick="hdMenus.changeModuleActionType('default');">默认
+				</button>
+				<button type="button" class="btn btn-default system"
+				        onclick="hdMenus.changeModuleActionType('system');">系统
+				</button>
+				<button type="button" class="btn btn-default group" onclick="hdMenus.changeModuleActionType('group');">
+					组合
+				</button>
 			</div>
 			<!--扩展模块动作 end-->
 			<div class="panel panel-default">
@@ -159,7 +166,7 @@
 				<!----------返回模块列表 start------------>
 				<if value="$LINKS['module']">
 					<div class="panel-heading hide module_back module_action" mark="package">
-						<h4 class="panel-title">模块列表</h4>
+						<h4 class="panel-title">系统功能</h4>
 						<a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
 							<i class="fa fa-chevron-circle-down"></i>
 						</a>
@@ -197,7 +204,7 @@
 							    url="?s=site/reply/lists&m={{$LINKS['module']['name']}}"
 							    menuid="rule"
 							    mark="package">
-								<i class="fa fa-comments"></i> 回复规则列表
+								<i class="fa fa-rss"></i> 回复规则列表
 							</li>
 						</if>
 						<if value="$LINKS['module']['setting']">
@@ -234,7 +241,7 @@
 							    url="?s=site/nav/lists&entry=profile&m={{$LINKS['module']['name']}}"
 							    menuid="profile"
 							    mark="package">
-								<i class="fa fa-user"></i> 手机个人中心导航
+								<i class="fa fa-github"></i> 移动端会员中心导航
 							</li>
 						</if>
 						<if value="!empty($LINKS['module']['budings']['member'])">
@@ -243,7 +250,7 @@
 							    url="?s=site/nav/lists&entry=member&m={{$LINKS['module']['name']}}"
 							    menuid="member"
 							    mark="package">
-								<i class="fa fa-user"></i> 桌面个人中心导航
+							<i class="fa fa-renren"></i> 桌面个人中心导航
 							</li>
 						</if>
 					</ul>
@@ -262,29 +269,32 @@
 							    url="?s=site/module/cover&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
 							    menuid="cover{{$f['bid']}}"
 							    mark="package">
-								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
+								<i class="fa fa-comments"></i> {{$f['title']}}
 							</li>
 						</foreach>
 					</ul>
 				</if>
 				<if value="$LINKS['module']['budings']['business']">
-					<div class="panel-heading hide module_action" mark="package">
-						<h4 class="panel-title">业务菜单</h4>
-						<a class="panel-collapse" data-toggle="collapse" href="#module_business" aria-expanded="true">
-							<i class="fa fa-chevron-circle-down"></i>
-						</a>
-					</div>
-					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
-						<foreach from="$LINKS['module']['budings']['business']" value="$f">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/module/business&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
-							    menuid="business{{$f['bid']}}"
-							    mark="package">
-								<i class="fa fa-puzzle-piece"></i> {{$f['title']}}
-							</li>
-						</foreach>
-					</ul>
+					<foreach from="$LINKS['module']['budings']['business']" value="$f">
+						<div class="panel-heading hide module_action" mark="package">
+							<h4 class="panel-title">{{$f['title']}}</h4>
+							<a class="panel-collapse" data-toggle="collapse" href="#module_business"
+							   aria-expanded="true">
+								<i class="fa fa-chevron-circle-down"></i>
+							</a>
+						</div>
+						<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
+							<foreach from="$f['do']" value="$d">
+								<li class="list-group-item"
+								    onclick="hdMenus.system(this)"
+								    url="?s=site/module/business&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+								    menuid="business{{$f['bid']}}"
+								    mark="package">
+									<i class="fa fa-server"></i> {{$d['title']}}
+								</li>
+							</foreach>
+						</ul>
+					</foreach>
 				</if>
 				<!------------------------模块菜单 end------------------------>
 				<!--模块列表-->
@@ -299,9 +309,9 @@
 						<foreach from="$d" value="$g">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    mark="package",
+							    mark="package" ,
 							    url="?s=site/entry/module&m={{$g['name']}}"
-							    menuid="{{$g['id']}}">
+							    menuid="{{$g['name']}}">
 								{{$g['title']}}
 							</li>
 						</foreach>

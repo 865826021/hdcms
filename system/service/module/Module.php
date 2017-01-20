@@ -138,6 +138,10 @@ class Module {
 			$m['permissions'] = array_filter( json_decode( $m['permissions'], true ) ?: [ ] );
 			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get() ?: [ ];
 			foreach ( $binds as $b ) {
+				//业务动作有多个储存时使用JSON格式的
+				if ( $b['entry'] == 'business' ) {
+					$b['do'] = json_decode( $b['do'], true );
+				}
 				$m['budings'][ $b['entry'] ][] = $b;
 			}
 			$cacheData[ $m['name'] ] = $m;

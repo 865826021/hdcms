@@ -36,7 +36,7 @@ class Menu {
 		                ->where( 'uid', v( 'user.info.uid' ) )
 		                ->where( 'type', 'system' )
 		                ->pluck( 'permission' );
-		$menus      = Db::table( 'menu' )->orderBy('id','asc')->get();
+		$menus      = Db::table( 'menu' )->orderBy( 'id', 'asc' )->get();
 		if ( $permission ) {
 			$permission = explode( '|', $permission );
 			$tmp        = $menus;
@@ -70,13 +70,18 @@ class Menu {
 	 * @return mixed
 	 */
 	public function get() {
-		return [
-			//系统菜单数据
-			'menus'       => $this->all(),
-			//当前模块
-			'module'      => \Module::currentUseModule(),
-			//用户在站点可以使用的模块列表
-			'moduleLists' => \Module::getBySiteUser()
-		];
+		static $menus = null;
+		if ( is_null( $menus ) ) {
+			$menus = [
+				//系统菜单数据
+				'menus'       => $this->all(),
+				//当前模块
+				'module'      => \Module::currentUseModule(),
+				//用户在站点可以使用的模块列表
+				'moduleLists' => \Module::getBySiteUser(),
+			];
+		}
+//		p($menus['module']);
+		return $menus;
 	}
 }

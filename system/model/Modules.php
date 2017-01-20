@@ -34,7 +34,7 @@ class Modules extends Common {
 		[ 'url', 'required', '发布url不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'thumb', 'required', '模块缩略图不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-		[ 'cover', 'required', '模块封面图片不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'preview', 'required', '模块封面图片不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
 		[ 'name', 'strtolower', 'function', self::MUST_AUTO, self::MODEL_INSERT ],

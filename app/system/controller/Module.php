@@ -116,22 +116,23 @@ class Module {
 			if ( is_dir( "module/{$data['name']}" ) || is_dir( $dir ) ) {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
-			//创建目录
-			foreach ( [ 'controller', 'template', 'model', 'service', 'system/template' ] as $d ) {
+			//创建目录创建安全文件
+			foreach ( [ 'controller', 'template', 'model', 'system', 'system/template' ] as $d ) {
 				if ( ! mkdir( "{$dir}/{$d}", 0755, true ) ) {
 					message( '模块目录创建失败,请修改addons目录的权限', 'back', 'error' );
 				}
+				file_put_contents( "{$dir}/{$d}/index.html", 'Not allowed to access' );
 			}
-			//模块图片处理
-			$info    = pathinfo( $data['thumb'] );
-			$thumb   = $dir . '/thumb.' . $info['extension'];
-			$info    = pathinfo( $data['preview'] );
-			$preview = $dir . '/cover.' . $info['extension'];
-			copy( $data['thumb'], $thumb );
-			copy( $data['preview'], $preview );
-			$data['thumb']   = 'thumb.' . $info['extension'];
-			$data['preview'] = 'cover.' . $info['extension'];
 
+			//模块图片处理
+			$info  = pathinfo( $data['thumb'] );
+			$thumb = $dir . '/thumb.' . $info['extension'];
+			copy( $data['thumb'], $thumb );
+			$data['thumb'] = 'thumb.' . $info['extension'];
+			$info          = pathinfo( $data['preview'] );
+			$preview       = $dir . '/cover.' . $info['extension'];
+			copy( $data['preview'], $preview );
+			$data['preview'] = 'cover.' . $info['extension'];
 			//初始创建模块需要的脚本文件
 			Config::make( $data );
 			Rule::make( $data );
@@ -184,7 +185,7 @@ class Module {
 			$model['author']      = $config['author'];
 			$model['rule']        = $config['rule'];
 			$model['thumb']       = $config['thumb'];
-			$model['cover']       = $config['cover'];
+			$model['preview']     = $config['preview'];
 			$model['is_system']   = 0;
 			$model['subscribes']  = $config['subscribes'];
 			$model['processors']  = $config['processors'];
@@ -235,6 +236,7 @@ class Module {
 							$a['entry']      = 'business';
 							$a['controller'] = $d['controller'];
 							$a['module']     = $module;
+							$a['do']         = json_encode( $d['action'], JSON_UNESCAPED_UNICODE );
 							ModulesBindings::insert( $a );
 						}
 					}
@@ -242,7 +244,7 @@ class Module {
 			}
 			//在服务套餐中添加模块
 			if ( ! empty( $_POST['package'] ) ) {
-				$package = Package::whereIn( 'name', $_POST['package'] )->get();
+				$package = Db::table('package')->whereIn( 'name', $_POST['package'] )->get();
 				foreach ( $package as $p ) {
 					$p['modules'] = json_decode( $p['modules'], true );
 					if ( empty( $p['modules'] ) ) {

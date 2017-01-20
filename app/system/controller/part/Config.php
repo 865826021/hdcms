@@ -37,7 +37,7 @@ class Config extends hdModule {
 		//分配
 		\View::with( 'field', \$this->getConfig() );
 
-		return view( \$this->view . '/setting.html' );
+		return view( \$this->template . '/setting.html' );
 	}
 }
 php;
@@ -71,6 +71,6 @@ php;
     </div>
 </block>
 html;
-		file_put_contents( "addons/{$data['name']}/system/view/config.html", $tpl );
+		file_put_contents( "addons/{$data['name']}/system/template/config.html", $tpl );
 	}
 }
