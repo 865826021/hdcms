@@ -14,8 +14,9 @@ abstract class HdRule {
 
 	//构造函数
 	public function __construct() {
-		$this->config = \Module::getModuleConfig();
-		$this->template   = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
+		auth();
+		$this->config   = \Module::getModuleConfig();
+		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
 		define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
 	}
 }

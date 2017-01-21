@@ -1,4 +1,5 @@
 <?php namespace addons\hdcms\system;
+use module\HdRule;
 
 /**
  * 回复规则列表
@@ -7,9 +8,8 @@
  * @author author
  * @url http://www.hdcms.com
  */
-use module\hdRule;
 
-class Rule extends hdRule {
+class Rule extends HdRule {
 	/**
 	 * 显示自定义的回复界面
 	 * 返回true表示验证通过

@@ -1,4 +1,5 @@
-<?php namespace addons\hdcms;
+<?php namespace addons\hdcms\system;
+use module\HdCover;
 
 /**
  * 模块功能封面
@@ -8,15 +9,15 @@
  * @author author
  * @url http://open.hdcms.com
  */
-use module\hdCover;
-
-class Cover extends hdCover {
+class Cover extends HdCover {
 	//功能封面1
 	public function fengmian1() {
+		echo '这是点击封面回复(微信图文消息)后执行';
 	}
 
 	//功能封面2
 	public function fengmian2() {
+		echo '这是点击封面回复(微信图文消息)后执行';
 	}
 
 

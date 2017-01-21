@@ -21,7 +21,7 @@ class Cover {
 
 	protected static function php( $data,$action ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\system;
 
 /**
  * 模块功能封面
@@ -31,9 +31,9 @@ class Cover {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\hdCover;
+use module\HdCover;
 
-class Cover extends hdCover {
+class Cover extends HdCover {
 $action
 }
 php;
@@ -45,6 +45,7 @@ php;
 		$tpl = <<<php
 	//{$d['title']}
 	public function {$d['do']}() {
+		echo '这是点击封面回复(微信图文消息)后执行';
 	}
 php;
 

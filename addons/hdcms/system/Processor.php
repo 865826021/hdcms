@@ -20,6 +20,6 @@ class Processor extends hdProcessor {
 	 * @param int $rid
 	 */
 	public function handle( $rid ) {
-		$this->text( '模块回复了消息' );
+//		Db::table('')
 	}
 }

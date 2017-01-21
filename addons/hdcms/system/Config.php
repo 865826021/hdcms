@@ -1,4 +1,5 @@
 <?php namespace addons\hdcms\system;
+use module\HdConfig;
 
 /**
  * 模块配置管理
@@ -8,9 +9,8 @@
  * @qq 2300071698
  * @url http://www.hdcms.com
  */
-use module\hdModule;
 
-class Config extends hdModule {
+class Config extends HdConfig {
 	public function settingsDisplay() {
 		if ( IS_POST ) {
 			//将新配置数据保存

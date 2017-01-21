@@ -15,7 +15,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">URL地址</label>
 					<div class="col-sm-7 col-md-8">
-						<input type="text" class="form-control" readonly="readonly" value="{{__ROOT__}}/{{$field['url']}}">
+						<input type="text" class="form-control" readonly="readonly" value="{{__ROOT__}}{{$field['url']}}">
 						<span class="help-block">您可以在微信自定义菜单或其他任何位置直接使用这个链接地址</span>
 					</div>
 				</div>

@@ -6,7 +6,7 @@
  * @package system\core
  * @author 向军
  */
-abstract class hdProcessor {
+abstract class HdProcessor {
 	//配置项
 	protected $config;
 	//微信消息内容

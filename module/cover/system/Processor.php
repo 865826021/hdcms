@@ -1,13 +1,13 @@
-<?php namespace module\cover;
+<?php namespace module\cover\system;
+use module\HdProcessor;
 
-use module\hdProcessor;
 
 /**
  * 封面消息处理
  * Class processor
  * @package module\basic
  */
-class processor extends hdProcessor {
+class processor extends HdProcessor {
 	//规则编号
 	public function handle( $rid ) {
 		$res = Db::table( 'reply_cover' )->where( 'rid', $rid )->where( 'siteid', SITEID )->first();
@@ -19,8 +19,6 @@ class processor extends hdProcessor {
 				'url'         => preg_match( '/^http/i', $res['url'] ) ? $res['url'] : __ROOT__ . '/' . $res['url'],
 			];
 			$this->news( $data );
-
-			return TRUE;
 		}
 	}
 }
