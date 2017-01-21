@@ -9,14 +9,14 @@
 		<input type="hidden" name="name" value="{{$field['name']}}">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				直接连接 直接进入的URL
+				链接地址
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">直接URL</label>
+					<label class="col-sm-2 control-label">URL地址</label>
 					<div class="col-sm-7 col-md-8">
 						<input type="text" class="form-control" readonly="readonly" value="{{__ROOT__}}/{{$field['url']}}">
-						<span class="help-block">直接指向到入口的URL。您可以在自定义菜单（有oAuth权限）或是其它位置直接使用。</span>
+						<span class="help-block">您可以在微信自定义菜单或其他任何位置直接使用这个链接地址</span>
 					</div>
 				</div>
 			</div>
@@ -45,24 +45,24 @@
 				</div>
 				<include file="app/site/view/reply/keyword"/>
 				<div class="form-group">
-					<label for="" class="col-sm-2 control-label">封面参数</label>
+					<label class="col-sm-2 control-label">封面参数</label>
 					<div class="col-sm-8">
 						<div class="panel panel-default">
 							<div class="panel-body">
 								<div class="form-group">
-									<label for="" class="col-sm-2 control-label">标题</label>
+									<label class="col-sm-2 control-label">标题</label>
 									<div class="col-sm-10">
 										<input type="text" class="form-control" name="title" value="{{$field['title']}}">
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="" class="col-sm-2 control-label">描述</label>
+									<label class="col-sm-2 control-label">描述</label>
 									<div class="col-sm-10">
 										<textarea name="description" class="form-control" rows="3">{{$field['description']}}</textarea>
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="" class="col-sm-2 control-label">封面</label>
+									<label class="col-sm-2 control-label">封面</label>
 									<div class="col-sm-10">
 										<div class="input-group">
 											<input type="text" class="form-control" name="thumb" readonly="" value="{{$field['thumb']}}">
@@ -78,7 +78,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label for="" class="col-sm-2 control-label">直接URL</label>
+									<label class="col-sm-2 control-label">直接URL</label>
 									<div class="col-sm-10">
 										<p class="form-control-static">{{__ROOT__}}/{{$field['url']}}</p>
 									</div>

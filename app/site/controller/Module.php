@@ -40,16 +40,9 @@ class Module {
 
 	//模块封面
 	public function cover() {
-		//验证登录
-		service( 'user' )->loginAuth();
-		//后台分配菜单
-		service( 'menu' )->assign();
-		if ( ! service( 'module' )->verifyModuleAccess() ) {
-			message( '你没有操作权限', 'back', 'error' );
-		}
 		$bid            = Request::get( 'bid' );
 		$replyCover     = new ReplyCover();
-		$moduleBindings = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
+		$module = Db::table( 'modules_bindings' )->where( 'bid', $bid )->first();
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'title', 'required', '标题不能为空' ],
@@ -57,14 +50,14 @@ class Module {
 				[ 'thumb', 'required', '封面图片不能为空' ]
 			] );
 			$data             = json_decode( $_POST['keyword'], true );
-			$data['rid']      = $replyCover->where( 'module', v( 'module.name' ) )->where( 'do', $moduleBindings['do'] )->pluck( 'rid' );
+			$data['rid']      = $replyCover->where( 'module', v( 'module.name' ) )->where( 'url', $module['do'] )->pluck( 'rid' );
 			$data['module']   = 'cover';
 			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
 			$data['keywords'] = $data['keyword'];
 			$rid              = service( 'WeChat' )->rule( $data );
 			//添加封面回复
 			$replyCover['id']          = $replyCover->where( 'rid', $rid )->pluck( 'id' );
-			$replyCover['do']          = $moduleBindings['do'];
+			$replyCover['do']          = $module['do'];
 			$replyCover['rid']         = $rid;
 			$replyCover['title']       = $_POST['title'];
 			$replyCover['description'] = $_POST['description'];
@@ -74,15 +67,15 @@ class Module {
 			$replyCover->save();
 			message( '功能封面更新成功', 'back', 'success' );
 		}
-		$field = $replyCover->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->where( 'do', $moduleBindings['do'] )->first();
+		$field = Db::table( 'reply_cover' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) )->where( 'url', $module['do'] )->first();
 		//获取关键词回复
 		if ( $field ) {
 			$data            = Db::table( 'rule' )->where( 'rid', $field['rid'] )->first();
-			$data['keyword'] = Db::table( 'rule_keyword' )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get() ?: [ ];
+			$data['keyword'] = Db::table( 'rule_keyword' )->orderBy( 'id', 'asc' )->where( 'rid', $field['rid'] )->get();
 			View::with( 'rule', $data );
 		}
-		$field['url']  = '?a=site/' . $moduleBindings['do'] . "&siteid=" . SITEID . "&t=web&m=" . v( 'module.name' );
-		$field['name'] = $moduleBindings['title'];
+		$field['url']  = __WEB__;
+		$field['name'] = $module['title'];p($field);
 
 		return view()->with( 'field', $field );
 	}

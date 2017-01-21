@@ -21,10 +21,11 @@ class Entry {
 	 */
 	public function action() {
 		$info       = explode( '/', Request::get( 'action' ) );
-		$controller = ucfirst( $info[0] );
-		$action     = $info[1];
+		$module     = strtolower( $info[0] );
+		$controller = ucfirst( $info[1] );
+		$action     = $info[2];
 		$class      = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) .
-		              v( 'module.name' ) . '\controller\\' . $controller;
+		              v( 'module.name' ) . "\\{$module}\\{$controller}";
 
 		return call_user_func_array( [ new $class(), $action ], [ ] );
 	}

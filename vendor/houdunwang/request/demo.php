@@ -24,6 +24,11 @@ $config = [
 	'prefix' => 'HOUDUNWANG##'
 ];
 \houdunwang\config\Config::set( 'cookie', $config );
+$http = [
+	//开启REWRITE
+	'rewrite' => false
+];
+\houdunwang\config\Config::set( 'http', $http );
 //$obj = new \houdunwang\request\Request();
 //echo $obj->ip();
 echo \houdunwang\request\Request::ip();

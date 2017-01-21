@@ -80,6 +80,9 @@ function authIdentity( $tag ) {
  */
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
+	if ( count( $info ) == 2 ) {
+		array_unshift( $info, 'controller' );
+	}
 
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
