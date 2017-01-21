@@ -234,7 +234,9 @@
 			//提交表单
 			$('form').submit(function () {
 				var msg = '';
-
+				if (!$scope.field.webid) {
+					msg += '请选择分配到的微站<br/>';
+				}
 				if (!$scope.field.name) {
 					msg += '导航名称不能为空<br/>';
 				}

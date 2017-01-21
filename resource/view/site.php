@@ -240,7 +240,7 @@
 						<if value="!empty($LINKS['module']['budings']['profile'])">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/nav/lists&entry=profile&m={{$LINKS['module']['name']}}"
+							    url="?s=site/navigate/lists&entry=profile&m={{$LINKS['module']['name']}}"
 							    menuid="profile"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
@@ -250,7 +250,7 @@
 						<if value="!empty($LINKS['module']['budings']['member'])">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/nav/lists&entry=member&m={{$LINKS['module']['name']}}"
+							    url="?s=site/navigate/lists&entry=member&m={{$LINKS['module']['name']}}"
 							    menuid="member"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">

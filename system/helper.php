@@ -82,5 +82,5 @@ function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
 
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
-	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' );
+	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
 }

@@ -3,10 +3,10 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li><a href="?m=article&action=site/lists">返回站点列表 </a></li>
 		<li class="active">
-			<a href="javascript:;"><?=\Navigate::title( );?></a>
+			<a href="javascript:;"><?= \Navigate::title(); ?></a>
 		</li>
 		<if value="Request::get('entry')=='home'">
-			<li><a href="{{u('site.navigate.post')}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
+			<li><a href="{{u('site.navigate.post')}}&m={{$_GET['m']}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a></li>
 		</if>
 	</ul>
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
@@ -18,7 +18,8 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">站点</label>
 						<div class="col-sm-8">
-							<select class="form-control" ng-change="changeWeb()" ng-model="webid" ng-options="a.id as a.title for a in web">
+							<select class="form-control" ng-change="changeWeb()" ng-model="webid"
+							        ng-options="a.id as a.title for a in web">
 								<option value="">选择微站</option>
 							</select>
 						</div>
@@ -27,7 +28,8 @@
 			</div>
 			<div class="alert alert-info">
 				<div ng-show="template.position">
-					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板提供 @{{template.position}} 个导航位置，您可以指定导航在特定的位置显示，未指位置的导航将无法显示
+					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板提供 @{{template.position}}
+					个导航位置，您可以指定导航在特定的位置显示，未指位置的导航将无法显示
 				</div>
 				<div ng-hide="template.position">
 					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板未提供导航位置
@@ -59,7 +61,8 @@
 					<tr ng-repeat="(key,field) in nav">
 						<td ng-bind="field.id"></td>
 						<td>
-							<i ng-click="upFont(field)" ng-if="field.icontype==1" class="@{{field.css.icon}} fa-2x" style="color:@{{field.css.color}}"></i>
+							<i ng-click="upFont(field)" ng-if="field.icontype==1" class="@{{field.css.icon}} fa-2x"
+							   style="color:@{{field.css.color}}"></i>
 							<img ng-if="field.icontype==2" ng-src="@{{field.css.image}}" style="width:35px;">
 						</td>
 						<td>
@@ -69,7 +72,8 @@
 							<div class="input-group">
 								<input type="text" class="form-control" ng-model="field.url">
 								<div class="input-group-btn">
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+									        aria-haspopup="true"
 									        aria-expanded="false">选择链接 <span class="caret"></span></button>
 									<ul class="dropdown-menu dropdown-menu-right">
 										<li><a href="javascript:;" ng-click="url.linkBrowsers(field)">系统菜单</a></li>
@@ -83,17 +87,21 @@
 						<if value="Request::get('entry')=='home'">
 							<!--模块链接时不显示位置,位置在文章系统有效-->
 							<td>
-								<select class="form-control" ng-options="a.position as a.title for a in template.template_position" ng-model="field.position">
+								<select class="form-control"
+								        ng-options="a.position as a.title for a in template.template_position"
+								        ng-model="field.position">
 									<option value="">不显示</option>
 								</select>
 							</td>
 						</if>
 						<td>
-							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
+							<input type="checkbox" data="@{{key}}" class="bootstrap-switch"
+							       ng-checked="field.status==1">
 						</td>
 						<td ng-if="field.id">
 							<div class="btn-group">
-								<a href="?s=site/navigate/post&m=article&webid={{Request::get('webid')}}&entry={{$_GET['m']}}&id=@{{field.id}}" class="btn btn-default">
+								<a href="?s=site/navigate/post&m=article&webid={{Request::get('webid')}}&entry={{$_GET['m']}}&id=@{{field.id}}"
+								   class="btn btn-default">
 									编辑
 								</a>
 								<a href="javascript:;" ng-click="del(field.id)" class="btn btn-default">删除</a>
@@ -111,27 +119,30 @@
 </block>
 <style>
 	table > tbody > tr > td {
-		overflow : visible;
+		overflow: visible;
 	}
 </style>
 <script>
-	require(['util', 'angular', 'underscore','hdcms'], function (util, angular, _,hdcms) {
+	require(['util', 'angular', 'underscore', 'hdcms'], function (util, angular, _, hdcms) {
 		angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
-			$scope.webid = <?php echo $webid;?>;
+			$scope.webid = <?php echo empty( $webid ) ? 0 : $webid;?>;
 			$scope.web = <?php echo json_encode( $web );?>;
-			$scope.template =<?php echo json_encode( $template );?>;
+			$scope.template =<?php echo empty( $template ) ? 'null' : json_encode( $template );?>;
 			$scope.nav =<?php echo json_encode( $nav );?>;
-			var position = [];
-			for (var i = 1; i <= $scope.template.position; i++) {
-				position.push({position: i, title: '位置' + i});
+			//只有在菜单类型为封面菜单即GET参数entry='home'有template数据
+			if ($scope.template) {
+				var position = [];
+				for (var i = 1; i <= $scope.template.position; i++) {
+					position.push({position: i, title: '位置' + i});
+				}
+				$scope.template.template_position = position;
 			}
-			$scope.template.template_position = position;
 			$('form').submit(function () {
 				$("[name='data']").val(angular.toJson($scope.nav));
 			})
 			//选择站点
 			$scope.changeWeb = function () {
-				location.replace("?s=site/navigate/lists&entry=home&webid=" + $scope.webid);
+				location.replace("?s=site/navigate/lists&entry=home&m={{$_GET['m']}}&webid=" + $scope.webid);
 			}
 			//选择链接
 			$scope.url = {
@@ -146,8 +157,7 @@
 			//删除菜单
 			$scope.del = function (id) {
 				util.confirm('确定删除菜单吗?', function () {
-					var nav = $scope.nav;
-					$.get("{{url('navigate.del')}}", {id: id}, function (res) {
+					$.get("?s=site/navigate/del", {id: id}, function (res) {
 						if (res.valid) {
 							util.message(res.message, 'refresh', 'success')
 						} else {
