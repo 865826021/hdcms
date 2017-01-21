@@ -2,8 +2,11 @@
 <block name="content">
 	<ul class="nav nav-tabs">
 		<li role="presentation" class="active"><a href="#">管理{{v('module.title')}}</a></li>
-		<li role="presentation"><a href="?s=site/reply/post&m={{v('module.name')}}"><i class="fa fa-plus"></i>
-				添加{{v('module.title')}}</a></li>
+		<li role="presentation">
+			<a href="?s=site/rule/post&m={{v('module.name')}}">
+				<i class="fa fa-plus"></i> 添加{{v('module.title')}}
+			</a>
+		</li>
 	</ul>
 	<div class="panel panel-info">
 		<div class="panel-heading">

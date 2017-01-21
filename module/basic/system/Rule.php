@@ -12,7 +12,7 @@ class Rule extends HdRule {
 
 	public function __construct() {
 		parent::__construct();
-		\User::auth( 'reply_basic', 'system' );
+		authIdentity( 'reply_basic' );
 	}
 
 	public function fieldsDisplay( $rid = 0 ) {
@@ -27,13 +27,19 @@ class Rule extends HdRule {
 		return View::fetch( $this->template . '/fieldsDisplay.html' );
 	}
 
+	/**
+	 * 验证用户输入内容的合法性
+	 * 返回true表示验证通过
+	 * $rid 为规则编号,新增时为0,编辑时才有具体编号
+	 * @param int $rid
+	 * @return bool
+	 */
 	public function fieldsValidate( $rid = 0 ) {
-		//规则编辑保存时，要进行的数据验证，返回空串表示验证无误，返回其他字符串将呈现为错误提示。这里 $rid 为对应的规则编号，新增时为 0
 		if ( ! Request::post( 'content' ) ) {
 			return '内容不能为空';
 		}
 
-		return '';
+		return true;
 	}
 
 	public function fieldsSubmit( $rid ) {

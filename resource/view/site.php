@@ -201,7 +201,7 @@
 						<if value="$LINKS['module']['rule']">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/reply/lists&m={{$LINKS['module']['name']}}"
+							    url="?s=site/rule/lists&m={{$LINKS['module']['name']}}"
 							    menuid="rule"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
@@ -271,7 +271,7 @@
 						<foreach from="$LINKS['module']['budings']['cover']" value="$f">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/module/cover&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+							    url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
 							    menuid="cover{{$f['bid']}}"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">

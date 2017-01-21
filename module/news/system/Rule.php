@@ -42,7 +42,7 @@ class Rule extends HdRule {
 			return '内容不能为空';
 		}
 
-		return '';
+		return true;
 	}
 
 	public function fieldsSubmit( $rid ) {

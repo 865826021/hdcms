@@ -3,10 +3,10 @@
 	<ul class="nav nav-tabs">
 		<if value="!empty($_GET['rid'])">
 			<li role="presentation">
-				<a href="?s=site/reply/lists&m={{v('module.name')}}">管理{{v('module.title')}}</a>
+				<a href="?s=site/rule/lists&m={{v('module.name')}}">管理{{v('module.title')}}</a>
 			</li>
 			<li role="presentation">
-				<a href="?s=site/reply/post&m={{v('module.name')}}">
+				<a href="?s=site/rule/post&m={{v('module.name')}}">
 					<i class="fa fa-plus"></i> 添加{{v('module.title')}}
 				</a>
 			</li>
@@ -15,7 +15,7 @@
 			</li>
 			<else/>
 			<li role="presentation">
-				<a href="?s=site/reply/lists&m={{v('module.name')}}">管理{{v('module.title')}}</a>
+				<a href="?s=site/rule/lists&m={{v('module.name')}}">管理{{v('module.title')}}</a>
 			</li>
 			<li role="presentation" class="active">
 				<a href="#"><i class="fa fa-plus"></i> 添加{{v('module.title')}}</a>
@@ -45,7 +45,7 @@
 						</div>
 					</div>
 				</div>
-				<include file="app/site/view/reply/keyword.php"/>
+				<include file="app/site/view/rule/keyword.php"/>
 			</div>
 		</div>
 		{{$moduleForm}}

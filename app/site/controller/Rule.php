@@ -8,16 +8,16 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-use system\model\Rule;
+use system\model\Rule as Model;
 
 /**
- * 关键词回复处理
- * Class Reply
+ * 模块规则列表管理
+ * Class Rule
  * @package app\site\controller
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class Reply {
+class Rule {
 	public function __construct() {
 		auth();
 	}
@@ -78,7 +78,7 @@ class Reply {
 		}
 		//获取关键词回复
 		if ( $rid = Request::get( 'rid' ) ) {
-			$data = Rule::where( 'rid', $rid )->first()->toArray();
+			$data = Model::where( 'rid', $rid )->first()->toArray();
 			if ( empty( $data ) ) {
 				message( '回复规则不存在', 'lists', 'error' );
 			}
