@@ -1,9 +1,9 @@
-<?php namespace addons\hdcms66\system;
+<?php namespace addons\store\system;
 
 /**
  * 测试模块消息订阅器
  *
- * @author author
+ * @author 向军
  * @url http://open.hdcms.com
  */
 use module\HdSubscribe;
@@ -16,7 +16,7 @@ class Subscribe extends HdSubscribe{
 	 * 不要在这里直接回复微信消息,否则会影响整个系统的稳定性
 	 * 微信消息类型很多, 系统已经内置了"后盾网微信接口SDK"
 	 * 要更全面的使用本功能请查看 SDK文档
-	 * @author author
+	 * @author 向军
 	 * @url http://www.hdcms.com
 	 */
 	public function handle(){

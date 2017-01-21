@@ -43,7 +43,7 @@
 						</div>
 					</div>
 				</div>
-				<include file="app/site/view/reply/keyword"/>
+				<include file="app/site/view/rule/keyword"/>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">封面参数</label>
 					<div class="col-sm-8">

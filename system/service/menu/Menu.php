@@ -82,7 +82,6 @@ class Menu {
 			];
 		}
 
-//		p($menus['module']);
 		return $menus;
 	}
 

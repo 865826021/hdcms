@@ -1,14 +1,13 @@
-<?php namespace addons\hdcms\system;
-use module\HdConfig;
+<?php namespace addons\store\system;
 
 /**
  * 模块配置管理
  * 用于管理当前模块的配置项
  * 每个模块配置是独立管理的互不影响
- * @author 后盾向军 <2300071698@qq.com>
- * @qq 2300071698
+ * @author 向军
  * @url http://www.hdcms.com
  */
+use module\HdConfig;
 
 class Config extends HdConfig {
 	public function settingsDisplay() {

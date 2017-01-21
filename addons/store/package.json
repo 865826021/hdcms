@@ -1,39 +1,30 @@
 {
     "manifest_code": "2.0",
-    "title": "hdcms",
-    "name": "hdcms",
+    "title": "应用商店",
+    "name": "store",
     "version": "1.0",
     "industry": "business",
-    "resume": "resume",
-    "detail": "detail",
-    "author": "author",
-    "url": "url",
+    "resume": "HDCMS应用商店",
+    "detail": "提供模块、模板的发布\/下载\/更新的管理平台。",
+    "author": "向军",
+    "url": "http:\/\/store.hdcms.com",
     "setting": true,
     "tag": true,
     "web": {
         "entry": {
             "title": "桌面入口导航",
-            "do": "zuomianrukou"
+            "do": "home"
         },
         "member": [
-            {
-                "title": "桌面会员中心",
-                "do": "zuomianmember"
-            }
+
         ]
     },
     "mobile": {
         "home": [
-            {
-                "title": "移动端首页导航",
-                "do": "mobilesouye"
-            }
+
         ],
         "member": [
-            {
-                "title": "移动端会员中心",
-                "do": "mobilemember"
-            }
+
         ]
     },
     "subscribes": {
@@ -76,15 +67,31 @@
             "do": "fengmian2"
         }
     ],
-    "rule": true,
+    "rule": false,
     "business": [
         {
-            "title": "业务功能",
-            "controller": "business",
+            "title": "模块管理",
+            "controller": "module",
             "action": [
                 {
-                    "title": "控制器动作",
-                    "do": "action"
+                    "title": "审核模块",
+                    "do": "audit"
+                },
+                {
+                    "title": "模块列表",
+                    "do": "lists",
+                    "directly": false
+                }
+            ]
+        },
+        {
+            "title": "开发者管理",
+            "controller": "user",
+            "action": [
+                {
+                    "title": "开发者列表",
+                    "do": "lists",
+                    "directly": false
                 }
             ]
         }
@@ -94,7 +101,7 @@
         "version2": true
     },
     "thumb": "thumb.png",
-    "preview": "cover.jpg",
+    "preview": "cover.png",
     "install": "",
     "uninstall": "",
     "upgrade": ""

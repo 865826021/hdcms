@@ -245,6 +245,7 @@ class Site {
 			$site->domain      = Request::post( 'domain' );
 			$site->module      = Request::post( 'module' );
 			$site->save();
+			message( '网站数据保存成功', 'back', 'success' );
 		}
 		$site = SiteModel::where( 'siteid', SITEID )->first();
 		\Site::updateCache();
@@ -256,7 +257,7 @@ class Site {
 	public function connect() {
 		//与微信官网通信绑定验证
 		$wechat = SiteWechat::where( 'siteid', SITEID )->first();
-		c( "wechat", $wechat?$wechat->toArray():[] );
+		c( "wechat", $wechat ? $wechat->toArray() : [ ] );
 		$status = \WeChat::getAccessToken();
 		SiteWechat::where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {

@@ -118,7 +118,7 @@ class Module {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
 			//创建目录创建安全文件
-			foreach ( [ 'controller', 'template','service', 'model', 'system', 'system/template' ] as $d ) {
+			foreach ( [ 'controller', 'template', 'service', 'model', 'system', 'system/template' ] as $d ) {
 				if ( ! mkdir( "{$dir}/{$d}", 0755, true ) ) {
 					message( '模块目录创建失败,请修改addons目录的权限', 'back', 'error' );
 				}
@@ -143,7 +143,7 @@ class Module {
 			Cover::make( $data );
 			Navigate::make( $data );
 			Business::make( $data );
-			Setup::make($data);
+			Setup::make( $data );
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块创建成功', 'prepared' );
 		}
@@ -163,8 +163,8 @@ class Module {
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
 			//执行安装指令
-			$class = 'addons\\'.$config['name'].'\system\Setup';
-			call_user_func_array([new $class,'install'],[]);
+			$class = 'addons\\' . $config['name'] . '\system\Setup';
+			call_user_func_array( [ new $class, 'install' ], [ ] );
 			//整合添加到模块表中的数据
 			$model                = new Modules();
 			$model['name']        = $config['name'];
@@ -224,13 +224,10 @@ class Module {
 			if ( ! empty( $config['business'] ) ) {
 				foreach ( $config['business'] as $d ) {
 					if ( ! empty( $d['action'] ) ) {
-						foreach ( $d['action'] as $a ) {
-							$a['entry']      = 'business';
-							$a['controller'] = $d['controller'];
-							$a['module']     = $module;
-							$a['do']         = json_encode( $d['action'], JSON_UNESCAPED_UNICODE );
-							ModulesBindings::insert( $a );
-						}
+						$d['entry']  = 'business';
+						$d['module'] = $module;
+						$d['do']     = json_encode( $d['action'], JSON_UNESCAPED_UNICODE );
+						ModulesBindings::insert( $d );
 					}
 				}
 			}

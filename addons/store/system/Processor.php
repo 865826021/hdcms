@@ -1,9 +1,9 @@
-<?php namespace addons\hdcms66\system;
+<?php namespace addons\store\system;
 
 /**
  * 测试模块消息处理器
  *
- * @author author
+ * @author 向军
  * @url http://open.hdcms.com
  */
 use module\HdProcessor;

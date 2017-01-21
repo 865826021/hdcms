@@ -1,10 +1,10 @@
-<?php namespace addons\hdcms;
+<?php namespace addons\store;
 
 use houdunwang\view\build\TagBase;
 
 /**
  * 模块模板视图自定义标签处理
- * @author author
+ * @author 向军
  * @url http://www.hdcms.com
  */
 class Tag extends TagBase {

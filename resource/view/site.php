@@ -293,9 +293,9 @@
 							<foreach from="$f['do']" value="$d">
 								<li class="list-group-item"
 								    onclick="hdMenus.system(this)"
-								    url="?m={{$LINKS['module']['title']}}&action={{$f['controller']}}/{{$d['do']}}"
-								    menuid="business{{$f['bid']}}"
-								    module="{{$LINKS['module']['title']}}"
+								    url="?m={{$LINKS['module']['name']}}&action=controller/{{$f['controller']}}/{{$d['do']}}"
+								    menuid="business_{{$f['controller']}}_{{$d['do']}}"
+								    module="{{$LINKS['module']['name']}}"
 								    mark="package">
 									<i class="fa fa-server"></i> {{$d['title']}}
 								</li>

@@ -1,10 +1,10 @@
-<?php namespace addons\hdcms\system;
+<?php namespace addons\store\system;
 
 /**
  * 模块配置管理
  * 用于管理当前模块的配置项
  * 每个模块配置是独立管理的互不影响
- * @author author
+ * @author 向军
  * @url http://www.hdcms.com
  */
 use module\HdSetup;

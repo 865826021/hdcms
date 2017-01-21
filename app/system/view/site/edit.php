@@ -31,7 +31,7 @@
                     <label class="col-sm-2 control-label">网站域名</label>
                     <div class="col-sm-10">
                         <input type="text" name="domain" class="form-control" value="{{$site['domain']}}" placeholder="如: www.houdunwang.com">
-                        <span class="help-block">站点使用的域名,不要添加http</span>
+                        <span class="help-block">站点使用的域名,不要添加http或https</span>
                     </div>
                 </div>
                 <div class="form-group">
@@ -79,7 +79,6 @@
 <style>
     .nav li.normal {
         background: #eee;
-
     }
 
     .nav li.normal a, .nav li.normal a:active, .nav li.normal a:focus {
