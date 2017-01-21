@@ -16,7 +16,7 @@ class Tag {
 
 	protected static function php( $data ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\system;
 
 use houdunwang\\view\\build\\TagBase;
 

@@ -36,7 +36,7 @@ class Navigate {
 
 	protected static function php( $data, $action ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\controller;
 
 /**
  * 模块导航菜单处理

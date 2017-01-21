@@ -19,7 +19,7 @@ class Processor {
 
 	protected static function php( $data ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\system;
 
 /**
  * 测试模块消息处理器

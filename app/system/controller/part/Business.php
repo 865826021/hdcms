@@ -23,7 +23,7 @@ class Business {
 	protected static function controller( $data, $controller, $action ) {
 		$file = "addons/{$data['name']}/controller/" . ucfirst( $controller['controller'] ) . ".php";
 		$tpl  = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\controller;
 
 /**
  * {$controller['title']}

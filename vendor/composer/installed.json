@@ -1843,59 +1843,6 @@
         ]
     },
     {
-        "name": "houdunwang/view",
-        "version": "v1.0.9",
-        "version_normalized": "1.0.9.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/view.git",
-            "reference": "b17b03dcd7eac490c46d86f92f00867dc0d3e8e9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/view/zipball/b17b03dcd7eac490c46d86f92f00867dc0d3e8e9",
-            "reference": "b17b03dcd7eac490c46d86f92f00867dc0d3e8e9",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/cache": "~1.0",
-            "houdunwang/config": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-17 23:14:59",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/helper.php"
-            ],
-            "psr-4": {
-                "houdunwang\\view\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "日志管理",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "模板",
-            "视图"
-        ]
-    },
-    {
         "name": "houdunwang/session",
         "version": "v1.0.10",
         "version_normalized": "1.0.10.0",
@@ -2059,18 +2006,71 @@
         ]
     },
     {
-        "name": "houdunwang/framework",
-        "version": "v3.0.63",
-        "version_normalized": "3.0.63.0",
+        "name": "houdunwang/view",
+        "version": "v1.0.12",
+        "version_normalized": "1.0.12.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/houdunwang/framework.git",
-            "reference": "e6e3454e5b533672c218d2e87794b0e5bbc0dda0"
+            "url": "https://github.com/houdunwang/view.git",
+            "reference": "621e92229eeb91de29772459469c3df9e45365fe"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/framework/zipball/e6e3454e5b533672c218d2e87794b0e5bbc0dda0",
-            "reference": "e6e3454e5b533672c218d2e87794b0e5bbc0dda0",
+            "url": "https://api.github.com/repos/houdunwang/view/zipball/621e92229eeb91de29772459469c3df9e45365fe",
+            "reference": "621e92229eeb91de29772459469c3df9e45365fe",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/cache": "~1.0",
+            "houdunwang/config": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-01-20 20:19:14",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\view\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "日志管理",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "模板",
+            "视图"
+        ]
+    },
+    {
+        "name": "houdunwang/framework",
+        "version": "v3.0.65",
+        "version_normalized": "3.0.65.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/framework.git",
+            "reference": "63d2c90ef5c0d5ab57270eb380afa0c3a48a5dcf"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/framework/zipball/63d2c90ef5c0d5ab57270eb380afa0c3a48a5dcf",
+            "reference": "63d2c90ef5c0d5ab57270eb380afa0c3a48a5dcf",
             "shasum": ""
         },
         "require": {
@@ -2117,7 +2117,7 @@
             "houdunwang/zip": "~1.0",
             "php": ">=5.4.0"
         },
-        "time": "2017-01-20 18:52:50",
+        "time": "2017-01-21 04:41:34",
         "type": "project",
         "installation-source": "dist",
         "autoload": {

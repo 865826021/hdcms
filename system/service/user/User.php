@@ -148,8 +148,8 @@ class User extends Common {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
 			$user                         = [ ];
-			$user['info']                 = UserModel::find( \Session::get( 'admin_uid' ) );
-			$user['group']                = UserGroup::where( 'id', $user['info']['groupid'] )->first();
+			$user['info']                 = Db::table('user')->find( \Session::get( 'admin_uid' ) );
+			$user['group']                = Db::table('user_group')->where( 'id', $user['info']['groupid'] )->first();
 			$user['system']['super_user'] = $user['group']['id'] == 0;
 			$user['system']['user_type']  = 'admin';
 			v( 'user', $user );
@@ -176,7 +176,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth() {
-		if ( v( 'user' ) ) {
+		if ( v( 'user' ) && v('user.system.user_type')=='admin') {
 			return true;
 		}
 		message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );

@@ -15,7 +15,7 @@ class Rule {
 
 	protected static function php( $data ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']};
+<?php namespace addons\\{$data['name']}\\system;
 
 /**
  * 回复规则列表

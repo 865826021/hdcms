@@ -51,6 +51,15 @@ function record( $message ) {
 }
 
 /**
+ * 验证用户有没有管理站点的权限
+ *
+ * @param string $siteId 站点编号
+ */
+function SiteVerify( $siteId = '' ) {
+	\User::isOperate( $siteId );
+}
+
+/**
  * 根据标识验证模块的访问权限
  * 系统模块时使用 system标识验证,因为所有系统模块权限是统一管理的
  * 插件模块是独立设置的,所以针对插件使用插件名标识进行验证
@@ -70,6 +79,7 @@ function moduleVerify() {
 
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
+
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' );
 }
