@@ -111,6 +111,7 @@ class Site extends Common {
 		*/
 		$SiteSetting                = new SiteSetting();
 		$SiteSetting['siteid']      = $siteId;
+		$SiteSetting['quickmenu']   = 1;
 		$SiteSetting['creditnames'] = [
 			'credit1' => [ 'title' => '积分', 'status' => 1 ],
 			'credit2' => [ 'title' => '余额', 'status' => 1 ],
@@ -197,6 +198,7 @@ class Site extends Common {
 		$setting ['register']        = json_decode( $setting['register'], true );
 		$setting ['smtp']            = json_decode( $setting['smtp'], true );
 		$setting ['pay']             = json_decode( $setting['pay'], true );
+		$setting ['quickmenu']       = $setting['quickmenu'];
 		$data['setting']             = $setting;
 		//站点模块
 		$data['modules'] = \Module::getSiteAllModules( $siteId, false );

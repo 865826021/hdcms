@@ -97,7 +97,6 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="?s=system/user/myPassword">我的帐号</a></li>
-							<li role="separator" class="divider"></li>
 							<li><a href="?s=system/manage/menu">系统选项</a></li>
 							<li role="separator" class="divider"></li>
 							<li><a href="?s=system/entry/quit">退出</a></li>
@@ -203,6 +202,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/reply/lists&m={{$LINKS['module']['name']}}"
 							    menuid="rule"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
 								<i class="fa fa-rss"></i> 回复规则列表
 							</li>
@@ -212,6 +212,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/module/setting&m={{$LINKS['module']['name']}}"
 							    menuid="setting"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
 								<i class="fa fa-cog"></i> 参数设置
 							</li>
@@ -231,6 +232,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/nav/lists&entry=home&m={{$LINKS['module']['name']}}"
 							    menuid="home"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
 								<i class="fa fa-home"></i> 微站首页导航
 							</li>
@@ -240,6 +242,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/nav/lists&entry=profile&m={{$LINKS['module']['name']}}"
 							    menuid="profile"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
 								<i class="fa fa-github"></i> 移动端会员中心导航
 							</li>
@@ -249,8 +252,9 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/nav/lists&entry=member&m={{$LINKS['module']['name']}}"
 							    menuid="member"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
-							<i class="fa fa-renren"></i> 桌面个人中心导航
+								<i class="fa fa-renren"></i> 桌面个人中心导航
 							</li>
 						</if>
 					</ul>
@@ -268,6 +272,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/module/cover&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
 							    menuid="cover{{$f['bid']}}"
+							    module="{{$LINKS['module']['title']}}"
 							    mark="package">
 								<i class="fa fa-comments"></i> {{$f['title']}}
 							</li>
@@ -289,6 +294,7 @@
 								    onclick="hdMenus.system(this)"
 								    url="?s=site/module/business&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
 								    menuid="business{{$f['bid']}}"
+								    module="{{$LINKS['module']['title']}}"
 								    mark="package">
 									<i class="fa fa-server"></i> {{$d['title']}}
 								</li>
@@ -311,6 +317,7 @@
 							    onclick="hdMenus.system(this)"
 							    mark="package" ,
 							    url="?s=site/entry/module&m={{$g['name']}}"
+							    module="{{$g['title']}}"
 							    menuid="{{$g['name']}}">
 								{{$g['title']}}
 							</li>
@@ -351,6 +358,7 @@
 	Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
 </div>
 <script src="{{__ROOT__}}/resource/js/menu.js"></script>
+<script src="{{__ROOT__}}/resource/js/quick_menu.js"></script>
 <script>
 	require(['bootstrap']);
 </script>
@@ -372,6 +380,40 @@
 			obj.modal('show');
 		});
 	</script>
+</if>
+<div id="context-menu">
+	<ul class="dropdown-menu" role="menu">
+		<li><a tabindex="-1" href="#">添加到快捷菜单</a></li>
+	</ul>
+</div>
+<!--底部快捷菜单导航-->
+<?php $QUICKMENU = \Menu::getQuickMenu(); ?>
+<if value="$QUICKMENU['status']">
+	<div class="quick_navigate">
+		<div class="btn-group">
+		<span class="btn btn-success btn-sm">
+			快捷导航
+		</span>
+			<foreach from="$QUICKMENU['system']" value="$v">
+				<a class="btn btn-default btn-sm" href="{{$v['url']}}">
+					{{$v['title']}}
+				</a>
+			</foreach>
+			<foreach from="$QUICKMENU['module']" value="$v">
+				<div class="btn-group dropup">
+					<button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+						{{$v['title']}} <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<foreach from="$v['action']" value="$a">
+							<li><a href="{{$a['url']}}">{{$a['title']}}</a></li>
+						</foreach>
+					</ul>
+				</div>
+			</foreach>
+		</div>
+		<i class="fa fa-times-circle-o pull-right fa-2x close_quick_menu"></i>
+	</div>
 </if>
 </body>
 </html>

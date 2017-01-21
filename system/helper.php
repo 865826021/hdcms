@@ -55,7 +55,7 @@ function record( $message ) {
  *
  * @param string $siteId 站点编号
  */
-function SiteVerify( $siteId = '' ) {
+function siteVerify( $siteId = '' ) {
 	\User::isOperate( $siteId );
 }
 

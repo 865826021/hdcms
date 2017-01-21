@@ -81,7 +81,17 @@ class Menu {
 				'moduleLists' => \Module::getBySiteUser(),
 			];
 		}
+
 //		p($menus['module']);
 		return $menus;
+	}
+
+	/**
+	 * 获取快捷导航菜单
+	 * @return array|mixed
+	 */
+	public function getQuickMenu() {
+		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where('uid',v('user.info.uid'))->pluck( 'data' );
+		return $data ? json_decode( $data, true ) : [ ];
 	}
 }

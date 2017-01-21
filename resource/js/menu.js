@@ -60,7 +60,8 @@ window.hdMenus = {
      * @param util util组件
      */
     setMark: function (util) {
-        var mark = util.get('mark')
+        var mark = util.get('mark');
+        mark = mark?mark.replace(/[^a-z]/i,''):mark;
         if (!mark) {
             mark = sessionStorage.getItem('hdMenusMark');
             if (!mark) {
