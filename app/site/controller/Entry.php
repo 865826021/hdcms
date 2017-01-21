@@ -34,7 +34,7 @@ class Entry {
 	 * @return mixed
 	 */
 	public function home() {
-		\User::isOperate();
+		auth();
 		if ( ! $mark = Request::get( 'mark' ) ) {
 			//获取系统菜单
 			$menu = \Menu::all();
@@ -42,7 +42,7 @@ class Entry {
 				message( '站点没有可访问的模块', 'back', 'error' );
 			}
 			$current = current( $menu );
-			$mark =$current['mark'] ;
+			$mark    = $current['mark'];
 		}
 
 		return view( VIEW_PATH . '/entry/home/' . $mark . '.php' );
@@ -53,14 +53,8 @@ class Entry {
 	 * @return mixed
 	 */
 	public function module() {
-		\User::moduleVerify();
+		auth();
 
 		return view();
 	}
-
-//	//返回模块列表功能
-//	public function package() {
-//		//分配菜单
-//		return view();
-//	}
 }

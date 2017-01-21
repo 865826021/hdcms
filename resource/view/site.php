@@ -180,7 +180,7 @@
 						</li>
 						<li class="list-group-item"
 						    onclick="hdMenus.system(this)"
-						    url="?s=site/entry/home&m={{$LINKS['module']['name']}}&mark=package"
+						    url="?s=site/entry/module&m={{$LINKS['module']['name']}}&mark=package"
 						    menuid="{{$LINKS['module']['name']}}"
 						    mark="package">
 							<i class="fa fa-reply-all"></i> {{$LINKS['module']['title']}}
@@ -230,7 +230,7 @@
 						<if value="!empty($LINKS['module']['budings']['home'])">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/nav/lists&entry=home&m={{$LINKS['module']['name']}}"
+							    url="?s=site/navigate/lists&entry=home&m={{$LINKS['module']['name']}}"
 							    menuid="home"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">

@@ -10,17 +10,8 @@ use system\model\User as UserModel;
  * @site www.houdunwang.com
  */
 class User {
-	//管理员模型
-	protected $user;
-
-	public function __construct() {
-		//登录检测
-		\User::loginAuth();
-	}
-
 	//用户列表
 	public function lists() {
-		//管理员验证
 		\User::superUserAuth();
 		$users = UserModel::leftJoin( 'user_group', 'user.groupid', '=', 'user_group.id' )
 		                  ->where( 'user.groupid', '>', '0' )->paginate( 10 );
@@ -30,7 +21,6 @@ class User {
 
 	//添加用户
 	public function add() {
-		//管理员验证
 		\User::superUserAuth();
 		if ( IS_POST ) {
 			Validate::make( [
@@ -58,7 +48,6 @@ class User {
 
 	//编辑
 	public function edit() {
-		//管理员验证
 		\User::superUserAuth();
 		$model = UserModel::find( Request::get( 'uid' ) );
 		if ( IS_POST ) {
@@ -90,7 +79,6 @@ class User {
 
 	//锁定或解锁用户
 	public function updateStatus() {
-		//管理员验证
 		\User::superUserAuth();
 		$model = UserModel::find( Request::get( 'uid' ) );
 		if ( \User::isSuperUser( $model->uid ) ) {
@@ -105,7 +93,6 @@ class User {
 
 	//删除用户
 	public function remove() {
-		//管理员验证
 		\User::superUserAuth();
 		if ( ! \User::remove( Request::post( 'uid' ) ) ) {
 			message( \User::getError(), 'with' );
@@ -118,6 +105,7 @@ class User {
 	 * @return mixed
 	 */
 	public function permission() {
+		\User::superUserAuth();
 		$model = UserModel::find( Request::get( 'uid' ) );
 		//获取用户组信息
 		$group = $model->userGroup();
@@ -125,6 +113,7 @@ class User {
 		$sites = \Site::getUserAllSite( $model['uid'] );
 		//用户套餐
 		$packages = \Package::getUserGroupPackageLists( $model['groupid'] );
+
 		return view()->with( [
 			'group'    => $group,
 			'packages' => $packages,

@@ -17,28 +17,9 @@ use system\model\ReplyCover;
  * @package site\controller
  */
 class Module {
-	//指控制器目录
-	protected $module;
-	//控制器
-	protected $controller;
-	//动作
-	protected $action;
-
 	public function __construct() {
-		//站点模块功能检测
-		if ( ! v( 'module' ) ) {
-			message( '访问的模块不存在', 'back', 'error' );
-		}
-		if ( $action = q( 'get.a' ) ) {
-			$info             = explode( '/', $action );
-			$this->module     = count( $info ) == 3 ? array_shift( $info ) : null;
-			$this->controller = $info[0];
-			$this->action     = $info[1];
-		} else {
-			$this->module = v( 'module.name' );
-		}
+		auth();
 	}
-
 
 	//模块配置
 	public function setting() {
@@ -57,7 +38,7 @@ class Module {
 	}
 
 
-	//模块封面设置
+	//模块封面
 	public function cover() {
 		//验证登录
 		service( 'user' )->loginAuth();
@@ -104,17 +85,5 @@ class Module {
 		$field['name'] = $moduleBindings['title'];
 
 		return view()->with( 'field', $field );
-	}
-
-	//请求入口
-	public function entry() {
-		switch ( q( 'get.t' ) ) {
-			case 'site':
-				return $this->site();
-			case 'web':
-				return $this->web();
-			default:
-				message( '你访问的页面不存在', 'back', 'warning' );
-		}
 	}
 }

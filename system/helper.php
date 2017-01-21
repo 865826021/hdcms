@@ -51,12 +51,11 @@ function record( $message ) {
 }
 
 /**
- * 验证用户有没有管理站点的权限
- *
- * @param string $siteId 站点编号
+ * 验证后台管理员帐号在当前站点的权限
+ * 如果当前有模块动作时同时会验证帐号访问该模块的权限
  */
-function siteVerify( $siteId = '' ) {
-	\User::isOperate( $siteId );
+function auth() {
+	\User::auth();
 }
 
 /**
@@ -66,17 +65,19 @@ function siteVerify( $siteId = '' ) {
  *
  * @param $tag 权限标识
  */
-function auth( $tag ) {
-	\User::auth( $tag );
+function authIdentity( $tag ) {
+	\User::authIdentity( $tag );
 }
+
 
 /**
- * 模块访问权限验证
+ * 生成模块控制器链接地址
+ *
+ * @param string $action 动作标识
+ * @param array $args GET参数
+ *
+ * @return string
  */
-function moduleVerify() {
-	\User::moduleVerify();
-}
-
 function url( $action, $args = [ ] ) {
 	$info = preg_split( '#\.|/#', $action );
 

@@ -14,7 +14,6 @@ class Manage {
 	 */
 	public function menu() {
 		\User::loginAuth();
-
 		return view()->with( [ 'isSuperUser' => \User::isSuperUser() ] );
 	}
 
@@ -23,7 +22,7 @@ class Manage {
 	 * @return mixed
 	 */
 	public function updateCache() {
-		\User::isSuperUser();
+		\User::superUserAuth();
 		if ( IS_POST ) {
 			//更新数据缓存
 			if ( isset( $_POST['data'] ) ) {

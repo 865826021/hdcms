@@ -117,11 +117,10 @@ class User extends Common {
 	 * 用户登录
 	 *
 	 * @param array $data 登录数据
-	 * @param bool $process 直接处理
 	 *
 	 * @return bool|array
 	 */
-	public function login( array $data, $process = true ) {
+	public function login( array $data ) {
 		$user = Db::table( 'user' )->where( 'username', $data['username'] )->first();
 		if ( empty( $user ) ) {
 			message( '帐号不存在', 'back', 'error' );
@@ -194,43 +193,69 @@ class User extends Common {
 	public function superUserAuth( $uid = 0 ) {
 		$uid = $uid ?: v( "user.info.uid" );
 		if ( ! $this->isSuperUser( $uid ) ) {
-			$url = v( 'user' ) ? 'back' : u( 'system.entry.login' );
-			message( '您不是系统管理员,无法进行操作!', $url, 'error' );
+			message( '您不是系统管理员,无法进行操作!', 'back', 'error' );
 		}
 
 		return true;
 	}
 
 	/**
-	 * 验证当前用户在当前站点
-	 * 能否使用当前模块
-	 * 具体模块动作需要使用权限标识独立验证
-	 * @return bool
-	 * @throws \Exception
+	 * 验证后台管理员帐号在当前站点的权限
+	 * 如果当前有模块动作时同时会验证帐号访问该模块的权限
+	 * @return bool|null|string
 	 */
-	public function hasModule() {
-		static $isAuth = null;
+	public function auth() {
+		static $status = null;
 		//验证过的进行缓存,减少验证效次数
-		if ( ! is_null( $isAuth ) ) {
-			return $isAuth;
+		if ( ! is_null( $status ) ) {
+			return $status;
 		}
-		//如果不是站点操作员验证失败
-		if ( ! $this->isOperate() ) {
-			return $isAuth = false;
+		$this->loginAuth();
+		//如果当前是模块操作时验证模块
+		$module = v( 'module.name' );
+		if ( $module ) {
+			$status = $this->authModule( $module, 'return' );
 		} else {
-			//如果对用户有模块权限的独立配置时先进行验证
-			$allowModules = UserPermission::where( 'siteid', SITEID )
-			                              ->where( 'uid', v( 'user.info.uid' ) )->lists( 'type' );
-			if ( ! empty( $allowModules ) ) {
-				return $isAuth = in_array( v( 'module.name' ), $allowModules );
+			//如果不是站点操作员验证失败
+			$status = $this->isOperate();
+			if ( ! $status ) {
+				message( '您没访问权限, 请连接管理员获取权限', 'back', 'error' );
 			}
-
-			//如果站点有这个模块时验证通过
-			if ( key_exists( v( 'module.name' ), v( 'site.modules' ) ) ) {
-				return $isAuth = true;
-			}
-
 		}
+
+		return true;
+	}
+
+	/**
+	 * 验证模块使用权限
+	 * 缓存不存在时执行验证流程
+	 *
+	 * @param string $module 模块名称
+	 * @param string $deal 处理方式 show直接显示错误 return(bool) 返回验证状态
+	 *
+	 * @return bool
+	 */
+	public function authModule( $module = '', $deal = 'show' ) {
+		static $cache = [ ];
+		$module = $module ?: v( 'module.name' );
+		$uid    = v( 'user.info.uid' );
+		if ( ! isset( $cache[ $module ] ) ) {
+			$cache[ $module ] = false;
+			//如果对用户有模块权限的独立配置时先进行验证
+			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )
+			                  ->where( 'uid', $uid )->lists( 'type' );
+			if ( ! empty( $allowModules ) ) {
+				$cache[ $module ] = in_array( $module, $allowModules );
+			} else if ( key_exists( $module, \Module::getSiteAllModules() ) ) {
+				//如果站点有这个模块时验证通过
+				$cache[ $module ] = true;
+			}
+		}
+		if ( ! $cache[ $module ] && $deal == 'show' ) {
+			message( '你没有访问模块的权限', 'back', 'error' );
+		}
+
+		return true;
 	}
 
 	/**
@@ -242,7 +267,7 @@ class User extends Common {
 	 *
 	 * @return bool
 	 */
-	public function auth( $identify ) {
+	public function authIdentity( $identify ) {
 		$this->loginAuth();
 		$status = true;
 		if ( $this->hasModule() === false ) {

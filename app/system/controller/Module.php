@@ -36,7 +36,7 @@ class Module {
 
 	//将本地开发模块生成压缩包
 	public function createZip() {
-		$name = q( 'get.name' );
+		$name = Request::get( 'name' );
 		//更改当前目录
 		chdir( 'addons' );
 		//设置压缩文件名
@@ -244,7 +244,7 @@ class Module {
 			}
 			//在服务套餐中添加模块
 			if ( ! empty( $_POST['package'] ) ) {
-				$package = Db::table('package')->whereIn( 'name', $_POST['package'] )->get();
+				$package = Db::table( 'package' )->whereIn( 'name', $_POST['package'] )->get();
 				foreach ( $package as $p ) {
 					$p['modules'] = json_decode( $p['modules'], true );
 					if ( empty( $p['modules'] ) ) {

@@ -8,30 +8,20 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-namespace app\site\controller;
+namespace module\quickmenu\controller;
 
+use module\HdController;
 
-class System {
-	public function __construct() {
-		\User::isOperate();
-	}
-
-	/**
-	 * 更新站点缓存
-	 */
-	public function updateCache() {
-		if ( IS_POST ) {
-			\Site::updateCache();
-			message( '更新站点缓存成功', 'back', 'success' );
-		}
-
-		return view();
-	}
-
+/**
+ * 底部快捷导航
+ * Class Site
+ * @package module\quickmenu\controller
+ */
+class Site extends HdController {
 	/**
 	 * 添加快捷菜单
 	 */
-	public function quickMenu() {
+	public function post() {
 		siteVerify();
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 		$data = $data ? json_decode( $data, true ) : [
@@ -82,7 +72,7 @@ class System {
 	/**
 	 * 关闭底部菜单
 	 */
-	public function quickMenuStatus() {
+	public function status() {
 		if ( IS_POST ) {
 			$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 			$data = $data ? json_decode( $data, true ) : [
@@ -104,6 +94,6 @@ class System {
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 		$data = $data ? json_decode( $data, true ) : [ 'status' => 0 ];
 
-		return view()->with( 'status', $data['status'] );
+		return view( $this->template . '/status.html' )->with( 'status', $data['status'] );
 	}
 }

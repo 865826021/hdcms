@@ -27,14 +27,14 @@ class Component {
 
 	//选择站点模板模板
 	public function siteTemplateBrowser() {
+		\User::loginAuth();
 		$data = \Template::getSiteAllTemplate();
-
 		return view()->with( 'data', $data );
 	}
 
 	//模块列表
 	public function moduleList() {
-		service( 'user' )->loginAuth();
+		\User::loginAuth();
 		$modules = Db::table( 'modules' )->get();
 
 		return view()->with( 'modules', $modules );
@@ -42,15 +42,16 @@ class Component {
 
 	//字体列表
 	public function font() {
-		\User::loginAuth();
-
+		if ( ! v( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		return View::make();
 	}
 
 	//上传图片webuploader
 	public function uploader() {
 		if ( ! v( 'user' ) ) {
-			message( '没有操作权限', 'back', 'error' );
+			message( '请登录后操作', 'back', 'error' );
 		}
 		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
 		if ( $file ) {
@@ -75,6 +76,9 @@ class Component {
 
 	//获取文件列表webuploader
 	public function filesLists() {
+		if ( ! v( 'user' ) ) {
+			message( '请登录后操作', 'back', 'error' );
+		}
 		$db = Db::table( 'attachment' )
 		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ) )
 		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
@@ -99,7 +103,7 @@ class Component {
 
 	//删除图片delWebuploader
 	public function removeImage() {
-		if ( v( 'user.uid' ) ) {
+		if ( ! v( 'user' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db   = Db::table( 'attachment' );
@@ -112,7 +116,6 @@ class Component {
 
 	//选择用户
 	public function users() {
-		//登录检测
 		\User::loginAuth();
 		if ( IS_POST ) {
 			//过滤不显示的用户
@@ -136,9 +139,7 @@ class Component {
 
 	//模块与模板列表,添加站点时选择扩展模块时使用
 	public function ajaxModulesTemplate() {
-		if ( ! Session::get( 'admin_uid' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
+		\User::loginAuth();
 		$modules   = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		$templates = Db::table( 'template' )->where( 'is_system', 0 )->get();
 

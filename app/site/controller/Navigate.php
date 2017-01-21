@@ -26,8 +26,7 @@ class Navigate {
 	protected $id;
 
 	public function __construct() {
-		//验证操作员权限
-		\User::isOperate();
+		auth();
 		$this->webid = Request::get( 'webid' );
 		$this->id    = Request::get( 'id' );
 		/**
@@ -190,7 +189,7 @@ class Navigate {
 		$field = Db::table( 'page' )->where( 'siteid', SITEID )->where( 'type', 'quickmenu' )->first();
 		if ( $field ) {
 			$field           = Arr::stringToInt( $field );
-			$field['params'] = json_decode( $field['params'],true );
+			$field['params'] = json_decode( $field['params'], true );
 		}
 
 		return view()->with( 'field', $field );

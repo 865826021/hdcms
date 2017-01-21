@@ -20,7 +20,7 @@ use system\model\Menu as MenuModel;
  */
 class Menu {
 	public function __construct() {
-		\User::isSuperUser();
+		\User::superUserAuth();
 	}
 
 	//编辑菜单

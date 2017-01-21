@@ -1,16 +1,5 @@
 <?php namespace app\system\controller;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-
-use system\model\Site;
-
 /**
  * 文章模板管理
  * Class Template
@@ -18,11 +7,8 @@ use system\model\Site;
  * @author 向军
  */
 class Template {
-	protected $db;
-
 	public function __construct() {
-		service( 'user' )->superUserAuth();
-		$this->db = new \system\model\Template();
+		\User::superUserAuth();
 	}
 
 	//设置新模板
@@ -50,11 +36,11 @@ class Template {
 			if ( is_dir( 'theme/' . $_POST['name'] ) || $this->db->where( 'name', $_POST['name'] )->first() ) {
 				message( '模板已经存在,请更改模板标识', 'back', 'error' );
 			}
-			if ( ! mkdir( 'theme/' . $_POST['name'], 0755, TRUE ) ) {
+			if ( ! mkdir( 'theme/' . $_POST['name'], 0755, true ) ) {
 				message( '模板目录创建失败,请修改 theme 目录的权限', 'back', 'error' );
 			}
-			mkdir( 'theme/' . $_POST['name'] . '/mobile', 0755, TRUE );
-			mkdir( 'theme/' . $_POST['name'] . '/web', 0755, TRUE );
+			mkdir( 'theme/' . $_POST['name'] . '/mobile', 0755, true );
+			mkdir( 'theme/' . $_POST['name'] . '/web', 0755, true );
 			//缩略图处理
 			$info = pathinfo( $_POST['thumb'] );
 			copy( $_POST['thumb'], 'theme/' . $_POST['name'] . '/thumb.' . $info['extension'] );
@@ -79,7 +65,7 @@ class Template {
 		$res  = json_decode( $res, 'true' );
 		$apps = [ ];
 		foreach ( $res['apps'] as $k => $v ) {
-			$v          = json_decode( $v['xml'], TRUE );
+			$v          = json_decode( $v['xml'], true );
 			$apps[ $k ] = $v;
 		}
 		//缓存
@@ -219,7 +205,7 @@ class Template {
 		if ( IS_POST ) {
 			$module = q( 'get.name' );
 			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=theme&module=' . $module );
-			$app    = json_decode( $app, TRUE );
+			$app    = json_decode( $app, true );
 			if ( $app['valid'] == 1 ) {
 				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=theme', [ 'file' => $app['data']['package'] ] );
 				file_put_contents( 'tmp.zip', $package );

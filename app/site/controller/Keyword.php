@@ -17,7 +17,7 @@ use system\model\Modules;
  */
 class Keyword {
 	public function __construct() {
-		\User::loginAuth();
+		auth();
 	}
 
 	/**

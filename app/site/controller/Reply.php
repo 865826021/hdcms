@@ -19,9 +19,7 @@ use system\model\Rule;
  */
 class Reply {
 	public function __construct() {
-		if ( ! \User::hasModule() ) {
-			message( '你没有操作权限', 'back', 'error' );
-		}
+		auth();
 	}
 
 	/**
