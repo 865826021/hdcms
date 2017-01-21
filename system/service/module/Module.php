@@ -17,6 +17,7 @@ class Module {
 	//删除模块时的关联数据表
 	protected $relationTables = [
 		'rule',
+		'reply_cover',
 		'module_setting',
 		'site_modules',
 		'ticket_module',
@@ -300,28 +301,8 @@ class Module {
 	 */
 	public function uninstall( $module ) {
 		//本地安装的模块删除处理
-		$configFile = 'addons/' . $module . '/package.json';
-		if ( is_file( $configFile ) ) {
-			$config = json_decode( file_get_contents( $configFile ), true );
-			//卸载数据
-			$installSql = trim( $config['uninstall'] );
-			if ( ! empty( $installSql ) ) {
-				if ( preg_match( '/.php$/', $installSql ) ) {
-					$file = 'addons/' . $module . '/' . $installSql;
-					if ( ! is_file( $file ) ) {
-						$this->error = '卸载文件:' . $file . '不存在';
+		$class = 'addons\\' . $module . '\system\Setup';
 
-						return false;
-					}
-					require $file;
-
-					return true;
-				} else {
-					return \Schema::sql( $installSql );
-				}
-			}
-		}
-
-		return true;
+		return call_user_func_array( [ new $class, 'uninstall' ], [ ] );
 	}
 }

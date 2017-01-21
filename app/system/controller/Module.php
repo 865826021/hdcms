@@ -162,19 +162,9 @@ class Module {
 		//获取模块xml数据
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
-			//执行安装SQL语句
-			$installSql = trim( $config['install'] );
-			if ( ! empty( $installSql ) ) {
-				if ( preg_match( '/.php$/', $installSql ) ) {
-					$file = $dir . '/' . $installSql;
-					if ( ! is_file( $file ) ) {
-						message( '安装文件:' . $file . " 不存在", '', 'error' );
-					}
-					require $file;
-				} else {
-					\Schema::sql( $installSql );
-				}
-			}
+			//执行安装指令
+			$class = 'addons\\'.$config['name'].'\system\Setup';
+			call_user_func_array([new $class,'install'],[]);
 			//整合添加到模块表中的数据
 			$model                = new Modules();
 			$model['name']        = $config['name'];
