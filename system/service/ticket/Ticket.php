@@ -28,7 +28,7 @@ class Ticket {
 	 * @return array
 	 */
 	public function getTicketListsByType( $type, $siteId = 0 ) {
-		$siteId = $siteid ?: SITEID;
+		$siteId = $siteId ?: SITEID;
 
 		return Db::table( 'ticket' )->where( 'siteid', $siteId )->where( 'type', intval( $type ) )->get();
 	}

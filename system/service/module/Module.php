@@ -16,8 +16,6 @@ use system\model\UserPermission;
 class Module {
 	//删除模块时的关联数据表
 	protected $relationTables = [
-		'rule',
-		'reply_cover',
 		'module_setting',
 		'site_modules',
 		'ticket_module',
@@ -285,6 +283,8 @@ class Module {
 		foreach ( $this->relationTables as $t ) {
 			Db::table( $t )->where( 'module', $module )->delete();
 		}
+		//删除模块使用的微信规则与关键词数据
+		\Wx::removeRuleByModule( $module );
 		Modules::where( 'name', $module )->delete();
 		//更新所有站点缓存
 		\Site::updateAllCache();

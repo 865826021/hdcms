@@ -122,4 +122,16 @@ class Wx {
 
 		return true;
 	}
+
+	/**
+	 * 根据模块名称删除模块相关数据
+	 *
+	 * @param $module
+	 */
+	public function removeRuleByModule( $module ) {
+		$rids = Db::table( 'rule' )->where( 'name','like', "%{$module}:%" )->lists( 'rid' );
+		foreach ( $rids as $rid ) {
+			$this->removeRule( $rid );
+		}
+	}
 }
