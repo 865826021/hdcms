@@ -15,6 +15,7 @@ use app\system\controller\part\Cover;
 use app\system\controller\part\Navigate;
 use app\system\controller\part\Processor;
 use app\system\controller\part\Rule;
+use app\system\controller\part\Setup;
 use app\system\controller\part\Subscribe;
 use app\system\controller\part\Tag;
 use houdunwang\request\Request;
@@ -142,6 +143,7 @@ class Module {
 			Cover::make( $data );
 			Navigate::make( $data );
 			Business::make( $data );
+			Setup::make($data);
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块创建成功', 'prepared' );
 		}

@@ -25,9 +25,9 @@ class Config {
  * @author {$data['author']}
  * @url http://www.hdcms.com
  */
-use module\hdModule;
+use module\HdConfig;
 
-class Config extends hdModule {
+class Config extends HdConfig {
 	public function settingsDisplay() {
 		if ( IS_POST ) {
 			//将新配置数据保存

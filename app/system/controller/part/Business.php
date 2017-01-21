@@ -32,9 +32,9 @@ class Business {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\hdController;
+use module\HdController;
 
-class {$controller['controller']} extends hdController {
+class {$controller['controller']} extends HdController {
 
 $action
 }

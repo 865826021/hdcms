@@ -211,7 +211,7 @@
 						<if value="$LINKS['module']['setting']">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/module/setting&m={{$LINKS['module']['name']}}"
+							    url="?s=site/config/post&m={{$LINKS['module']['name']}}"
 							    menuid="setting"
 							    module="{{$LINKS['module']['title']}}"
 							    mark="package">

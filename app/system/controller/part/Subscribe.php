@@ -27,8 +27,8 @@ class Subscribe {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\\hdSubscribe;
-class Subscribe extends hdSubscribe{
+use module\HdSubscribe;
+class Subscribe extends HdSubscribe{
 	
 	/**
 	 * 微信消息订阅处理

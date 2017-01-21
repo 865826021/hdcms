@@ -1,16 +1,16 @@
 <?php namespace app\site\controller;
 /**
- * 模块动作访问处理
- * Class Module
+ * 模块配置管理
+ * Class Config
  * @package site\controller
  */
-class Module {
+class Config {
 	public function __construct() {
 		auth();
 	}
 
 	//模块配置
-	public function setting() {
+	public function post() {
 		//后台分配菜单
 		$class = '\addons\\' . v( 'module.name' ) . '\system\Config';
 		if ( ! class_exists( $class ) || ! method_exists( $class, 'settingsDisplay' ) ) {

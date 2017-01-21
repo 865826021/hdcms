@@ -27,8 +27,8 @@ class Processor {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\hdProcessor;
-class Processor extends hdProcessor{
+use module\HdProcessor;
+class Processor extends HdProcessor{
 	/**
 	 * 微信消息处理
 	 * \$rid 为包含消息内容处理规则的编号

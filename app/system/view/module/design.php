@@ -629,30 +629,9 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">安装脚本</label>
-				<div class="col-sm-10 col-xs-10">
-					<textarea class="form-control" ng-model="field.install" rows="5"></textarea>
-					<span class="help-block">当前模块全新安装时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: install.php</span>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">卸载脚本</label>
-				<div class="col-sm-10 col-xs-12">
-					<textarea class="form-control" ng-model="field.uninstall" rows="5"></textarea>
-					<span class="help-block">当前模块卸载时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: uninstall.php</span>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">升级脚本</label>
-				<div class="col-sm-10 col-xs-12">
-					<textarea class="form-control" ng-model="field.upgrade" rows="5"></textarea>
-					<span class="help-block">当前模块更新时所执行的脚本, 可以定义为SQL语句. 也可以指定为单个的php脚本文件, 如: upgrade.php. (推荐使用php脚本, 方便检测字段及兼容性)</span>
-				</div>
-			</div>
-			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
 				<div class="col-sm-10 col-xs-12">
-					<input type="submit" class="btn btn-primary" value="生成模块模板">
+					<input type="submit" class="btn btn-primary" value="点击生成模块文件结构">
 					<p class="help-block">点此直接在源码目录 addons/<span class="identifie"></span> 处生成模块开发的模板文件, 方便快速开发</p>
 				</div>
 			</div>

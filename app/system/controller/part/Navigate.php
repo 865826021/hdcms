@@ -44,9 +44,9 @@ class Navigate {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\hdController;
+use module\HdController;
 
-class Navigate extends hdController {
+class Navigate extends HdController {
 
 $action
 }
