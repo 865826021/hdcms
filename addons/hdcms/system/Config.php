@@ -19,7 +19,6 @@ class Config extends hdModule {
 		}
 		//分配
 		\View::with( 'field', $this->config );
-		p($this->config);
 
 		return view( $this->template . '/config.html' );
 	}

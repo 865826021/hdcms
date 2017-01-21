@@ -24,6 +24,6 @@ abstract class hdProcessor {
 	abstract function handle( $rid );
 
 	public function __call( $method, $arguments = [ ] ) {
-
+		return call_user_func_array( [ $this->message, $method ], $arguments );
 	}
 }

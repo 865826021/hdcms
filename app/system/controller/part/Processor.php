@@ -39,7 +39,7 @@ class Processor extends hdProcessor{
 	 * @param int \$rid
 	 */
 	public function handle(\$rid){
-		p(\$this->message());
+		//此处书写微信回复代码
 	}
 }
 php;

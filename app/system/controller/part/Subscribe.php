@@ -31,7 +31,7 @@ use module\\hdSubscribe;
 class Subscribe extends hdSubscribe{
 	
 	/**
-	 * 微信消息定阅处理
+	 * 微信消息订阅处理
 	 * 微信有新消息后会发到这个方法
 	 * 本方法只做微信消息分析
 	 * 不要在这里直接回复微信消息,否则会影响整个系统的稳定性
@@ -41,7 +41,7 @@ class Subscribe extends hdSubscribe{
 	 * @url http://www.hdcms.com
 	 */
 	public function handle(){
-		p(\$this->message());
+		//此处理书写订阅处理代码
 	}
 }
 php;

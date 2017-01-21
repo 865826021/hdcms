@@ -1,4 +1,4 @@
-<?php namespace addons\hdcms;
+<?php namespace addons\hdcms\controller;
 
 /**
  * 业务功能
@@ -13,5 +13,6 @@ class business extends hdController {
 
     //控制器动作 
     public function action() {
+    	echo 33;
     }
 }

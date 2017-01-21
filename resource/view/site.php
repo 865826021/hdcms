@@ -292,7 +292,7 @@
 							<foreach from="$f['do']" value="$d">
 								<li class="list-group-item"
 								    onclick="hdMenus.system(this)"
-								    url="?s=site/module/business&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+								    url="?m={{$LINKS['module']['title']}}&action={{$f['controller']}}/{{$d['do']}}"
 								    menuid="business{{$f['bid']}}"
 								    module="{{$LINKS['module']['title']}}"
 								    mark="package">
@@ -381,6 +381,7 @@
 		});
 	</script>
 </if>
+<!--右键菜单添加到快捷导航-->
 <div id="context-menu">
 	<ul class="dropdown-menu" role="menu">
 		<li><a tabindex="-1" href="#">添加到快捷菜单</a></li>

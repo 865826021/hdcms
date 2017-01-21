@@ -70,7 +70,8 @@ class Reply {
 			$data['keywords'] = $data['keyword'];
 			$rid              = \Wx::rule( $data );
 			//调用模块的执行方法进行数据验证
-			if ( $msg = $instance->fieldsValidate( $rid ) ) {
+			$msg = $instance->fieldsValidate( $rid );
+			if ( $msg !== true ) {
 				message( $msg, 'back', 'error' );
 			}
 			//使模块保存回复内容

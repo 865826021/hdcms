@@ -21,10 +21,8 @@ require(['bootstrapContextmenu'], function ($) {
 
     //删除底部快捷菜单
     $(".close_quick_menu").click(function(){
-        util.confirm('下次要开启底部快捷菜单请在 [系统设置] 中进行开启',function(){
-           $.post('?s=site/system/quickMenuStatus',{'quickmenu':0},function(json){
-               util.message('菜单关闭显示成功,需要刷新页面后才可以看到效果。','','success');
-           },'JSON');
-        });
+        $.post('?s=site/system/quickMenuStatus',{'quickmenu':0},function(json){
+            util.message('菜单关闭显示成功,下次要开启底部快捷菜单请在 [系统设置] 中进行开启<br/>需要刷新页面后才可以看到效果。','','success');
+        },'JSON');
     })
 })

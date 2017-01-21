@@ -47,6 +47,7 @@ php;
 		return <<<php
     //{$d['title']} 
     public function {$d['do']}() {
+        echo '执行了控制器动作';
     }
 php;
 	}

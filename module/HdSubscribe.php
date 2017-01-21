@@ -26,6 +26,6 @@ abstract class hdSubscribe {
 	abstract function handle();
 
 	public function __call( $method, $arguments = [ ] ) {
-
+		return call_user_func_array( [ $this->message, $method ], $arguments );
 	}
 }

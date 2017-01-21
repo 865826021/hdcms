@@ -33,7 +33,7 @@ class Rule extends hdRule {
 	 * \$rid 为规则编号,新增时为0,编辑时才有具体编号
 	 * @param int \$rid
 	 */
-	public function display( \$rid = 0 ) {
+	public function fieldsDisplay( \$rid = 0 ) {
 	}
 	
 	/**
@@ -43,7 +43,7 @@ class Rule extends hdRule {
 	 * @param int \$rid
 	 * @return bool
 	 */
-	public function validate( \$rid = 0 ) {
+	public function fieldsValidate( \$rid = 0 ) {
 		return true;
 	}
 	
@@ -53,7 +53,7 @@ class Rule extends hdRule {
 	 * \$rid 为规则编号,新增时为0,编辑时才有具体编号
 	 * @param int \$rid
 	 */
-	public function submit( \$rid ) {
+	public function fieldsSubmit( \$rid ) {
 	}
 	
 	/**
@@ -61,7 +61,7 @@ class Rule extends hdRule {
 	 * \$rid 为规则编号,新增时为0,编辑时才有具体编号
 	 * @param int \$rid
 	 */
-	public function delete( \$rid ) {
+	public function ruleDeleted( \$rid ) {
 	}
 }
 php;

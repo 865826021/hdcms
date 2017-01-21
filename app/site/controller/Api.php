@@ -116,6 +116,7 @@ class Api {
 	 */
 	protected function moduleProcessing( $module, $rid = 0 ) {
 		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\system\Processor';
+
 		if ( class_exists( $class ) ) {
 			$obj = new $class();
 			if ( $obj->handle( $rid ) === true ) {

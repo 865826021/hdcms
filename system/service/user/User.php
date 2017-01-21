@@ -1,6 +1,7 @@
 <?php namespace system\service\user;
 
 use system\model\UserGroup;
+use system\model\UserPermission;
 use system\service\Common;
 use system\model\User as UserModel;
 
@@ -148,8 +149,8 @@ class User extends Common {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
 			$user                         = [ ];
-			$user['info']                 = Db::table('user')->find( \Session::get( 'admin_uid' ) );
-			$user['group']                = Db::table('user_group')->where( 'id', $user['info']['groupid'] )->first();
+			$user['info']                 = Db::table( 'user' )->find( \Session::get( 'admin_uid' ) );
+			$user['group']                = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
 			$user['system']['super_user'] = $user['group']['id'] == 0;
 			$user['system']['user_type']  = 'admin';
 			v( 'user', $user );
@@ -176,7 +177,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth() {
-		if ( v( 'user' ) && v('user.system.user_type')=='admin') {
+		if ( v( 'user' ) && v( 'user.system.user_type' ) == 'admin' ) {
 			return true;
 		}
 		message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
@@ -213,30 +214,23 @@ class User extends Common {
 		if ( ! is_null( $isAuth ) ) {
 			return $isAuth;
 		}
-		//操作员验证
-		if ( ! \User::isOperate() ) {
-			$isAuth = false;
+		//如果不是站点操作员验证失败
+		if ( ! $this->isOperate() ) {
+			return $isAuth = false;
 		} else {
-			//系统模块不受限制
-			if ( v( "module.is_system" ) == 1 ) {
-				$isAuth = true;
-			} else {
-				//站点是否含有模块
-				if ( ! $this->hasModule( SITEID, v( 'module.name' ) ) ) {
-					$isAuth = false;
-				} else {
-					//插件模块
-					$allowModules = UserPermission::where( 'siteid', SITEID )
-					                              ->where( 'uid', Session::get( 'user.uid' ) )->lists( 'type' );
-					if ( ! empty( $allowModules ) ) {
-						return $isAuth = in_array( v( 'module.name' ), $allowModules );
-					}
-					$isAuth = true;
-				}
+			//如果对用户有模块权限的独立配置时先进行验证
+			$allowModules = UserPermission::where( 'siteid', SITEID )
+			                              ->where( 'uid', v( 'user.info.uid' ) )->lists( 'type' );
+			if ( ! empty( $allowModules ) ) {
+				return $isAuth = in_array( v( 'module.name' ), $allowModules );
 			}
-		}
 
-		return $isAuth;
+			//如果站点有这个模块时验证通过
+			if ( key_exists( v( 'module.name' ), v( 'site.modules' ) ) ) {
+				return $isAuth = true;
+			}
+
+		}
 	}
 
 	/**
