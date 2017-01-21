@@ -387,6 +387,12 @@
 		<li><a tabindex="-1" href="#">添加到快捷菜单</a></li>
 	</ul>
 </div>
+<!--右键菜单删除快捷导航-->
+<div id="context-menu-del">
+	<ul class="dropdown-menu" role="menu">
+		<li><a tabindex="-1" href="#">删除菜单</a></li>
+	</ul>
+</div>
 <!--底部快捷菜单导航-->
 <?php $QUICKMENU = \Menu::getQuickMenu(); ?>
 <if value="$QUICKMENU['status']">

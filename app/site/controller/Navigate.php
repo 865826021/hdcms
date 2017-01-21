@@ -177,9 +177,8 @@ class Navigate {
 		message( '菜单删除成功', 'back', 'success' );
 	}
 
-	//快捷导航
+	//移动端页面快捷导航
 	public function quickmenu() {
-
 		if ( IS_POST ) {
 			$data  = json_decode( $_POST['data'], true );
 			$model = empty( $data['id'] ) ? new Page() : Page::find( $data['id'] );

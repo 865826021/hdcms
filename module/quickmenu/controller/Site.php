@@ -22,7 +22,7 @@ class Site extends HdController {
 	 * 添加快捷菜单
 	 */
 	public function post() {
-		siteVerify();
+		auth();
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 		$data = $data ? json_decode( $data, true ) : [
 			'system' => [ ],
@@ -73,6 +73,7 @@ class Site extends HdController {
 	 * 关闭底部菜单
 	 */
 	public function status() {
+		auth();
 		if ( IS_POST ) {
 			$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 			$data = $data ? json_decode( $data, true ) : [
@@ -95,5 +96,33 @@ class Site extends HdController {
 		$data = $data ? json_decode( $data, true ) : [ 'status' => 0 ];
 
 		return view( $this->template . '/status.html' )->with( 'status', $data['status'] );
+	}
+
+	public function del() {
+		$menu = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->first();
+		$tmp  = $data = json_decode( $menu['data'], true );
+		//从系统菜单删除
+		foreach ( $data['system'] as $k => $d ) {
+			if ( $d['url'] == $_POST['url'] ) {
+				unset( $tmp['system'][ $k ] );
+				break;
+			}
+		}
+		//从模块菜单删除
+		foreach ( $data['module'] as $moduleName => $d ) {
+			foreach ( $d['action'] as $n => $m ) {
+				if ( $m['url'] == $_POST['url'] ) {
+					unset( $tmp['module'][ $moduleName ]['action'][ $n ] );
+					//模块没动作时,删除这个模块的菜单列表
+					if ( empty( $tmp['module'][ $moduleName ]['action'] ) ) {
+						unset( $tmp['module'][ $moduleName ] );
+					}
+					break 2;
+				}
+			}
+		}
+		$insertData['data'] = json_encode( $tmp, JSON_UNESCAPED_UNICODE );
+		Db::table( 'site_quickmenu' )->where( 'id', $menu['id'] )->update( $insertData );
+		message( '删除菜单成功', 'back', 'success' );
 	}
 }

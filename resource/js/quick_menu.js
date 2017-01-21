@@ -1,4 +1,5 @@
 require(['bootstrapContextmenu'], function ($) {
+    //添加菜单
     $('.currentMenu li').contextmenu({
         target:'#context-menu',
         before: function(e,context) {
@@ -11,9 +12,26 @@ require(['bootstrapContextmenu'], function ($) {
                 url:obj.attr('url')+'&mark='+obj.attr('mark'),
                 title:$.trim(obj.text())
             };
-            $.post('?s=site/system/quickMenu',data,function(json){
+            $.post('?m=quickmenu&action=site/post',data,function(json){
                 if(json['valid']==1){
                     util.message('添加菜单成功,需要刷新页面后才可以看到底部菜单。','','success');
+                }
+            },'JSON');
+        }
+    })
+    //删除菜单
+    $('.quick_navigate a').contextmenu({
+        target:'#context-menu-del',
+        before: function(e,context) {
+        },
+        onItem: function(context,e) {
+            var obj  =$(context.context);
+            var data={
+                url:obj.attr('href')
+            };
+            $.post('?m=quickmenu&action=site/del',{url:data.url},function(json){
+                if(json['valid']==1){
+                    util.message('删除菜单成功,需要刷新页面后才可以看到效果。','','success');
                 }
             },'JSON');
         }
