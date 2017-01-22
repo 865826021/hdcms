@@ -72,7 +72,6 @@ class Menu {
 	public function get() {
 		static $menus = null;
 		if ( is_null( $menus ) ) {
-
 			$menus = [
 				//系统菜单数据
 				'menus'       => $this->all(),

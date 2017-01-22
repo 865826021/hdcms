@@ -7,13 +7,19 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-
 namespace app\site\controller;
 
 /**
- * Class a
+ * 模块路由规则
+ * Class Router
  * @package app\site\controller
  */
-class a {
+class Router {
+	public function __construct() {
+		auth();
+	}
 
+	public function lists() {
+		return view();
+	}
 }

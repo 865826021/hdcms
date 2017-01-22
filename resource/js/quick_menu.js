@@ -12,7 +12,7 @@ require(['bootstrapContextmenu'], function ($) {
                 url: obj.attr('url') + '&mark=' + obj.attr('mark'),
                 title: $.trim(obj.text())
             };
-            $.post('?m=quickmenu&action=site/post', data, function (json) {
+            $.post('?m=quickmenu&action=controller/site/post', data, function (json) {
                 if (json['valid'] == 1) {
                     util.message('添加菜单成功,系统将刷新页面。', window.system.url, 'success',1);
                 }
@@ -29,7 +29,7 @@ require(['bootstrapContextmenu'], function ($) {
             var data = {
                 url: obj.attr('href')
             };
-            $.post('?m=quickmenu&action=site/del', {url: data.url}, function (json) {
+            $.post('?m=quickmenu&action=controller/site/del', {url: data.url}, function (json) {
                 if (json['valid'] == 1) {
                     util.message('删除菜单成功,系统将刷新页面。',window.system.url,'success',1);
                 }

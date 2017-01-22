@@ -184,7 +184,8 @@
 						    url="?s=site/entry/module&m={{$LINKS['module']['name']}}&mark=package"
 						    menuid="{{$LINKS['module']['name']}}"
 						    mark="package">
-							<i class="fa fa-reply-all"></i> {{$LINKS['module']['title']}}
+							<i class="fa fa-desktop"></i>
+							{{$LINKS['module']['title']}}
 						</li>
 					</ul>
 				</if>
@@ -215,7 +216,7 @@
 							    menuid="middleware"
 							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
-								<i class="fa fa-rss"></i> 中间件设置
+								<i class="fa fa-globe"></i> 中间件设置
 							</li>
 						</if>
 						<if value="$LINKS['module']['router']">
@@ -225,7 +226,7 @@
 							    menuid="router"
 							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
-								<i class="fa fa-rss"></i> 路由器
+								<i class="fa fa-tachometer"></i> 路由规则
 							</li>
 						</if>
 					</ul>
@@ -256,7 +257,7 @@
 							    menuid="cover{{$f['bid']}}"
 							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
-								<i class="fa fa-comments"></i> {{$f['title']}}
+								<i class="fa fa-file-image-o"></i> {{$f['title']}}
 							</li>
 						</foreach>
 					</ul>
@@ -301,7 +302,6 @@
 						</if>
 					</ul>
 				</if>
-
 				<if value="$LINKS['module']['budings']['business']">
 					<foreach from="$LINKS['module']['budings']['business']" value="$f">
 						<div class="panel-heading hide module_action" mark="package">
@@ -319,7 +319,8 @@
 								    menuid="business_{{$f['controller']}}_{{$d['do']}}"
 								    module="{{$LINKS['module']['name']}}"
 								    mark="package">
-									<i class="fa fa-server"></i> {{$d['title']}}
+									<i class="fa fa-pencil-square-o"></i>
+									{{$d['title']}}
 								</li>
 							</foreach>
 						</ul>
@@ -355,12 +356,12 @@
 			<if value="v('module.title') && v('module.is_system')==0">
 				<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
 					<li>
-						<a href="?s=site/entry/home&p=package&menuid=21">
-							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块管理
+						<a href="?s=site/entry/home&mark=package">
+							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块
 						</a>
 					</li>
 					<li class="active">
-						<a href="?s=site/module/home&m={{$LINKS['module']['name']}}">{{$LINKS['module']['title']}}模块</a>
+						<a href="?s=site/entry/module&mark=package&mark=package&m={{$LINKS['module']['name']}}">{{$LINKS['module']['title']}}</a>
 					</li>
 					<if value="$module_action_name">
 						<li class="active">

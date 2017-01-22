@@ -1,7 +1,9 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs">
-		<li role="presentation" class="active"><a href="#">扩展功能概况 - {{v('module.title')}}</a></li>
+		<li role="presentation" class="active">
+			<a href="#">扩展功能概况 - {{v('module.title')}}</a>
+		</li>
 	</ul>
 	<?php $LINKS = \Menu::get(); ?>
 	<div class="page-header">
@@ -10,7 +12,7 @@
 			<if value="$LINKS['module']['budings']['cover']">
 				<foreach from="$LINKS['module']['budings']['cover']" value="$f">
 					<a href="?s=site/cover/post&mark=package&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}">
-						<i class="fa fa-comments"></i>
+						<i class="fa fa-file-image-o"></i>
 						<span>{{$f['title']}}</span>
 					</a>
 				</foreach>
@@ -29,8 +31,14 @@
 			</if>
 			<if value="$LINKS['module']['middleware']">
 				<a href="?s=site/middleware/lists&m={{$LINKS['module']['name']}}">
-					<i class="fa fa-cog"></i>
+					<i class="fa fa-globe"></i>
 					<span>中间件设置</span>
+				</a>
+			</if>
+			<if value="$LINKS['module']['router']">
+				<a href="?s=site/router/post&mark=package&m={{$LINKS['module']['name']}}">
+					<i class="fa fa-tachometer"></i>
+					<span>路由规则</span>
 				</a>
 			</if>
 			<if value="!empty($LINKS['module']['budings']['home'])">
