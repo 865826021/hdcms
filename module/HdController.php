@@ -18,7 +18,7 @@ abstract class HdController {
 		$this->siteid   = SITEID;
 		$this->config   = \Module::getModuleConfig();
 		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/template';
-		define( 'TEMPLATE_PATH', $this->template );
-		define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
+		detemplate_path($this->template);
+		template_url(__ROOT__ . '/' . $this->template);
 	}
 }

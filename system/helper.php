@@ -87,3 +87,35 @@ function url( $action, $args = [ ] ) {
 	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
 }
+
+/**
+ * 模块模板目录路径地址
+ *
+ * @param string $path 设置目录地址
+ *
+ * @return null|string
+ */
+function template_path( $path = '' ) {
+	static $cathe = null;
+	if ( ! empty( $url ) ) {
+		$cathe = $path;
+	}
+
+	return $cathe;
+}
+
+/**
+ * 模块模板目录链接地址
+ *
+ * @param string $url 设置的URL地址
+ *
+ * @return null|string
+ */
+function template_url( $url = '' ) {
+	static $cathe = null;
+	if ( ! empty( $url ) ) {
+		$cathe = $url;
+	}
+
+	return $cathe;
+}

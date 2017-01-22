@@ -18,8 +18,18 @@ use module\HdController;
  * @package module\article\controller
  */
 class Entry extends HdController {
-	public function home() {
-		view( $this->template . '/home.html' );
+	public function __construct() {
+		$this->siteid = SITEID;
+		$this->config = \Module::getModuleConfig();
+		//获取默认官网
+		$web            = \Web::getDefaultWeb();
+		$this->template = "theme/{$web['template_name']}/" . ( IS_MOBILE ? 'mobild' : 'web' );
+		template_path( $this->template );
+		template_url( __ROOT__ . '/' . $this->template );
+	}
+
+	public function index() {
+		view( $this->template . '/index.html' );
 	}
 
 	/**
