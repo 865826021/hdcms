@@ -80,7 +80,7 @@ class Navigate {
 		if ( v( 'module.name' ) != 'article' ) {
 			$moduleMenu = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', Request::get( 'entry' ) )->get();
 			foreach ( $moduleMenu as $k => $v ) {
-				$moduleMenu[ $k ]['url'] = "?m={$v['module']}&action=navigate/{$v['do']}&siteid=" . SITEID;
+				$moduleMenu[ $k ]['url'] = "?m={$v['module']}&action=system/navigate/{$v['do']}&siteid=" . SITEID;
 				foreach ( $nav as $n ) {
 					//如果模块的菜单已经添加到数据库中的将这个菜单从列表中移除
 					if ( $n['url'] == $moduleMenu[ $k ]['url'] ) {

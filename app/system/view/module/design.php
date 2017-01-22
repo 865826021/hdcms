@@ -335,9 +335,7 @@
 
 			<!--业务功能-->
 			<h5 class="page-header">模块业务设置
-				<small>设置模块的业务功能菜单, 业务功能的操作名称不能使用
-				<strong class="label label-danger">Navigate</strong> , 因为系统已经用于管理菜单业务。
-				</small>
+				<small>设置模块的业务功能菜单</small>
 			</h5>
 			<div ng-repeat="(key,v) in field.business"
 			     style="padding-top: 20px;margin-bottom: 10px;background-color: #efefef;border:solid 1px #dedede;">

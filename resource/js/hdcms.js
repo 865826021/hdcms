@@ -110,6 +110,25 @@
             }
         },
         /**
+         * 获取拥有桌面主面访问的模块列表
+         * @param callback
+         * @param mid 已经使用的模块如 1,2,3以逗号分隔
+         */
+        getModuleHasWebPage: function (callback, mid) {
+            var modalobj = util.modal({
+                content: ['?s=system/site/getModuleHasWebPage&mid=' + mid],
+                title: '请选择模块',
+                width: 600,
+                show: true,//直接显示
+            });
+            window.selectHasWebModuleComplete = function (link) {
+                if ($.isFunction(callback)) {
+                    callback(link);
+                }
+                modalobj.modal('hide');
+            }
+        },
+        /**
          * 选择站点模板列表
          * 系统根据站点套餐权限显示模板列表
          * @param callback

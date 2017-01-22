@@ -1,0 +1,103 @@
+{
+    "manifest_code": "2.0",
+    "title": "aaa777",
+    "name": "hdcms777",
+    "version": "1.0",
+    "industry": "business",
+    "resume": "resume",
+    "detail": "detail",
+    "author": "author",
+    "url": "url",
+    "setting": true,
+    "tag": true,
+    "middleware": true,
+    "router": true,
+    "web": {
+        "entry": {
+            "title": "桌面入口导航",
+            "do": "zuomianrukou"
+        },
+        "member": [
+            {
+                "title": "桌面会员中心",
+                "do": "zuomianmember"
+            }
+        ]
+    },
+    "mobile": {
+        "home": [
+            {
+                "title": "移动端首页导航",
+                "do": "mobilesouye"
+            }
+        ],
+        "member": [
+            {
+                "title": "移动端会员中心",
+                "do": "mobilemember"
+            }
+        ]
+    },
+    "subscribes": {
+        "text": true,
+        "image": true,
+        "voice": true,
+        "video": true,
+        "shortvideo": true,
+        "location": true,
+        "link": true,
+        "subscribe": true,
+        "unsubscribe": true,
+        "scan": true,
+        "track": true,
+        "click": true,
+        "view": true
+    },
+    "processors": {
+        "text": true,
+        "image": true,
+        "voice": true,
+        "video": true,
+        "shortvideo": true,
+        "location": true,
+        "link": true,
+        "subscribe": true,
+        "unsubscribe": true,
+        "scan": true,
+        "track": true,
+        "click": true,
+        "view": true
+    },
+    "cover": [
+        {
+            "title": "功能封面1",
+            "do": "fengmian1"
+        },
+        {
+            "title": "功能封面2",
+            "do": "fengmian2"
+        }
+    ],
+    "rule": true,
+    "business": [
+        {
+            "title": "业务功能",
+            "controller": "business",
+            "action": [
+                {
+                    "title": "控制器动作",
+                    "do": "action"
+                }
+            ]
+        }
+    ],
+    "permissions": "",
+    "compatible_version": {
+        "version2": true
+    },
+    "thumb": "thumb.jpg",
+    "preview": "cover.jpg",
+    "install": "",
+    "uninstall": "",
+    "upgrade": ""
+}

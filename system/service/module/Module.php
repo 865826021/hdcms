@@ -31,6 +31,27 @@ class Module {
 	];
 
 	/**
+	 * 系统启动时执行的模块初始化
+	 */
+	public function moduleInitialize() {
+		/**
+		 * 初始化模块数据
+		 * 加载模块数据到全局变量窗口中
+		 */
+		if ( $name = Request::get( 'm' ) ) {
+			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+		}
+		/**
+		 * 扩展模块单独使用变量访问
+		 * 而不是使用框架中的s变量
+		 * 所以当存在a变量时访问到扩展模块处理
+		 */
+		if ( Request::get( 'm' ) && Request::get( 'action' ) ) {
+			Request::set( 'get.s', 'site/entry/action' );
+		}
+	}
+
+	/**
 	 * 检测模块是否已经安装
 	 *
 	 * @param $module
@@ -265,27 +286,46 @@ class Module {
 	}
 
 	/**
+	 * 获取拥有桌面主面访问的模块列表
+	 * @return array
+	 */
+	public function getModuleHasWebPage() {
+		return Db::table( 'modules' )
+		         ->field( 'modules.mid,modules.title,modules.name,modules.is_system' )
+		         ->join( 'modules_bindings', 'modules.name', '=', 'modules_bindings.module' )
+		         ->groupBy( 'modules.name' )
+		         ->get();
+	}
+
+	/**
 	 * 从系统中删除模块
 	 *
-	 * @param string $module 模块名称
+	 * @param string $name 模块标识
 	 * @param bool $removeData 删除模块数据
 	 *
 	 * @return bool
 	 */
-	public function remove( $module, $removeData = false ) {
+	public function remove( $name, $removeData = false ) {
+		$module = Db::table( 'modules' )->where( 'name', $name )->first();
+		if ( empty( $module ) ) {
+			message( '模块不存在无法进行操作', 'back', 'error' );
+		}
+		if ( $module['is_system'] == 1 ) {
+			message( '系统模块不允许卸载', 'back', 'error' );
+		}
 		//删除封面关键词数据
 		if ( $removeData ) {
 			//执行卸载程序
-			$this->uninstall( $module );
+			$this->uninstall( $name );
 		}
 		//更新套餐数据
-		\Package::removeModule( $module );
+		\Package::removeModule( $name );
 		foreach ( $this->relationTables as $t ) {
-			Db::table( $t )->where( 'module', $module )->delete();
+			Db::table( $t )->where( 'module', $name )->delete();
 		}
 		//删除模块使用的微信规则与关键词数据
-		\Wx::removeRuleByModule( $module );
-		Modules::where( 'name', $module )->delete();
+		\Wx::removeRuleByModule( $name );
+		Modules::where( 'name', $name )->delete();
 		//更新所有站点缓存
 		\Site::updateAllCache();
 

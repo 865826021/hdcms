@@ -16,7 +16,7 @@ class Entry {
 	 * 然后通过域名执行默认模块
 	 * @return mixed
 	 */
-	public function index() {
+	public function home() {
 		$site = Db::table( 'site' )->where( 'domain', $_SERVER['SERVER_NAME'] )->first();
 		if ( $site && ! empty( $site['module'] ) ) {
 			//站点设置了默认访问模块时访问模块的桌面入口页面
@@ -24,14 +24,21 @@ class Entry {
 			            ->join( 'modules', 'modules.name', '=', 'modules_bindings.module' )
 			            ->where( 'entry', 'web' )->first();
 			if ( $module && ! empty( $module['do'] ) ) {
-				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['name'] . '\controller\Navigate';
+				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['name'] . '\system\Navigate';
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
+					Request::set( 'get.siteid', $site['siteid'] );
+					Request::set( 'get.m', $module['name'] );
+					//初始站点数据
+					\Site::siteInitialize();
+					//初始模块数据
+					\Module::moduleInitialize();
+
 					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
 				}
 			}
 		}
-		//如果没有默认模块或模块的方法错误时显示系统后台登录界面
-		go( __WEB__ . '/hdcms' );
+
+		return view();
 	}
 
 	//注册

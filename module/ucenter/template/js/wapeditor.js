@@ -28,6 +28,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'jquery-ui'], fun
             //添加组件
             addWidget: function (id) {
                 len = this.modules.all.length;
+                var data={};
                 switch (id) {
                     case 'wireLine':
                         data = {
@@ -247,7 +248,6 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'jquery-ui'], fun
             }
         }
     }]);
-
     m.run(function ($templateCache) {
         //--------------------------------------------------------会员中心顶部内容--------------------------------------------------------------------
         $templateCache.put('widget-ucheader-display.html', '\

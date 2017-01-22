@@ -55,11 +55,10 @@ class Module {
 
 	//已经安装模块
 	public function installed() {
-		$modules = Modules::where( 'is_system', 0 )->get() ?: [ ];
+		$modules = Db::table( 'modules' )->orderBy( 'mid', 'desc' )->get();
 		foreach ( $modules as $k => $m ) {
 			//本地模块
-			$modules[ $k ]['cover'] = is_file( "addons/{$m['name']}/{$m['cover']}" ) ?
-				"addons/{$m['name']}/{$m['cover']}" : "resource/images/nopic_small.jpg";
+			$modules[ $k ]['thumb'] = ( $m['is_system'] == 1 ? 'module' : 'addons' ) . "/{$m['name']}/{$m['thumb']}";
 		}
 
 		return view()->with( [ 'modules' => $modules ] );
@@ -281,15 +280,16 @@ class Module {
 
 	//卸载模块
 	public function uninstall() {
+		$module = Request::get( 'module' );
 		//更改错误为直接显示
 		c( 'validate.dispose', 'show' );
 		if ( ! isset( $_GET['confirm'] ) ) {
 			confirm( '卸载模块时同时删除模块数据吗？', u( 'uninstall', [
 				'confirm' => 1,
-				'module'  => $_GET['module']
-			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => Request::get( 'module' ) ] ) );
+				'module'  => $module
+			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $module] ) );
 		}
-		if ( ! \Module::remove( $_GET['module'], $_GET['confirm'] ) ) {
+		if ( ! \Module::remove( $module, $_GET['confirm'] ) ) {
 			message( \Module::getError(), '', 'error' );
 		}
 		message( '模块卸载成功', u( 'installed' ) );

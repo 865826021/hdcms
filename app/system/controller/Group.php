@@ -46,11 +46,13 @@ class Group {
 		//组编号
 		$id = Request::get( 'id', 0 );
 		if ( IS_POST ) {
-			$model             = $id ? UserGroup::find( $id ) : new UserGroup();
-			$model['name']     = Request::post( 'name' );
-			$model['maxsite']  = Request::post( 'maxsite', 1, 'intval' );
-			$model['daylimit'] = Request::post( 'daylimit', 7, 'intval' );
-			$model['package']  = Request::post( 'package', [ ] );
+			$model                   = $id ? UserGroup::find( $id ) : new UserGroup();
+			$model['name']           = Request::post( 'name' );
+			$model['maxsite']        = Request::post( 'maxsite', 1, 'intval' );
+			$model['daylimit']       = Request::post( 'daylimit', 7, 'intval' );
+			$model['middleware_num'] = Request::post( 'middleware_num', 100, 'intval' );
+			$model['router_num']     = Request::post( 'router_num', 100, 'intval' );
+			$model['package']        = Request::post( 'package', [ ] );
 			$model->save();
 			message( '用户组数据保存成功', 'lists', 'success' );
 		}

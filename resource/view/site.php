@@ -28,7 +28,6 @@
 		}
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
-	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 	<script>

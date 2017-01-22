@@ -1,4 +1,4 @@
-<?php namespace addons\store\controller;
+<?php namespace addons\store\system;
 
 /**
  * 模块导航菜单处理
@@ -6,9 +6,9 @@
  * @author 向军
  * @url http://open.hdcms.com
  */
-use module\HdController;
+use module\HdNavigate;
 
-class Navigate extends HdController {
+class Navigate extends HdNavigate {
 
 	/**
 	 * 桌面入口导航 [桌面入口导航菜单]

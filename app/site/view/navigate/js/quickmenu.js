@@ -32,7 +32,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms','jquery-ui'], func
             for (var i = 0; i < uc.menu.params.modules.length; i++) {
                 mid.push(uc.menu.params.modules[i].mid);
             }
-            util.moduleBrowser(function (modules) {
+            hdcms.moduleBrowser(function (modules) {
                 uc.menu.params.modules = [];
                 $(modules).each(function (i) {
                     uc.menu.params.modules.push({title: this.title, mid: this.mid});

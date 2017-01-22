@@ -10,13 +10,15 @@
 			<li role="presentation" class="active"><a href="javascript:;">已经安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/prepared">安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
-			<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a></li>
+			<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store" target="_blank">应用商城</a>
+			</li>
 		</ul>
 		<h5 class="page-header">菜单列表</h5>
 		<nav role="navigation" class="navbar navbar-default">
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+					        data-target="#bs-example-navbar-collapse-1"
 					        aria-expanded="false">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
@@ -47,35 +49,39 @@
 			<div class="media" type="{{$m['industry']}}">
 				<div class="pull-right">
 					<div style="margin-right: 10px;">
-						<if value="$m['locality']==1">
+						<if value="$m['is_system']==0">
+							<if value="$m['locality']==1">
+								<div class="btn-group" role="group" aria-label="...">
+									<a href="{{u('createZip',['name'=>$m['name']])}}" class="btn btn-default btn-sm">打包下载</a>
+								</div>
+							</if>
 							<div class="btn-group" role="group" aria-label="...">
-								<a href="{{u('createZip',['name'=>$m['name']])}}" class="btn btn-default btn-sm">打包下载</a>
-								<a href="javascript:;" class="btn btn-sm btn-default" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
-							</div>
-							<else/>
-							<div class="btn-group" role="group" aria-label="...">
-								<a href="javascript:;" class="btn btn-sm btn-default" onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+								<a href="javascript:;" class="btn btn-sm btn-default"
+								   onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
 							</div>
 						</if>
 					</div>
 				</div>
 				<div class="media-left">
 					<a href="#">
-						<img class="media-object" src="addons/{{$m['name']}}/{{$m['thumb']}}" style="width: 50px;height: 50px;"/>
+						<img class="media-object" src="{{nopic($m['thumb'])}}" style="width: 50px;height: 50px;"/>
 					</a>
 				</div>
 				<div class="media-body">
 					<h4 class="media-heading">{{$m['title']}}
 						<small>（标识：{{$m['name']}} 版本：{{$m['version']}} 作者：{{$m['author']}}）</small>
-						<if value="$m['locality']==1">
-							<span class="label label-info">本地模块</span>
+						<if value="$m['is_system']==1">
+							<span class="label label-success">系统内置</span>
+							<elseif value="$m['locality']==1"/>
+							<span class="label label-info">本地开发</span>
 							<else/>
-							<span class="label label-success">应用商店模块</span>
+							<span class="label label-danger">应用商店</span>
 						</if>
 					</h4>
 					<a href="javascript:;" class="detail">详细介绍</a>
 				</div>
-				<div class="alert alert-info" role="alert" style="display: none"><strong>功能介绍</strong>： {{$m['detail']}}</div>
+				<div class="alert alert-info" role="alert" style="display: none"><strong>功能介绍</strong>： {{$m['detail']}}
+				</div>
 			</div>
 		</foreach>
 	</div>
@@ -83,31 +89,31 @@
 
 <style>
 	.media {
-		border-bottom  : solid 1px #dcdcdc;
-		padding-bottom : 6px;
+		border-bottom: solid 1px #dcdcdc;
+		padding-bottom: 6px;
 	}
 
 	.media h4.media-heading {
-		font-size : 16px;
+		font-size: 16px;
 	}
 
 	.media .media-left a img {
-		border-radius : 10px;
+		border-radius: 10px;
 	}
 
 	.media h4.media-heading small {
-		font-size : 65%;
+		font-size: 65%;
 	}
 
 	.media .media-body a {
-		display     : inline-block;
-		font-size   : 14px;
-		padding-top : 6px;
+		display: inline-block;
+		font-size: 14px;
+		padding-top: 6px;
 	}
 
 	.media .alert {
-		margin-top : 6px;
-		display    : none;
+		margin-top: 6px;
+		display: none;
 	}
 </style>
 <script>

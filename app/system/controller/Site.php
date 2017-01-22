@@ -276,4 +276,12 @@ class Site {
 		SiteUser::where( 'siteid', SITEID )->where( 'role', 'owner' )->delete();
 		message( '删除站长成功', 'back', 'success' );
 	}
+
+	/**
+	 * 获取拥有桌面主面访问的模块列表
+	 */
+	public function getModuleHasWebPage() {
+		$modules = \Module::getModuleHasWebPage();
+		return view()->with( 'modules', $modules );
+	}
 }

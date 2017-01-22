@@ -71,8 +71,9 @@
 		</div>
 	</form>
 </block>
+
 <script>
-	require(['angular','{{__TEMPLATE__}}/js/wapeditor.js'], function (angular) {
+	require(['angular','jquery','{{__TEMPLATE__}}/js/wapeditor.js'], function (angular,$) {
 		//回复规则编号;
 		window.rid = {{$rid}};
 		window.modules = {{$modules}};

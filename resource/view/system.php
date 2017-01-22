@@ -27,7 +27,7 @@
 			attachment: "{{__ROOT__}}/attachment",
 			user: <?php echo json_encode( Session::get( 'user' ) );?>,
 			root: "{{__ROOT__}}",
-			url: "{{__URL__}}",
+			url: "{{__URL__}}"
 		}
 	</script>
 	<script>

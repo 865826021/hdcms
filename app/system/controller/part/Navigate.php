@@ -36,7 +36,7 @@ class Navigate {
 
 	protected static function php( $data, $action ) {
 		$tpl = <<<php
-<?php namespace addons\\{$data['name']}\\controller;
+<?php namespace addons\\{$data['name']}\\system;
 
 /**
  * 模块导航菜单处理
@@ -44,14 +44,14 @@ class Navigate {
  * @author {$data['author']}
  * @url http://open.hdcms.com
  */
-use module\HdController;
+use module\HdNavigate;
 
-class Navigate extends HdController {
+class Navigate extends HdNavigate {
 
 $action
 }
 php;
-		file_put_contents( "addons/{$data['name']}/controller/Navigate.php", $tpl );
+		file_put_contents( "addons/{$data['name']}/system/Navigate.php", $tpl );
 	}
 
 	//桌面入口菜单

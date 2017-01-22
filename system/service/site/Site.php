@@ -15,6 +15,26 @@ use system\model\Site as SiteModel;
  */
 class Site extends Common {
 	/**
+	 * 系统启动时执行的站点信息初始化
+	 */
+	public function siteInitialize() {
+		/**
+		 * 站点编号
+		 * 如果GET中存在siteid使用,否则使用SESSION会话中的siteid
+		 */
+		$siteId = Request::get( 'siteid', Session::get( 'siteid' ), 'intval' );
+		if ( $siteId ) {
+			if ( Db::table( 'site' )->find( $siteId ) ) {
+				define( 'SITEID', $siteId );
+				Session::set( 'siteid', $siteId );
+				$this->loadSite( $siteId );
+			} else {
+				message( '你访问的站点不存在', 'back', 'error' );
+			}
+		}
+	}
+
+	/**
 	 * 加载当前请求的站点缓存
 	 *
 	 * @param int $siteId 站点编号

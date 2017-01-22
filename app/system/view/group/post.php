@@ -39,6 +39,22 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label for="" class="col-sm-2 control-label">中间件数量</label>
+
+					<div class="col-sm-10">
+						<input type="number" class="form-control" name="maxsite" value="{{$group['middleware_num']?:100}}">
+						<span class="help-block">限制站点的数量，为0则不允许添加。</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="" class="col-sm-2 control-label">路由数量</label>
+
+					<div class="col-sm-10">
+						<input type="number" class="form-control" name="maxsite" value="{{$group['router_num']?:100}}">
+						<span class="help-block">限制站点的数量，为0则不允许添加。</span>
+					</div>
+				</div>
+				<div class="form-group">
 					<label for="" class="col-sm-2 control-label">有效期限</label>
 
 					<div class="col-sm-10">

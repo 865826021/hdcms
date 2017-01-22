@@ -21,6 +21,8 @@
 						<th width="30">删？</th>
 						<th>名称</th>
 						<th>公众号数量</th>
+						<th>中间件数量</th>
+						<th>路由数量</th>
 						<th>有效期限</th>
 						<th>操作</th>
 					</tr>
@@ -40,6 +42,8 @@
 								</if>
 							</td>
 							<td>{{$g['maxsite']}}</td>
+							<td>{{$g['middleware_num']}}</td>
+							<td>{{$g['router_num']}}</td>
 							<td>
 								<if value="$g['daylimit']">
 									<span class="label label-danger">{{$g['daylimit']}}天</span>

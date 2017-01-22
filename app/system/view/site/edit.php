@@ -37,8 +37,12 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">默认模块</label>
                     <div class="col-sm-10">
-                        <input type="text" name="module" class="form-control" value="{{$site['module']}}">
-                        <span class="help-block">通过域名访问时运行的模块,需要设置 桌面入口导航</span>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="module" value="{{$site['module']}}">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" onclick="getModuleHasWebPage()">选择模块</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,6 +77,14 @@
         require(['md5'], function (md5) {
             var encodingaeskey = md5(Math.random()).substr(0, 11)+md5(Math.random());
             $("[name='encodingaeskey']").val(encodingaeskey);
+        })
+    }
+    //获取默认模块
+    function getModuleHasWebPage(){
+        require(['hdcms','util'],function(hdcms,util){
+            hdcms.getModuleHasWebPage(function(module){
+                $("[name='module']").val(module.name);
+            });
         })
     }
 </script>

@@ -21,7 +21,7 @@ class Site extends HdController {
 		$data = Db::table( 'web' )->where( 'siteid', SITEID )->get() ?: [ ];
 		foreach ( $data as $k => $v ) {
 			$data[ $k ]['site_info'] = json_decode( $v['site_info'], true );
-			$data[ $k ]['url']       = '?a=entry/home&m=article&siteid=' . SITEID . '&webid=' . $v['id'];
+			$data[ $k ]['url']       = '?m=article&action=controller/entry/home&siteid=' . SITEID . '&webid=' . $v['id'];
 		}
 
 		return View::with( 'data', $data )->make( $this->template . '/site_lists.html' );
