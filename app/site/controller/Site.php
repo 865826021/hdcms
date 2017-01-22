@@ -11,8 +11,8 @@
 namespace app\site\controller;
 
 /**
- * 站点设置
- * Class System
+ * 多站其他功能管理
+ * Class Site
  * @package app\site\controller
  */
 class Site {

@@ -189,8 +189,8 @@
 					</ul>
 				</if>
 				<!----------返回模块列表 end------------>
-				<!------------------------参数设置与中间件------------------------>
-				<if value="!empty($LINKS['module']['middleware'])||!empty($LINKS['module']['setting'])">
+				<!------------------------参数设置与中间件和路由器------------------------>
+				<if value="!empty($LINKS['module']['middleware'])||!empty($LINKS['module']['setting']) ||!empty($LINKS['module']['router'])">
 					<div class="panel-heading hide module_action" mark="package">
 						<h4 class="panel-title">基本功能</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
@@ -216,6 +216,16 @@
 							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
 								<i class="fa fa-rss"></i> 中间件设置
+							</li>
+						</if>
+						<if value="$LINKS['module']['router']">
+							<li class="list-group-item"
+							    onclick="hdMenus.system(this)"
+							    url="?s=site/router/lists&m={{$LINKS['module']['name']}}"
+							    menuid="router"
+							    module="{{$LINKS['module']['name']}}"
+							    mark="package">
+								<i class="fa fa-rss"></i> 路由器
 							</li>
 						</if>
 					</ul>

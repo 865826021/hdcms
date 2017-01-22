@@ -8,11 +8,12 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
+
 /**
  * 微信请求接口
- * Class api
- * @package module\wechat\controller
- * @author 向军
+ * Class Api
+ * @package app\site\controller
+ * @author 向军<2300071698@qq.com>
  */
 class Api {
 	protected $instance;

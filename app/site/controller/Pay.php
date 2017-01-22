@@ -1,22 +1,10 @@
 <?php namespace app\site\controller;
-	/** .-------------------------------------------------------------------
-	 * |  Software: [HDCMS framework]
-	 * |      Site: www.hdcms.com
-	 * |-------------------------------------------------------------------
-	 * |    Author: 向军 <2300071698@qq.com>
-	 * |    WeChat: aihoudun
-	 * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
-	 * '-------------------------------------------------------------------*/
-
 /**
- * 支付通知处理
+ * 网站支付处理
  * Class Pay
  * @package web\site
  */
 class Pay {
-	public function __construct() {
-	}
-
 	//微信支付
 	public function wechat() {
 		$pay                  = Db::table( 'pay' )->where( 'tid', Session::get( 'pay.tid' ) )->first();

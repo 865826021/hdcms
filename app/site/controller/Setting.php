@@ -1,25 +1,20 @@
-<?php
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-namespace module\setting\controller;
+<?php namespace app\site\controller;
 
 use houdunwang\request\Request;
-use module\HdController;
 use system\model\SiteSetting;
 
-class Site extends HdController {
+/**
+ * 网站配置管理
+ * Class Setting
+ * @package module\setting\controller
+ */
+class Setting {
 	protected $db;
 	//主键
 	protected $id;
 
 	public function __construct() {
-		parent::__construct();
+		auth();
 		$this->id = SiteSetting::where( 'siteid', SITEID )->pluck( 'id' );
 		$this->db = SiteSetting::find( $this->id );
 	}
@@ -40,7 +35,7 @@ class Site extends HdController {
 		}
 		View::with( 'creditnames', v( 'site.setting.creditnames' ) );
 
-		return view( $this->template . '/credit.html' );
+		return view();
 	}
 
 	//积分策略
@@ -52,7 +47,7 @@ class Site extends HdController {
 			message( '积分策略更新成功', '', 'success' );
 		}
 
-		return view( $this->template . '/tactics.html' );
+		return view();
 	}
 
 	//注册设置
@@ -64,7 +59,7 @@ class Site extends HdController {
 			message( '修改会员注册设置成功', '', 'success' );
 		}
 
-		return view( $this->template . '/register.html' );
+		return view();
 	}
 
 	//邮件通知设置
@@ -85,7 +80,7 @@ class Site extends HdController {
 			message( '邮箱配置保存成功', 'refresh', 'success' );
 		}
 
-		return view( $this->template . '/mail.html' );
+		return view();
 	}
 
 	//支付设置
@@ -99,6 +94,6 @@ class Site extends HdController {
 		}
 		$wechat = Db::table( 'site_wechat' )->where( 'siteid', siteid() )->first();
 
-		return view( $this->template . '/pay.html' )->with( [ 'wechat' => $wechat ] );
+		return view()->with( [ 'wechat' => $wechat ] );
 	}
 }

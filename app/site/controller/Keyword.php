@@ -1,5 +1,4 @@
-<?php namespace app\site\controller;
-
+<?php
 /** .-------------------------------------------------------------------
  * |  Software: [HDCMS framework]
  * |      Site: www.hdcms.com
@@ -8,10 +7,12 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+namespace app\site\controller;
+
 use system\model\Modules;
 
 /**
- * 回复关键词处理
+ * 模块回复关键词处理
  * Class keyword
  * @package site\controller
  */

@@ -1,22 +1,12 @@
 <?php namespace app\site\controller;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
-
 use system\model\Navigate as NavigateModel;
 use system\model\Page;
 
 /**
- * 导航菜单管理
- * Class Nav
- * @package web\site\controller
- * @author 向军
+ * 模块导航菜单管理
+ * Class Navigate
+ * @package app\site\controller
  */
 class Navigate {
 	public function __construct() {

@@ -11,11 +11,9 @@
 use system\model\Rule as Model;
 
 /**
- * 模块规则列表管理
+ * 模块回复规则管理
  * Class Rule
  * @package app\site\controller
- * @author 向军 <2300071698@qq.com>
- * @site www.houdunwang.com
  */
 class Rule {
 	public function __construct() {

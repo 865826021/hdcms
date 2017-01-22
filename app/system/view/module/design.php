@@ -102,9 +102,19 @@
 				<div class="col-sm-10 col-xs-12">
 					<label class="checkbox-inline">
 						<input type="checkbox" value="true" ng-model="field.middleware">
-						设置站点中间件
+						设置中间件
 					</label>
 					<span class="help-block">用于管理站点中间件中的模块动作</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">路由规则</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.router">
+						设置路由规则
+					</label>
+					<span class="help-block">用于管理模块链接的路由器设置</span>
 				</div>
 			</div>
 			<h5 class="page-header">公众平台消息处理选项
@@ -675,6 +685,7 @@
 					"setting": true,
 					"tag": true,
 					"middleware":true,
+					"router":true,
 					"web": {
 						"entry": {
 							"title": "桌面入口导航",

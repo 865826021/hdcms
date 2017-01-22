@@ -8,11 +8,11 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
+
 /**
- * 后台站点管理入口
- * Class entry
- * @package site\controller
- * @author 向军
+ * 网站入口管理
+ * Class Entry
+ * @package app\site\controller
  */
 class Entry {
 	/**
