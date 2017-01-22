@@ -9,38 +9,44 @@
 		<div class="menuLists clearfix">
 			<if value="$LINKS['module']['budings']['cover']">
 				<foreach from="$LINKS['module']['budings']['cover']" value="$f">
-					<a href="?s=site/module/cover&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}">
+					<a href="?s=site/cover/post&mark=package&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}">
 						<i class="fa fa-comments"></i>
 						<span>{{$f['title']}}</span>
 					</a>
 				</foreach>
 			</if>
 			<if value="$LINKS['module']['rule']">
-				<a href="?s=site/reply/lists&m={{$LINKS['module']['name']}}">
+				<a href="?s=site/rule/lists&mark=package&m={{$LINKS['module']['name']}}">
 					<i class="fa fa-rss"></i>
 					<span>回复规则列表</span>
 				</a>
 			</if>
 			<if value="$LINKS['module']['setting']">
-				<a href="?s=site/module/setting&m={{$LINKS['module']['name']}}">
+				<a href="?s=site/config/post&mark=package&m={{$LINKS['module']['name']}}">
 					<i class="fa fa-cog"></i>
 					<span>参数设置</span>
 				</a>
 			</if>
+			<if value="$LINKS['module']['middleware']">
+				<a href="?s=site/middleware/lists&m={{$LINKS['module']['name']}}">
+					<i class="fa fa-cog"></i>
+					<span>中间件设置</span>
+				</a>
+			</if>
 			<if value="!empty($LINKS['module']['budings']['home'])">
-				<a href="?s=site/nav/lists&entry=home&m={{$LINKS['module']['name']}}">
+				<a href="?s=site/navigate/lists&entry=home&mark=package&m={{$LINKS['module']['name']}}">
 					<i class="fa fa-home"></i>
-					<span>移动端首页导航</span>
+					<span>微站首页导航</span>
 				</a>
 			</if>
 			<if value="!empty($LINKS['module']['budings']['profile'])">
-				<a href="?s=site/nav/lists&entry=profile&m={{$LINKS['module']['name']}}">
+				<a href="?s=site/navigate/lists&entry=profile&mark=package&m={{$LINKS['module']['name']}}">
 					<i class="fa fa-github"></i>
 					<span>移动端会员中心导航</span>
 				</a>
 			</if>
 			<if value="!empty($LINKS['module']['budings']['member'])">
-				<a href="?s=site/nav/lists&entry=member&m={{$LINKS['module']['name']}}">
+				<a href="?s=site/navigate/lists&entry=member&mark=package&m={{$LINKS['module']['name']}}">
 					<i class="fa fa-renren"></i>
 					<span>桌面个人中心导航</span>
 				</a>

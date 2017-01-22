@@ -97,6 +97,16 @@
 					<span class="help-block">用于创建模板使用的自定义标签, 模板标签在 system/tag.php 文件中实现</span>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">中间件</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.middleware">
+						设置站点中间件
+					</label>
+					<span class="help-block">用于管理站点中间件中的模块动作</span>
+				</div>
+			</div>
 			<h5 class="page-header">公众平台消息处理选项
 				<small>这里来定义公众平台消息相关处理</small>
 			</h5>
@@ -664,6 +674,7 @@
 					"url": "url",
 					"setting": true,
 					"tag": true,
+					"middleware":true,
 					"web": {
 						"entry": {
 							"title": "桌面入口导航",

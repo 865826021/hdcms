@@ -189,8 +189,39 @@
 					</ul>
 				</if>
 				<!----------返回模块列表 end------------>
-				<!------------------------模块菜单 start------------------------>
-				<if value="!empty($LINKS['module']['rule'])||!empty($LINKS['module']['setting'])">
+				<!------------------------参数设置与中间件------------------------>
+				<if value="!empty($LINKS['module']['middleware'])||!empty($LINKS['module']['setting'])">
+					<div class="panel-heading hide module_action" mark="package">
+						<h4 class="panel-title">基本功能</h4>
+						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
+							<i class="fa fa-chevron-circle-down"></i>
+						</a>
+					</div>
+					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
+						<if value="$LINKS['module']['setting']">
+							<li class="list-group-item"
+							    onclick="hdMenus.system(this)"
+							    url="?s=site/config/post&m={{$LINKS['module']['name']}}"
+							    menuid="setting"
+							    module="{{$LINKS['module']['name']}}"
+							    mark="package">
+								<i class="fa fa-cog"></i> 参数设置
+							</li>
+						</if>
+						<if value="$LINKS['module']['middleware']">
+							<li class="list-group-item"
+							    onclick="hdMenus.system(this)"
+							    url="?s=site/middleware/lists&m={{$LINKS['module']['name']}}"
+							    menuid="middleware"
+							    module="{{$LINKS['module']['name']}}"
+							    mark="package">
+								<i class="fa fa-rss"></i> 中间件设置
+							</li>
+						</if>
+					</ul>
+				</if>
+				<!------------------------回复规则列表与功能封面------------------------>
+				<if value="!empty($LINKS['module']['rule'])||!empty($LINKS['module']['budings']['cover'])">
 					<div class="panel-heading hide module_action" mark="package">
 						<h4 class="panel-title">回复规则</h4>
 						<a class="panel-collapse" data-toggle="collapse" href="#reply_rule" aria-expanded="true">
@@ -203,21 +234,21 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/rule/lists&m={{$LINKS['module']['name']}}"
 							    menuid="rule"
-							    module="{{$LINKS['module']['title']}}"
+							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
 								<i class="fa fa-rss"></i> 回复规则列表
 							</li>
 						</if>
-						<if value="$LINKS['module']['setting']">
+						<foreach from="$LINKS['module']['budings']['cover']" value="$f">
 							<li class="list-group-item"
 							    onclick="hdMenus.system(this)"
-							    url="?s=site/config/post&m={{$LINKS['module']['name']}}"
-							    menuid="setting"
-							    module="{{$LINKS['module']['title']}}"
+							    url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+							    menuid="cover{{$f['bid']}}"
+							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
-								<i class="fa fa-cog"></i> 参数设置
+								<i class="fa fa-comments"></i> {{$f['title']}}
 							</li>
-						</if>
+						</foreach>
 					</ul>
 				</if>
 				<if value="!empty($LINKS['module']['budings']['home'])||!empty($LINKS['module']['budings']['profile'])||!empty($LINKS['module']['budings']['member'])">
@@ -233,7 +264,7 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/navigate/lists&entry=home&m={{$LINKS['module']['name']}}"
 							    menuid="home"
-							    module="{{$LINKS['module']['title']}}"
+							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
 								<i class="fa fa-home"></i> 微站首页导航
 							</li>
@@ -253,33 +284,14 @@
 							    onclick="hdMenus.system(this)"
 							    url="?s=site/navigate/lists&entry=member&m={{$LINKS['module']['name']}}"
 							    menuid="member"
-							    module="{{$LINKS['module']['title']}}"
+							    module="{{$LINKS['module']['name']}}"
 							    mark="package">
 								<i class="fa fa-renren"></i> 桌面个人中心导航
 							</li>
 						</if>
 					</ul>
 				</if>
-				<if value="$LINKS['module']['budings']['cover']">
-					<div class="panel-heading hide module_action" mark="package">
-						<h4 class="panel-title">封面入口</h4>
-						<a class="panel-collapse" data-toggle="collapse" href="#module_home" aria-expanded="true">
-							<i class="fa fa-chevron-circle-down"></i>
-						</a>
-					</div>
-					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
-						<foreach from="$LINKS['module']['budings']['cover']" value="$f">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
-							    menuid="cover{{$f['bid']}}"
-							    module="{{$LINKS['module']['title']}}"
-							    mark="package">
-								<i class="fa fa-comments"></i> {{$f['title']}}
-							</li>
-						</foreach>
-					</ul>
-				</if>
+
 				<if value="$LINKS['module']['budings']['business']">
 					<foreach from="$LINKS['module']['budings']['business']" value="$f">
 						<div class="panel-heading hide module_action" mark="package">
