@@ -179,7 +179,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth( $deal = 'show' ) {
-		if ( v( 'user' ) ) {
+		if ( v( 'user' )) {
 			return true;
 		}
 		switch ( $deal ) {

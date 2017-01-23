@@ -1,5 +1,6 @@
 <?php namespace system\service\member;
 
+use houdunwang\validate\Validate;
 use system\service\Common;
 use system\model\Member as MemberModel;
 
@@ -18,10 +19,10 @@ class Member extends Common {
 	//初始用户信息
 	public function initMemberInfo() {
 		if ( Session::get( "member_uid" ) ) {
-			$user                        = [ ];
-			$user['member']              = Db::table( 'member' )->find( $_SESSION['member_uid'] );
-			$group                       = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
-			$user['group']               = $group ?: [ ];
+			$user           = [ ];
+			$user['member'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
+			$group          = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
+			$user['group']  = $group ?: [ ];
 			v( 'member', $user );
 		}
 	}
@@ -84,6 +85,10 @@ class Member extends Common {
 
 	//会员登录
 	public function login( $data ) {
+		Validate::make( [
+			[ 'password', 'required', '密码不能为空' ],
+			[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ]
+		] );
 		$member = new MemberModel();
 		$user   = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
 		if ( empty( $user ) ) {
@@ -92,38 +97,47 @@ class Member extends Common {
 		if ( md5( $data['password'] . $user['security'] ) != $user['password'] ) {
 			message( '密码输入错误', 'back', 'error' );
 		}
-		Session::set( 'member_uid', $user['uid'] );
+		\Session::set( 'member_uid', $user['uid'] );
 
 		return true;
 	}
 
 	//注册页面
 	public function register( $data ) {
-		$model             = new MemberModel();
-		$model['password'] = $data['password'];
-		$model['group_id'] = \Site::getDefaultGroup();
-		$info              = $this->getPasswordAndSecurity();
+		$model = new MemberModel();
+		Validate::make( [
+			[ 'password', 'required|minlen:5', '密码长度不能小于5位' ],
+			[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ]
+		] );
+		//批量添加字段
+		foreach ( $data as $k => $v ) {
+			$model[ $k ] = $v;
+		}
+		$info = $this->getPasswordAndSecurity( $data['password'] );
+		if ( empty( $info['password'] ) ) {
+			message( '密码不能为空', 'back', 'error' );
+		}
 		$model['password'] = $info['password'];
 		$model['security'] = $info['security'];
 		switch ( v( 'site.setting.register.item' ) ) {
 			case 1:
 				//手机号注册
-				if ( ! preg_match( '/^\d{11}$/', $data['username'] ) ) {
+				if ( empty( $data['username'] ) || ! preg_match( '/^\d{11}$/', $data['username'] ) ) {
 					message( '请输入手机号', 'back', 'error' );
 				}
 				$model['mobile'] = $data['username'];
-				if ( Db::table( 'member' )->where( 'mobile', $data['mobile'] )->get() ) {
-					message( '手机号已经存在', '', 'error' );
+				if ( Db::table( 'member' )->where( 'mobile', $data['mobile'] )->where( 'siteid', siteid() )->get() ) {
+					message( '手机号已经存在', 'back', 'error' );
 				}
 				break;
 			case 2:
 				//邮箱注册
-				if ( ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
+				if ( empty( $data['username'] ) || ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱', 'back', 'error' );
 				}
 				$model['email'] = $data['username'];
-				if ( Db::table( 'member' )->where( 'mobile', $data['email'] )->get() ) {
-					message( '邮箱已经存在', '', 'error' );
+				if ( Db::table( 'member' )->where( 'email', $data['email'] )->where( 'siteid', siteid() )->get() ) {
+					message( '邮箱已经存在', 'back', 'error' );
 				}
 
 				break;
@@ -131,19 +145,19 @@ class Member extends Common {
 				//二者都行
 				if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) && ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱或手机号', 'back', 'error' );
-				} else if ( preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
+				} else if ( preg_match( '/^\d{11}$/', $data['username'] ) ) {
 					$model['mobile'] = $data['username'];
-					if ( Db::table( 'member' )->where( 'mobile', $data['mobile'] )->get() ) {
-						message( '手机号已经存在', '', 'error' );
+					if ( empty( $data['username'] ) || Db::table( 'member' )->where( 'mobile', $data['mobile'] )->where( 'siteid', siteid() )->get() ) {
+						message( '手机号已经存在', 'back', 'error' );
 					}
 				} else {
 					$model['email'] = $data['username'];
-					if ( Db::table( 'member' )->where( 'mobile', $data['email'] )->get() ) {
-						message( '邮箱已经存在', '', 'error' );
+					if ( empty( $data['username'] ) || Db::table( 'member' )->where( 'email', $data['email'] )->where( 'siteid', siteid() )->get() ) {
+						message( '邮箱已经存在', 'back', 'error' );
 					}
 				}
 		}
-		$model->save( $data );
+		$model->save();
 
 		return true;
 	}

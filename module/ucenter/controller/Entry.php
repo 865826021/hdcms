@@ -33,8 +33,8 @@ class Entry extends HdController {
 	//注册页面
 	public function register() {
 		if ( IS_POST ) {
-			\Member::register( $_POST );
-			message( '恭喜你,注册成功!系统将跳转到登录页面', Session::get( 'from', url( 'entry.login' ) ), 'success', 3 );
+			\Member::register( Request::post() );
+			$this->login();
 		}
 		$placeholder = [
 			1 => '手机号',
@@ -49,7 +49,8 @@ class Entry extends HdController {
 	//登录
 	public function login() {
 		if ( IS_POST ) {
-			service( 'member' )->login( Request::post() );
+			\Member::login( Request::post() );
+			echo Session::get( 'from', __ROOT__ );exit;
 			message( '登录成功', Session::get( 'from', __ROOT__ ), 'success' );
 		}
 		//微信自动登录

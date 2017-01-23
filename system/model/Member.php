@@ -61,7 +61,7 @@ class Member extends Common {
 	];
 
 	protected function getDefaultGroupId() {
-		return \Member::defaultGroupId();
+		return \Member::getDefaultGroup();
 	}
 
 	public function checkUid( $field, $value, $params, $data ) {
