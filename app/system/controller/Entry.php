@@ -43,8 +43,6 @@ class Entry {
 
 	//注册
 	public function register() {
-		//系统维护检测
-		\User::checkSystemClose();
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ],
@@ -90,7 +88,6 @@ class Entry {
 			\User::login( Request::post() );
 			//系统维护检测
 			\User::checkSystemClose();
-
 			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
 		}
 		if ( Session::get( 'user.uid' ) ) {

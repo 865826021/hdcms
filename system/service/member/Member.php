@@ -1,33 +1,28 @@
 <?php namespace system\service\member;
 
 use system\service\Common;
+use system\model\Member as MemberModel;
 
 //服务功能类
 class Member extends Common {
-	protected $db;
 
-	public function __construct() {
-		$this->db = new \system\model\Member();
-	}
-
-	//检测用户登录
+	//用户登录检测
 	public function isLogin() {
 		if ( ! Session::get( "member_uid" ) ) {
-			message( '请登录后操作', web_url( 'reg/login', [ ], 'uc' ), 'error' );
+			message( '请登录后操作', url( 'entry/login', [ ], 'ucenter' ), 'error' );
 		}
 
 		return true;
 	}
 
 	//初始用户信息
-	public function initUserInfo() {
+	public function initMemberInfo() {
 		if ( Session::get( "member_uid" ) ) {
 			$user                        = [ ];
 			$user['member']              = Db::table( 'member' )->find( $_SESSION['member_uid'] );
 			$group                       = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
 			$user['group']               = $group ?: [ ];
-			$user['system']['user_type'] = 'member';
-			v( 'user', $user );
+			v( 'member', $user );
 		}
 	}
 
@@ -66,7 +61,7 @@ class Member extends Common {
 					$this->db['openid']   = $info['openid'];
 					$this->db['nickname'] = $info['nickname'];
 					$this->db['icon']     = $info['headimgurl'];
-					$this->db['group_id'] = $this->defaultGruopId();
+					$this->db['group_id'] = \Site::getDefaultGroup();
 					$uid                  = $this->db->save();
 					$user                 = $this->db->find( $uid );
 				}
@@ -89,7 +84,7 @@ class Member extends Common {
 
 	//会员登录
 	public function login( $data ) {
-		$member = new \system\model\Member();
+		$member = new MemberModel();
 		$user   = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
 		if ( empty( $user ) ) {
 			message( '帐号不存在', 'back', 'error' );
@@ -104,49 +99,51 @@ class Member extends Common {
 
 	//注册页面
 	public function register( $data ) {
-		$member             = new \system\model\Member();
-		$member['password'] = $data['password'];
-		$member['group_id'] = $this->defaultGruopId();
-		$info               = $member->getPasswordAndSecurity();
-		$member['password'] = $info['password'];
-		$member['security'] = $info['security'];
+		$model             = new MemberModel();
+		$model['password'] = $data['password'];
+		$model['group_id'] = \Site::getDefaultGroup();
+		$info              = $this->getPasswordAndSecurity();
+		$model['password'] = $info['password'];
+		$model['security'] = $info['security'];
 		switch ( v( 'site.setting.register.item' ) ) {
 			case 1:
 				//手机号注册
 				if ( ! preg_match( '/^\d{11}$/', $data['username'] ) ) {
 					message( '请输入手机号', 'back', 'error' );
 				}
-				$member['mobile'] = $data['username'];
+				$model['mobile'] = $data['username'];
+				if ( Db::table( 'member' )->where( 'mobile', $data['mobile'] )->get() ) {
+					message( '手机号已经存在', '', 'error' );
+				}
 				break;
 			case 2:
 				//邮箱注册
 				if ( ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱', 'back', 'error' );
 				}
-				$member['email'] = $data['username'];
+				$model['email'] = $data['username'];
+				if ( Db::table( 'member' )->where( 'mobile', $data['email'] )->get() ) {
+					message( '邮箱已经存在', '', 'error' );
+				}
+
 				break;
 			case 3:
 				//二者都行
 				if ( ! preg_match( '/^\d{11}$/', $_POST['username'] ) && ! preg_match( '/\w+@\w+/', $data['username'] ) ) {
 					message( '请输入邮箱或手机号', 'back', 'error' );
 				} else if ( preg_match( '/^\d{11}$/', $_POST['username'] ) ) {
-					$member['mobile'] = $data['username'];
+					$model['mobile'] = $data['username'];
+					if ( Db::table( 'member' )->where( 'mobile', $data['mobile'] )->get() ) {
+						message( '手机号已经存在', '', 'error' );
+					}
 				} else {
-					$member['email'] = $data['username'];
+					$model['email'] = $data['username'];
+					if ( Db::table( 'member' )->where( 'mobile', $data['email'] )->get() ) {
+						message( '邮箱已经存在', '', 'error' );
+					}
 				}
 		}
-		if ( ! empty( $member['mobile'] ) ) {
-			if ( $member->where( 'mobile', $data['mobile'] )->get() ) {
-				message( '手机号已经存在', '', 'error' );
-			}
-		}
-		if ( ! empty( $data['email'] ) ) {
-			if ( $member->where( 'mobile', $data['email'] )->get() ) {
-				message( '邮箱已经存在', '', 'error' );
-			}
-		}
-
-		$member->save( $data );
+		$model->save( $data );
 
 		return true;
 	}
@@ -160,10 +157,10 @@ class Member extends Common {
 	}
 
 	/**
-	 * 默认会员组编号
-	 * @return mixed
+	 * 获取站点的默认会员组编号
+	 * @return int|null
 	 */
-	public function defaultGroupId() {
+	public function getDefaultGroup() {
 		return Db::table( 'member_group' )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->pluck( 'id' );
 	}
 

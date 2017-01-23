@@ -35,10 +35,17 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 control-label">会员中心风格</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="ucenter_template" class="form-control" value="{{$site['ucenter_template']}}">
+                        <span class="help-block">网站会员中心使用的模板风格</span>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 control-label">默认模块</label>
                     <div class="col-sm-10">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="module" value="{{$site['module']}}">
+                            <input type="text" class="form-control" name="module" value="{{$site['module']}}" readonly="readonly">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" onclick="getModuleHasWebPage()">选择模块</button>
                             </span>

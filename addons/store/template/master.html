@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>
+		<blade name="title"/>
+	</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<div>
+	<div class="container">
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="?a=site/store&t=web&siteid=1&m=store">应用商店</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="{{__ROOT__}}">首页</a></li>
+						<if value="$_GET['type']=='module'">
+							<li class="active">
+								<else/>
+							<li>
+						</if>
+						<a href="{{url('entry/home',['type'=>'module'])}}">功能模块 <span class="sr-only">(current)</span></a>
+						</li>
+						<if value="$_GET['type']=='template'">
+							<li class="active">
+								<else/>
+							<li>
+						</if>
+						<a href="{{url('entry/home',['type'=>'template'])}}" class="active">风格模板 <span class="sr-only">(current)</span></a>
+						</li>
+					</ul>
+					<form class="navbar-form navbar-left" role="search" method="post" action="{{__URL__}}">
+						<div class="input-group">
+							<input type="text" class="form-control" name="w">
+                              <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">搜索</button>
+                              </span>
+						</div>
+					</form>
+					<ul class="nav navbar-nav navbar-left">
+						<li>
+							<a style="color: #CF4646;">每周五更新,周周有惊喜! </a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<if value="v('user.info.uid')">
+							<li><a href="?a=app/apps&t=web&siteid=1&m=store&type=addons">开发者中心</a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{Session::get('user.username')}} <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li><a href="{{u('system/entry/quit',['from'=>__URL__])}}">退出</a></li>
+								</ul>
+							</li>
+							<else/>
+							<li><a href="{{url('entry/login',['from'=>__URL__],'ucenter')}}">登录</a></li>
+						</if>
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+	<blade name="content"/>
+</div>
+</body>
+</html>

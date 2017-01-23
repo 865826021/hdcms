@@ -22,6 +22,7 @@ class Business {
 
 	protected static function controller( $data, $controller, $action ) {
 		$file = "addons/{$data['name']}/controller/" . ucfirst( $controller['controller'] ) . ".php";
+		$controller = ucfirst($controller['controller']);
 		$tpl  = <<<php
 <?php namespace addons\\{$data['name']}\\controller;
 
@@ -34,7 +35,7 @@ class Business {
  */
 use module\HdController;
 
-class {$controller['controller']} extends HdController {
+class {$controller} extends HdController {
 
 $action
 }

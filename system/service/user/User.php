@@ -31,11 +31,12 @@ class User extends Common {
 	 * 超级管理员检测
 	 *
 	 * @param int $uid
+	 * @param string $deal 处理方式 show显示 return返回bool
 	 *
 	 * @return bool
 	 */
-	public function isSuperUser( $uid = 0 ) {
-		$this->loginAuth();
+	public function isSuperUser( $uid = 0, $deal = 'show' ) {
+		$this->loginAuth( $deal );
 		$uid  = $uid ?: v( "user.info.uid" );
 		$user = Db::table( 'user' )->find( $uid );
 
@@ -151,7 +152,6 @@ class User extends Common {
 			$user['info']                 = Db::table( 'user' )->find( \Session::get( 'admin_uid' ) );
 			$user['group']                = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
 			$user['system']['super_user'] = $user['group']['id'] == 0;
-			$user['system']['user_type']  = 'admin';
 			v( 'user', $user );
 		}
 	}
@@ -173,13 +173,22 @@ class User extends Common {
 	/**
 	 * 登录验证
 	 * 没有登录异步请求会返回json数据否则直接跳转到登录页
+	 *
+	 * @param string $deal 处理方式 show直接显示 return返回布尔
+	 *
 	 * @return bool
 	 */
-	public function loginAuth() {
-		if ( v( 'user' ) && v( 'user.system.user_type' ) == 'admin' ) {
+	public function loginAuth( $deal = 'show' ) {
+		if ( v( 'user' ) ) {
 			return true;
 		}
-		message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
+		switch ( $deal ) {
+			case 'return':
+				return false;
+			case 'show':
+			default:
+				message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
+		}
 	}
 
 	/**
@@ -269,7 +278,7 @@ class User extends Common {
 	 */
 	public function authIdentity( $identify ) {
 		$this->auth();
-		$status = true;
+		$status     = true;
 		$type       = v( 'module.name.is_system' ) ? 'system' : v( 'module.name' );
 		$permission = Db::table( 'user_permission' )->where( 'siteid', SITEID )->where( 'uid', v( "user.info.uid" ) )->get();
 		if ( empty( $permission ) ) {

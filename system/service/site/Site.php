@@ -246,7 +246,7 @@ class Site extends Common {
 	 * @return mixed
 	 */
 	public function getDefaultGroup() {
-		return $this->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
+		return Db::table('member_group')->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
 	}
 
 	/**

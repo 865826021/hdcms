@@ -13,12 +13,13 @@ class Member extends Common {
 		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
 	];
 	protected $validate = [
-		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_INSERT ],
+		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'password', 'minlen:5', '密码长度不能小于5位', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'mobile', 'unique', '手机号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_UPDATE ],
+		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
@@ -66,6 +67,4 @@ class Member extends Common {
 	public function checkUid( $field, $value, $params, $data ) {
 		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? true : false;
 	}
-
-
 }

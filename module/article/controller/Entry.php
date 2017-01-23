@@ -19,17 +19,16 @@ use module\HdController;
  */
 class Entry extends HdController {
 	public function __construct() {
-		$this->siteid = SITEID;
-		$this->config = \Module::getModuleConfig();
+		parent::__construct();
 		//获取默认官网
 		$web            = \Web::getDefaultWeb();
-		$this->template = "theme/{$web['template_name']}/" . ( IS_MOBILE ? 'mobild' : 'web' );
+		$this->template = "theme/{$web['template_name']}/" . ( IS_MOBILE ? 'mobile' : 'web' );
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 	}
 
 	public function index() {
-		view( $this->template . '/index.html' );
+		return view( $this->template . '/index.html' );
 	}
 
 	/**

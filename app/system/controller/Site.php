@@ -82,32 +82,6 @@ class Site {
 		ajax( [ 'package' => $package, 'modules' => $modules ] );
 	}
 
-	//添加站点
-	public function addSite( SiteModel $site ) {
-		//检测用户是否可以添加帐号
-		if ( ! \User::hasAddSite() ) {
-			message( '您可创建的站点数量已经用完,请联系管理员进行升级' );
-		}
-		if ( IS_POST ) {
-			//添加站点信息
-			$site['name']        = Request::post( 'name' );
-			$site['description'] = Request::post( 'description' );
-			$site['domain']      = Request::post( 'domain' );
-			$site['module']      = Request::post( 'module' );
-			$siteId              = $site->save();
-
-			//添加站长数据,系统管理员不添加数据
-			\User::setSiteOwner( $siteId, v( 'user.info.uid' ) );
-			//创建用户字段表数据
-			\Site::InitializationSiteTableData( $siteId );
-			//更新站点缓存
-			\Site::updateCache( $siteId );
-			message( '站点添加成功', 'lists' );
-		}
-
-		return view( 'site_setting' );
-	}
-
 	/**
 	 * 为站点设置权限
 	 * 默认站点使用站长的权限
@@ -239,11 +213,12 @@ class Site {
 		}
 		if ( IS_POST ) {
 			//更新站点数据
-			$site              = SiteModel::find( SITEID );
-			$site->name        = Request::post( 'name' );
-			$site->description = Request::post( 'description' );
-			$site->domain      = Request::post( 'domain' );
-			$site->module      = Request::post( 'module' );
+			$site                     = SiteModel::find( SITEID );
+			$site['name']             = Request::post( 'name' );
+			$site['description']      = Request::post( 'description' );
+			$site['domain']           = Request::post( 'domain' );
+			$site['module']           = Request::post( 'module' );
+			$site['ucenter_template'] = Request::post( 'ucenter_template' );
 			$site->save();
 			message( '网站数据保存成功', 'back', 'success' );
 		}
@@ -251,6 +226,33 @@ class Site {
 		\Site::updateCache();
 
 		return view()->with( [ 'site' => $site ] );
+	}
+
+	//添加站点
+	public function addSite( SiteModel $site ) {
+		//检测用户是否可以添加帐号
+		if ( ! \User::hasAddSite() ) {
+			message( '您可创建的站点数量已经用完,请联系管理员进行升级' );
+		}
+		if ( IS_POST ) {
+			//添加站点信息
+			$site['name']             = Request::post( 'name' );
+			$site['description']      = Request::post( 'description' );
+			$site['domain']           = Request::post( 'domain' );
+			$site['module']           = Request::post( 'module' );
+			$site['ucenter_template'] = 'default';
+			$siteId                   = $site->save();
+
+			//添加站长数据,系统管理员不添加数据
+			\User::setSiteOwner( $siteId, v( 'user.info.uid' ) );
+			//创建用户字段表数据
+			\Site::InitializationSiteTableData( $siteId );
+			//更新站点缓存
+			\Site::updateCache( $siteId );
+			message( '站点添加成功', 'lists' );
+		}
+
+		return view( 'site_setting' );
 	}
 
 	//公众号连接测试
@@ -282,6 +284,7 @@ class Site {
 	 */
 	public function getModuleHasWebPage() {
 		$modules = \Module::getModuleHasWebPage();
+
 		return view()->with( 'modules', $modules );
 	}
 }

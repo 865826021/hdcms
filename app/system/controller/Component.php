@@ -29,6 +29,7 @@ class Component {
 	public function siteTemplateBrowser() {
 		\User::loginAuth();
 		$data = \Template::getSiteAllTemplate();
+
 		return view()->with( 'data', $data );
 	}
 
@@ -45,18 +46,19 @@ class Component {
 		if ( ! v( 'user' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
+
 		return View::make();
 	}
 
 	//上传图片webuploader
 	public function uploader() {
-		if ( ! v( 'user' ) ) {
+		if ( ! v( 'user' ) && ! v( 'member' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
 		if ( $file ) {
 			$data = [
-				'uid'        => v( 'user.info.uid' ) ?: v( 'user.member.uid' ),
+				'uid'        => Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'user.member.uid' ),
 				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
@@ -64,7 +66,7 @@ class Component {
 				'extension'  => strtolower( $file[0]['ext'] ),
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
-				'user_type'  => v( 'user.system.user_type' ),
+				'user_type'  => Request::post( 'user_type', 'member' ),
 				'data'       => Request::post( 'data', '' )
 			];
 			Db::table( 'attachment' )->insert( $data );
@@ -76,15 +78,15 @@ class Component {
 
 	//获取文件列表webuploader
 	public function filesLists() {
-		if ( ! v( 'user' ) ) {
+		if ( ! v( 'user' ) && ! v( 'member' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db = Db::table( 'attachment' )
-		        ->where( 'uid', v( 'user.info.uid' ) ?: v( 'user.member.uid' ) )
-		        ->whereIn( 'extension', explode( ',', strtolower( $_GET['extensions'] ) ) )
-		        ->where( 'user_type', v( 'user.system.user_type' ) )
+		        ->where( 'uid', Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'user.member.uid' ) )
+		        ->whereIn( 'extension', explode( ',', strtolower( Request::post( 'extensions') ) ) )
+		        ->where( 'user_type', Request::post( 'user_type', 'member' ) )
 		        ->orderBy( 'id', 'DESC' );
-		if ( v( 'user.system.user_type' ) == 'member' ) {
+		if ( Request::post( 'user_type' ) != 'user' ) {
 			//前台会员根据站点编号读取数据
 			$db->where( 'siteid', SITEID );
 		}

@@ -75,16 +75,18 @@ function authIdentity( $tag ) {
  *
  * @param string $action 动作标识
  * @param array $args GET参数
+ * @param string $module 模块标识
  *
  * @return string
  */
-function url( $action, $args = [ ] ) {
-	$info = preg_split( '#\.|/#', $action );
+function url( $action, $args = [ ], $module = '' ) {
+	$info   = preg_split( '#\.|/#', $action );
+	$module = $module ? $module : v( 'module.name' );
 	if ( count( $info ) == 2 ) {
 		array_unshift( $info, 'controller' );
 	}
 
-	return __ROOT__ . "/?m=" . v( 'module.name' ) . "&action=" .
+	return __ROOT__ . "/?m=" . $module . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
 }
 

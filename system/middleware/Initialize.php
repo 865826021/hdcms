@@ -13,12 +13,13 @@ use system\model\Modules;
 class Initialize {
 
 	public function run() {
+
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );
 		//后台用户
 		\User::initUserInfo();
 		//前台用户
-		\Member::initUserInfo();
+		\Member::initMemberInfo();
 		//加载系统配置项,对是系统配置不是站点配置
 		$this->loadConfig();
 		//初始站点数据

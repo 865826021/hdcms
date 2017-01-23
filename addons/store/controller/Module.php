@@ -9,7 +9,7 @@
  */
 use module\HdController;
 
-class module extends HdController {
+class Module extends HdController {
 
     //审核模块 
     public function audit() {

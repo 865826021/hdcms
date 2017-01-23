@@ -290,9 +290,12 @@ class Module {
 	 * @return array
 	 */
 	public function getModuleHasWebPage() {
+		$modules = array_keys( $this->getSiteAllModules() );
 		return Db::table( 'modules' )
 		         ->field( 'modules.mid,modules.title,modules.name,modules.is_system' )
 		         ->join( 'modules_bindings', 'modules.name', '=', 'modules_bindings.module' )
+		         ->whereIn( 'modules.name', $modules )
+		         ->where( 'modules_bindings.entry', 'web' )
 		         ->groupBy( 'modules.name' )
 		         ->get();
 	}
