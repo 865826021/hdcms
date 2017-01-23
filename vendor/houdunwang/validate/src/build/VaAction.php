@@ -12,7 +12,7 @@ namespace houdunwang\validate\build;
 class VaAction {
 	//字段为空时验证失败
 	public function isnull( $field, $value, $params, $data ) {
-		return empty( $data[ $field ] ) ? false : true;
+		return empty( $data[ $field ] ) ?  false:true;
 	}
 
 	//验证字段是否存在
@@ -82,7 +82,8 @@ class VaAction {
 
 	//网址验证
 	public function http( $name, $value, $params ) {
-		$preg = "/^(http[s]?:)?(\/{2})?([a-z0-9]+\.)?[a-z0-9]+(\.(com|cn|cc|build|net|com.cn))$/i";
+		$preg
+			= "/^(http[s]?:)?(\/{2})?([a-z0-9]+\.)?[a-z0-9]+(\.(com|cn|cc|build|net|com.cn))$/i";
 		if ( preg_match( $preg, $value ) ) {
 			return true;
 		}

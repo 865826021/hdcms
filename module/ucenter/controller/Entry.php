@@ -50,7 +50,6 @@ class Entry extends HdController {
 	public function login() {
 		if ( IS_POST ) {
 			\Member::login( Request::post() );
-			echo Session::get( 'from', __ROOT__ );exit;
 			message( '登录成功', Session::get( 'from', __ROOT__ ), 'success' );
 		}
 		//微信自动登录
@@ -81,7 +80,8 @@ class Entry extends HdController {
 
 	//退出
 	public function out() {
-		Session::flush();
-		message( '退出成功', url( 'entry.login' ), 'success', 1 );
+		$url = Session::get( 'from', url( 'entry.login' ) );
+		\Session::flush();
+		message( '退出成功', $url, 'success', 1 );
 	}
 }

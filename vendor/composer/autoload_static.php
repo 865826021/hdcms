@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3554e2617afb89628e1af61bfcb15420
+class ComposerStaticInit8783fc00f87e76b047a824325692a202
 {
     public static $files = array (
         '0f066c7cf996f26fedf8f5e90a916a95' => __DIR__ . '/..' . '/houdunwang/config/src/helper.php',
@@ -15,9 +15,9 @@ class ComposerStaticInit3554e2617afb89628e1af61bfcb15420
         '3299168317b10de7cb7942003bd52a29' => __DIR__ . '/..' . '/houdunwang/response/src/helper.php',
         'c54daba5473de13d796733fe0422e2c2' => __DIR__ . '/..' . '/houdunwang/collection/src/helper.php',
         'b200b64f4d1415a1ec31d557162a91e1' => __DIR__ . '/..' . '/houdunwang/loader/src/helper.php',
-        '0fdb93813e3129bfd50d293224a2095e' => __DIR__ . '/..' . '/houdunwang/error/src/helper.php',
-        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
         '50d0a9eb2eaa09019de1d3a8d2c45e4e' => __DIR__ . '/..' . '/houdunwang/view/src/helper.php',
+        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
+        '0fdb93813e3129bfd50d293224a2095e' => __DIR__ . '/..' . '/houdunwang/error/src/helper.php',
         '252420c3cb244c300529dbbdc1b6f21a' => __DIR__ . '/..' . '/houdunwang/framework/src/helper.php',
         '5be7e55f4e1232b42dcf75258888ab3c' => __DIR__ . '/../..' . '/system/helper.php',
     );
@@ -273,8 +273,8 @@ class ComposerStaticInit3554e2617afb89628e1af61bfcb15420
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3554e2617afb89628e1af61bfcb15420::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3554e2617afb89628e1af61bfcb15420::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8783fc00f87e76b047a824325692a202::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8783fc00f87e76b047a824325692a202::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

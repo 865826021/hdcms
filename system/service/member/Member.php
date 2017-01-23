@@ -18,11 +18,10 @@ class Member extends Common {
 
 	//初始用户信息
 	public function initMemberInfo() {
-		if ( Session::get( "member_uid" ) ) {
+		if ( $member_uid = Session::get( "member_uid" ) ) {
 			$user           = [ ];
-			$user['member'] = Db::table( 'member' )->find( $_SESSION['member_uid'] );
-			$group          = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
-			$user['group']  = $group ?: [ ];
+			$user['info'] = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
+			$user['group']  = Db::table( 'member_group' )->where( 'id', $user['member']['group_id'] )->first();
 			v( 'member', $user );
 		}
 	}
@@ -97,6 +96,7 @@ class Member extends Common {
 		if ( md5( $data['password'] . $user['security'] ) != $user['password'] ) {
 			message( '密码输入错误', 'back', 'error' );
 		}
+
 		\Session::set( 'member_uid', $user['uid'] );
 
 		return true;

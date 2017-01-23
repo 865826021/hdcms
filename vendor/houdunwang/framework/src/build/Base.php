@@ -63,6 +63,7 @@ class Base extends \houdunwang\container\build\Base {
 	protected function constant() {
 		//根目录即Vendor同级目录
 		define( 'ROOT_PATH', realpath(dirname( __DIR__ ).'/../../../..') );
+
 		//根URL地址
 		define( '__ROOT__', PHP_SAPI == 'cli' ? '' : trim( 'http://' . $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' ) );
 		define( 'DS', DIRECTORY_SEPARATOR );

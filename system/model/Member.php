@@ -33,7 +33,7 @@ class Member extends Common {
 		[ 'credit5', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'qq', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		[ 'nickname', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'nickname', '幸福小海豚', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'realname', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'telephone', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'vip', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
