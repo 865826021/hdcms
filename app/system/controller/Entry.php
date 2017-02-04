@@ -22,22 +22,22 @@ class Entry {
 			//站点设置了默认访问模块时访问模块的桌面入口页面
 			$module = Db::table( 'modules_bindings' )
 			            ->join( 'modules', 'modules.name', '=', 'modules_bindings.module' )
+			            ->join( 'site', 'site.module', '=', 'modules.name' )
+			            ->where( 'site.siteid', $site['siteid'] )
 			            ->where( 'entry', 'web' )->first();
 			if ( $module && ! empty( $module['do'] ) ) {
-				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['name'] . '\system\Navigate';
+				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['module'] . '\system\Navigate';
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
 					Request::set( 'get.siteid', $site['siteid'] );
-					Request::set( 'get.m', $module['name'] );
+					Request::set( 'get.m', $module['module'] );
 					//初始站点数据
 					\Site::siteInitialize();
 					//初始模块数据
 					\Module::moduleInitialize();
-
 					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
 				}
 			}
 		}
-
 		return view();
 	}
 

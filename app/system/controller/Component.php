@@ -55,10 +55,13 @@ class Component {
 		if ( ! v( 'user' ) && ! v( 'member' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
+		if(!Request::post( 'user_type')){
+			message('请设置user_type');
+		}
 		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
 		if ( $file ) {
 			$data = [
-				'uid'        => Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'user.member.uid' ),
+				'uid'        => Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'member.info.uid' ),
 				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],

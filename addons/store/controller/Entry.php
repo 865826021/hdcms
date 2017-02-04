@@ -20,19 +20,8 @@ class Entry extends HdController {
 			//模块列表
 			$category = \Module::getModuleTitles();
 		}
-
-//		$Model = new StoreApps();
-//		$Model->where( 'racking', 1 );
-//		if ( $t = q( 'get.h' ) ) {
-//			$Model->where( 'industry', $t );
-//		}
-//		if ( $w = q( 'post.w' ) ) {
-//			$Model->orWhere( 'title', $w )->orWhere( 'name', $w );
-//		}
-//		$data = $Model->where( 'type', $_GET['type'] )->get();
-//		View::with( 'data', $data );
 		View::with( 'category', $category );
 		View::with( 'type_title', $type_title );
-		return view( $this->template . '/home.html' );
+		return view( $this->template . '/entry.home.html' );
 	}
 }

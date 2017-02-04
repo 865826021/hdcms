@@ -55,7 +55,6 @@ class Entry {
 	 */
 	public function module() {
 		auth();
-
 		return view();
 	}
 }

@@ -16,7 +16,7 @@ class Navigate extends HdNavigate {
 	 * 当使用配置的域名访问时会执行这个方法
 	 */
     public function home() {
-    	echo '33';
+    	return view($this->template.'/home.html');
     }
 
 

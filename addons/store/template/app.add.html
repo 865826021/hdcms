@@ -1,0 +1,46 @@
+<extend file='addons/store/template/admin.html'/>
+<block name="content">
+	<ul class="nav nav-tabs" role="tablist">
+		<li><a href="{{url('app.lists',['type'=>$_GET['type']])}}">插件列表</a></li>
+		<li class="active"><a href="{{url('app.add',['type'=>$_GET['type']])}}">添加插件</a></li>
+	</ul>
+	<br/>
+	<form class="form-horizontal">
+		<div class="alert alert-info">
+			每个帐号初始会有 100个 <b>大神币</b> ,当大神币为零时不允许发布应用。
+			<br>你当前拥有 00 个大神币。
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				添加{{$app_title}}
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label  class="col-sm-2 control-label">选择模块</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<input type="text" class="form-control ng-pristine ng-untouched ng-valid" readonly="" ng-model="field.thumb">
+							<div class="input-group-btn">
+								<button ng-click="uploadThumb()" onclick="upFile()" class="btn btn-default" type="button">选择压缩包</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</block>
+<script>
+	//上传图片
+	function upFile(obj) {
+		require(['util'], function (util) {
+			options = {
+				extensions: 'zip'
+			};
+			util.file(function (files) {
+				//上传成功的文件，数组类型 
+				console.log(files);
+			}, options)
+		});
+	}
+</script>

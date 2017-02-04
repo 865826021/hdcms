@@ -25,7 +25,6 @@
 	<script>
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",
-			user: <?php echo json_encode( Session::get( 'user' ) );?>,
 			root: "{{__ROOT__}}",
 			url: "{{__URL__}}",
 			//用于上传等组件使用标识当前是后台用户

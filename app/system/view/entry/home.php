@@ -13,7 +13,7 @@
 <div class="container">
 	<h1></h1>
 	<div class="alert alert-info">
-		<h3><i class="fa fa-warning"></i> 当前域名不属性任何网站!</h3>
+		<h3><i class="fa fa-warning"></i> 当前域名不属于任何网站!</h3>
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -22,8 +22,9 @@
 		<ul class="list-group">
 			<li class="list-group-item">需要设置网站的域名</li>
 			<li class="list-group-item">需要设置网站的默认访问模块</li>
+			<li class="list-group-item">模块设置了 "入口导航" 功能 </li>
 			<li class="list-group-item">
-				<span class="text-danger"><i class="fa fa-info-circle"></i> 以上两点必须都要满足</span>
+				<span class="text-danger"><i class="fa fa-info-circle"></i> 以上几点必须都要满足</span>
 			</li>
 		</ul>
 	</div>

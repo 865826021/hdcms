@@ -20,11 +20,10 @@
 		};
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",
-			user: <?php echo json_encode( Session::get( 'user' ) );?>,
-			root: "<?php echo __ROOT__;?>",
+			root: "{{__ROOT__}}",
 			url: "{{__URL__}}",
-			siteid: <?php echo SITEID;?>,
-			module: "<?php echo v( 'module.name' );?>"
+			siteid: "{{SITEID}}",
+			module: "{{v( 'module.name' )}}"
 		}
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>

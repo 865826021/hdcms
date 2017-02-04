@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>
-        <blade name="title"/>
-    </title>
+    <title><blade name="title"/></title>
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
@@ -54,7 +52,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <if value="v('member')">
-                            <li><a href="?a=app/apps&t=web&siteid=1&m=store&type=addons">开发者中心</a></li>
+                            <li><a href="{{url('admin.home')}}">开发者中心</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                    aria-haspopup="true" aria-expanded="false">

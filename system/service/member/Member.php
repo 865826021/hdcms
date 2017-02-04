@@ -10,7 +10,7 @@ class Member extends Common {
 	//用户登录检测
 	public function isLogin() {
 		if ( ! Session::get( "member_uid" ) ) {
-			message( '请登录后操作', url( 'entry/login', [ ], 'ucenter' ), 'error' );
+			message( '请登录后操作', url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' ), 'error' );
 		}
 
 		return true;
@@ -19,9 +19,9 @@ class Member extends Common {
 	//初始用户信息
 	public function initMemberInfo() {
 		if ( $member_uid = Session::get( "member_uid" ) ) {
-			$user           = [ ];
-			$user['info'] = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
-			$user['group']  = Db::table( 'member_group' )->where( 'id', $user['member']['group_id'] )->first();
+			$user          = [ ];
+			$user['info']  = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
+			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['member']['group_id'] )->first();
 			v( 'member', $user );
 		}
 	}

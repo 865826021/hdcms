@@ -14,7 +14,9 @@ class Module extends HdController {
     //审核模块 
     public function audit() {
         echo '执行了控制器动作';
-    }    //模块列表 
+    }
+
+    //模块列表
     public function lists() {
         echo '执行了控制器动作';
     }
