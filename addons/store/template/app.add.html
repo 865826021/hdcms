@@ -5,28 +5,33 @@
         <li class="active"><a href="{{url('app.add',['type'=>$_GET['type']])}}">添加插件</a></li>
     </ul>
     <br/>
-    <form class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
+    <form action="" class="form-horizontal ng-cloak" ng-controller="ctrl" method="post">
         <input type="hidden" name="type" value="{{$_GET['type']}}">
         <div class="alert alert-info">
+            <h4>注意事项:</h4>
             每个帐号初始会有 100个 <b>大神币</b> ,当大神币为零时不允许发布应用。
-            <br>你当前拥有 00 个大神币。
+            <br/>
+            初次发布{{$app_title}}时需要添加模块的基本信息,然后再上传zip压缩包。
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 添加{{$app_title}}
             </div>
             <div class="panel-body">
+                <if value="!Request::get('id')">
                 <div class="form-group">
                     <label class="col-sm-2 control-label"></label>
                     <div class="col-sm-10">
                         <div class="input-group">
                             <div class="input-group-btn">
-                                <button ng-click="upFile()" class="btn btn-default" type="button">选择压缩包</button>
+                                <button ng-click="upFile()" class="btn btn-default" type="button">选择package.json文件
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div n1g-show="field.title">
+                </if>
+                <div ng-show="field.title">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">名称</label>
                         <div class="col-sm-10">
@@ -40,13 +45,25 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">版本号</label>
+                        <label class="col-sm-2 control-label">作者</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" ng-model="field.version" disabled="disabled">
+                            <input type="text" class="form-control" ng-model="field.author">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">模块描述</label>
+                        <label class="col-sm-2 control-label">发布页</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="field.url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">简介</label>
+                        <div class="col-sm-10">
+                            <textarea ng-model="field.resume" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详细介绍</label>
                         <div class="col-sm-10">
                             <textarea id="container" style="height:300px;width:100%;"></textarea>
                         </div>
@@ -54,50 +71,66 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">发布{{$app_title}}</button>
+        <input type="hidden" name="data">
+        <button type="submit" class="btn btn-primary" ng-show="field.title">发布{{$app_title}}</button>
     </form>
 </block>
 <script>
-    require(['angular', 'underscore', 'util', 'jquery', 'hdcms'], function (angular, _, util, $, hdcms) {
+    require(['angular', 'underscore', 'util', 'jquery'], function (angular, _, util, $) {
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
-            $scope.field={content:''};
-            //上传软件包
+            $scope.field = <?php echo $field;?>;
+            //上传package.json文件
             $scope.upFile = function () {
                 options = {
-                    extensions: 'zip',
+                    extensions: 'json',
                     data: {data: 'ext_app', status: 0}
                 };
                 util.file(function (files) {
                     if (files.length == 1) {
-                        $.post('{{url("app.unpack")}}',{file:files[0]},function(json){
-                            $scope.field=json;
+                        $.post('{{url("app.unpack")}}', {file: files[0]}, function (json) {
+                            $scope.field = json;
                             $scope.$apply();
-                        },'json');
+                        }, 'json');
                     }
                 }, options)
             }
             //图文编辑器
             util.ueditor('container', {}, function (editor) {
                 editor.addListener('contentChange', function () {
-                    $scope.field.content = editor.getContent();
+                    $scope.field.detail = editor.getContent();
                 });
                 editor.addListener('ready', function () {
-                    if (editor && editor.getContent() != $scope.field.content) {
-                        editor.setContent($scope.field.content);
+                    if (editor && editor.getContent() != $scope.field.detail) {
+                        editor.setContent($scope.field.detail);
                     }
                     $scope.$watch('field', function (item) {
-                        if (editor && editor.getContent() != item.content) {
-                            editor.setContent(item.content ? item.content : '');
+                        if (editor && editor.getContent() != item.detail) {
+                            editor.setContent(item.detail ? item.detail : '');
                         }
-                    },true);
+                    }, true);
                 });
                 editor.addListener('clearRange', function () {
-                    $scope.field.content = editor.getContent();
+                    $scope.field.detail = editor.getContent();
                     $scope.$apply();
                 });
             });
             //提交表单
             $("form").submit(function () {
+                var msg = '';
+                if ($.trim($scope.field.url) == '') {
+                    msg += '发布页不能为空<br/>';
+                }
+                if ($.trim($scope.field.resume) == '') {
+                    msg += '简介不能为空<br/>';
+                }
+                if ($.trim($scope.field.detail) == '') {
+                    msg += '详细介绍不能为空<br/>';
+                }
+                if (msg) {
+                    util.message(msg, '', 'warning');
+                    return false;
+                }
+                $("[name='data']").val(angular.toJson($scope.field));
                 return true;
             })
         }]);
@@ -105,5 +138,4 @@
             angular.bootstrap($("form")[0], ['app']);
         });
     });
-
 </script>

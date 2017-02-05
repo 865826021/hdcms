@@ -6,10 +6,6 @@
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
-	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
 	<script>
 		//HDJS组件需要的配置
 		hdjs = {
@@ -23,9 +19,15 @@
 			root: "{{__ROOT__}}",
 			url: "{{__URL__}}",
 			siteid: "{{SITEID}}",
-			module: "{{v( 'module.name' )}}"
+			module: "{{v( 'module.name' )}}",
+			//用于上传等组件使用标识当前是后台用户
+			user_type: 'user'
 		}
 	</script>
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">

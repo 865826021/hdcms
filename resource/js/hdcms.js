@@ -179,6 +179,6 @@
             return hdcms;
         });
     } else {
-        window.hdcms = util;
+        window.hdcms = hdcms;
     }
 })(window);

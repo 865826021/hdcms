@@ -3,15 +3,17 @@
 use houdunwang\model\Model;
 
 /**
- * 模块/模板应用
+ * 模块/模板基本信息
  * Class StoreApp
  * @package addons\store\model
  */
 class StoreApp extends Model {
 	protected $table = 'store_app';
+	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'title', 'required', '标题不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
-		[ 'name', 'required', '标识不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
+		[ 'title', 'required', '标题不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'name', 'required', '标识不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'name', 'unique', '应用已经存在了', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'type', 'required', '应用类型不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 		[ 'thumb', 'required', '缩略图不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 	];
@@ -23,22 +25,6 @@ class StoreApp extends Model {
 	];
 
 	protected function getUid() {
-		return Session::get( "user.uid" );
-	}
-
-	/**
-	 * 获取模块的最新版数据
-	 *
-	 * @param $module
-	 *
-	 * @return mixed
-	 */
-	public function getLastModule( $module ) {
-		return $this->join( 'store_app_package', 'store_apps_package.appid', '=', 'store_app.id' )
-		            ->where( 'store_app.name', $module )
-		            ->where( 'racking', 1 )
-		            ->orderBy( 'store_app_package.id', 'DESC' )
-		            ->field( 'store_app_package.releaseCode,store_app_package.package' )
-		            ->first();
+		return v( 'member.info.uid' );
 	}
 }

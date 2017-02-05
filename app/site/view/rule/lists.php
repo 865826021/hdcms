@@ -61,7 +61,7 @@
 				</div>
 				<div class="panel-footer clearfix">
 					<div class="btn-group pull-right" role="group" aria-label="...">
-						<a href="?s=site/reply/post&m={{$r['module']}}&rid={{$r['rid']}}" class="btn btn-default"><i
+						<a href="?s=site/rule/post&m={{$r['module']}}&rid={{$r['rid']}}" class="btn btn-default"><i
 								class="fa fa-edit"></i> 编辑</a>
 						<button type="button" onclick="removeRule('{{$r['rid']}}','{{$r['name']}}',this)"
 						        class="btn btn-default"><i

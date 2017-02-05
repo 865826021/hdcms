@@ -24,7 +24,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<foreach from="$data" value="$d">
+					<foreach from="$apps" value="$d">
 						<tr>
 							<td width="80">{{$d['id']}}</td>
 							<td width="150">{{$d['title']}}</td>
@@ -40,13 +40,12 @@
 							<td>{{date('Y/m/d h:i',$d['createtime'])}}</td>
 							<td>
 								<div class="btn-group" role="group" aria-label="...">
-									<a href="{{web_url('packages',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-success btn-sm">软件包管理</a>
-									<a href="{{web_url('editPackage',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-default btn-sm">编辑资料</a>
-
+									<a href="{{url('packages',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-success btn-sm">软件包管理</a>
+									<a href="{{url('app.add',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-default btn-sm">编辑资料</a>
 									<if value="$d['racking']==1">
-										<a href="javascript:;" onclick="changeRacking({{$d['id']}},0)" class="btn btn-default btn-sm">下架</a>
+										<a href="{{url('app.changeRacking',['type'=>$_GET['type'],'id'=>$d['id'],'racking'=>0])}}" class="btn btn-default btn-sm">下架</a>
 										<else/>
-										<a href="javascript:;" onclick="changeRacking({{$d['id']}},1)" class="btn btn-info btn-sm">上架</a>
+										<a href="{{url('app.changeRacking',['type'=>$_GET['type'],'id'=>$d['id'],'racking'=>1])}}" class="btn btn-default btn-sm">上架</a>
 									</if>
 									<a href="javascript:;" onclick="del({{$d['id']}})" class="btn btn-default btn-sm">删除</a>
 								</div>
@@ -59,3 +58,13 @@
 		</div>
 	</form>
 </block>
+<script>
+	//删除应用
+	function del(id){
+		require(['util'],function(util){
+			util.confirm('删除应用将删除已经上传的所有压缩包! <br/>确定删除吗?',function(){
+				location.href="{{url('app.del',['type'=>$_GET['type']])}}&id="+id;
+			})
+		})
+	}
+</script>

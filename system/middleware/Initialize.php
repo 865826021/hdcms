@@ -32,13 +32,11 @@ class Initialize {
 	 * 只加载系统配置不加载网站配置
 	 */
 	protected function loadConfig() {
-		$config = Db::table( 'config' )->field( 'site,register' )->first();
-		/**
-		 * 不存在配置项时
-		 * 一般在系统初次安装时会发生这个情况
-		 */
-		$config['site']     = json_decode( $config['site'], true );
+		$config         = Db::table( 'config' )->field( 'site,register' )->first();
+		$config['site'] = json_decode( $config['site'], true );
 		$config['register'] = json_decode( $config['register'], true );
 		v( 'config', $config );
+		//上传允许的文件类型
+		c( 'upload.type',v('config.site.upload.type'));
 	}
 }
