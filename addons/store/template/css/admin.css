@@ -56,6 +56,9 @@ body {
 table th {
   font-weight: normal;
 }
+.ng-cloak {
+  display: none;
+}
 div.panel {
   border-radius: 0px;
 }

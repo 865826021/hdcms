@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\system\controller;
+use houdunwang\request\Request;
 
 /**
  * 前端组件处理
@@ -55,13 +56,13 @@ class Component {
 		if ( ! v( 'user' ) && ! v( 'member' ) ) {
 			message( '请登录后操作', 'back', 'error' );
 		}
-		if(!Request::post( 'user_type')){
-			message('请设置user_type');
+		if ( ! Request::post( 'user_type' ) ) {
+			message( '请设置user_type' );
 		}
 		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
 		if ( $file ) {
 			$data = [
-				'uid'        => Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'member.info.uid' ),
+				'uid'        => v( Request::post( 'user_type' ) . '.info.uid' ),
 				'siteid'     => SITEID,
 				'name'       => $file[0]['name'],
 				'filename'   => $file[0]['filename'],
@@ -69,9 +70,9 @@ class Component {
 				'extension'  => strtolower( $file[0]['ext'] ),
 				'createtime' => time(),
 				'size'       => $file[0]['size'],
-				'user_type'  => Request::post( 'user_type', 'member' ),
-				'data'       => Request::post( 'data', '' )
+				'status'     => 1
 			];
+			$data = array_merge( $data, Request::post(), [ ] );
 			Db::table( 'attachment' )->insert( $data );
 			ajax( [ 'valid' => 1, 'message' => $file[0]['path'] ] );
 		} else {
@@ -85,8 +86,8 @@ class Component {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		$db = Db::table( 'attachment' )
-		        ->where( 'uid', Request::post( 'user_type' ) == 'user' ? v( 'user.info.uid' ) : v( 'user.member.uid' ) )
-		        ->whereIn( 'extension', explode( ',', strtolower( Request::post( 'extensions') ) ) )
+		        ->where( 'uid', v( Request::post( 'user_type' ) . '.info.uid' ) )
+		        ->whereIn( 'extension', explode( ',', strtolower( Request::post( 'extensions' ) ) ) )
 		        ->where( 'user_type', Request::post( 'user_type', 'member' ) )
 		        ->orderBy( 'id', 'DESC' );
 		if ( Request::post( 'user_type' ) != 'user' ) {
@@ -101,6 +102,7 @@ class Component {
 				$data[ $k ]['size']       = \Tool::getSize( $v['size'] );
 				$data[ $k ]['url']        = __ROOT__ . '/' . $v['path'];
 				$data[ $k ]['path']       = $v['path'];
+				$data[ $k ]['name']       = $v['name'];
 			}
 		}
 		ajax( [ 'data' => $data, 'page' => $Res->links() ] );

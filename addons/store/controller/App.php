@@ -38,6 +38,22 @@ class App extends HdController {
 
 	//添加插件或模块
 	public function add() {
+		if ( IS_POST ) {
+
+		}
+
 		return view( $this->template . '/app.add.html' );
+	}
+
+	/**
+	 * 添加模块时解压数据包
+	 * 获取包内的json数据用于生成提交用的表单
+	 */
+	public function unpack() {
+		$file = Db::table( 'attachment' )->where( 'path', Request::post( 'file' ) )->first();
+		$info = pathinfo( $file['name'] );
+		Zip::PclZip( Request::post( 'file' ) );
+		Zip::extract( 'temp' );
+		ajax( json_decode(file_get_contents( "temp/{$info['filename']}/package.json" ) ,true) );
 	}
 }
