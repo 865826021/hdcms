@@ -10,8 +10,7 @@
 use module\HdController;
 
 class user extends HdController {
-
-    //开发者列表 
+    //开发者列表
     public function lists() {
         echo '执行了控制器动作';
     }

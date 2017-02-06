@@ -25,6 +25,7 @@ class Initialize {
 		\User::initUserInfo();
 		//前台用户
 		\Member::initMemberInfo();
+//		p(v('member.info'));
 	}
 
 	/**

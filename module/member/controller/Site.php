@@ -195,7 +195,8 @@ class site extends HdController {
 		if ( $model['credit'] != 0 ) {
 			message( '默认会员组初始积分必须为0', '', 'error' );
 		}
-		$model['isdefault'] = 0;
+		Db::table('member_group')->update( [ 'isdefault' => 0 ] );
+		$model['isdefault'] = 1;
 		$model->save();
 		message( '默认会员组设置成功', '', 'success' );
 	}

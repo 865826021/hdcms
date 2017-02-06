@@ -1,0 +1,64 @@
+<extend file='addons/store/template/admin.html'/>
+<block name="content">
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="active"><a href="{{url('hdcms.lists')}}">更新包列表</a></li>
+		<li><a href="{{url('hdcms.add')}}">添加更新包</a></li>
+	</ul>
+	<br/>
+	<form class="form-horizontal">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				HDCMS更新包列表
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped">
+					<thead>
+					<tr>
+						<th>编号</th>
+						<th>版本</th>
+						<th>上架</th>
+						<th>创建日期</th>
+						<th width="120">操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<foreach from="$apps" value="$d">
+						<tr>
+							<td width="80">{{$d['id']}}</td>
+							<td width="150">{{$d['version']}}</td>
+							<td>
+								<if value="$d['racking']==1">
+									<i class="fa fa-check-square-o text-success"></i>
+									<else/>
+									<i class="fa fa-times-circle text-danger"></i>
+								</if>
+							</td>
+							<td>{{date('Y/m/d h:i',$d['createtime'])}}</td>
+							<td>
+								<div class="btn-group" role="group" aria-label="...">
+									<if value="$d['racking']==1">
+										<a href="{{url('app.changeModuleRacking',['id'=>$d['id'],'racking'=>0])}}" class="btn btn-default btn-sm">下架</a>
+										<else/>
+										<a href="{{url('app.changeModuleRacking',['id'=>$d['id'],'racking'=>1])}}" class="btn btn-default btn-sm">上架</a>
+									</if>
+									<a href="javascript:;" onclick="del({{$d['id']}})" class="btn btn-default btn-sm">删除</a>
+								</div>
+							</td>
+						</tr>
+					</foreach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</block>
+<script>
+	//删除应用
+	function del(id){
+		require(['util'],function(util){
+			util.confirm('删除应用将删除已经上传的所有压缩包! <br/>确定删除吗?',function(){
+				location.href="{{url('app.delModule')}}&id="+id;
+			})
+		})
+	}
+</script>

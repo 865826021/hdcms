@@ -13,7 +13,8 @@ namespace addons\store\controller;
 use module\HdController;
 
 /**
- * 后台主页
+ * 后台主控制器
+ * 用于其他控制器继承使用
  * Class Admin
  * @package addons\store\controller
  */
@@ -21,8 +22,25 @@ class Admin extends HdController {
 	public function __construct() {
 		parent::__construct();
 		\Member::isLogin();
+		/**
+		 * 初始登录的帐号
+		 * 为帐号设置密钥
+		 */
+		$user = Db::table( 'store_user' )->where( 'uid', v( 'member.info.uid' ) )->first();
+		if ( empty( $user ) ) {
+			$data['secret'] = md5( time() ) . md5( v( 'member.info.uid' ) );
+			$data['uid']    = v( 'member.info.uid' );
+			Db::table( 'store_user' )->insert( $data );
+			//设置初始大神积分
+			$data['uid']        = v( 'member.info.uid' );
+			$data['credittype'] = 'credit1';
+			$data['num']        = 100;
+			$data['remark']     = '开发者初始大神积分';
+			\Credit::change( $data );
+		}
 	}
 
+	//后台主页
 	public function home() {
 		return view( $this->template . '/admin.home.html' );
 	}

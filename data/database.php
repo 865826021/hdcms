@@ -2,7 +2,7 @@
 return [
 	'read'     => [ ],
 	'write'    => [ ],
-	'host'     => 'localhost',
+	'host'     => '127.0.0.1',
 	'user'     => 'hdcms',
 	'password' => 'hdcms@)!!',
 	'database' => 'hdcms',

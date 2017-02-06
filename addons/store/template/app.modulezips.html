@@ -1,0 +1,87 @@
+<extend file='addons/store/template/admin.html'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="{{url('app.moduleLists')}}">返回模块列表</a></li>
+    </ul>
+    <div style="padding: 10px 0px;">
+        <button class="btn btn-primary" onclick="upFile()">添加压缩包</button>
+    </div>
+    <form class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+               <b> {{$app['title']}}</b> 插件压缩包列表
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>版本号</th>
+                        <th>上架</th>
+                        <th>创建日期</th>
+                        <th width="110">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <foreach from="$zips" value="$d">
+                        <tr>
+                            <td width="80">{{$d['id']}}</td>
+                            <td width="80">{{$d['version']}}</td>
+                            <td>
+                                <if value="$d['racking']==1">
+                                    <i class="fa fa-check-square-o text-success"></i>
+                                    <else/>
+                                    <i class="fa fa-times-circle text-danger"></i>
+                                </if>
+                            </td>
+                            <td>{{date('Y/m/d h:i',$d['createtime'])}}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <if value="$d['racking']==1">
+                                        <a href="{{url('app.changeModuleZipRacking',['id'=>$d['id'],'racking'=>0])}}"
+                                           class="btn btn-default btn-sm">下架</a>
+                                        <else/>
+                                        <a href="{{url('app.changeModuleZipRacking',['id'=>$d['id'],'racking'=>1])}}"
+                                           class="btn btn-default btn-sm">上架</a>
+                                    </if>
+                                    <a href="javascript:;" onclick="del({{$d['id']}})"
+                                       class="btn btn-default btn-sm">删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </foreach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</block>
+<script>
+    function upFile() {
+        require(['util'], function (util) {
+            options = {
+                extensions: 'zip',
+                data: {data: 'ext_app', status: 0}
+            };
+            util.file(function (files) {
+                if (files.length == 1) {
+                    $.post('{{url("app.addModuleZip",["id"=>$_GET["id"]])}}', {file: files[0]}, function (json) {
+                        if (json.valid == 1) {
+                            util.message('模块压缩包添加成功', 'refresh', 'success');
+                        } else {
+                            util.message(json.message, '','error');
+                        }
+                    }, 'json');
+                }
+            }, options)
+        })
+    }
+    //删除应用
+    function del(id) {
+        require(['util'], function (util) {
+            util.confirm('确定删除模块压缩包吗?', function () {
+                location.href = "{{url('app.delModuleZip')}}&id=" + id;
+            })
+        })
+    }
+</script>

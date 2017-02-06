@@ -10,8 +10,7 @@
 use module\HdController;
 
 class Module extends HdController {
-
-    //审核模块 
+    //审核模块
     public function audit() {
         echo '执行了控制器动作';
     }

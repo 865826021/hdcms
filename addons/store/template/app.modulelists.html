@@ -1,14 +1,14 @@
 <extend file='addons/store/template/admin.html'/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li class="active"><a href="{{url('app.lists',['type'=>$_GET['type']])}}">插件列表</a></li>
-		<li><a href="{{url('app.add',['type'=>$_GET['type']])}}">添加插件</a></li>
+		<li class="active"><a href="{{url('app.moduleLists')}}">模块列表</a></li>
+		<li><a href="{{url('app.addModule')}}">添加模块</a></li>
 	</ul>
 	<br/>
 	<form class="form-horizontal">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				{{$app_title}}列表
+				模块插件列表
 			</div>
 			<div class="panel-body">
 				<table class="table table-striped">
@@ -40,12 +40,12 @@
 							<td>{{date('Y/m/d h:i',$d['createtime'])}}</td>
 							<td>
 								<div class="btn-group" role="group" aria-label="...">
-									<a href="{{url('packages',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-success btn-sm">软件包管理</a>
-									<a href="{{url('app.add',['type'=>$_GET['type'],'id'=>$d['id']])}}" class="btn btn-default btn-sm">编辑资料</a>
+									<a href="{{url('app.moduleZips',['id'=>$d['id']])}}" class="btn btn-default btn-sm">软件包管理</a>
+									<a href="{{url('app.addModule',['id'=>$d['id']])}}" class="btn btn-default btn-sm">编辑资料</a>
 									<if value="$d['racking']==1">
-										<a href="{{url('app.changeRacking',['type'=>$_GET['type'],'id'=>$d['id'],'racking'=>0])}}" class="btn btn-default btn-sm">下架</a>
+										<a href="{{url('app.changeModuleRacking',['id'=>$d['id'],'racking'=>0])}}" class="btn btn-default btn-sm">下架</a>
 										<else/>
-										<a href="{{url('app.changeRacking',['type'=>$_GET['type'],'id'=>$d['id'],'racking'=>1])}}" class="btn btn-default btn-sm">上架</a>
+										<a href="{{url('app.changeModuleRacking',['id'=>$d['id'],'racking'=>1])}}" class="btn btn-default btn-sm">上架</a>
 									</if>
 									<a href="javascript:;" onclick="del({{$d['id']}})" class="btn btn-default btn-sm">删除</a>
 								</div>
@@ -63,7 +63,7 @@
 	function del(id){
 		require(['util'],function(util){
 			util.confirm('删除应用将删除已经上传的所有压缩包! <br/>确定删除吗?',function(){
-				location.href="{{url('app.del',['type'=>$_GET['type']])}}&id="+id;
+				location.href="{{url('app.delModule')}}&id="+id;
 			})
 		})
 	}
