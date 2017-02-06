@@ -22,6 +22,11 @@ use system\model\MemberGroup;
  * @author 向军
  */
 class site extends HdController {
+	public function __construct() {
+		parent::__construct();
+		auth();
+	}
+
 	//会员列表
 	public function memberLists() {
 		$data = Db::table( 'member' )
@@ -144,7 +149,9 @@ class site extends HdController {
 			\Site::updateCache();
 			message( '更改会组资料更新成功', 'refresh', 'success' );
 		}
-		$sql    = "SELECT count(*) as user_count,m.uid,g.* FROM " . tablename( 'member_group' ) . " g LEFT JOIN " . tablename( 'member' ) . " m ON g.id=m.group_id WHERE g.siteid=" . SITEID . " GROUP BY g.id ORDER BY g.rank DESC,g.id";
+		$sql    = "SELECT count(*) as user_count,m.uid,g.* FROM " . tablename( 'member_group' )
+		          . " g LEFT JOIN " . tablename( 'member' ) . " m ON g.id=m.group_id WHERE g.siteid="
+		          . SITEID . " GROUP BY g.id ORDER BY g.rank DESC,g.id";
 		$groups = Db::query( $sql );
 		View::with( 'groups', $groups );
 		View::with( 'grouplevel', v( 'site.setting.grouplevel' ) );

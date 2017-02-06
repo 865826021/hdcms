@@ -2,9 +2,9 @@
 return [
 	'read'     => [ ],
 	'write'    => [ ],
-	'host'     => '127.0.0.1',
-	'user'     => 'hdcms',
-	'password' => 'hdcms@)!!',
-	'database' => 'hdcms',
+	'host'     => 'neiwangfuwuqi.mysql.rds.aliyuncs.com',
+	'user'     => 'dev',
+	'password' => 'Admin888',
+	'database' => 'dev',
 	'prefix'   => 'hd_'
 ];
