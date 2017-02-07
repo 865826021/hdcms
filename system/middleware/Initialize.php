@@ -13,9 +13,11 @@ use system\model\Modules;
 class Initialize {
 
 	public function run() {
-		//安装脚本时不执行中间件
-		if ( Request::get( 's' ) == 'system/install/make' ) {
-			return;
+		//安装系统时创建表与初始数据
+		if ( isset( $_GET['s'] ) && $_GET['s'] == 'install' ) {
+			cli( 'hd migrate:make' );
+			cli( 'hd seed:make' );
+			message( '数据表创建成功', '', 'success' );
 		}
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );

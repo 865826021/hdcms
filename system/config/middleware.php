@@ -26,6 +26,5 @@ return [
 	| 根据业务需要可以在任何位置执行的中间件
 	*/
 	'web'        => [
-		'boot'=>'system\middleware\Boot'
 	]
 ];
