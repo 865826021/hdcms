@@ -10,6 +10,7 @@ php hd cli:upgrade
 #完整包数据库
 ##先备份所有表结构
 ##需要执行INSERT动作的表
+hd_config
 hd_menu
 hd_migrations
 hd_modules
