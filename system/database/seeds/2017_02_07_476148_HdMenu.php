@@ -1,0 +1,60 @@
+<?php namespace system\database\seeds;
+use houdunwang\database\build\Seeder;
+class HdMenu extends Seeder {
+    //执行
+	public function up() {
+		$sql=<<<str
+INSERT INTO `hd_menu` (`id`, `pid`, `title`, `permission`, `url`, `append_url`, `icon`, `orderby`, `is_display`, `is_system`, `mark`)
+VALUES
+	(1,0,'微信功能','','?s=site/entry/home','','fa fa-comments-o',0,1,1,'platform'),
+	(2,1,'基本功能','','','','',0,1,1,'platform'),
+	(3,2,'文字回复','reply_basic','?s=site/rule/lists&m=basic','?s=site/rule/post&m=basic','fa fa-plus',0,1,1,'platform'),
+	(27,10000,'管理','','','','',0,1,1,'package'),
+	(30,2,'图文回复','reply_news','?s=site/rule/lists&m=news','?s=site/rule/post&m=news','fa fa-plus',0,1,1,'platform'),
+	(32,0,'会员粉丝','','?s=site/entry/home','','fa fa-cubes',10,1,1,'member'),
+	(33,32,'会员中心','','','','fa fa-cubes',0,1,1,'member'),
+	(35,33,'会员','users','?m=member&action=controller/site/memberlists','?m=member&action=controller/site/MemberPost','fa fa-cubes',0,1,1,'member'),
+	(36,33,'会员组','member_groups','?m=member&action=controller/site/groupLists','?m=member&action=controller/site/groupPost','fa fa-cubes',0,1,1,'member'),
+	(38,32,'积分兑换','','','','fa fa-cubes',0,1,1,'member'),
+	(39,38,'折扣券','member_coupons','?m=ticket&action=controller/site/lists&type=1','?a=site/post&t=site&type=1&m=ticket','fa fa-cubes',0,1,1,'member'),
+	(40,38,'折扣券核销','member_coupons_charge','?m=ticket&action=controller/site/charge&type=1','','fa fa-cubes',0,1,1,'member'),
+	(41,38,'代金券','member_cash','?m=ticket&action=controller/site/lists&type=2','?a=site/post&t=site&type=2&m=ticket','fa fa-cubes',0,1,1,'member'),
+	(42,38,'代金券核销','member_cash_charge','?m=ticket&action=controller/site/charge&type=2','','fa fa-cubes',0,1,1,'member'),
+	(55,2,'系统回复','reply_special','?m=special&action=controller/site/post','','fa fa-cubes',0,1,1,'platform'),
+	(63,100,'支付配置','','','','fa fa-cubes',0,1,1,'feature'),
+	(64,63,'微信支付','setting_pay','?s=site/setting/pay','','fa fa-cubes',0,1,1,'feature'),
+	(66,100,'会员与粉丝选项','','','','fa fa-cubes',0,1,1,'feature'),
+	(67,66,'积分设置','setting_credit','?s=site/setting/credit','','fa fa-cubes',0,1,1,'feature'),
+	(68,66,'注册设置','setting_register','?s=site/setting/register','','fa fa-cubes',0,1,1,'feature'),
+	(70,66,'邮件通知设置','setting_mail','?s=site/setting/mail','','fa fa-cubes',0,1,1,'feature'),
+	(71,0,'文章系统','','?s=site/entry/home','','fa fa-cubes',0,1,1,'article'),
+	(72,71,'官网管理','','?s=article/home/welcome','','fa fa-cubes',0,1,1,'article'),
+	(73,72,'官网模板','article_site_template','?m=article&action=controller/template/lists','','fa fa-cubes',0,1,1,'article'),
+	(74,71,'内容管理','','','','fa fa-cubes',0,1,1,'article'),
+	(75,74,'分类管理','category_manage','?a=content/category&t=site&m=article','?a=content/categoryPost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+	(76,74,'文章管理','article_manage','?a=content/article&t=site&m=article','?a=content/articlePost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+	(77,72,'站点管理','site_manage','?m=article&action=controller/site/lists','?m=article&action=controller/site/post','fa fa-cubes',0,1,1,'article'),
+	(78,100,'特殊页面管理','','','','fa fa-cubes',0,1,1,'article'),
+	(80,78,'手机会员中心','article_ucenter_post','?m=ucenter&action=controller/mobile/post','','fa fa-cubes',0,1,1,'feature'),
+	(81,27,'扩展功能管理','package_managa','?s=site/entry/package','','fa fa-cubes',0,1,1,'package'),
+	(82,1,'高级功能','','','','fa fa-cubes',0,1,1,'platform'),
+	(84,33,'会员字段管理','member_fields','?m=member&action=controller/site/fieldlists','','fa fa-cubes',0,1,1,'member'),
+	(85,78,'微站快捷导航','article_quick_menu','?s=site/navigate/quickmenu','','fa fa-cubes',0,1,1,'feature'),
+	(86,82,'微信菜单','menus_lists','?m=button&action=controller/site/lists','','fa fa-cubes',0,1,1,'platform'),
+	(87,1,'微信素材','','','','fa fa-cubes',0,1,1,'platform'),
+	(88,87,'素材&群发','material','?m=material&action=controller/site/image','','fa fa-cubes',0,1,1,'platform'),
+	(89,100,'系统管理','','','','fa fa-cubes',0,1,1,'feature'),
+	(90,89,'更新站点缓存','system_update_cache','?s=site/site/updateCache','','fa fa-cubes',0,1,1,'feature'),
+	(91,89,'快捷菜单设置','system_quickmenu','?m=quickmenu&action=controller/site/status','','',0,1,1,'feature'),
+	(92,72,'导航菜单','navigate_lists','?s=site/navigate/lists&entry=home&m=article','?s=site/navigate/post&entry=home&m=article','',0,1,1,'article'),
+	(93,74,'模型管理','model_manage','?m=article&action=controller/model/lists','?m=article&action=controller/model/post','fa fa-cubes',0,1,1,'article'),
+	(100,0,'系统设置','','?s=site/entry/home','','fa fa-comments-o',20,1,1,'feature'),
+	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package');
+str;
+		Db::execute($sql);
+    }
+    //回滚
+    public function down() {
+
+    }
+}

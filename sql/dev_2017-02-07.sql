@@ -7,7 +7,7 @@
 #
 # Host: houdunwang.mysql.rds.aliyuncs.com (MySQL 5.6.29)
 # Database: dev
-# Generation Time: 2017-02-07 13:53:46 +0000
+# Generation Time: 2017-02-07 14:13:30 +0000
 # ************************************************************
 
 
@@ -20,50 +20,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Dump of table hd_profile_fields
+# Dump of table hd_user_group
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `hd_profile_fields`;
+DROP TABLE IF EXISTS `hd_user_group`;
 
-CREATE TABLE `hd_profile_fields` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `field` varchar(45) NOT NULL COMMENT '字段名',
-  `title` varchar(45) NOT NULL COMMENT '中文标题',
-  `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
-  `status` tinyint(1) NOT NULL COMMENT '启用',
-  `required` tinyint(1) NOT NULL COMMENT '必须填写',
-  `showinregister` tinyint(1) NOT NULL COMMENT '注册时显示',
+CREATE TABLE `hd_user_group` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL DEFAULT '' COMMENT '组名',
+  `maxsite` int(11) unsigned NOT NULL COMMENT '站点数量',
+  `allfilesize` int(10) unsigned NOT NULL COMMENT '允许上传空间大小',
+  `daylimit` int(11) unsigned NOT NULL COMMENT '有效期限',
+  `package` varchar(2000) NOT NULL DEFAULT '' COMMENT '可使用的公众服务套餐',
+  `system_group` tinyint(1) unsigned NOT NULL COMMENT '系统用户组',
+  `router_num` int(11) unsigned NOT NULL COMMENT '允许设置路由的数量',
+  `middleware_num` int(11) unsigned NOT NULL COMMENT '允许设置中间件的数量',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员字段信息使用的基本数据表中文名称与状态';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员组';
 
-LOCK TABLES `hd_profile_fields` WRITE;
-/*!40000 ALTER TABLE `hd_profile_fields` DISABLE KEYS */;
+LOCK TABLES `hd_user_group` WRITE;
+/*!40000 ALTER TABLE `hd_user_group` DISABLE KEYS */;
 
-INSERT INTO `hd_profile_fields` (`id`, `field`, `title`, `orderby`, `status`, `required`, `showinregister`)
+INSERT INTO `hd_user_group` (`id`, `name`, `maxsite`, `allfilesize`, `daylimit`, `package`, `system_group`, `router_num`, `middleware_num`)
 VALUES
-	(1,'qq','QQ号',0,0,1,1),
-	(2,'realname','真实姓名',0,0,1,1),
-	(3,'nickname','昵称',0,1,1,1),
-	(4,'mobile','手机号码',0,1,1,1),
-	(5,'telephone','固定电话',0,1,0,0),
-	(6,'vip','VIP级别',0,1,0,0),
-	(7,'address','居住地址',0,1,0,0),
-	(8,'zipcode','邮编',0,1,0,0),
-	(9,'alipay','阿里帐号',0,1,0,0),
-	(10,'msn','msn帐号',0,1,0,0),
-	(11,'taobao','淘宝帐号',0,1,0,0),
-	(12,'email','邮箱',0,1,1,1),
-	(13,'site','个人站点',0,1,0,0),
-	(14,'nationality','国籍',0,1,0,0),
-	(15,'introduce','自我介绍',0,1,0,0),
-	(16,'gender','性别',0,1,0,0),
-	(17,'graduateschool','毕业学校',0,1,0,0),
-	(18,'height','身高',0,1,0,0),
-	(19,'weight','体重',0,1,0,0),
-	(20,'bloodtype','血型',0,1,0,0),
-	(21,'birthyear','出生日期',0,1,0,0);
+	(1,'体验组',100,0,30,'\"\"',1,100,100);
 
-/*!40000 ALTER TABLE `hd_profile_fields` ENABLE KEYS */;
+/*!40000 ALTER TABLE `hd_user_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
