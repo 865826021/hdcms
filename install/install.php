@@ -81,7 +81,9 @@ if ( $action == 'downloadFile' ) {
 		echo 1;
 		exit;
 	} else {
-		$d = curl_get( $download_file_url );
+		$hdcms             = curl_get( $download_file_url );
+		$_SESSION['hdcms'] = json_decode( $hdcms, true );
+		$d                 = curl_get( 'http://store.hdcms.com/' . $_SESSION['hdcms']['file'] );
 		if ( strlen( $d ) < 2787715 ) {
 			//下载失败
 			exit;
@@ -123,48 +125,36 @@ if ( $action == 'downloadFile' ) {
 
 //安装完成,添加数据
 if ( $action == 'table' ) {
+	//修改配置文件
+	file_put_contents( 'data/database.php', '<?php return [];?>' );
+	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, true ) . ';?>' );
+
+	//创建表与初始数据
+	curl_get( '?s=system/install/make' );
+
 	//添加数据表
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
 	$username = $_SESSION['config']['user'];
 	$password = $_SESSION['config']['password'];
 	$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	//执行建表语句
-	if ( is_file( 'data/install.sql' ) ) {
-		$sql = file_get_contents( 'data/install.sql' );
-		$sql = preg_replace( '/^(\/\*|#.*).*/m', '', $sql );
-		//替换表前缀
-		$sql    = str_replace( '`hd_', '`' . $_SESSION['config']['prefix'], $sql );
-		$result = preg_split( '/;(\r|\n)/is', $sql );
-		foreach ( (array) $result as $r ) {
-			if ( preg_match( '/^\s*[a-z]/i', $r ) ) {
-				try {
-					$pdo->exec( $r );
-				} catch ( PDOException $e ) {
-					die( 'SQL执于失败:' . $r . '. ' . $e->getMessage() );
-				}
-			}
-		}
-	}
 	//更新系统版本号
 	$version = include 'data/upgrade.php';
-	$sql     = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
-		VALUES(0,'','','','{$version['versionCode']}','{$version['releaseCode']}',0)";
+	$sql     = "INSERT INTO hd_cloud (uid,username,webname,secret,version,createtime)
+		VALUES(0,'','','','{$_SESSION['hdcms']['version']}',0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
 		die( 'SQL执于失败:' . $sql . '. ' . $e->getMessage() );
 	}
-
 	//设置管理员帐号
-	$user     = $pdo->query( "select * from {$_SESSION['config']['prefix']}user where uid=1" );
+	$user     = $pdo->query( "select * from hd_user where uid=1" );
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
 	$password = md5( $_SESSION['config']['upassword'] . $row[0]['security'] );
-	$pdo->exec( "UPDATE {$_SESSION['config']['prefix']}user SET password='{$password}' WHERE uid=1" );
-	//修改配置文件
-	file_put_contents( 'data/database.php', '<?php return [];?>' );
-	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, true ) . ';?>' );
+	$regtime  = time();
+	$pdo->exec( "UPDATE hd_user SET password='{$password}',regtime='{$regtime}' WHERE uid=1" );
+
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {

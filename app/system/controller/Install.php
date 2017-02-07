@@ -8,16 +8,9 @@ class Install {
 	/**
 	 * 创建数据表
 	 */
-	public function table() {
+	public function make() {
 		cli( 'hd migrate:make' );
-		message( '数据表创建成功', '', 'success' );
-	}
-
-	/**
-	 * 添加初始数据成功
-	 */
-	public function data() {
 		cli( 'hd seed:make' );
-		message( '初始数据插入成功', '', 'success' );
+		message( '数据表创建成功', '', 'success' );
 	}
 }

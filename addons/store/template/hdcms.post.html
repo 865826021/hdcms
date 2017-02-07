@@ -68,7 +68,8 @@
             $scope.upFile = function () {
                 options = {
                     extensions: 'zip',
-                    data: {data: 'ext_app', status: 0,upload_dir:'package/hdcms'}
+                    data: {data: 'ext_app', status: 0,uploadDir:'package/hdcms'},
+                    fileSingleSizeLimit:10 * 1024 * 1024,
                 };
                 util.file(function (files) {
                     if (files.length == 1) {
