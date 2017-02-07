@@ -1,6 +1,6 @@
 <?php namespace system\database\seeds;
 use houdunwang\database\build\Seeder;
-class HdModules extends Seeder {
+class modules extends Seeder {
     //执行
 	public function up() {
 		$sql=<<<str

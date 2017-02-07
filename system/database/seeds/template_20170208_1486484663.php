@@ -2,7 +2,7 @@
 
 use houdunwang\database\build\Seeder;
 
-class HdTemplate extends Seeder {
+class template extends Seeder {
 	//执行
 	public function up() {
 		$sql = <<<str

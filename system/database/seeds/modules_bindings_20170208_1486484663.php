@@ -2,7 +2,7 @@
 
 use houdunwang\database\build\Seeder;
 
-class HdModulesBindings extends Seeder {
+class modules_bindings extends Seeder {
 	//执行
 	public function up() {
 		$sql = <<<str

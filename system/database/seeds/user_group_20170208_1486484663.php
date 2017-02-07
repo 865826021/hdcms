@@ -2,7 +2,7 @@
 
 use houdunwang\database\build\Seeder;
 
-class HdUserGroup extends Seeder {
+class user_group extends Seeder {
 	//执行
 	public function up() {
 		$sql = <<<str

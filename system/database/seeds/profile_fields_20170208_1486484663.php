@@ -2,7 +2,7 @@
 
 use houdunwang\database\build\Seeder;
 
-class HdProfileFields extends Seeder {
+class profile_fields extends Seeder {
 	//执行
 	public function up() {
 		$sql = <<<str
