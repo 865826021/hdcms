@@ -1,17 +1,17 @@
 <extend file='addons/store/template/admin.html'/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('hdcms.lists')}}">更新包列表</a></li>
-        <li class="active"><a href="javascript:;">添加更新包</a></li>
+        <li><a href="{{url('hdcms.lists')}}">压缩包列表</a></li>
+        <li class="active"><a href="javascript:;">添加压缩包</a></li>
     </ul>
     <br/>
     <form action="" class="form-horizontal ng-cloak" ng-controller="ctrl" method="post">
         <div class="panel panel-default" ng-sho1w="field.title">
             <div class="panel-heading">
-                压缩包资料
+                更新包资料
             </div>
             <div class="panel-body">
-                <div >
+                <if value="empty($_GET['id'])">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">压缩包</label>
                         <div class="col-sm-10">
@@ -23,6 +23,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">类型</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="field.type" value="full"> 完整包
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" ng-model="field.type" value="upgrade"> 更新包
+                            </label>
+                        </div>
+                    </div>
+                </if>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">版本号</label>
                         <div class="col-sm-10">
@@ -42,17 +54,16 @@
                             <textarea ng-model="field.explain" rows="5" class="form-control"></textarea>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
         <input type="hidden" name="data">
-        <button type="submit" class="btn btn-primary" ng-show="field.file">保存模块资料</button>
+        <button type="submit" class="btn btn-primary" ng-show="field.logs">保存模块资料</button>
     </form>
 </block>
 <script>
     require(['angular', 'underscore', 'util', 'jquery'], function (angular, _, util, $) {
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
-            $scope.field = {};
+            $scope.field = <?php echo $field;?>;
             //上传压缩包文件
             $scope.upFile = function () {
                 options = {
@@ -70,7 +81,7 @@
             //提交表单
             $("form").submit(function () {
                 var msg = '';
-                if ($.trim($scope.field.file) == '') {
+                if (!util.get('id') && $.trim($scope.field.file) == '') {
                     msg += '请选择压缩包文件<br/>';
                 }
                 if ($.trim($scope.field.logs) == '') {

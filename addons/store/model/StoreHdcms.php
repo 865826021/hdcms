@@ -7,11 +7,11 @@ use houdunwang\model\Model;
  * Class StoreApp
  * @package addons\store\model
  */
-class StoreApp extends Model {
+class StoreHdcms extends Model {
 	protected $table = 'store_hdcms';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'file', 'required', '压缩包文件不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'file', 'required', '压缩包文件不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 		[ 'logs', 'required', '更新日志不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [

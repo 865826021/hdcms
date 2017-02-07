@@ -8,8 +8,9 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://www.hdcms.com/?a=cloud/GetHdcms&m=store&t=web&siteid=1';
-$last_version_url  = 'http://www.hdcms.com/?a=cloud/GetLastHdcms&m=store&t=web&siteid=1';
+$download_file_url = 'http://store.hdcms.com/?m=store&action=controller/cloud/downloadFullHdcms&siteid=13';
+echo curl_get( $download_file_url );
+exit;
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -18,11 +19,6 @@ if ( $action == 'copyright' ) {
 }
 //环境检测
 if ( $action == 'environment' ) {
-	//获取新新版本
-	if ( ! is_dir( 'app' ) && ! $soft = curl_get( $last_version_url ) ) {
-		echo '请求HDCMS云主机失败';
-		exit;
-	}
 	//系统信息
 	$data['PHP_OS']              = PHP_OS;
 	$data['SERVER_SOFTWARE']     = $_SERVER['SERVER_SOFTWARE'];
@@ -97,7 +93,7 @@ if ( $action == 'downloadFile' ) {
 		//解包
 		get_zip_originalsize( $zipFile, './' );
 		function dcopy( $old, $new ) {
-			is_dir( $new ) or mkdir( $new, 0755, TRUE );
+			is_dir( $new ) or mkdir( $new, 0755, true );
 			foreach ( glob( $old . '/*' ) as $v ) {
 				if ( $v != 'upload/install.php' ) {
 					$to = $new . '/' . basename( $v );
@@ -105,14 +101,14 @@ if ( $action == 'downloadFile' ) {
 				}
 			}
 
-			return TRUE;
+			return true;
 		}
 
 		dcopy( 'upload', '.' );
 		//删除目录
 		function del( $dir ) {
 			if ( ! is_dir( $dir ) ) {
-				return TRUE;
+				return true;
 			}
 			foreach ( glob( $dir . "/*" ) as $v ) {
 				is_dir( $v ) ? del( $v ) : unlink( $v );
@@ -154,8 +150,7 @@ if ( $action == 'table' ) {
 	}
 	//更新系统版本号
 	$version = include 'data/upgrade.php';
-	$sql
-	         = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
+	$sql     = "INSERT INTO {$_SESSION['config']['prefix']}cloud (uid,username,webname,AppSecret,versionCode,releaseCode,createtime)
 		VALUES(0,'','','','{$version['versionCode']}','{$version['releaseCode']}',0)";
 	try {
 		$pdo->exec( $sql );
@@ -171,7 +166,7 @@ if ( $action == 'table' ) {
 	//修改配置文件
 	file_put_contents( 'data/database.php', '<?php return [];?>' );
 	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, TRUE ) . ';?>' );
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, true ) . ';?>' );
 	header( 'Location:?a=finish' );
 }
 if ( $action == 'finish' ) {
@@ -208,8 +203,8 @@ function curl_get( $url ) {
 	$ch = curl_init();
 	curl_setopt( $ch, CURLOPT_URL, $url );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, FALSE );
+	curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+	curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, false );
 
 	if ( ! curl_exec( $ch ) ) {
 		$data = '';
@@ -253,7 +248,7 @@ function get_zip_originalsize( $filename, $path ) {
 			$file_path = substr( $file_name, 0, strrpos( $file_name, "/" ) );
 			//如果路径不存在，则创建一个目录，true表示可以创建多级目录
 			if ( ! is_dir( $file_path ) ) {
-				mkdir( $file_path, 0777, TRUE );
+				mkdir( $file_path, 0777, true );
 			}
 			//如果不是目录，则写入文件
 			if ( ! is_dir( $file_name ) ) {
@@ -274,6 +269,6 @@ function get_zip_originalsize( $filename, $path ) {
 	//关闭压缩包
 	zip_close( $resource );
 
-	return TRUE;
+	return true;
 }
 

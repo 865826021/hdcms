@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 
 namespace addons\store\controller;
+use addons\store\model\StoreHdcms;
 
 /**
  * 系统核心包管理
@@ -17,15 +18,37 @@ namespace addons\store\controller;
  */
 class Hdcms extends Admin {
 	public function lists() {
+		$data = StoreHdcms::get();
+		View::with( [ 'data' => $data ] );
+
 		return view( $this->template . '/hdcms.lists.html' );
 	}
 
 	//添加压缩包
 	public function post() {
-		if(IS_POST){
-			p($_POST);
-			p(json_decode($_POST['data'],true));
+		$id = Request::get( 'id' );
+		if ( IS_POST ) {
+			$data  = json_decode( $_POST['data'], true );
+			$model = $id ? StoreHdcms::find( $id ) : new StoreHdcms();
+			$model->save( $data );
+			message( '发布成功,用户将收到更新通知', url( 'hdcms.lists' ), 'success' );
 		}
+		$field = "{type:'upgrade',logs:'优化系统代码',explain:'请先将系统备份后再进行更新操作!'}";
+		if ( $id ) {
+			$field = json_encode( StoreHdcms::find( $id )->toArray(), JSON_UNESCAPED_UNICODE );
+		}
+		View::with( 'field', $field );
+
 		return view( $this->template . '/hdcms.post.html' );
+	}
+
+	public function del() {
+		$id = Request::get( 'id' );
+		$model= StoreHdcms::find($id);
+		if(is_file($model['file'])){
+			@unlink($model['file']);
+		}
+		$model->destory();
+		message('删除成功',url('hdcms.lists'),'success');
 	}
 }
