@@ -139,10 +139,12 @@ if ( $action == 'table' ) {
 	$password = $_SESSION['config']['password'];
 	$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+
 	//更新系统版本号
-	$version = include 'data/upgrade.php';
-	$sql     = "INSERT INTO hd_cloud (uid,username,webname,secret,version,createtime)
-		VALUES(0,'','','','{$_SESSION['hdcms']['version']}',0)";
+	$version    = include 'data/upgrade.php';
+	$createTime = time();
+	$sql        = "INSERT INTO hd_cloud (uid,username,webname,secret,version,createtime)
+		VALUES(0,'','','','{$_SESSION['hdcms']['version']}',$createTime)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {

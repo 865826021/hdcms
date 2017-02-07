@@ -13,6 +13,10 @@ use system\model\Modules;
 class Initialize {
 
 	public function run() {
+		//安装脚本时不执行中间件
+		if ( Request::get( 's' ) == 'system/install/make' ) {
+			return;
+		}
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );
 		//初始站点数据
