@@ -48,6 +48,8 @@ class Base extends \houdunwang\container\build\Base {
 		Facade::setFacadeApplication( $this );
 		//启动服务
 		$this->boot();
+		//应用初始中间件
+		Middleware::exe( 'boot' );
 		//执行命令行指令
 		Cli::bootstrap();
 		//开启SESSION
@@ -62,7 +64,7 @@ class Base extends \houdunwang\container\build\Base {
 	//定义常量
 	protected function constant() {
 		//根目录即Vendor同级目录
-		define( 'ROOT_PATH', realpath(dirname( __DIR__ ).'/../../../..') );
+		define( 'ROOT_PATH', realpath( dirname( __DIR__ ) . '/../../../..' ) );
 
 		//根URL地址
 		define( '__ROOT__', PHP_SAPI == 'cli' ? '' : trim( 'http://' . $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' ) );
