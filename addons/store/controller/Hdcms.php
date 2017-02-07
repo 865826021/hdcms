@@ -19,4 +19,13 @@ class Hdcms extends Admin {
 	public function lists() {
 		return view( $this->template . '/hdcms.lists.html' );
 	}
+
+	//添加压缩包
+	public function post() {
+		if(IS_POST){
+			p($_POST);
+			p(json_decode($_POST['data'],true));
+		}
+		return view( $this->template . '/hdcms.post.html' );
+	}
 }
