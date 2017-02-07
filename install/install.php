@@ -9,8 +9,6 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
 $download_file_url = 'http://store.hdcms.com/?m=store&action=controller/cloud/downloadFullHdcms&siteid=13';
-echo curl_get( $download_file_url );
-exit;
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );

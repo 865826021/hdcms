@@ -59,7 +59,7 @@ class Component {
 		if ( ! Request::post( 'user_type' ) ) {
 			message( '请设置user_type' );
 		}
-		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->upload();
+		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->dir(Request::post('uploadDir','attachment'))->upload();
 		if ( $file ) {
 			$data = [
 				'uid'        => v( Request::post( 'user_type' ) . '.info.uid' ),
