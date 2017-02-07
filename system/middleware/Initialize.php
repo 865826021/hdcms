@@ -26,6 +26,7 @@ class Initialize {
 		//前台用户
 		\Member::initMemberInfo();
 //		p(v('member.info'));
+		cli('make:migration CreateArticleTable --create=article');
 	}
 
 	/**
