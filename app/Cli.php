@@ -15,12 +15,14 @@ class Cli extends Base {
 			$info = preg_split( '@\s+@', trim( $f ) );
 			//添加修改时收集更新文件
 			if ( in_array( $info[0], [ 'A', 'M' ] ) ) {
-				\Dir::copyFile($info[1],'upgrade/hdcms/'.$info[1]);
+				\Dir::copyFile( $info[1], 'upgrade/hdcms/' . $info[1] );
 			}
 		}
-		Zip::PclZip('hdcms.zip');
-		Zip::create('upgrade/hdcms');
-//		Zip::PclZip('hdcms.zip');//设置压缩文件名
-//		Zip::extract();//解压缩到当前目录
+		chdir( 'upgrade' );
+		Zip::PclZip( 'hdcms.zip' );
+		Zip::create( 'hdcms' );
+		copy( 'hdcms.zip', '../hdcms.zip' );
+		chdir( '..' );
+		\Dir::del( 'upgrade' );
 	}
 }
