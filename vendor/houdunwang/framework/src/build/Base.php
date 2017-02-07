@@ -52,8 +52,6 @@ class Base extends \houdunwang\container\build\Base {
 		Middleware::exe( 'boot' );
 		//执行命令行指令
 		Cli::bootstrap();
-		//解析全局数组会触发SESSION开启
-		Request::bootstrap();
 		//执行全局中间件
 		Middleware::globals();
 		//解析路由
