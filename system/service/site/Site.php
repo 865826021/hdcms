@@ -234,7 +234,7 @@ class Site extends Common {
 	 * @return bool
 	 */
 	public function updateAllCache() {
-		foreach ( SiteModel::lists( 'siteid' ) as $siteid ) {
+		foreach ((array) SiteModel::lists( 'siteid' ) as $siteid ) {
 			$this->updateCache( $siteid );
 		}
 

@@ -131,7 +131,7 @@ if ( $action == 'table' ) {
 	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, true ) . ';?>' );
 
 	//创建表与初始数据
-	curl_get( '?s=system/install/make' );
+	curl_get($_SERVER['HTTP_HOST'] .'/'.dirname($_SERVER['SCRIPT_NAME']).'/index.php?s=install' );
 
 	//添加数据表
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
@@ -143,8 +143,8 @@ if ( $action == 'table' ) {
 	//更新系统版本号
 	$version    = include 'data/upgrade.php';
 	$createTime = time();
-	$sql        = "INSERT INTO hd_cloud (uid,username,webname,secret,version,createtime)
-		VALUES(0,'','','','{$_SESSION['hdcms']['version']}',$createTime)";
+	$sql        = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,createtime)
+		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$createTime)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
