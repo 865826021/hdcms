@@ -153,9 +153,10 @@ if ( $action == 'table' ) {
 	//设置管理员帐号
 	$user     = $pdo->query( "select * from hd_user where uid=1" );
 	$row      = $user->fetchAll( PDO::FETCH_ASSOC );
+	$username = $_SESSION['config']['username'];
 	$password = md5( $_SESSION['config']['upassword'] . $row[0]['security'] );
 	$regtime  = time();
-	$pdo->exec( "UPDATE hd_user SET password='{$password}',regtime='{$regtime}' WHERE uid=1" );
+	$pdo->exec( "UPDATE hd_user SET username='{$username}',password='{$password}',regtime='{$regtime}' WHERE uid=1" );
 
 	header( 'Location:?a=finish' );
 }
