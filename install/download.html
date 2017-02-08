@@ -66,10 +66,11 @@
 </html>
 
 <script>
+    var w = 0;
+    var tid=0;
     $(function () {
         //进度条
-        var w = 0;
-        var tid = setInterval(function () {
+        tid = setInterval(function () {
             w += 1;
             $("#progress").css({width: w + '%'})
             $("#progress").text(w + '%');
@@ -90,7 +91,7 @@
         });
     })
     function error() {
-        alert('当前下载量太大,暂时无法提供下载,您可以去官网下载离线安装包');
+        alert('当前下载量太大,暂时无法提供下载,你可以尝试刷新页面,或直接去官网下载离线安装包');
 //        window.history.back();
     }
 </script>

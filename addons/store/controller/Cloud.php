@@ -47,7 +47,8 @@ class Cloud {
 	 * 检测用户提供的版本有无可用更新
 	 */
 	public function getUpgradeVersion() {
-		$res = StoreHdcms::where( 'createtime', '>', $_POST['createtime'] )->where( 'type', 'upgrade' )->orderBy( 'id', 'asc' )->first();
+		$id = StoreHdcms::where('version',$_POST['version'])->pluck('id');
+		$res = StoreHdcms::where( 'id', '>', $id )->where( 'type', 'upgrade' )->orderBy( 'id', 'asc' )->first();
 		if ( empty( $res ) ) {
 			ajax( [ 'message' => '你使用的是最新版HDCMS', 'valid' => 0 ] );
 		} else {

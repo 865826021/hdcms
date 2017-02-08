@@ -1,13 +1,13 @@
 <?php namespace app\system\controller;
 
-/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
- * |-------------------------------------------------------------------
- * |    Author: 向军 <2300071698@qq.com>
- * |    WeChat: aihoudun
- * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
- * '-------------------------------------------------------------------*/
+	/** .-------------------------------------------------------------------
+	 * |  Software: [HDCMS framework]
+	 * |      Site: www.hdcms.com
+	 * |-------------------------------------------------------------------
+	 * |    Author: 向军 <2300071698@qq.com>
+	 * |    WeChat: aihoudun
+	 * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+	 * '-------------------------------------------------------------------*/
 /**
  * 云帐号管理
  * Class Cloud
@@ -51,55 +51,20 @@ class Cloud {
 	public function upgrade() {
 		switch ( q( 'get.action' ) ) {
 			case 'download':
-				//下载更新包
-				return view( 'download' )->with( 'data', [] );
+				return view( 'download' );
 				break;
-			case 'download222':
-				$data      = f( '_upgrade_' );
-				$fileLists = $data['data']['files'];
-				if ( empty( $fileLists ) ) {
-					//全部下载完成
-					$res = [ 'valid' => 2 ];
-				} else {
-					//文件位置
-					$file = current( $fileLists );
-					//从第一个文件开始下载
-					$action = strtoupper( $file[0] );
-					$path   = trim( substr( $file, 1 ) );
-					//下载文件,根据文件类型 ADM  AM下载,D删除
-					if ( $action == 'D' ) {
-						if ( \Dir::delFile( $path ) ) {
-							array_shift( $fileLists );
-							$res = [ 'valid' => 1 ];
-						} else {
-							$res = [ 'valid' => 0 ];
-						}
-					} else {
-						//下载文件
-						$postData = [ 'file' => $path, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
-						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
-						Dir::create( dirname( $path ) );
-						$res = json_decode( $path, true );
-						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
-							$res = [ 'valid' => 0 ];
-						} else {
-							file_put_contents( $path, $content );
-							array_shift( $fileLists );
-							$res = [ 'valid' => 1 ];
-						}
-					}
-				}
-				$data['data']['files'] = $fileLists;
-				f( '_upgrade_', $data );
-				echo json_encode( $res );
+			case 'downloadFile':
+				//下载更新包
+				$files = \Cloud::downloadUpgradeVersion();
+				ajax($files);
 				break;
 			case 'sql':
+				//更新SQL
 				if ( IS_POST ) {
 					cli( 'migrate:make' );
 					echo json_encode( $res = [ 'valid' => 2 ] );
 					exit;
 				}
-
 				return view( 'updateSql' )->with( 'data', f( '_upgrade_' ) );
 				break;
 			case 'finish':
