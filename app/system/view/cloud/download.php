@@ -8,36 +8,27 @@
 	<ul class="nav nav-tabs">
 		<li role="presentation" class="active"><a href="#">系统更新</a></li>
 	</ul>
-	<div class="alert alert-danger">
-		<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
+	<div class="alert alert-success">
+		<i class="fa fa-info-circle"></i>
+		新版本的文件已经下载完毕并进行了更新。<br/>
+		<i class="fa fa-info-circle"></i>
+		旧版本的文件已经移动到了data/upgrade目录中,如果更新出现异常可以进行手动将文件复制回来恢复到旧版本。
 	</div>
 	<form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl">
-		<div class="form-group">
-			<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">发布日期</label>
-			<div class="col-sm-10">
-				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前Release版本: Build {{$hdcms['releaseCode']}}</p>
-				<div class="help-block">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动</div>
-			</div>
-		</div>
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				下载更新文件
+				本次更新的文件列表
 			</div>
 			<div class="panel-body">
-				<p style="margin: 0px;">
-						<span class="text-info" ng-repeat="(k,v) in files" style="display: block;">
-							@{{v.file}}
-							<i class="fa fa-check-circle-o alert-success" ng-if="v.downloaded==1"></i>
-							<i class="fa fa-times-circle-o alert-danger" ng-if="v.downloaded==0"></i>
-						</span>
-				</p>
+				sdf
 			</div>
 		</div>
+		<a href="" class="btn btn-success">更新数据表 <small>[ 更新前! 请务必对数据表进行备份 ]</small></a>
 	</form>
 </block>
 <script>
 	require(['util', 'angular', 'underscore'], function (util, angular, _) {
-		angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
+		angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
 			$scope.files = <?php echo json_encode( $data['data']['files'] );?>;
 			angular.forEach($scope.files, function (v, k) {
 				$scope.files[k] = {downloaded: null, file: v};
@@ -62,6 +53,6 @@
 			}
 			$scope.download();
 		}]);
-		angular.bootstrap(document.getElementById('form'), ['myApp']);
+		angular.bootstrap(document.getElementById('form'), ['app']);
 	});
 </script>

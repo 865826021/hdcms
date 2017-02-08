@@ -8,8 +8,6 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-use system\model\User;
-
 /**
  * 云帐号管理
  * Class Cloud
@@ -52,19 +50,11 @@ class Cloud {
 	//更新HDCMS
 	public function upgrade() {
 		switch ( q( 'get.action' ) ) {
-			case 'downloadLists':
-				$data = f( '_upgrade_' );
-				if ( empty( $data['data']['files'] ) ) {
-					//文件全部下载完成或本次更新没有修改的文件时,更新数据库
-					go( u( 'upgrade', [ 'action' => 'sql' ] ) );
-				}
-				//下标排序
-				sort( $data['data']['files'] );
-				f( '_upgrade_', $data );
-
-				return view( 'downloadLists' )->with( 'data', $data );
-				break;
 			case 'download':
+				//下载更新包
+				return view( 'download' )->with( 'data', [] );
+				break;
+			case 'download222':
 				$data      = f( '_upgrade_' );
 				$fileLists = $data['data']['files'];
 				if ( empty( $fileLists ) ) {
@@ -125,18 +115,9 @@ class Cloud {
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
-				$hdcms = $this->db->find( 1 );
-				$data  = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&AppSecret={$hdcms['AppSecret']}&releaseCode=" . $hdcms['releaseCode'] );
-				$data  = json_decode( $data, true );
-				f( '_upgrade_', $data );
-
-				return view()->with( [ 'data' => $data, 'hdcms' => $hdcms ] );
+				//获取更新版本
+				$upgrade = \Cloud::getUpgradeVersion();
+				return view()->with( [ 'upgrade' => $upgrade,'current'=>\system\model\Cloud::find(1) ] );
 		}
-	}
-
-	//清除更新日志
-	public function clear() {
-		D( '_upgrade_', '[del]' );
-		echo '清除更新缓存成功';
 	}
 }

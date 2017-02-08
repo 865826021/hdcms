@@ -14,8 +14,7 @@
 				<div class="panel-body alert-info">
 					<h5 style="margin-top: 0px;"><i class="fa fa-refresh"></i> <strong>更新日志</strong></h5>
 					<p>
-						<a href="#">HDCMS 2.0更新说明【2016年08月1日】</a>
-						<span class="pull-right">2016-08-1</span>
+						<?php echo nl2br( $upgrade['hdcms']['logs'] ); ?>
 					</p>
 				</div>
 			</div>
@@ -37,62 +36,39 @@
 			<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
 		</div>
 		<div class="form-group">
-			<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">发布日期</label>
+			<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">当前版本</label>
 			<div class="col-sm-10">
-				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前Release版本: Build {{$hdcms['releaseCode']}}</p>
-				<div class="help-block text-danger">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动</div>
+				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前版本: Build
+					安装时间【{{date('Y年m月d日',$current['createtime'])}}】
+				</p>
+				<div class="help-block text-danger">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动
+				</div>
 			</div>
 		</div>
 	</div>
-	<if value="$data['valid']==1">
-		<form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl" onsubmit="return false;">
+	<if value="$upgrade['valid']==1">
+		<form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl"
+		      onsubmit="return false;">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新版本</label>
 				<div class="col-sm-10">
-					<foreach from="$data['data']['version']" value="$f">
-						<p class="form-control-static">
-							<span class="fa fa-square-o"></span> &nbsp;
-							HDCMS {{$f['versionCode']}} Release版本: Build {{$f['releaseCode']}}
-							更新时间【{{date('Y年m月d日',strtotime($f['releaseCode']))}}】
-						</p>
-					</foreach>
+					<p class="form-control-static">
+						<span class="fa fa-square-o"></span> &nbsp;
+						Build {{$upgrade['hdcms']['version']}}
+						更新时间【{{date('Y年m月d日',$upgrade['hdcms']['createtime'])}}】
+					</p>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新日志</label>
 				<div class="col-sm-10">
 					<p class="form-control-static">
-						<foreach from="$data['data']['logs']" value="$f">
-							<span class="fa fa-square-o"></span> &nbsp;{{$f}}<br/>
-						</foreach>
+						<?php foreach ( preg_split( '@\n@', $upgrade['hdcms']['logs'] ) as $d ): ?>
+							<span class="fa fa-square-o"></span> {{$d}}<br/>
+						<?php endforeach; ?>
 					</p>
 				</div>
 			</div>
-			<if value="!empty($data['data']['files'])">
-				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">文件列表</label>
-					<div class="col-sm-10 ">
-						<div class="alert alert-success form-control-static">
-							<foreach from="$data['data']['files']" value="$f">
-								{{preg_replace('/\s+/',' ',$f)}}<br/>
-							</foreach>
-						</div>
-					</div>
-				</div>
-			</if>
-			<if value="!empty($data['data']['sql'])">
-				<div class="form-group">
-					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新数据</label>
-					<div class="col-sm-10 ">
-						<div class="alert alert-success form-control-static">
-							<foreach from="$data['data']['sql']" value="$f">
-								{{$f}}
-								<hr/>
-							</foreach>
-						</div>
-					</div>
-				</div>
-			</if>
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">更新协议</label>
 				<div class="col-sm-10">
@@ -113,8 +89,12 @@
 					</div>
 				</div>
 			</div>
-			<button type="button" class="btn btn-default col-lg-offset-1" disabled="disabled" ng-show="!cp1 || !cp2 ||!cp3">请接受所有更新协议</button>
-			<button type="button" class="btn btn-success col-lg-offset-1" ng-click="send()" ng-show="cp1 && cp2 &&cp3">开始执行更新</button>
+			<button type="button" class="btn btn-default col-lg-offset-1" disabled="disabled"
+			        ng-show="!cp1 || !cp2 ||!cp3">请接受所有更新协议
+			</button>
+			<button type="button" class="btn btn-success col-lg-offset-1" ng-click="send()" ng-show="cp1 && cp2 &&cp3">
+				开始执行更新
+			</button>
 			<else/>
 			<div class="panel panel-success">
 				<div class="panel-heading">
@@ -132,7 +112,7 @@
 		angular.module('hd', []).controller('ctrl', ['$scope', function ($scope) {
 			$scope.send = function () {
 				if (confirm('更新将直接覆盖本地文件, 请注意备份文件和数据. \n\n**另注意** 更新过程中不要关闭此浏览器窗口.')) {
-					location.href = "{{u('upgrade',['action'=>'downloadLists'])}}";
+					location.href = "{{u('upgrade',['action'=>'download'])}}";
 				}
 			}
 		}]);
