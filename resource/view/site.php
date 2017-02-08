@@ -55,11 +55,13 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<ul class="nav navbar-nav">
-					<li>
-						<a href="?s=system/site/lists">
-							<i class="fa fa-reply-all"></i> 返回系统
-						</a>
-					</li>
+					<if value="q('session.system.login')=='hdcms'">
+						<li>
+							<a href="?s=system/site/lists">
+								<i class="fa fa-reply-all"></i> 返回系统
+							</a>
+						</li>
+					</if>
 					<foreach from="$LINKS['menus']" value="$m">
 						<li class="top_menu">
 							<a href="javascript:;"

@@ -29,7 +29,7 @@
 	</if>
 	<div class="row ">
 		<div class="col-md-6">
-			<form method="post" action="{{u('system/entry/login')}}">
+			<form method="post" action="">
 				{{csrf_field()}}
 				<div class="form-group">
 					<label>帐号</label>

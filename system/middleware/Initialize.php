@@ -13,6 +13,7 @@ use system\model\Modules;
 class Initialize {
 
 	public function run() {
+//		p(Session::all());
 		//安装检测
 		if ( is_file( 'install.php' ) ) {
 			go( __ROOT__ . '/install.php' );

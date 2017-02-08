@@ -34,10 +34,12 @@ class Entry {
 					\Site::siteInitialize();
 					//初始模块数据
 					\Module::moduleInitialize();
+
 					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
 				}
 			}
 		}
+
 		return view();
 	}
 
@@ -105,6 +107,7 @@ class Entry {
 	//退出
 	public function quit() {
 		Session::flush();
-		message( '退出系统成功,系统将自动进行跳转', q( 'get.from', u( 'login' ) ) );
+		$url = __WEB__ . '/' . q( 'session.system.login', 'hdcms' );
+		message( '退出系统成功,系统将自动进行跳转', $url );
 	}
 }
