@@ -46,6 +46,9 @@ class Hdcms extends Admin {
 	public function del() {
 		$id    = Request::get( 'id' );
 		$model = StoreHdcms::find( $id );
+		if ( $model['update_site_num'] > 0 ) {
+			message( '已经有站点下载了,所以不允许删除', '', 'error' );
+		}
 		if ( is_file( $model['file'] ) ) {
 			@unlink( $model['file'] );
 		}

@@ -49,6 +49,8 @@ class Cloud {
 	public function getUpgradeVersion() {
 		$id = StoreHdcms::where('version',$_POST['version'])->pluck('id');
 		$res = StoreHdcms::where( 'id', '>', $id )->where( 'type', 'upgrade' )->orderBy( 'id', 'asc' )->first();
+		//增加下载数量
+		Db::table("store_hdcms")->where('id',1)->increment('update_site_num',1);
 		if ( empty( $res ) ) {
 			ajax( [ 'message' => '你使用的是最新版HDCMS', 'valid' => 0 ] );
 		} else {
@@ -56,12 +58,3 @@ class Cloud {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-

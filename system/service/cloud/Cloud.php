@@ -51,7 +51,8 @@ class Cloud {
 	 */
 	public function getUpgradeVersion() {
 		$data = CloudModel::find( 1 )->toArray();
-		$res = Curl::post( $this->url . '/getUpgradeVersion', $data );
+		$res  = Curl::post( $this->url . '/getUpgradeVersion', $data );
+		echo $res;exit;
 		return json_decode( $res, true );
 	}
 
@@ -67,61 +68,55 @@ class Cloud {
 
 	/**
 	 * 下载HDCMS更新包
-	 * @return [type] [description]
+	 * @return array
 	 */
-	public function downloadUpgradeVersion(){
-		$soft = $this->getUpgradeVersion();
-		$content = \Curl::get('http://store.hdcms.com/'.$soft['hdcms']['file']);
-		\Dir::create('upgrade/hdcms');
-		file_put_contents('upgrade/hdcms.zip', $content);
-		chdir('upgrade');
-		Zip::PclZip('hdcms.zip');//设置压缩文件名
+	public function downloadUpgradeVersion() {
+		$soft    = $this->getUpgradeVersion();
+		$content = \Curl::get( 'http://store.hdcms.com/' . $soft['hdcms']['file'] );
+		\Dir::create( 'upgrade/hdcms' );
+		file_put_contents( 'upgrade/hdcms.zip', $content );
+		chdir( 'upgrade' );
+		Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
 		Zip::extract();//解压缩到当前目录
-		chdir('..');
+		chdir( '..' );
 
 		//将旧版本文件进行备份
-		$files = file_get_contents('upgrade/hdcms/upgrade_files.php');
-		$files = preg_split('/\n/', $files);
-		$current = Db::table('cloud')->find(1);
-		foreach($files as $f){
-			$info = preg_split('/\s+/', $f);
-			\Dir::copyFile($info[1],"upgrade/{$current['version']}/{$info[1]}");
+		$files   = file_get_contents( 'upgrade/hdcms/upgrade_files.php' );
+		$files   = preg_split( '/\n/', $files );
+		$current = Db::table( 'cloud' )->find( 1 );
+		foreach ( $files as $f ) {
+			$info = preg_split( '/\s+/', $f );
+			\Dir::copyFile( $info[1], "upgrade/{$current['version']}/{$info[1]}" );
 		}
 		//直接文件替换操作
-		$formats=[];
-		foreach($files as $f){
-			$info = preg_split('/\s+/', $f);
-			$formats[]=['type'=>$info[0],'file'=>$info[1]];
+		$formats = [ ];
+		foreach ( $files as $f ) {
+			$info      = preg_split( '/\s+/', $f );
+			$formats[] = [ 'type' => $info[0], 'file' => $info[1] ];
 		}
 		//验证结果
-		$valid=1;
-		foreach($formats as $k=>$info){
-			switch($info['type']){
+		$valid = 1;
+		foreach ( $formats as $k => $info ) {
+			switch ( $info['type'] ) {
 				case 'D':
 					//删除文件
-					if(\Dir::delFile($info[1])===false){
-						$valid=0;
-						$formats[$k]['status']=false;
-					}else{
-						$formats[$k]['status']=true;
+					if ( \Dir::delFile( $info[1] ) === false ) {
+						$valid                   = 0;
+						$formats[ $k ]['status'] = false;
+					} else {
+						$formats[ $k ]['status'] = true;
 					}
 					break;
 				default:
-					if(in_array($info['file'],[
-						'system/service/cloud/Cloud.php',
-						'app/system/controller/Cloud.php',
-						'app/system/view/cloud/download.php'
-					])){
-						continue 2;
-					}
-					if(\Dir::copyFile("upgrade/hdcms/".$info['file'],$info['file'])===false){
-						$formats[$k]['status']=false;
-					}else{
-						$formats[$k]['status']=true;
+					if ( \Dir::copyFile( "upgrade/hdcms/" . $info['file'], $info['file'] ) === false ) {
+						$formats[ $k ]['status'] = false;
+					} else {
+						$formats[ $k ]['status'] = true;
 					}
 			}
 		}
-		return ['files'=>$formats,'valid'=>$valid];
+
+		return [ 'files' => $formats, 'valid' => $valid ];
 	}
 }
 
