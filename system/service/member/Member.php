@@ -82,21 +82,36 @@ class Member extends Common {
 		return $res ? [ 'valid' => 1, 'data' => $res ] : [ 'valid' => 0, 'message' => '用户不存在' ];
 	}
 
-	//会员登录
-	public function login( $data ) {
+	/**
+	 * 会员登录
+	 *
+	 * @param $data
+	 * @param bool $return 错误处理方式:true 返回错误内容 false直接显示错误
+	 *
+	 * @return bool
+	 */
+	public function login( $data, $return = false ) {
 		Validate::make( [
 			[ 'password', 'required', '密码不能为空' ],
 			[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ]
 		] );
-		$member = new MemberModel();
-		$user   = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
+		$member       = new MemberModel();
+		$user         = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
+		$errorMessage = '';
 		if ( empty( $user ) ) {
-			message( '帐号不存在', 'back', 'error' );
+			$errorMessage = '帐号不存在';
 		}
 		if ( md5( $data['password'] . $user['security'] ) != $user['password'] ) {
-			message( '密码输入错误', 'back', 'error' );
+			$errorMessage = '密码输入错误';
 		}
-
+		//错误处理
+		if ( $errorMessage ) {
+			if ( $return ) {
+				return $errorMessage;
+			} else {
+				message( $errorMessage, '', 'error' );
+			}
+		}
 		\Session::set( 'member_uid', $user['uid'] );
 
 		return true;

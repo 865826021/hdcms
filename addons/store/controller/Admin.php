@@ -10,6 +10,7 @@
 
 namespace addons\store\controller;
 
+use addons\store\model\StoreUser;
 use module\HdController;
 
 /**
@@ -28,9 +29,10 @@ class Admin extends HdController {
 		 */
 		$user = Db::table( 'store_user' )->where( 'uid', v( 'member.info.uid' ) )->first();
 		if ( empty( $user ) ) {
-			$data['secret'] = md5( time() ) . md5( v( 'member.info.uid' ) );
+			$data['secret'] = '';
 			$data['uid']    = v( 'member.info.uid' );
-			Db::table( 'store_user' )->insert( $data );
+			$model = new StoreUser();
+			$model->save( $data );
 			//设置初始大神积分
 			$data['uid']        = v( 'member.info.uid' );
 			$data['credittype'] = 'credit1';

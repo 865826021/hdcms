@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 
 namespace addons\store\controller;
+
 use addons\store\model\StoreHdcms;
 
 /**
@@ -43,12 +44,12 @@ class Hdcms extends Admin {
 	}
 
 	public function del() {
-		$id = Request::get( 'id' );
-		$model= StoreHdcms::find($id);
-		if(is_file($model['file'])){
-			@unlink($model['file']);
+		$id    = Request::get( 'id' );
+		$model = StoreHdcms::find( $id );
+		if ( is_file( $model['file'] ) ) {
+			@unlink( $model['file'] );
 		}
 		$model->destory();
-		message('删除成功',url('hdcms.lists'),'success');
+		message( '删除成功', url( 'hdcms.lists' ), 'success' );
 	}
 }

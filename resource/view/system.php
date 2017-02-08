@@ -149,7 +149,7 @@
 		Powered by hdcms v{{c('database.versionCode')}} Build:{{c('database.releaseCode')}} © 2014-2019 www.hdcms.com
 	</div>
 	<div class="hdcms-upgrade">
-		<a href="{{u('system/cloud/upgrade')}}"><span class="label label-danger">有新版本了,亲! 快更新吧</span></a>
+		<a href="{{u('system/cloud/upgrade')}}"><span class="label label-danger">亲:) 有新版本了,快更新吧</span></a>
 	</div>
 	<style>
 		.hdcms-upgrade {
@@ -164,7 +164,7 @@
 	require(['bootstrap', 'util'], function ($, util) {
 		var n = Math.floor(Math.random() * 10);
 		if (n > 0) {
-			$.get('{{u("cloud/checkUpgrade")}}', function (res) {
+			$.get('{{u("cloud/getUpgradeVersion")}}', function (res) {
 				if (res.valid == 1) {
 					//有新版本
 					$(".hdcms-upgrade").show();

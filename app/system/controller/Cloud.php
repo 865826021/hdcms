@@ -17,63 +17,36 @@ use system\model\User;
  * @author 向军
  */
 class Cloud {
-	protected $user;
-	//云URL
-	protected $url;
-	protected $db;
-
 	public function __construct() {
-		$this->user = new User();
-		service( 'user' )->superUserAuth();
-		$user      = Db::table( 'cloud' )->find( 1 );
-		$this->url = c( 'api.cloud' ) . "?uid={$user['uid']}&AppSecret={$user['AppSecret']}&t=web&siteid=1&m=store";
-		$this->db  = new \system\model\Cloud();
+		\User::superUserAuth();
 	}
 
 	/**
-	 * 云帐号管理
+	 * 绑定云帐号
+	 * 这是进行系统更新的前提
 	 */
 	public function account() {
 		if ( IS_POST ) {
-			$data           = json_decode( $_POST['data'], TRUE );
+			$data           = json_decode( $_POST['data'], true );
 			$data['weburl'] = __ROOT__;
 			$res            = \Cloud::connect( $data );
 			if ( $res['valid'] == 1 ) {
-				//连接成功
-				$data['id']        = 1;
-				$data['uid']       = $res['message']['uid'];
-				$data['username']  = $res['message']['username'];
-				$data['AppSecret'] = $res['message']['AppSecret'];
-				$data['webname']   = $res['message']['webname'];
-				$data['status']    = 1;
-				$this->db->save( $data );
 				message( '连接成功', 'refresh', 'success' );
+			} else {
+				message( $res['message'], 'back', 'error' );
 			}
-			message( $res['message'], 'back', 'error' );
 		}
-		if ( ! $field = Db::table( 'cloud' )->find( 1 ) ) {
-			$field = [
-				'uid'         => 0,
-				'username'    => '',
-				'webname'     => '',
-				'AppID'       => '',
-				'AppSecret'   => '',
-				'versionCode' => '',
-				'releaseCode' => '',
-				'createtime'  => 0,
-				'status'      => 0
-			];
+		$field = \system\model\Cloud::find( 1 )->toArray();
+		if ( empty( $field['secret'] ) ) {
+			$field['secret'] = md5( time() . mt_rand( 1, 9999 ) );
 		}
 
 		return view()->with( 'field', $field );
 	}
 
 	//检测有没有新版本
-	public function checkUpgrade() {
-		$hdcms = Db::table( 'cloud' )->find( 1 );
-		$d     = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&releaseCode={$hdcms['releaseCode']}&AppSecret={$hdcms['AppSecret']}" );
-
-		return json_decode( $d, TRUE );
+	public function getUpgradeVersion() {
+		ajax(\Cloud::getUpgradeVersion());
 	}
 
 	//更新HDCMS
@@ -116,7 +89,7 @@ class Cloud {
 						$postData = [ 'file' => $path, 'releaseCode' => $data['data']['version'][0]['releaseCode'] ];
 						$content  = \Curl::post( $this->url . '&a=cloud/download&t=web&siteid=1&m=store', $postData );
 						Dir::create( dirname( $path ) );
-						$res = json_decode( $path, TRUE );
+						$res = json_decode( $path, true );
 						if ( isset( $res['valid'] ) && $res['valid'] == 0 ) {
 							$res = [ 'valid' => 0 ];
 						} else {
@@ -154,7 +127,7 @@ class Cloud {
 			default:
 				$hdcms = $this->db->find( 1 );
 				$data  = \Curl::get( $this->url . "&a=cloud/HdcmsUpgrade&t=web&siteid=1&m=store&AppSecret={$hdcms['AppSecret']}&releaseCode=" . $hdcms['releaseCode'] );
-				$data  = json_decode( $data, TRUE );
+				$data  = json_decode( $data, true );
 				f( '_upgrade_', $data );
 
 				return view()->with( [ 'data' => $data, 'hdcms' => $hdcms ] );

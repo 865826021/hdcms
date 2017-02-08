@@ -1,5 +1,7 @@
 <?php namespace system\service\cloud;
 
+use system\model\Cloud as CloudModel;
+
 /**
  * 远程云请求
  * Class Cloud
@@ -8,7 +10,7 @@
  * @site www.houdunwang.com
  */
 class Cloud {
-	protected $url = 'http://open.hdcms.com';
+	protected $url = 'http://store.hdcms.com?m=store&siteid=13&action=controller/cloud';
 	//云帐号
 	protected $accounts;
 
@@ -17,25 +19,48 @@ class Cloud {
 	}
 
 	/**
+	 * 绑定云帐号
+	 *
+	 * @param $data 帐号、密码、密钥数据
+	 *
+	 * @return mixed
+	 */
+	public function connect( $data ) {
+		$res   = Curl::post( $this->url . '/connect', $data );
+		$res   = json_decode( $res, true );
+		$model = CloudModel::find( 1 );
+		if ( $res['valid'] == 1 ) {
+			//连接成功
+			$model['uid']      = $res['uid'];
+			$model['username'] = $data['username'];
+			$model['secret']   = $data['secret'];
+			$model['webname']  = $data['webname'];
+			$model['status']   = 1;
+			$model->save();
+		} else {
+			$model['status'] = 0;
+			$model->save();
+		}
+
+		return $res;
+	}
+
+	/**
+	 * 检测HDCMS有没有新版本可用来更新
+	 * @return array
+	 */
+	public function getUpgradeVersion() {
+		$data = CloudModel::find( 1 )->toArray();
+		$res = Curl::post( $this->url . '/getUpgradeVersion', $data );
+		return json_decode( $res, true );
+	}
+
+	/**
 	 * 获取远程已经购买的模块列表
 	 * @return mixed
 	 */
 	public function modules() {
 		$res = \Curl::post( $this->url . '/', $this->accounts );
-
-		return json_decode( $res, 'true' );
-	}
-
-	/**
-	 * 远程POST请求
-	 *
-	 * @param string $url 地址
-	 * @param array $post POST数据
-	 *
-	 * @return mixed
-	 */
-	public function post( $url, $post = [ ] ) {
-		$res = \Curl::post( $this->url . '/' . $url, $post );
 
 		return json_decode( $res, 'true' );
 	}

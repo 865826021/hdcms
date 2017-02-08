@@ -118,20 +118,29 @@ class User extends Common {
 	 * 用户登录
 	 *
 	 * @param array $data 登录数据
+	 * @param bool $return 错误处理方式:true 返回错误内容 false直接显示错误
 	 *
 	 * @return bool|array
 	 */
-	public function login( array $data ) {
-		$user = Db::table( 'user' )->where( 'username', $data['username'] )->first();
+	public function login( array $data, $return = false ) {
+		$user         = Db::table( 'user' )->where( 'username', $data['username'] )->first();
+		$errorMessage = '';
 		if ( empty( $user ) ) {
-			message( '帐号不存在', 'back', 'error' );
+			$errorMessage = '帐号不存在';
 		}
-		if ( ! $this->checkPassword( $data['password'], $user['username'] ) ) {
-			message( '密码输入错误', 'back', 'error' );
+		if ( $errorMessage == '' && ! $this->checkPassword( $data['password'], $user['username'] ) ) {
+			$errorMessage = '密码输入错误';
 		}
 
-		if ( ! $user['status'] ) {
-			message( '您的帐号正在审核中', 'back', 'error' );
+		if ( $errorMessage == '' && ! $user['status'] ) {
+			$errorMessage = '您的帐号正在审核中';
+		}
+		if ( $errorMessage ) {
+			if ( $return ) {
+				return $errorMessage;
+			} else {
+				message( $errorMessage, 'back', 'error' );
+			}
 		}
 		//更新登录状态
 		$data             = [ ];

@@ -42,10 +42,10 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">应用密钥(AppSecret)</label>
+					<label class="col-sm-2 control-label">应用密钥(secret)</label>
 					<div class="col-sm-8">
 						<div class="input-group">
-							<input type="text" class="form-control" ng-model="field.AppSecret" required="required">
+							<input type="text" class="form-control" readonly="readonly" ng-model="field.secret" required="required">
 							<span class="input-group-addon" style="cursor: pointer" ng-click="createAppSecret()">生成新的</span>
 						</div>
 					</div>
@@ -65,7 +65,7 @@
 			}
 			//生成createAppSecret
 			$scope.createAppSecret=function(){
-				$scope.field.AppSecret=md5(Math.random());
+				$scope.field.secret=md5(Math.random());
 			}
 			$("form").submit(function () {
 				$("[name='data']").val(angular.toJson($scope.field));
@@ -74,7 +74,7 @@
 					if (res.valid == 1) {
 						util.message('连接成功', 'refresh', 'success');
 					} else {
-						util.message(res.message, '', 'error');
+						util.message(res.message, 'refresh', 'error');
 					}
 				}, 'json');
 				return false;
