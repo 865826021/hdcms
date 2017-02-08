@@ -2,7 +2,7 @@
 <block name="content">
         <ol class="breadcrumb">
             <li><i class="fa fa-home"></i></li>
-            <li><a href="?s=system/manage/menu">系统</a></li>
+            <li><a href="#">系统</a></li>
             <li class="active">我的帐户</li>
         </ol>
         <ul class="nav nav-tabs">

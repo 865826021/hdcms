@@ -7,10 +7,9 @@
 | 当然也可以根据业务需要两种方式都使用
 |-------------------------------------------------------------------------*/
 //后台管理员登录
-Route::get( 'hdcms', function () {
+Route::any( 'hdcms', function () {
 	Session::set( 'system.login', 'hdcms' );
-//	Route
-//	go( u( 'system/entry/login' ) );
+	controller( 'system/entry/login' );
 } );
 
 /**
@@ -18,8 +17,7 @@ Route::get( 'hdcms', function () {
  * 站点管理员登录后直接登录到站点管理平台
  * 不显示系统管理界面
  */
-Route::get( 'admin', function () {
+Route::any( 'admin', function () {
 	Session::set( 'system.login', 'admin' );
-	$site = Db::table( 'site' )->where( 'domain', $_SERVER['SERVER_NAME'] )->first();
-	go( u( 'system/entry/login', [ 'from' => __ROOT__ . '?s=site/entry/home&siteid=' . $site['siteid'] ] ) );
+	controller( 'system/entry/login' );
 } );

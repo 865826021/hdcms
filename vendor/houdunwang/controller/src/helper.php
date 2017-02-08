@@ -7,6 +7,6 @@
  */
 function controller( $url ) {
 	$url = str_replace( '.', '\\', $url );
-	Config::set( 'http.url_var', $url );
+	\houdunwang\request\Request::set( 'get.'.Config::get( 'http.url_var' ), $url );
 	\houdunwang\controller\Controller::run();
 }

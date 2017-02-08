@@ -14,6 +14,7 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         '5943d84bf0db79d84f3eb0f51461e736' => __DIR__ . '/..' . '/houdunwang/request/src/helper.php',
         '3299168317b10de7cb7942003bd52a29' => __DIR__ . '/..' . '/houdunwang/response/src/helper.php',
         'c54daba5473de13d796733fe0422e2c2' => __DIR__ . '/..' . '/houdunwang/collection/src/helper.php',
+        'faaf22bd2d61568b16e9dac83f4a95a0' => __DIR__ . '/..' . '/houdunwang/controller/src/helper.php',
         'b200b64f4d1415a1ec31d557162a91e1' => __DIR__ . '/..' . '/houdunwang/loader/src/helper.php',
         '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
         '0fdb93813e3129bfd50d293224a2095e' => __DIR__ . '/..' . '/houdunwang/error/src/helper.php',

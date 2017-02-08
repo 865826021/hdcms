@@ -90,7 +90,22 @@ class Entry {
 			\User::login( Request::post() );
 			//系统维护检测
 			\User::checkSystemClose();
-			message( '登录成功,系统准备跳转', q( 'get.from', u( 'system/site/lists' ) ) );
+			//跳转URL地址
+			$url = q( 'get.form' );
+			if ( empty( $url ) ) {
+				switch ( Session::get( 'system.login' ) ) {
+					case 'hdcms':
+						//系统管理平台
+						$url = u( 'system/site/lists' );
+						break;
+					case 'admin':
+						//站点管理平台
+						$site = Db::table( 'site' )->where( 'domain', $_SERVER['SERVER_NAME'] )->first();
+						$url  = __ROOT__ . '?s=site/entry/home&siteid=' . $site['siteid'];
+						break;
+				}
+			}
+			message( '登录成功,系统准备跳转', $url );
 		}
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );

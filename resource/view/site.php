@@ -77,21 +77,23 @@
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
-						   style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
-						   aria-expanded="false">
-							<i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b>
-						</a>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i>
-									编辑当前账号资料
-								</a>
-							</li>
-							<li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
-						</ul>
-					</li>
+					<if value="q('session.system.login')=='hdcms'">
+						<li class="dropdown">
+							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
+							   style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
+							   aria-expanded="false">
+								<i class="fa fa-group"></i> {{v('site.info.name')}} <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="?s=system/site/edit&siteid={{SITEID}}"><i class="fa fa-weixin fa-fw"></i>
+										编辑当前账号资料
+									</a>
+								</li>
+								<li><a href="?s=system/site/lists"><i class="fa fa-cogs fa-fw"></i> 管理其它公众号</a></li>
+							</ul>
+						</li>
+					</if>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
 							<i class="fa fa-w fa-user"></i>
@@ -100,7 +102,9 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="?s=system/user/myPassword">我的帐号</a></li>
-							<li><a href="?s=system/manage/menu">系统选项</a></li>
+							<if value="q('session.system.login')=='hdcms'">
+								<li><a href="?s=system/manage/menu">系统选项</a></li>
+							</if>
 							<li role="separator" class="divider"></li>
 							<li><a href="?s=system/entry/quit">退出</a></li>
 						</ul>

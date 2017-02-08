@@ -739,114 +739,6 @@
         ]
     },
     {
-        "name": "houdunwang/controller",
-        "version": "v1.0.4",
-        "version_normalized": "1.0.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/controller.git",
-            "reference": "e14c95caee1017ec7546833d92d68490cd8ce22a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/controller/zipball/e14c95caee1017ec7546833d92d68490cd8ce22a",
-            "reference": "e14c95caee1017ec7546833d92d68490cd8ce22a",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/config": "~1.0",
-            "houdunwang/container": "~1.0",
-            "houdunwang/middleware": "~1.0",
-            "houdunwang/request": "~1.0",
-            "houdunwang/response": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-06 21:57:01",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\controller\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "控制器管理组件",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "controller",
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "控制器"
-        ]
-    },
-    {
-        "name": "houdunwang/route",
-        "version": "v1.0.6",
-        "version_normalized": "1.0.6.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/route.git",
-            "reference": "ab3942e7dc5ae7f80471868fc8f409eaf94dc20a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/route/zipball/ab3942e7dc5ae7f80471868fc8f409eaf94dc20a",
-            "reference": "ab3942e7dc5ae7f80471868fc8f409eaf94dc20a",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/cache": "~1.0",
-            "houdunwang/config": "~1.0",
-            "houdunwang/container": "~1.0",
-            "houdunwang/controller": "~1.0",
-            "houdunwang/request": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-10 21:16:54",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [],
-            "psr-4": {
-                "houdunwang\\route\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "路由管理组件",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "router",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "路由器"
-        ]
-    },
-    {
         "name": "houdunwang/rbac",
         "version": "v1.0.4",
         "version_normalized": "1.0.4.0",
@@ -2061,18 +1953,72 @@
         ]
     },
     {
-        "name": "houdunwang/framework",
-        "version": "v3.0.66",
-        "version_normalized": "3.0.66.0",
+        "name": "houdunwang/route",
+        "version": "v1.0.7",
+        "version_normalized": "1.0.7.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/houdunwang/framework.git",
-            "reference": "2472b45ee1a182d22f69ccf6e525f8f90bed873a"
+            "url": "https://github.com/houdunwang/route.git",
+            "reference": "01d838efd164701465bcb6c752f96c62a0159e86"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/framework/zipball/2472b45ee1a182d22f69ccf6e525f8f90bed873a",
-            "reference": "2472b45ee1a182d22f69ccf6e525f8f90bed873a",
+            "url": "https://api.github.com/repos/houdunwang/route/zipball/01d838efd164701465bcb6c752f96c62a0159e86",
+            "reference": "01d838efd164701465bcb6c752f96c62a0159e86",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/cache": "~1.0",
+            "houdunwang/config": "~1.0",
+            "houdunwang/container": "~1.0",
+            "houdunwang/controller": "~1.0",
+            "houdunwang/request": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-02-08 10:37:56",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [],
+            "psr-4": {
+                "houdunwang\\route\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "路由管理组件",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "router",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "路由器"
+        ]
+    },
+    {
+        "name": "houdunwang/framework",
+        "version": "v3.0.67",
+        "version_normalized": "3.0.67.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/framework.git",
+            "reference": "d12a1967d0347b958e077799e8db7f33caebd586"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/framework/zipball/d12a1967d0347b958e077799e8db7f33caebd586",
+            "reference": "d12a1967d0347b958e077799e8db7f33caebd586",
             "shasum": ""
         },
         "require": {
@@ -2119,7 +2065,7 @@
             "houdunwang/zip": "~1.0",
             "php": ">=5.4.0"
         },
-        "time": "2017-02-07 20:36:46",
+        "time": "2017-02-08 10:38:37",
         "type": "project",
         "installation-source": "dist",
         "autoload": {
@@ -2141,5 +2087,61 @@
             }
         ],
         "description": "Hdphp Framework (Kernel)"
+    },
+    {
+        "name": "houdunwang/controller",
+        "version": "v1.0.6",
+        "version_normalized": "1.0.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/controller.git",
+            "reference": "af26876225e94d678e53101a1919405fb2d9919c"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/controller/zipball/af26876225e94d678e53101a1919405fb2d9919c",
+            "reference": "af26876225e94d678e53101a1919405fb2d9919c",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/config": "~1.0",
+            "houdunwang/container": "~1.0",
+            "houdunwang/middleware": "~1.0",
+            "houdunwang/request": "~1.0",
+            "houdunwang/response": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-02-08 10:42:44",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\controller\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "控制器管理组件",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "controller",
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "控制器"
+        ]
     }
 ]

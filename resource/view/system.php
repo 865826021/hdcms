@@ -54,9 +54,11 @@
 		<div class="container-fluid">
 			<div class="navbar-header">
 				<ul class="nav navbar-nav">
-					<li>
-						<a href="?s=system/manage/menu"><i class="fa fa-w fa-cogs"></i> 系统管理</a>
-					</li>
+					<if value="q('session.system.login')=='hdcms'">
+						<li>
+							<a href="?s=system/manage/menu"><i class="fa fa-w fa-cogs"></i> 系统管理</a>
+						</li>
+					</if>
 					<if value="v('site')">
 						<li>
 							<a href="?s=site/entry/home&siteid={{SITEID}}" target="_blank">
@@ -74,7 +76,7 @@
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<if value="v('site')">
+					<if value="v('site') && q('session.system.login')=='hdcms'">
 						<li class="dropdown">
 							<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"
 							   style="display:block; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; "
@@ -95,8 +97,10 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li><a href="?s=system/user/myPassword">我的帐号</a></li>
-							<li role="separator" class="divider"></li>
-							<li><a href="?s=system/manage/menu">系统选项</a></li>
+							<if value="q('session.system.login')=='hdcms'">
+								<li role="separator" class="divider"></li>
+								<li><a href="?s=system/manage/menu">系统选项</a></li>
+							</if>
 							<li role="separator" class="divider"></li>
 							<li><a href="?s=system/entry/quit">退出</a></li>
 						</ul>
@@ -114,6 +118,7 @@
 		</div>
 		<div class="col-md-6">
 			<ul class="nav nav-pills pull-right">
+				<if value="q('session.system.login')=='hdcms'">
 				<li>
 					<a href="?s=system/site/lists" class="tile <if value='ACTION==" lists"'>active</if>">
 					<i class="fa fa-sitemap fa-2x"></i>网站管理
@@ -124,6 +129,7 @@
 					<i class="fa fa-support fa-2x"></i>系统设置
 					</a>
 				</li>
+				</if>
 				<li>
 					<a href="?s=system/entry/quit" class="tile">
 						<i class="fa fa-sign-out fa-2x"></i>退出
