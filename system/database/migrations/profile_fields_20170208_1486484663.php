@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class profile_fields extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('profile_fields')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_profile_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -6,6 +6,9 @@ use houdunwang\database\build\Blueprint;
 class balance extends Migration {
 	//执行
 	public function up() {
+		if(Schema::tableExists('balance')){
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_balance` (
   `bid` int(10) unsigned NOT NULL AUTO_INCREMENT,

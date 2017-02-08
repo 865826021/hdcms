@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class member_oauth extends Migration {
     //执行
 	public function up() {
+    if(Schema::tableExists('member_oauth')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_member_oauth` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

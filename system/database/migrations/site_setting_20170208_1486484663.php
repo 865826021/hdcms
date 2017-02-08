@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class site_setting extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('site_setting')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_site_setting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

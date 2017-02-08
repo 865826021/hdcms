@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class site_quickmenu extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('site_quickmenu')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_site_quickmenu` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

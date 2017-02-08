@@ -6,6 +6,9 @@ use houdunwang\database\build\Blueprint;
 class attachment extends Migration {
 	//执行
 	public function up() {
+		if(Schema::tableExists('attachment')){
+			return;
+		}
 		$sql=<<<sql
 CREATE TABLE `hd_attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

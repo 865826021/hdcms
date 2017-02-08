@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class cache extends Migration {
     //执行
 	public function up() {
+		if(Schema::tableExists('cache')){
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_cache` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class web extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('web')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_web` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

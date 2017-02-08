@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class config extends Migration {
     //执行
 	public function up() {
+		if(Schema::tableExists('config')){
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_config` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

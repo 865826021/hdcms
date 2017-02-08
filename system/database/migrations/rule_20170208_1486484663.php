@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class rule extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('rule')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_rule` (
   `rid` int(10) unsigned NOT NULL AUTO_INCREMENT,

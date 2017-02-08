@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class member_fields extends Migration {
     //执行
 	public function up() {
+    if(Schema::tableExists('member_fields')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_member_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

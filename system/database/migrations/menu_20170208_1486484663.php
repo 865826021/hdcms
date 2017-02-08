@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class menu extends Migration {
     //执行
 	public function up() {
+    if(Schema::tableExists('menu')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

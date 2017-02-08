@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class user_permission extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('user_permission')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_user_permission` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

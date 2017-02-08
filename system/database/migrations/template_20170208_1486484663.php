@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class template extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('template')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_template` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,

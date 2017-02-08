@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class navigate extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('navigate')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_navigate` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

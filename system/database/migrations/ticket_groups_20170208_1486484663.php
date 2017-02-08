@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class ticket_groups extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('ticket_groups')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_ticket_groups` (
   `tgid` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class button extends Migration {
     //执行
 	public function up() {
+		if(Schema::tableExists('button')){
+			return;
+		}
 		$sql=<<<sql
 CREATE TABLE `hd_button` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

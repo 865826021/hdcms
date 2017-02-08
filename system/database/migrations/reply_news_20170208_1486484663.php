@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class reply_news extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('reply_news')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_reply_news` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

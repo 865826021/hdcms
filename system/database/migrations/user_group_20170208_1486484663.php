@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class user_group extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('user_group')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_user_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

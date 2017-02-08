@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class rule_keyword extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('rule_keyword')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_rule_keyword` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

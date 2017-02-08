@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class modules extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('modules')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_modules` (
   `mid` int(11) NOT NULL AUTO_INCREMENT,

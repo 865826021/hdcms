@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class router extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('router')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_router` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

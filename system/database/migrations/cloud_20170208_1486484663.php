@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class cloud extends Migration {
     //执行
 	public function up() {
+		if(Schema::tableExists('cloud')){
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_cloud` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

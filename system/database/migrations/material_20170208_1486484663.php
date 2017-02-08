@@ -5,6 +5,9 @@ use houdunwang\database\build\Blueprint;
 class material extends Migration {
     //执行
 	public function up() {
+		if(Schema::tableExists('material')){
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_material` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

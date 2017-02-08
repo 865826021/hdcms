@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class session extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('session')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_session` (
   `session_id` char(50) NOT NULL DEFAULT '',

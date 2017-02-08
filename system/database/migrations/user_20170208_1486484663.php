@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class user extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('user')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_user` (
   `uid` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',

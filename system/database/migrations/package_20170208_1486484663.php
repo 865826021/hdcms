@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class package extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('package')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_package` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

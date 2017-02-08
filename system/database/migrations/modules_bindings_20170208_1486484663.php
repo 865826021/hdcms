@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class modules_bindings extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('modules_bindings')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_modules_bindings` (
   `bid` int(11) NOT NULL AUTO_INCREMENT,

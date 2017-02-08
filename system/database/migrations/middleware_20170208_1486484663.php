@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class middleware extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('middleware')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_middleware` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class pay extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('pay')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_pay` (
   `pid` int(10) unsigned NOT NULL AUTO_INCREMENT,

@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class module_setting extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('module_setting')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_module_setting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,

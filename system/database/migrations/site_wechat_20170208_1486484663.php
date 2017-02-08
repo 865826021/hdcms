@@ -4,7 +4,9 @@ use houdunwang\database\build\Blueprint;
 
 class site_wechat extends Migration {
     //执行
-	public function up() {
+	public function up() {if(Schema::tableExists('site_wechat')){
+      return;
+    }
 		$sql = <<<sql
 CREATE TABLE `hd_site_wechat` (
   `weid` int(10) unsigned NOT NULL AUTO_INCREMENT,
