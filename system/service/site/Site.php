@@ -183,6 +183,16 @@ class Site extends Common {
 			$memberField->insert( $d );
 		}
 
+		/*
+		|--------------------------------------------------------------------------
+		| 初始快捷菜单
+		|--------------------------------------------------------------------------
+		*/
+		$data['siteid'] = $siteId;
+		$data['data']   = '{"status":1,"system":[],"module":[]}';
+		$data['uid']    = v( 'user.info.uid' );
+		Db::table( 'site_quickmenu' )->insert( $data );
+
 		return true;
 	}
 

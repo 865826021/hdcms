@@ -179,7 +179,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth( $deal = 'show' ) {
-		if ( v( 'user' )) {
+		if ( v( 'user' ) ) {
 			return true;
 		}
 		switch ( $deal ) {
@@ -187,7 +187,8 @@ class User extends Common {
 				return false;
 			case 'show':
 			default:
-				message( '请登录后进行操作', u( 'system/entry/login' ), 'error' );
+				$url = __WEB__ . '/' . q( 'session.system.login', 'hdcms' );
+				message( '请登录后进行操作', $url, 'error' );
 		}
 	}
 

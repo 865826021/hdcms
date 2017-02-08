@@ -1,4 +1,4 @@
-# 生成HDCMS更新包
+# 生成HDCMS更新包方法
 
 ## 生成差异文件(本地执行)
 git diff v2.0.2 v2.0.6 --name-status > upgrade/files.php
