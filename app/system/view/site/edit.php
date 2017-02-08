@@ -54,11 +54,9 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">保存</button>
+        <button type="submit" class="btn btn-primary">保存修改</button>
     </form>
-
 </block>
-
 <script>
     //上传图片
     function upImage(obj) {

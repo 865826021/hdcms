@@ -13,6 +13,10 @@ use system\model\Modules;
 class Initialize {
 
 	public function run() {
+		//安装检测
+		if ( is_file( 'install.php' ) ) {
+			go( __ROOT__ . '/install.php' );
+		}
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );
 		//初始站点数据
@@ -37,7 +41,7 @@ class Initialize {
 		$config['register'] = json_decode( $config['register'], true );
 		v( 'config', $config );
 		//上传配置
-		c( 'upload', v( 'config.site.upload' ) );
-		c( 'app', v( 'config.site.app' ) );
+		c( 'upload', array_merge( c( 'upload' ), v( 'config.site.upload' ) ) );
+		c( 'app', array_merge( c( 'app' ), v( 'config.site.app' ) ) );
 	}
 }

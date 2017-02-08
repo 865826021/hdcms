@@ -211,7 +211,7 @@ class Site {
 		if ( ! \User::isManage() ) {
 			message( '你没有编辑站点的权限', 'with' );
 		}
-		if ( IS_POST ) {
+		if ( IS_POST ) {p($_POST);
 			//更新站点数据
 			$site                     = SiteModel::find( SITEID );
 			$site['name']             = Request::post( 'name' );
@@ -220,11 +220,10 @@ class Site {
 			$site['module']           = Request::post( 'module' );
 			$site['ucenter_template'] = Request::post( 'ucenter_template' );
 			$site->save();
+			\Site::updateCache();
 			message( '网站数据保存成功', 'back', 'success' );
 		}
 		$site = SiteModel::where( 'siteid', SITEID )->first();
-		\Site::updateCache();
-
 		return view()->with( [ 'site' => $site ] );
 	}
 
@@ -242,7 +241,6 @@ class Site {
 			$site['module']           = Request::post( 'module' );
 			$site['ucenter_template'] = 'default';
 			$siteId                   = $site->save();
-
 			//添加站长数据,系统管理员不添加数据
 			\User::setSiteOwner( $siteId, v( 'user.info.uid' ) );
 			//创建用户字段表数据
