@@ -18,6 +18,9 @@ class Site extends Common {
 	 * 系统启动时执行的站点信息初始化
 	 */
 	public function siteInitialize() {
+		if ( isset( $_GET['siteid'] ) && empty( $_GET['siteid'] ) ) {
+			message( '你访问的站点不存在', 'back', 'error' );
+		}
 		/**
 		 * 站点编号
 		 * 如果GET中存在siteid使用,否则使用SESSION会话中的siteid
@@ -234,7 +237,7 @@ class Site extends Common {
 	 * @return bool
 	 */
 	public function updateAllCache() {
-		foreach ((array) SiteModel::lists( 'siteid' ) as $siteid ) {
+		foreach ( (array) SiteModel::lists( 'siteid' ) as $siteid ) {
 			$this->updateCache( $siteid );
 		}
 
@@ -246,7 +249,7 @@ class Site extends Common {
 	 * @return mixed
 	 */
 	public function getDefaultGroup() {
-		return Db::table('member_group')->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
+		return Db::table( 'member_group' )->where( 'siteid', v( 'site.siteid' ) )->where( 'isdefault', 1 )->pluck( 'id' );
 	}
 
 	/**
