@@ -61,22 +61,16 @@ class Cloud {
 			case 'sql':
 				//更新SQL
 				if ( IS_POST ) {
-					cli( 'migrate:make' );
-					echo json_encode( $res = [ 'valid' => 2 ] );
+					cli( 'hd migrate:make' );
+					cli( 'hd seed:make' );
+					ajax(['valid'=>1,'message'=>'数据表更新成功']);
 					exit;
 				}
-				return view( 'updateSql' )->with( 'data', f( '_upgrade_' ) );
+				return view( 'updateSql' );
 				break;
 			case 'finish':
-				$data = f( '_upgrade_' );
-				//全部更新完成
-				$this->db['id']          = 1;
-				$this->db['versionCode'] = $data['data']['version'][0]['versionCode'];
-				$this->db['releaseCode'] = $data['data']['version'][0]['releaseCode'];
-				$this->db['createtime']  = time();
-				$this->db->save();
-				//删除更新缓存
-				f( '_upgrade_', '[del]' );
+				$hdcms = \Cloud::getUpgradeVersion();
+				Db::table('cloud')->where('id',1)->update(['version'=>$hdcms['hdcms']['version']]);
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:

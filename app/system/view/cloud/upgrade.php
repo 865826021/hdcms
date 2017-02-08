@@ -31,21 +31,29 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="form-horizontal">
+		<if value="$upgrade['valid']==1">
 		<div class="alert alert-danger">
 			<i class="fa fa-exclamation-triangle"></i> 更新时请注意备份网站数据和相关数据库文件！官方不强制要求用户跟随官方意愿进行更新尝试！
 		</div>
+		</if>
 		<div class="form-group">
 			<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">当前版本</label>
 			<div class="col-sm-10">
-				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前版本: Build
+				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前版本: 
+				{{$current['version']}}
 					安装时间【{{date('Y年m月d日',$current['createtime'])}}】
 				</p>
-				<div class="help-block text-danger">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动
+				<if value="$upgrade['valid']==1">
+				<div class="help-block text-danger">
+				系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动
 				</div>
+				</if>
 			</div>
 		</div>
 	</div>
+	
 	<if value="$upgrade['valid']==1">
 		<form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl"
 		      onsubmit="return false;">
@@ -98,10 +106,10 @@
 			<else/>
 			<div class="panel panel-success">
 				<div class="panel-heading">
-					<h3 class="panel-title">更新日志</h3>
+					<h3 class="panel-title">温馨提示</h3>
 				</div>
 				<div class="panel-body">
-					{{$data['message']}}
+					{{$upgrade['message']}}
 				</div>
 			</div>
 		</form>
