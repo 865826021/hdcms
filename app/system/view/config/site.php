@@ -90,6 +90,18 @@
 						</label>
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">伪静态</label>
+
+					<div class="col-sm-10">
+						<label class="radio-inline">
+							<input type="radio" value="1" ng-model="field.http.rewrite"> 开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="0" ng-model="field.http.rewrite"> 关闭
+						</label>
+					</div>
+				</div>
 			</div>
 		</div>
 		<input type="hidden" name="site">
