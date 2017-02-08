@@ -75,7 +75,7 @@ class Cloud {
 				break;
 			default:
 				//获取更新版本
-				$upgrade = \Cloud::getUpgradeVersion();p($upgrade);
+				$upgrade = \Cloud::getUpgradeVersion();
 				return view()->with( [ 'upgrade' => $upgrade,'current'=>\system\model\Cloud::find(1) ] );
 		}
 	}

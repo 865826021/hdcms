@@ -52,7 +52,6 @@ class Cloud {
 	public function getUpgradeVersion() {
 		$data = CloudModel::find( 1 )->toArray();
 		$res  = Curl::post( $this->url . '/getUpgradeVersion', $data );
-		echo $res;exit;
 		return json_decode( $res, true );
 	}
 
