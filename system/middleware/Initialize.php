@@ -36,7 +36,8 @@ class Initialize {
 		$config['site']     = json_decode( $config['site'], true );
 		$config['register'] = json_decode( $config['register'], true );
 		v( 'config', $config );
-		//上传允许的文件类型
-		c( 'upload.type', v( 'config.site.upload.type' ) );
+		//上传配置
+		c( 'upload', v( 'config.site.upload' ) );
+		c( 'app', v( 'config.site.app' ) );
 	}
 }

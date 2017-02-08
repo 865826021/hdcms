@@ -73,6 +73,25 @@
 				</div>
 			</div>
 		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				开发模式
+			</div>
+			<div class="panel-body">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">调试模式</label>
+
+					<div class="col-sm-10">
+						<label class="radio-inline">
+							<input type="radio" value="1" ng-model="field.app.debug"> 开启
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="0" ng-model="field.app.debug"> 关闭
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
 		<input type="hidden" name="site">
 		<button class="btn btn-primary">提交</button>
 	</form>
