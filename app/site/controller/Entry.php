@@ -9,6 +9,8 @@
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
 
+use system\model\Modules;
+
 /**
  * 网站入口管理
  * Class Entry
@@ -50,11 +52,23 @@ class Entry {
 	}
 
 	/**
+	 * 扩展功能模块
+	 * @return mixed
+	 */
+	public function package() {
+		auth();
+		$data = Db::table( 'modules' )->where( 'is_system', 0 )->get();
+
+		return view()->with( [ 'data' => $data ] );
+	}
+
+	/**
 	 * 后台模块主页
 	 * @return mixed
 	 */
 	public function module() {
 		auth();
+
 		return view();
 	}
 }

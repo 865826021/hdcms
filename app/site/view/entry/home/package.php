@@ -1,27 +1,24 @@
 <extend file="resource/view/site"/>
+<link rel="stylesheet" href="{{__VIEW__}}/entry/css/package.css">
 <block name="content">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#">平台相关数据</a></li>
+        <li role="presentation" class="active"><a href="#">扩展模块列表</a></li>
     </ul>
-    <div class="page-header">
-        <h4><i class="fa fa-comments"></i> 公众号信息</h4>
-    </div>
-    <div class="panel panel-default row">
-        <div class="panel-body">
-            <div class="col-sm-7">
-                <p>
-                    <strong>{{v("site.wechat.wename")}}</strong>
-                    <span class="label label-success">
-                        <?php echo \Wx::chatNameBylevel(v('site.wechat.level')) ?>
-                    </span>
-                    &nbsp;&nbsp;&nbsp;
-                    <if value="v('site.wechat.is_connect')">
-                       <span class="text-success">
-                            <i class="fa fa-check-circle"></i> 接入成功
-                       </span>
-                    </if>
-                </p>
+    <div class="row apps">
+        <?php $data=Db::table( 'modules' )->where( 'is_system', 0 )->get();?>
+        <foreach from="$data" value="$d">
+            <div class="col-sm-6 col-md-2">
+                <div class="thumbnail">
+                    <div class="img">
+                        <img src="addons/{{$d['name']}}/{{$d['preview']}}">
+                    </div>
+                    <div class="caption">
+                        <h4>
+                            <a href="?s=site/entry/module&m={{$d['name']}}&mark=package">{{$d['title']}}</a>
+                        </h4>
+                    </div>
+                </div>
             </div>
-        </div>
+        </foreach>
     </div>
 </block>

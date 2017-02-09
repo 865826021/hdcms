@@ -363,7 +363,7 @@
 				<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
 					<li>
 						<a href="?s=site/entry/home&mark=package">
-							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块
+							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块11
 						</a>
 					</li>
 					<li class="active">
