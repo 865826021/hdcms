@@ -6,7 +6,7 @@
 	</ul>
 	<div class="row apps">
 		<foreach from="$data" value="$d">
-			<div class="col-sm-6 col-md-2">
+			<div class="col-sm-6 col-md-4 col-lg-2">
 				<div class="thumbnail">
 					<div class="img">
 						<img src="addons/{{$d['name']}}/{{$d['preview']}}">
