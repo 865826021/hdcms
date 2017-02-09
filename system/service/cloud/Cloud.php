@@ -60,8 +60,8 @@ class Cloud {
 
 	//更新安装数量
 	public function updateHDownloadNum() {
-		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum'
-			, Db::table( 'cloud' )->where( 'id', 1 )->first() );
+		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum&build='
+		                   .Db::table( 'cloud' )->where( 'id', 1 )->pluck('build'));
 
 		return json_decode( $res, true );
 	}

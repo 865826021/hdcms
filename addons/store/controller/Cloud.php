@@ -60,7 +60,7 @@ class Cloud {
 	 */
 	public function updateHDownloadNum() {
 		//增加下载数量
-		Db::table( "store_hdcms" )->where( 'build', $_POST['build'] )->increment( 'update_site_num', 1 );
+		Db::table( "store_hdcms" )->where( 'build', $_GET['build'] )->increment( 'update_site_num', 1 );
 		ajax( [ 'message' => '更新安装数量成功', 'valid' => 1 ] );
 	}
 }
