@@ -41,7 +41,7 @@
 			<div class="col-sm-10">
 				<p class="form-control-static"><span class="fa fa-square-o"></span> &nbsp; 系统当前版本:
 					{{$current['version']}}
-					安装时间【{{date('Y年m月d日',$current['createtime'])}}】
+					安装时间【{{date('Y年m月d日',$current['build'])}}】
 				</p>
 				<div class="help-block text-danger">系统会检测当前程序文件的变动, 如果被病毒或木马非法篡改, 会自动警报并提示恢复至默认版本, 因此可能修订日期未更新而文件有变动
 				</div>
@@ -57,7 +57,7 @@
 					<p class="form-control-static">
 						<span class="fa fa-square-o"></span> &nbsp;
 						Build {{$upgrade['hdcms']['version']}}
-						更新时间【{{date('Y年m月d日',$upgrade['hdcms']['createtime'])}}】
+						更新时间【{{date('Y年m月d日',$upgrade['hdcms']['build'])}}】
 					</p>
 				</div>
 			</div>

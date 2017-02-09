@@ -70,7 +70,7 @@ class Cloud {
 				break;
 			case 'finish':
 				$hdcms = \Cloud::getUpgradeVersion();
-				Db::table('cloud')->where('id',1)->update(['version'=>$hdcms['hdcms']['version']]);
+				Db::table('cloud')->where('id',1)->update(['build'=>$hdcms['hdcms']['build'],'version'=>$hdcms['hdcms']['version']]);
 				\Cloud::updateHDownloadNum();
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
