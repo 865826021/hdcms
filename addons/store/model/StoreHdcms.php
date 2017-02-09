@@ -15,6 +15,7 @@ class StoreHdcms extends Model {
 		[ 'logs', 'required', '更新日志不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'createtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		//发布时间
+		[ 'build', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 }

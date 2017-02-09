@@ -47,14 +47,20 @@ class Cloud {
 	 * 检测用户提供的版本有无可用更新
 	 */
 	public function getUpgradeVersion() {
-		$id = StoreHdcms::where('version',$_POST['version'])->pluck('id');
-		$res = StoreHdcms::where( 'id', '>', $id )->where( 'type', 'upgrade' )->orderBy( 'id', 'asc' )->first();
-		//增加下载数量
-		Db::table("store_hdcms")->where('id',1)->increment('update_site_num',1);
+		$res = StoreHdcms::where( 'build', '>', $_POST['build'] )->where( 'type', 'upgrade' )->orderBy( 'id', 'asc' )->first();
 		if ( empty( $res ) ) {
 			ajax( [ 'message' => '你使用的是最新版HDCMS', 'valid' => 0 ] );
 		} else {
 			ajax( [ 'message' => '有新版本发布请进行更新', 'hdcms' => $res->toArray(), 'valid' => 1 ] );
 		}
+	}
+
+	/**
+	 * 用户更新CMS系统后修改安装数量
+	 */
+	public function updateHDownloadNum() {
+		//增加下载数量
+		Db::table( "store_hdcms" )->where( 'build', $_POST['build'] )->increment( 'update_site_num', 1 );
+		ajax( [ 'message' => '更新安装数量成功', 'valid' => 1 ] );
 	}
 }

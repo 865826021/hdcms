@@ -10,7 +10,9 @@ use system\model\Cloud as CloudModel;
  * @site www.houdunwang.com
  */
 class Cloud {
-	protected $url = 'http://store.hdcms.com?m=store&siteid=13&action=controller/cloud';
+	//云主机
+	protected $host = 'http://store.hdcms.com';
+	protected $url = 'http://store.hdcms.com?m=store&siteid=13&action=controller';
 	//云帐号
 	protected $accounts;
 
@@ -26,7 +28,7 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function connect( $data ) {
-		$res   = Curl::post( $this->url . '/connect', $data );
+		$res   = Curl::post( $this->url . '/cloud/connect', $data );
 		$res   = json_decode( $res, true );
 		$model = CloudModel::find( 1 );
 		if ( $res['valid'] == 1 ) {
@@ -51,18 +53,17 @@ class Cloud {
 	 */
 	public function getUpgradeVersion() {
 		$data = CloudModel::find( 1 )->toArray();
-		$res  = Curl::post( $this->url . '/getUpgradeVersion', $data );
+		$res  = Curl::post( $this->url . '/cloud/getUpgradeVersion', $data );
+
 		return json_decode( $res, true );
 	}
 
-	/**
-	 * 获取远程已经购买的模块列表
-	 * @return mixed
-	 */
-	public function modules() {
-		$res = \Curl::post( $this->url . '/', $this->accounts );
+	//更新安装数量
+	public function updateHDownloadNum() {
+		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum'
+			, Db::table( 'cloud' )->where( 'id', 1 )->first() );
 
-		return json_decode( $res, 'true' );
+		return json_decode( $res, true );
 	}
 
 	/**
@@ -71,7 +72,7 @@ class Cloud {
 	 */
 	public function downloadUpgradeVersion() {
 		$soft    = $this->getUpgradeVersion();
-		$content = \Curl::get( 'http://store.hdcms.com/' . $soft['hdcms']['file'] );
+		$content = \Curl::get( $this->host . '/' . $soft['hdcms']['file'] );
 		\Dir::create( 'upgrade/hdcms' );
 		file_put_contents( 'upgrade/hdcms.zip', $content );
 		chdir( 'upgrade' );

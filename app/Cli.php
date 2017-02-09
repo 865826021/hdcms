@@ -8,7 +8,14 @@ use houdunwang\cli\build\Base;
  * @package app
  */
 class Cli extends Base {
-	//动作
+	//不生成到压缩包的文件
+	protected $filterFiles = [
+		'data/database.php'
+	];
+
+	/**
+	 * 生成HDCMS更新压缩包
+	 */
 	public function upgrade() {
 		$files = $this->format();
 		foreach ( $files as $f ) {
@@ -17,7 +24,7 @@ class Cli extends Base {
 				\Dir::copyFile( $info[1], 'build/hdcms/' . $info[1] );
 			}
 		}
-		file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ) );
+		file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ));
 		chdir( 'build' );
 		Zip::PclZip( 'hdcms.zip' );
 		Zip::create( 'hdcms' );
@@ -45,6 +52,14 @@ class Cli extends Base {
 			}
 		}
 
-		return $news;
+		//移除不需要生成到压缩包中的文件
+		$data=[];
+		foreach($news as $f){
+			$info = preg_split( '@\s+@', trim( $f ) );
+			if(!in_array($info[1],$this->filterFiles)){
+				$data[]="{$info[0]}\t{$info[1]}";
+			}
+		}
+		return $data;
 	}
 }

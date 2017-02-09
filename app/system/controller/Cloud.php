@@ -71,6 +71,7 @@ class Cloud {
 			case 'finish':
 				$hdcms = \Cloud::getUpgradeVersion();
 				Db::table('cloud')->where('id',1)->update(['version'=>$hdcms['hdcms']['version']]);
+				\Cloud::updateHDownloadNum();
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
