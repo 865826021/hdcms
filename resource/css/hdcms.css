@@ -305,6 +305,7 @@ div.quick_navigate {
   right: 0;
   bottom: 0;
   display: flex;
+  z-index: 2000;
 }
 div.quick_navigate .btn-group {
   flex: 1;

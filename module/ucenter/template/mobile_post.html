@@ -1,8 +1,8 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="ucenter/mobile/css/ucenter.css">
-<link rel="stylesheet" href="{{__TEMPLATE__}}/css/css.css">
+<link rel="stylesheet" href="ucenter/default/mobile/css/ucenter.css">
+<link rel="stylesheet" href="{{template_url()}}/css/css.css">
 <block name="content">
-	<form action="" method="post" id="form" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
+	<form action="" method="post" id="formApp" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
 		{{csrf_field()}}
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="javascript:;">微站会员中心</a></li>
@@ -71,16 +71,16 @@
 		</div>
 	</form>
 </block>
-
+<!--<script src="{{template_url()}}/js/wapeditor.js"></script>-->
 <script>
-	require(['angular','jquery','{{__TEMPLATE__}}/js/wapeditor.js'], function (angular,$) {
+	require(['wapeditor'], function () {
 		//回复规则编号;
 		window.rid = {{$rid}};
 		window.modules = {{$modules}};
 		//动态菜单
 		menus = {{$menus}};
 		$(function () {
-			angular.bootstrap(document.getElementById('form'), ['app']);
+			angular.bootstrap(document.getElementById('formApp'), ['app']);
 		});
 	});
 </script>

@@ -1,5 +1,4 @@
-define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'jquery-ui'], function (angular, $, _, util, hdcms) {
-    require(['angular.drag']);
+define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'angular.drag','jquery-ui'], function (angular, $, _, util, hdcms) {
     var m = angular.module('app', ['dndLists']);
     //服务
     m.factory('uc', function () {
