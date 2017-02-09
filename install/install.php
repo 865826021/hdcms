@@ -126,12 +126,10 @@ if ( $action == 'downloadFile' ) {
 //安装完成,添加数据
 if ( $action == 'table' ) {
 	//修改配置文件
-	file_put_contents( 'data/database.php', '<?php return [];?>' );
-	$data = array_merge( include 'system/config/database.php', $_SESSION['config'] );
-	file_put_contents( 'data/database.php', '<?php return ' . var_export( $data, true ) . ';?>' );
+	file_put_contents( 'data/database.php', '<?php return ' . var_export( $_SESSION['config'], true ) . ';?>' );
 
 	//创建表与初始数据
-	curl_get($_SERVER['HTTP_HOST'] .'/'.dirname($_SERVER['SCRIPT_NAME']).'/index.php?s=install' );
+	curl_get( $_SERVER['HTTP_HOST'] . '/' . dirname( $_SERVER['SCRIPT_NAME'] ) . '/index.php?s=install' );
 
 	//添加数据表
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
@@ -142,7 +140,7 @@ if ( $action == 'table' ) {
 
 	//更新系统版本号
 	$version    = include 'data/upgrade.php';
-	$createTime = time();
+	$createTime = $_SESSION['hdcms']['createtime'];
 	$sql        = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,createtime)
 		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$createTime)";
 	try {
@@ -171,6 +169,7 @@ if ( $action == 'finish' ) {
 		@unlink( $f );
 	}
 	is_dir( 'install' ) and rmdir( 'install' );
+	is_dir( 'upgrade' ) and rmdir( 'upgrade' );
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
