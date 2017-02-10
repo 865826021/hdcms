@@ -123,7 +123,6 @@ class Module {
 				}
 				file_put_contents( "{$dir}/{$d}/index.html", 'Not allowed to access' );
 			}
-
 			//模块图片处理
 			$info  = pathinfo( $data['thumb'] );
 			$thumb = $dir . '/thumb.' . $info['extension'];
@@ -177,6 +176,7 @@ class Module {
 			$model['rule']        = $config['rule'];
 			$model['thumb']       = $config['thumb'];
 			$model['preview']     = $config['preview'];
+			$model['tag']         = $config['tag'];
 			$model['is_system']   = 0;
 			$model['subscribes']  = $config['subscribes'];
 			$model['processors']  = $config['processors'];
@@ -287,7 +287,7 @@ class Module {
 			confirm( '卸载模块时同时删除模块数据吗？', u( 'uninstall', [
 				'confirm' => 1,
 				'module'  => $module
-			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $module] ) );
+			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $module ] ) );
 		}
 		if ( ! \Module::remove( $module, $_GET['confirm'] ) ) {
 			message( \Module::getError(), '', 'error' );

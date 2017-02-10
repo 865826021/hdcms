@@ -74,7 +74,7 @@ class Mobile extends HdController {
 			$replyCoverModel['description'] = $ucenter['description'];
 			$replyCoverModel['thumb']       = $ucenter['thumb'];
 			$replyCoverModel['module']      = 'ucenter';
-			$replyCoverModel['url']         = "?m=ucenter&action=controller/entry/home&siteid=" . SITEID;
+			$replyCoverModel['url']         = "?m=ucenter&action=controller/member/home&siteid=" . SITEID;
 			$replyCoverModel->save();
 			message( '会员中心视图保存成功', 'refresh', 'success' );
 		}

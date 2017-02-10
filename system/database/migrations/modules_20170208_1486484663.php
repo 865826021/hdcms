@@ -23,6 +23,7 @@ CREATE TABLE `hd_modules` (
   `processors` varchar(500) NOT NULL DEFAULT '' COMMENT '处理消息',
   `setting` tinyint(1) unsigned NOT NULL COMMENT '存在全局设置项',
   `router` tinyint(1) unsigned NOT NULL COMMENT '路由规则',
+  `tag` tinyint(1) NOT NULL COMMENT '模版标签功能',
   `rule` tinyint(1) unsigned NOT NULL COMMENT '需要嵌入规则',
   `middleware` tinyint(1) unsigned NOT NULL COMMENT '中间件管理',
   `permissions` varchar(5000) NOT NULL DEFAULT '' COMMENT '业务规则权限验证标识',
@@ -33,7 +34,7 @@ CREATE TABLE `hd_modules` (
   PRIMARY KEY (`mid`),
   UNIQUE KEY `name` (`name`),
   KEY `is_system` (`is_system`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块列表';
+) ENGINE=InnoDB AUTO_INCREMENT=10017 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块列表';
 sql;
 		Db::execute( $sql );
     }
