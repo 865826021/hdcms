@@ -11,7 +11,6 @@ class reply_cover extends Migration {
 CREATE TABLE `hd_reply_cover` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
-  `web_id` int(11) unsigned NOT NULL COMMENT '微站编号',
   `rid` int(10) unsigned NOT NULL COMMENT '规则编号',
   `module` varchar(45) NOT NULL COMMENT '模块名称',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',

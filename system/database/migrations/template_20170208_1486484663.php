@@ -22,7 +22,7 @@ CREATE TABLE `hd_template` (
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模板缩略图',
   `is_default` tinyint(1) unsigned NOT NULL COMMENT '默认模板',
   `locality` tinyint(1) unsigned NOT NULL COMMENT '本地模板',
-  `module` char(20) DEFAULT NULL COMMENT '模块名称,只为指定模块指定',
+  `module` char(20) NOT NULL DEFAULT '' COMMENT '模块名称,为专属模块设置的模板',
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点模板';
 sql;

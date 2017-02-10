@@ -13,9 +13,8 @@ CREATE TABLE `hd_web` (
   `siteid` int(10) unsigned NOT NULL COMMENT '站点id',
   `title` varchar(50) NOT NULL COMMENT '标题',
   `template_name` varchar(50) NOT NULL DEFAULT '' COMMENT '模板',
-  `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
   `site_info` text NOT NULL COMMENT '序列化的数据',
-  `is_default` tinyint(1) NOT NULL COMMENT '默认站点',
+  `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
   PRIMARY KEY (`id`),
   KEY `siteid` (`siteid`),
   KEY `template_name` (`template_name`)
