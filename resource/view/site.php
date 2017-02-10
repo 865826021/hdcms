@@ -221,15 +221,15 @@
 								</a>
 							</li>
 						</if>
-						<if value="$LINKS['module']['middleware']">
+						<if value="$LINKS['module']['crontab']">
 							<li class="list-group-item">
 								<a href="javascript:;"
 								   onclick="hdMenus.system(this)"
-								   url="?s=site/middleware/lists&m={{$LINKS['module']['name']}}"
-								   menuid="middleware"
+								   url="?s=site/crontab/lists&m={{$LINKS['module']['name']}}"
+								   menuid="crontab"
 								   module="{{$LINKS['module']['name']}}"
 								   mark="package">
-								<i class="fa fa-globe"></i> 中间件设置
+								<i class="fa fa-globe"></i> 定时任务
 								</a>
 							</li>
 						</if>

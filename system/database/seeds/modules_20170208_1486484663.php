@@ -4,7 +4,7 @@ class modules extends Seeder {
     //执行
 	public function up() {
 		$sql=<<<str
-INSERT INTO `hd_modules` (`mid`, `name`, `industry`, `title`, `version`, `resume`, `detail`, `author`, `url`, `is_system`, `subscribes`, `processors`, `setting`, `router`, `tag`, `rule`, `middleware`, `permissions`, `thumb`, `preview`, `locality`, `releaseCode`)
+INSERT INTO `hd_modules` (`mid`, `name`, `industry`, `title`, `version`, `resume`, `detail`, `author`, `url`, `is_system`, `subscribes`, `processors`, `setting`, `router`, `tag`, `rule`, `crontab`, `permissions`, `thumb`, `preview`, `locality`, `releaseCode`)
 VALUES
 	(1,'basic','business','基本文字回复','1.0','和您进行简单对话','一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户','后盾','http://www.hdcms.com','1','','{\"text\":true}',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
 	(2,'news','business','基本混合图文回复','1.0','为你提供生动的图文资讯','一问一答得简单对话. 当访客的对话语句中包含指定关键字, 或对话语句完全等于特定关键字, 将回复文字或链接给用户','后盾','http://www.hdcms.com','1','','{\"text\":true}',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),

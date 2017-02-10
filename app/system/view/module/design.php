@@ -98,11 +98,11 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">中间件</label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">定时任务</label>
 				<div class="col-sm-10 col-xs-12">
 					<label class="checkbox-inline">
-						<input type="checkbox" value="true" ng-model="field.middleware">
-						设置中间件
+						<input type="checkbox" value="true" ng-model="field.crontab">
+						开启定时任务功能
 					</label>
 					<span class="help-block">用于管理站点中间件中的模块动作</span>
 				</div>
@@ -682,7 +682,7 @@
 					"url": "url",
 					"setting": true,
 					"tag": true,
-					"middleware":true,
+					"crontab":true,
 					"router":true,
 					"web": {
 						"entry": {

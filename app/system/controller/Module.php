@@ -181,7 +181,7 @@ class Module {
 			$model['subscribes']  = $config['subscribes'];
 			$model['processors']  = $config['processors'];
 			$model['setting']     = $config['setting'];
-			$model['middleware']  = $config['middleware'];
+			$model['crontab']     = $config['crontab'];
 			$model['router']      = $config['router'];
 			$model['permissions'] = preg_split( '/\n/', $config['permission'] );
 			$model['locality']    = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
