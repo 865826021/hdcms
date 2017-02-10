@@ -8,7 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 
-namespace module\quickmenu\controller;
+namespace module\quicknavigate\controller;
 
 use module\HdController;
 

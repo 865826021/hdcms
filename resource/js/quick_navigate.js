@@ -32,7 +32,7 @@ require(['bootstrapContextmenu'], function ($) {
             var data = {
                 url: obj.attr('href')
             };
-            $.post('?m=quickmenu&action=controller/site/del', {url: data.url}, function (json) {
+            $.post('?m=quicknavigate&action=controller/site/del', {url: data.url}, function (json) {
                 if (json['valid'] == 1) {
                     util.message('删除菜单成功,系统将刷新页面。', window.system.url, 'success', 1);
                 }
@@ -42,8 +42,8 @@ require(['bootstrapContextmenu'], function ($) {
 
     //删除底部快捷菜单
     $(".close_quick_menu").click(function () {
-        $.post('?s=site/system/quickMenuStatus', {'quickmenu': 0}, function (json) {
-            util.message('菜单关闭显示成功,下次要开启底部快捷菜单请在 [系统设置] 中进行开启<br/>需要刷新页面后才可以看到效果。', '', 'success');
+        $.post('?m=quicknavigate&action=controller/site/status', {'quickmenu': 0}, function (json) {
+            util.message('菜单关闭显示成功,下次要开启底部快捷菜单请在 [系统设置] 中进行开启。', 'refresh', 'success');
         }, 'JSON');
     })
 })

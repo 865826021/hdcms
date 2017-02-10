@@ -102,9 +102,9 @@ window.hdMenus = {
         var con = $(elem).val();
         //让所有当前菜单先隐藏
         $(".currentMenu").addClass('hide');
-        $("li.currentMenu").each(function () {
+        $("a.currentMenu").each(function () {
             if ($.trim($(this).text()).indexOf(con) >= 0) {
-                $(this).parent().removeClass('hide').prev('.currentMenu').eq(0).removeClass('hide');
+                $(this).parent().parent().removeClass('hide').prev('.currentMenu').eq(0).removeClass('hide');
                 $(this).removeClass('hide');
             }
         });
