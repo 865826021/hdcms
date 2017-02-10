@@ -56,10 +56,10 @@ class Template {
 		if ( isset( $cache[ $siteId ] ) ) {
 			return $cache[ $siteId ];
 		}
-		$db = Db::table( 'template' );
+		//系统模板默认包含
+		$db = Db::table( 'template' )->orWhere( 'is_system', 1 );
 		//获取站点可使用的所有套餐
-		$package   = \Package::getSiteAllPackageData( $siteId );
-		$templates = [ ];
+		$package = \Package::getSiteAllPackageData( $siteId );
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐时可以使用模板
 			if ( $industry ) {
@@ -71,7 +71,7 @@ class Template {
 			$templates = $db->get();
 		} else {
 			$templateNames = [ ];
-			foreach ( $package as $p ) {
+			foreach ( (array) $package as $p ) {
 				$templateNames = array_merge( $templateNames, $p['template'] );
 			}
 			$templateNames = array_merge( $templateNames, $this->getSiteExtTemplateName( $siteId ) );
@@ -82,8 +82,9 @@ class Template {
 				if ( $module ) {
 					$db->where( 'module', $module );
 				}
-				$templates = $db->whereIn( 'name', $templateNames )->get();
+				$db->whereIn( 'name', $templateNames );
 			}
+			$templates = $db->get();
 		}
 
 		return $cache[ $siteId ] = $templates;
@@ -105,7 +106,7 @@ class Template {
 		$data     = [ ];
 		if ( $position ) {
 			for ( $i = 1; $i <= $position; $i ++ ) {
-				$data[ $i ] = '位置' . $i;
+				$data[] = [ 'position' => $i, 'title' => '位置' . $i ];
 			}
 		}
 
@@ -133,14 +134,11 @@ class Template {
 	}
 
 	/**
-	 * 获取站点的模板数据
-	 *
-	 * @param int $webid 站点编号
-	 *
-	 * @return array 模板数据
+	 * 获取文章模块的使用的模板数据
+	 * @return mixed
 	 */
-	public function getTemplateData( $webid ) {
-		$name = Db::table( 'web' )->where( 'siteid', SITEID )->where( 'id', $webid )->pluck( 'template_name' );
+	public function getTemplateData() {
+		$name = Db::table( 'web' )->where( 'siteid', SITEID )->pluck( 'template_name' );
 		if ( $name ) {
 			return Db::table( 'template' )->where( 'name', $name )->first();
 		}

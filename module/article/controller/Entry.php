@@ -21,12 +21,16 @@ class Entry extends HdController {
 	public function __construct() {
 		parent::__construct();
 		//获取默认官网
-		$web            = \Web::getDefaultWeb();
-		$this->template = "theme/{$web['template_name']}/" . ( IS_MOBILE ? 'mobile' : 'web' );
+		$template       = \Template::getTemplateData();
+		$this->template = "theme/{$template['name']}/" . ( IS_MOBILE ? 'mobile' : 'web' );
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 	}
 
+	/**
+	 * 站点首页访问
+	 * @return mixed
+	 */
 	public function index() {
 		return view( $this->template . '/index.html' );
 	}

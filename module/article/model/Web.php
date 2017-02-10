@@ -1,4 +1,5 @@
-<?php namespace system\model;
+<?php namespace module\article\model;
+use houdunwang\model\Model;
 
 /**
  * 微站
@@ -7,7 +8,7 @@
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class Web extends Common {
+class Web extends Model {
 	protected $table = 'web';
 	protected $denyInsertFields = [ 'id' ];
 	protected $allowFill = [ '*' ];

@@ -1,14 +1,13 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="{{url('site.lists')}}">微站管理 </a></li>
-		<if value="q('get.webid')">
-			<li><a href="{{url('site.post')}}">添加站点</a></li>
-			<li class="active"><a href="#">编辑站点</a></li>
-			<else/>
-			<li class="active"><a href="{{url('site.post')}}">添加站点</a></li>
-		</if>
+		<li class="active"><a href="javascript:;">站点设置</a></li>
 	</ul>
+	<div class="alert alert-info">
+		站点链接:<br/>
+		<i class="fa fa-adn"></i> {{__ROOT__}}?m=article&action=controller/entry/index&siteid={{SITEID}}<br/>
+		<i class="fa fa-adn"></i> 如果在<a href="?s=system/site/edit&siteid={{SITEID}}" target="_blank"><strong>站点设置</strong></a> 中定义了域名,可以直接使用域名进行访问。<br/>
+	</div>
 	<form action="" method="post" id="form" role="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
 		{{csrf_field()}}
 		<div class="panel panel-default">
@@ -33,7 +32,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-2 control-label">是否启用</label>
+					<label class="col-sm-2 control-label">网站开启</label>
 					<div class="col-sm-9">
 						<label class="radio-inline">
 							<input type="radio" value="1" ng-model="field.status"> 是
@@ -43,6 +42,14 @@
 						</label>
 					</div>
 				</div>
+                <div class="form-group" ng-show="field.status==0">
+                    <label class="col-sm-2 control-label star">关闭信息</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="3" ng-model="field.close_message"></textarea>
+                        <span class="help-block">用于显示网站关闭时的提供信息。</span>
+                    </div>
+                </div>
+                <div ng-show="field.status==1">
 				<div class="form-group">
 					<label class="col-sm-2 control-label star">站点风格</label>
 					<div class="col-sm-9">
@@ -84,11 +91,18 @@
 						<span class="help-block">用户通过微信客户端触发关键字后，系统回复时的图文消息的封面图片</span>
 					</div>
 				</div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label star">页面关键字</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" rows="3" ng-model="field.keywords" required="required"></textarea>
+                            <span class="help-block">用于SEO的关键词内容</span>
+                        </div>
+                    </div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label star">页面描述</label>
 					<div class="col-sm-9">
 						<textarea class="form-control" rows="3" ng-model="field.description" required="required"></textarea>
-						<span class="help-block">用户通过微信分享给朋友时,会自动显示页面描述</span>
+						<span class="help-block">用户通过微信分享给朋友时,会自动显示页面描述, 同时也用于页面中SEO的描述内容</span>
 					</div>
 				</div>
 				<div class="form-group">
@@ -98,6 +112,7 @@
 						<span class="help-block">自定义底部信息，支持HTML</span>
 					</div>
 				</div>
+                </div>
 			</div>
 		</div>
 		<input type="hidden" name="data">
@@ -138,10 +153,7 @@
 <script>
 	require(['angular', 'util'], function (angular, util) {
 		angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
-			$scope.field = {{$field ? $field : 'false'}};
-			if (!$scope.field) {
-				$scope.field = {rid: 0, status: 1, is_default: 0};
-			}
+			$scope.field = {{$field ? $field : '{rid: 0, status: 1, is_default: 0,close_message:"网站暂时关闭,请稍候访问"}'}};
 			//上传封面图片
 			$scope.upImage = function (obj) {
 				require(['util'], function (util) {
@@ -173,7 +185,7 @@
 					msg += "关键词已经存在<br/>";
 				}
 				if (!$scope.field.template_tid) {
-					msg += "请选择微站风格<br/>";
+					msg += "请选择站点风格<br/>";
 				}
 				if (msg) {
 					util.message(msg, '', 'error');

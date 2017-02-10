@@ -1,8 +1,7 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="?m=article&action=controller/site/lists&mark=article">返回站点列表 </a></li>
-		<li><a href="?s=site/navigate/lists&entry=home&m=article&mark=article&webid={{$_GET['webid']}}">导航菜单列表</a></li>
+		<li><a href="?s=site/navigate/lists&entry=home&m=article">导航菜单列表</a></li>
 		<li class="active"><a href="javascript:;">添加导航菜单</a></li>
 	</ul>
 	<form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-controller="MyController" ng-cloak>
@@ -12,22 +11,14 @@
 			<div class="panel-body">
 				<if value="q('get.entry')=='home'">
 					<div class="form-group">
-						<label class="col-sm-2 control-label">分配到微站</label>
-						<div class="col-sm-8">
-							<select class="form-control" ng-model="field.webid"
-							        ng-options="a.id as a.title for a in web">
-								<option value="">选择站点</option>
-							</select>
-						</div>
-					</div>
-					<div class="form-group">
 						<label class="col-sm-2 control-label">导航显示位置</label>
 						<div class="col-sm-8">
 							<select class="form-control" ng-model="field.position"
-							        ng-options="a.position as a.title for a in position_data">
-								<option value="">不显示</option>
+							        ng-options="a.position as a.title for a in template_position_data">
+								<option value="">无</option>
 							</select>
 							<span class="help-block">
+								@{{position_data}}
                             设置位置后可以将导航菜单显示到模板对应的位置中。（可以同时设置多个导航在同一个位置中，会根据排序大小依次显示），显示的位置必须要有模板支持。
                         </span>
 						</div>
@@ -69,7 +60,7 @@
 									选择链接 <span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu dropdown-menu-right">
-									<li><a href="javascript:;" ng-click="getUrl.systemLink()">系统菜单</a></li>
+									<li><a href="javascript:;" ng-click="link.system()">系统菜单</a></li>
 								</ul>
 							</div>
 						</div>
@@ -174,30 +165,10 @@
 		angular.module('myApp', []).controller('MyController', ['$scope', function ($scope) {
 			$scope.web = <?php echo json_encode( $web, JSON_UNESCAPED_UNICODE );?>;
 			$scope.field = <?php echo json_encode( $field, JSON_UNESCAPED_UNICODE );?>;
-
-			//设置导航显示位置
-			$scope.getTemplatePositon = function () {
-				var position = [];
-				var len = 0;
-				//编辑站点时根据当前导航所在站点显示站点位置
-				for (var i = 0; i < $scope.web.length; i++) {
-					if ($scope.field.webid == $scope.web[i].id) {
-						len = $scope.web[i].position;
-					}
-				}
-				for (var i = 1; i <= len; i++) {
-					position.push({position: i, title: '位置' + i});
-				}
-				$scope.position_data = position;
-			}
-			$scope.getTemplatePositon();
-			//监测站点更改来获取导航显示位置
-			$scope.$watch('field.webid', function (newValue, newOld) {
-				$scope.getTemplatePositon();
-			});
+			$scope.template_position_data=<?php echo json_encode($template_position_data,JSON_UNESCAPED_UNICODE);?>;
 			//选择链接
-			$scope.getUrl = {
-				systemLink: function () {
+			$scope.link = {
+				system: function () {
 					hdcms.link.system(function (link) {
 						$scope.field.url = link;
 						$scope.$apply();
@@ -234,9 +205,6 @@
 			//提交表单
 			$('form').submit(function () {
 				var msg = '';
-				if (!$scope.field.webid) {
-					msg += '请选择分配到的微站<br/>';
-				}
 				if (!$scope.field.name) {
 					msg += '导航名称不能为空<br/>';
 				}

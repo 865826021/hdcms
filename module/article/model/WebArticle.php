@@ -1,4 +1,4 @@
-<?php namespace system\model;
+<?php namespace module\article\model;
 
 /**
  * 文章管理

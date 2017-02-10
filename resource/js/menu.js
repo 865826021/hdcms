@@ -16,7 +16,7 @@ window.hdMenus = {
             //改变当前点击的顶部菜单选中样式
             $(".top_menu a[mark='" + This.mark + "']").parent().addClass('active');
             //设置左侧菜单按钮背景样式
-            $("[menuid='" + This.menuid + "']").addClass('active');
+            $("[menuid='" + This.menuid + "']").parent().addClass('active').find('a').css({color:'#fff'});
             //当mark为extModule时显示模块动作菜单按钮
             if (This.mark == 'package' && util.get('m')) {
                 $('.module_action_type').removeClass('hide');

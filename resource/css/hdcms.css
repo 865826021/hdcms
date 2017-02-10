@@ -172,6 +172,15 @@ h3 {
 }
 .site .admin_menu .left-menu .panel ul li {
   cursor: pointer;
+  padding: 0px;
+}
+.site .admin_menu .left-menu .panel ul li a {
+  padding: 10px 15px;
+  color: #333;
+  display: block;
+}
+.site .admin_menu .left-menu .panel ul li a.append_url {
+  color: #337ab7;
 }
 .site .master-footer {
   text-align: center;

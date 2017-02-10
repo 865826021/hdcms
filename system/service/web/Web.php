@@ -8,14 +8,6 @@ use system\service\Common;
  */
 class Web extends Common {
 	/**
-	 * 获取站点的所有官网数据
-	 * @return array
-	 */
-	public function getSiteWebs() {
-		return Db::table( 'web' )->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->get();
-	}
-
-	/**
 	 * 检测指定的官网编号是否属于当前站点
 	 *
 	 * @param int $id 站点编号
@@ -24,14 +16,6 @@ class Web extends Common {
 	 */
 	public function has( $id ) {
 		return Db::table( 'web' )->where( 'siteid', SITEID )->where( 'id', $id )->first() ? true : false;
-	}
-
-	/**
-	 * 获取默认站点
-	 * @return array
-	 */
-	public function getDefaultWeb() {
-		return Db::table( 'web' )->where( 'siteid', SITEID )->orderBy( 'id', 'asc' )->where( 'is_default', 1 )->first();
 	}
 
 	/**

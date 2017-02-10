@@ -1493,59 +1493,6 @@
         ]
     },
     {
-        "name": "houdunwang/view",
-        "version": "v1.0.15",
-        "version_normalized": "1.0.15.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/houdunwang/view.git",
-            "reference": "8c42540edbca4fa3c6acf4de184cc93acbae86f2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/houdunwang/view/zipball/8c42540edbca4fa3c6acf4de184cc93acbae86f2",
-            "reference": "8c42540edbca4fa3c6acf4de184cc93acbae86f2",
-            "shasum": ""
-        },
-        "require": {
-            "houdunwang/cache": "~1.0",
-            "houdunwang/config": "~1.0",
-            "php": ">=5.4.0"
-        },
-        "time": "2017-02-05 13:36:40",
-        "type": "project",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/helper.php"
-            ],
-            "psr-4": {
-                "houdunwang\\view\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "后盾网向军",
-                "email": "2300071698@qq.com"
-            }
-        ],
-        "description": "日志管理",
-        "homepage": "http://www.houdunwang.com/",
-        "keywords": [
-            "hdphp",
-            "houdunwang",
-            "后盾人",
-            "后盾网",
-            "向军老师",
-            "模板",
-            "视图"
-        ]
-    },
-    {
         "name": "houdunwang/zip",
         "version": "v1.0.4",
         "version_normalized": "1.0.4.0",
@@ -2143,5 +2090,58 @@
             }
         ],
         "description": "Hdphp Framework (Kernel)"
+    },
+    {
+        "name": "houdunwang/view",
+        "version": "v1.0.16",
+        "version_normalized": "1.0.16.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/houdunwang/view.git",
+            "reference": "31b9f835de3deb85c1d330066762e5b408de1c3d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/houdunwang/view/zipball/31b9f835de3deb85c1d330066762e5b408de1c3d",
+            "reference": "31b9f835de3deb85c1d330066762e5b408de1c3d",
+            "shasum": ""
+        },
+        "require": {
+            "houdunwang/cache": "~1.0",
+            "houdunwang/config": "~1.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2017-02-10 07:52:16",
+        "type": "project",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/helper.php"
+            ],
+            "psr-4": {
+                "houdunwang\\view\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "后盾网向军",
+                "email": "2300071698@qq.com"
+            }
+        ],
+        "description": "日志管理",
+        "homepage": "http://www.houdunwang.com/",
+        "keywords": [
+            "hdphp",
+            "houdunwang",
+            "后盾人",
+            "后盾网",
+            "向军老师",
+            "模板",
+            "视图"
+        ]
     }
 ]

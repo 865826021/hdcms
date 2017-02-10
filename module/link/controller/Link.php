@@ -20,8 +20,8 @@ use module\HdController;
 class Link extends HdController {
 	//加载系统链接
 	public function system() {
-		\User::loginAuth();
+		auth();
 
-		return view($this->template.'/system.html');
+		return view( $this->template . '/system.html' );
 	}
 }

@@ -76,7 +76,7 @@
         link: {
             system: function (callback) {
                 var modalobj = util.modal({
-                    content: ['?m=link&action=link/system'],
+                    content: ['?m=link&action=controller/link/system'],
                     title: '请选择链接',
                     width: 600,
                     show: true,//直接显示

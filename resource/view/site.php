@@ -148,13 +148,9 @@
 						</div>
 						<ul class="list-group menus collapse in hide" mark="{{$m['mark']}}">
 							<foreach from="$d['_data']" value="$g">
-								<li class="list-group-item" dataHref="{{$g['url']}}"
-								    onclick="hdMenus.system(this)"
-								    url="{{$g['url']}}"
-								    menuid="{{$g['id']}}"
-								    mark="{{$g['mark']}}">
+								<li class="list-group-item">
 									<if value="$g['append_url']">
-										<a class="pull-right"
+										<a class="pull-right append_url"
 										   onclick="hdMenus.system(this)"
 										   url="{{$g['append_url']}}"
 										   menuid="{{$g['id']}}"
@@ -162,7 +158,12 @@
 											<i class="fa fa-plus"></i>
 										</a>
 									</if>
-									{{$g['title']}}
+									<a href="javascript:;"
+									   onclick="hdMenus.system(this)"
+									   url="{{$g['url']}}"
+									   menuid="{{$g['id']}}"
+									   mark="{{$g['mark']}}">{{$g['title']}}
+									</a>
 								</li>
 							</foreach>
 						</ul>
@@ -178,20 +179,23 @@
 						</a>
 					</div>
 					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
-						<li class="list-group-item"
-						    onclick="hdMenus.system(this)"
-						    url="?s=site/entry/home"
-						    menuid="{{$LINKS['module']['name']}}lists"
-						    mark="package">
+						<li class="list-group-item">
+							<a href="javascript:;"
+							   onclick="hdMenus.system(this)"
+							   url="?s=site/entry/home"
+							   menuid="{{$LINKS['module']['name']}}lists"
+							   mark="package">
 							<i class="fa fa-reply-all"></i> 返回模块列表
+							</a>
 						</li>
-						<li class="list-group-item"
-						    onclick="hdMenus.system(this)"
-						    url="?s=site/entry/module&m={{$LINKS['module']['name']}}&mark=package"
-						    menuid="{{$LINKS['module']['name']}}"
-						    mark="package">
-							<i class="fa fa-desktop"></i>
-							{{$LINKS['module']['title']}}
+						<li class="list-group-item">
+							<a href="javascript:;"
+							   onclick="hdMenus.system(this)"
+							   url="?s=site/entry/module&m={{$LINKS['module']['name']}}&mark=package"
+							   menuid="{{$LINKS['module']['name']}}"
+							   mark="package">
+							<i class="fa fa-desktop"></i> {{$LINKS['module']['title']}}
+							</a>
 						</li>
 					</ul>
 				</if>
@@ -206,33 +210,39 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 						<if value="$LINKS['module']['setting']">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/config/post&m={{$LINKS['module']['name']}}"
-							    menuid="setting"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/config/post&m={{$LINKS['module']['name']}}"
+								   menuid="setting"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-cog"></i> 参数设置
+								</a>
 							</li>
 						</if>
 						<if value="$LINKS['module']['middleware']">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/middleware/lists&m={{$LINKS['module']['name']}}"
-							    menuid="middleware"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/middleware/lists&m={{$LINKS['module']['name']}}"
+								   menuid="middleware"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-globe"></i> 中间件设置
+								</a>
 							</li>
 						</if>
 						<if value="$LINKS['module']['router']">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/router/lists&m={{$LINKS['module']['name']}}"
-							    menuid="router"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/router/lists&m={{$LINKS['module']['name']}}"
+								   menuid="router"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-tachometer"></i> 路由规则
+								</a>
 							</li>
 						</if>
 					</ul>
@@ -247,23 +257,27 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 						<if value="$LINKS['module']['rule']">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/rule/lists&m={{$LINKS['module']['name']}}"
-							    menuid="rule"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/rule/lists&m={{$LINKS['module']['name']}}"
+								   menuid="rule"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-rss"></i> 回复规则列表
+								</a>
 							</li>
 						</if>
 						<foreach from="$LINKS['module']['budings']['cover']" value="$f">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
-							    menuid="cover{{$f['bid']}}"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+								   menuid="cover{{$f['bid']}}"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-file-image-o"></i> {{$f['title']}}
+								</a>
 							</li>
 						</foreach>
 					</ul>
@@ -277,33 +291,39 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 						<if value="!empty($LINKS['module']['budings']['home'])">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/navigate/lists&entry=home&m={{$LINKS['module']['name']}}"
-							    menuid="home"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/navigate/lists&entry=home&m={{$LINKS['module']['name']}}"
+								   menuid="home"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-home"></i> 微站首页导航
+								</a>
 							</li>
 						</if>
 						<if value="!empty($LINKS['module']['budings']['profile'])">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/navigate/lists&entry=profile&m={{$LINKS['module']['name']}}"
-							    menuid="profile"
-							    module="{{$LINKS['module']['title']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/navigate/lists&entry=profile&m={{$LINKS['module']['name']}}"
+								   menuid="profile"
+								   module="{{$LINKS['module']['title']}}"
+								   mark="package">
 								<i class="fa fa-github"></i> 移动端会员中心导航
+								</a>
 							</li>
 						</if>
 						<if value="!empty($LINKS['module']['budings']['member'])">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    url="?s=site/navigate/lists&entry=member&m={{$LINKS['module']['name']}}"
-							    menuid="member"
-							    module="{{$LINKS['module']['name']}}"
-							    mark="package">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/navigate/lists&entry=member&m={{$LINKS['module']['name']}}"
+								   menuid="member"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
 								<i class="fa fa-renren"></i> 桌面个人中心导航
+								</a>
 							</li>
 						</if>
 					</ul>
@@ -319,14 +339,14 @@
 						</div>
 						<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 							<foreach from="$f['do']" value="$d">
-								<li class="list-group-item"
-								    onclick="hdMenus.system(this)"
-								    url="?m={{$LINKS['module']['name']}}&action=controller/{{$f['controller']}}/{{$d['do']}}"
-								    menuid="business_{{$f['controller']}}_{{$d['do']}}"
-								    module="{{$LINKS['module']['name']}}"
-								    mark="package">
-									<i class="fa fa-pencil-square-o"></i>
-									{{$d['title']}}
+								<li class="list-group-item">
+									<a href="javascript:;" onclick="hdMenus.system(this)"
+									   url="?m={{$LINKS['module']['name']}}&action=controller/{{$f['controller']}}/{{$d['do']}}"
+									   menuid="business_{{$f['controller']}}_{{$d['do']}}"
+									   module="{{$LINKS['module']['name']}}"
+									   mark="package">
+										<i class="fa fa-pencil-square-o"></i> {{$d['title']}}
+									</a>
 								</li>
 							</foreach>
 						</ul>
@@ -343,13 +363,15 @@
 					</div>
 					<ul class="list-group menus collapse in hide" mark="package">
 						<foreach from="$d" value="$g">
-							<li class="list-group-item"
-							    onclick="hdMenus.system(this)"
-							    mark="package" ,
-							    url="?s=site/entry/module&m={{$g['name']}}"
-							    module="{{$g['title']}}"
-							    menuid="{{$g['name']}}">
-								{{$g['title']}}
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   mark="package" ,
+								   url="?s=site/entry/module&m={{$g['name']}}"
+								   module="{{$g['title']}}"
+								   menuid="{{$g['name']}}">
+									{{$g['title']}}
+								</a>
 							</li>
 						</foreach>
 					</ul>
@@ -363,7 +385,7 @@
 				<ol class="breadcrumb" style="background-color: #f9f9f9;padding:8px 0;margin-bottom:10px;">
 					<li>
 						<a href="?s=site/entry/home&mark=package">
-							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块11
+							&nbsp;&nbsp;<i class="fa fa-cogs"></i> 扩展模块
 						</a>
 					</li>
 					<li class="active">

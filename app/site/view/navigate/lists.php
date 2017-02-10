@@ -2,14 +2,11 @@
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<if value="Request::get('entry')=='home'&& v('module.is_system')==1">
-			<li>
-				<a href="?m=article&action=controller/site/lists&mark=article">返回站点列表 </a>
-			</li>
 			<li class="active">
 				<a href="javascript:;"><?= \Navigate::title(); ?></a>
 			</li>
 			<li>
-				<a href="{{u('site.navigate.post')}}&m={{$_GET['m']}}&webid={{$_GET['webid']}}&entry=home">添加菜单</a>
+				<a href="{{u('site.navigate.post')}}&m=article&entry=home">添加菜单</a>
 			</li>
 			<else/>
 			<li class="active">
@@ -20,20 +17,6 @@
 	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
 		{{csrf_field()}}
 		<if value="Request::get('entry')=='home'">
-			<div class="panel panel-info">
-				<div class="panel-heading">筛选</div>
-				<div class="panel-body">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">站点</label>
-						<div class="col-sm-8">
-							<select class="form-control" ng-change="changeWeb()" ng-model="webid"
-							        ng-options="a.id as a.title for a in web">
-								<option value="">选择微站</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
 			<div class="alert alert-info">
 				<div ng-show="template.position">
 					当前使用的风格为：@{{template.title}}，模板目录：theme/@{{template.name}}。此模板提供 @{{template.position}}
@@ -98,17 +81,16 @@
 								<select class="form-control"
 								        ng-options="a.position as a.title for a in template.template_position"
 								        ng-model="field.position">
-									<option value="">不显示</option>
+									<option value="">无</option>
 								</select>
 							</td>
 						</if>
 						<td>
-							<input type="checkbox" data="@{{key}}" class="bootstrap-switch"
-							       ng-checked="field.status==1">
+							<input type="checkbox" data="@{{key}}" class="bootstrap-switch" ng-checked="field.status==1">
 						</td>
 						<td ng-if="field.id">
 							<div class="btn-group">
-								<a href="?s=site/navigate/post&m=article&webid={{Request::get('webid')}}&entry={{$_GET['m']}}&id=@{{field.id}}"
+								<a href="?s=site/navigate/post&m={{Request::get('m')}}&entry=@{{field.entry}}&id=@{{field.id}}"
 								   class="btn btn-default">
 									编辑
 								</a>
@@ -133,8 +115,6 @@
 <script>
 	require(['util', 'angular', 'underscore', 'hdcms'], function (util, angular, _, hdcms) {
 		angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
-			$scope.webid = <?php echo empty( $webid ) ? 0 : $webid;?>;
-			$scope.web = <?php echo json_encode( $web );?>;
 			$scope.template =<?php echo empty( $template ) ? 'null' : json_encode( $template );?>;
 			$scope.nav =<?php echo json_encode( $nav );?>;
 			//只有在菜单类型为封面菜单即GET参数entry='home'有template数据
@@ -148,10 +128,6 @@
 			$('form').submit(function () {
 				$("[name='data']").val(angular.toJson($scope.nav));
 			})
-			//选择站点
-			$scope.changeWeb = function () {
-				location.replace("?s=site/navigate/lists&entry=home&m={{$_GET['m']}}&webid=" + $scope.webid);
-			}
 			//选择链接
 			$scope.url = {
 				//获取系统链接

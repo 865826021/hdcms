@@ -18,7 +18,7 @@ class Navigate extends Common {
 	 */
 	public function title( $entry = '' ) {
 		$entry = $entry ?: Request::get( 'entry' );
-		$menu  = [ 'home' => '微站首页导航', 'profile' => '手机会员中心导航', 'member' => '桌面会员中心导航' ];
+		$menu  = [ 'home' => '网站首页导航', 'profile' => '手机会员中心导航', 'member' => '桌面会员中心导航' ];
 
 		return $menu[ $entry ];
 	}

@@ -17,7 +17,6 @@ if ( ! function_exists( 'widget' ) ) {
 		//类名
 		$className = array_pop( $info );
 		$class     = implode( '\\', $info ) . '\\' . ucfirst( $className );
-		p($vars);
 		return call_user_func_array( [ new $class, $method ], $vars );
 	}
 }

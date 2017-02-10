@@ -11,15 +11,6 @@ use system\model\Page;
 class Navigate {
 	public function __construct() {
 		auth();
-		$this->webid = Request::get( 'webid' );
-		/**
-		 * 没有站点编号时设置站点编号
-		 * 在前台添加菜单时使用
-		 * 因为添加菜单只能给微站首页添加必须有这个字段
-		 */
-		if ( empty( $this->webid ) || ! \Web::has( $this->webid ) ) {
-			$this->webid = Db::table( 'web' )->where( 'siteid', SITEID )->pluck( 'id' );
-		}
 	}
 
 	//菜单列表管理
@@ -27,7 +18,6 @@ class Navigate {
 		if ( IS_POST ) {
 			$data = json_decode( Request::post( 'data' ), true );
 			foreach ( $data as $k => $nav ) {
-				$nav['webid'] = Request::get( 'webid', 0 );
 				$model        = empty( $nav['id'] ) ? new NavigateModel() : NavigateModel::find( $nav['id'] );
 				$model->save( $nav );
 			}
@@ -40,39 +30,23 @@ class Navigate {
 		 * 没有站点编号时设置站点编号并刷新页面
 		 */
 		if ( Request::get( 'entry' ) == 'home' ) {
-			$webid = Request::get( 'webid' );
-			if ( empty( $webid ) ) {
-				if ( $web = \Web::getDefaultWeb() ) {
-					go( __URL__ . '&webid=' . $web['id'] );
-				}
-			}
-			if ( empty( $webid ) ) {
-				message( '请先在文章系统添加站点后进行操作', 'back', 'error' );
-			}
 			//当前站点模板数据
-			$template = \Template::getTemplateData( $this->webid );
+			$template = \Template::getTemplateData( );
+			if ( empty( $template ) ) {
+				message( '请先在站点设置中设置站点模板', '', 'error' );
+			}
 			View::with( 'template', $template );
 			View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
-			View::with( 'webid', $webid );
 		}
 		/**
 		 * 获取导航菜单
 		 * entry是导航类型:home微站首页导航/profile手机会员中心导航/member桌面会员中心导航
 		 */
-		if ( Request::get( 'entry' ) == 'home' ) {
-			//站点首页导航时需要根据站点编号读取导航菜单
-			$nav = Db::table( 'navigate' )
-			         ->where( 'webid', $this->webid )
-			         ->where( 'entry', Request::get( 'entry' ) )
-			         ->where( 'module', v( 'module.name' ) )
-			         ->get();
-		} else {
-			//其他类型导航不需要站点编号条件
-			$nav = Db::table( 'navigate' )
-			         ->where( 'entry', Request::get( 'entry' ) )
-			         ->where( 'module', v( 'module.name' ) )
-			         ->get();
-		}
+		$nav = Db::table( 'navigate' )
+		         ->where( 'siteid', SITEID )
+		         ->where( 'entry', Request::get( 'entry' ) )
+		         ->where( 'module', v( 'module.name' ) )
+		         ->get();
 		/**
 		 * 扩展模块动作时将没有添加到数据库中的菜单添加到列表中
 		 * 根据模块菜单的URL进行比较
@@ -91,7 +65,6 @@ class Navigate {
 			//没有添加到数据库中的菜单组合出可用于数据库的数据结构
 			foreach ( $moduleMenu as $v ) {
 				$nav[] = [
-					'webid'    => 0,
 					'module'   => v( 'module.name' ),
 					'url'      => $v['url'],
 					'position' => 0,
@@ -103,7 +76,7 @@ class Navigate {
 						'size'  => 35,
 					] ),
 					'orderby'  => 0,
-					'status'   => 1,
+					'status'   => 0,
 					'icontype' => 1,
 					'entry'    => q( 'get.entry' ),
 				];
@@ -118,8 +91,6 @@ class Navigate {
 				$nav[ $k ]['css'] = json_decode( $v['css'], true );
 			}
 		}
-		//模块时将模块菜单添加进去
-		View::with( 'web', Arr::stringToInt( \Web::getSiteWebs() ) );
 		View::with( 'nav', Arr::stringToInt( $nav ) );
 
 		return view();
@@ -138,20 +109,10 @@ class Navigate {
 			$model               = empty( $data['id'] ) ? new NavigateModel() : NavigateModel::find( $data['id'] );
 			$data['css']['size'] = min( intval( $data['css']['size'] ), 100 );
 			$model->save( $data );
-			$url = u( 'lists', [
-				'entry' => 'home',
-				'm'     => 'article',
-				'webid' => $data['webid']
-			] );
+			$url = u( 'lists', [ 'entry' => Request::get('entry'), 'm' => Request::get('m') ] );
 			message( '保存导航数据成功', $url, 'success' );
 		}
-		//站点列表
-		$web = Db::table( 'web' )
-		         ->field( 'web.id,web.title,template.tid,template.position' )
-		         ->join( 'template', 'template.name', '=', 'web.template_name' )
-		         ->where( 'siteid', SITEID )
-		         ->get();
-		$id  = Request::get( 'id' );
+		$id = Request::get( 'id' );
 		if ( $id ) {
 			$field        = Db::table( 'navigate' )->where( 'id', $id )->first();
 			$field['css'] = empty( $field['css'] ) ? [ ] : json_decode( $field['css'], true );
@@ -167,11 +128,21 @@ class Navigate {
 			$field['orderby']  = 0;
 			$field['entry']    = 'home';
 			$field['css']      = [ 'icon' => 'fa fa-external-link', 'image' => '', 'color' => '#333333', 'size' => 35 ];
-			$field['webid']    = 0;
 		}
-		View::with( 'web', Arr::stringToInt( $web ) );
+		/**
+		 * 站点导航菜单时
+		 * 显示站点模板的菜单位置信息
+		 */
+		if ( Request::get( 'entry' ) == 'home' ) {
+			//当前站点模板数据
+			$template = \Template::getTemplateData( );
+			if ( empty( $template ) ) {
+				message( '请先在站点设置中设置站点模板', '', 'error' );
+			}
+			View::with( 'template', $template );
+			View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
+		}
 		View::with( 'field', Arr::stringToInt( $field ) );
-
 		return view();
 	}
 
