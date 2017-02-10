@@ -11,7 +11,7 @@
 
 use module\HdController;
 use system\model\Web;
-use system\model\WebSlide;
+use module\article\model\WebSlide;
 
 /**
  * 幻灯片管理
@@ -30,7 +30,7 @@ class Slide extends HdController {
 			}
 			message( '修改幻灯片成功', 'refresh', 'success' );
 		}
-		$data = WebSlide::where( 'web_id', Request::get( 'webid' ) )->get();
+		$data = WebSlide::where( 'siteid', SITEID )->get();
 		View::with( 'data', $data );
 
 		return View::make( $this->template . '/slide_lists.html' );
@@ -39,21 +39,24 @@ class Slide extends HdController {
 	//添加&修改
 	public function post() {
 		$id    = Request::get( 'id' );
-		$webid = Request::get( 'webid' );
 		$model = $id ? WebSlide::find( $id ) : new WebSlide();
 		if ( IS_POST ) {
-			$model['web_id'] = $webid;
-			foreach ( Request::post() as $k => $v ) {
-				$model[ $k ] = $v;
-			}
-			$model->save();
-			message( '幻灯片保存成功', url( 'slide.lists', [ 'webid' => $webid ] ), 'success' );
+			$model->save( Request::post() );
+			message( '幻灯片保存成功', url( 'slide.lists' ), 'success' );
 		}
 		//官网列表
-		$web = Web::find( $webid );
-		View::with( [ 'web' => $web, 'field' => $model ] );
+		View::with( [ 'field' => $model ] );
 
 		return View::make( $this->template . '/slide_post.html' );
 	}
 
+	//删除幻灯图片
+	public function remove() {
+		$Model = WebSlide::where( 'siteid', SITEID )->find( Request::get( 'id' ) );
+		if ( $Model ) {
+			$Model->destory();
+			message( '删除成功', '', 'success' );
+		}
+		message( '删除失败可能因为幻灯图片不存在', '', 'error' );
+	}
 }

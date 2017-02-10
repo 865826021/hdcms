@@ -1,4 +1,5 @@
 <?php namespace module\article\model;
+use houdunwang\model\Model;
 
 /**
  * 幻灯片管理
@@ -7,8 +8,9 @@
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class WebSlide extends Common {
+class WebSlide extends Model {
 	protected $table = 'web_slide';
+	protected $allowFill = [ '*' ];
 	protected $denyInsertFields = [ 'id' ];
 	protected $validate = [
 		[ 'title', 'required', '标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],

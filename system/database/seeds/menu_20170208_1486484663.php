@@ -49,7 +49,8 @@ VALUES
 	(92,72,'导航菜单','article_navigate_lists','?s=site/navigate/lists&entry=home&m=article','?s=site/navigate/post&m=article&entry=home','',0,1,1,'article'),
 	(93,74,'模型管理','article_model_manage','?m=article&action=controller/model/lists','?m=article&action=controller/model/post','fa fa-cubes',0,1,1,'article'),
 	(100,0,'系统设置','','?s=site/entry/home','','fa fa-comments-o',20,1,1,'feature'),
-	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package');
+	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package'),
+	(10001,72,'轮换图片','article_site_slide','?m=article&action=controller/slide/lists','','fa fa-cubes',0,1,1,'article');
 str;
 		Db::execute($sql);
     }

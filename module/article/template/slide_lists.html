@@ -1,9 +1,8 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('site.lists')}}">返回站点列表</a></li>
-        <li class="active"><a href="javascript:;">管理</a></li>
-        <li><a href="{{url('slide.post',array('webid'=>$_GET['webid']))}}">添加</a></li>
+        <li class="active"><a href="javascript:;">轮换图管理</a></li>
+        <li><a href="{{url('slide.post')}}">添加图片</a></li>
     </ul>
     <form action="" method="post">
         <div class="panel panel-default">
@@ -31,8 +30,7 @@
                             <td>{{$d['title']}}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{url('slide.post')}}&webid={{$_GET['webid']}}&id={{$d['id']}}"
-                                       class="btn btn-default btn-sm">编辑</a>
+                                    <a href="{{url('slide.post')}}&id={{$d['id']}}" class="btn btn-default btn-sm">编辑</a>
                                     <a href="javascript:del({{$d['id']}})" class="btn btn-default btn-sm">删除</a>
                                 </div>
 
@@ -50,7 +48,7 @@
 <script>
     function del(id) {
         util.confirm('确定幻灯图片吗,删除后将不可以恢复?', function () {
-            url = "{{url('slide.remove')}}&webid={{$_GET['webid']}}&id=" + id;
+            url = "{{url('slide.remove')}}&id=" + id;
             $.get(url, function (res) {
                 if (res.valid == 1) {
                     util.message(res.message, 'refresh', 'success');
@@ -60,10 +58,4 @@
             }, 'json');
         })
     }
-    require(['util'], function (util) {
-        $('.copy').each(function () {
-            var This = this;
-            util.zclip(This, $(This).attr('url'))
-        });
-    });
 </script>
