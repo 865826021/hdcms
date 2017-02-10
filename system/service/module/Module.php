@@ -40,14 +40,6 @@ class Module {
 		 */
 		if ( $name = Request::get( 'm' ) ) {
 			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
-			//加载模板标签
-			if ( v( 'module.tag' ) == 1 ) {
-				$config = c( 'view.tags' );
-				$class  = ( v( 'module.is_system' ) == 1 ? 'module\\' : 'addons\\' )
-				          . v( 'module.name' ) . '\\system\\Tag';
-				array_push( $config, $class );
-				c( 'view.tags', $config );
-			}
 		}
 		/**
 		 * 扩展模块单独使用变量访问

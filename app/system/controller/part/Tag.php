@@ -18,23 +18,13 @@ class Tag {
 		$tpl = <<<php
 <?php namespace addons\\{$data['name']}\\system;
 
-use houdunwang\\view\\build\\TagBase;
-
 /**
- * 模块模板视图自定义标签处理
+ * 模块模板视图标签
+ * 支持模块间调用
  * @author {$data['author']}
  * @url http://www.hdcms.com
  */
-class Tag extends TagBase {
-	/**
-	 * 标签名要以下划线+模块名(小写)开始
-	 * block 块标签时为true,行标签时为false
-	 * level 块可以嵌套层数,行标签不需要填充
-	 */
-	public \$tags = [
-		'article_foreach' => [ 'block' => true, 'level' => 5 ],
-	];
-
+class Tag{
 	/**
 	 * 标签定义
 	 *
@@ -42,8 +32,9 @@ class Tag extends TagBase {
 	 * @param string \$content 块标签包裹的内容
 	 *
 	 * @return string
+	 * 调用方法: <tag action="{$data['name']}.show" id="1" name="hdphp"></tag>
 	 */
-	public function _article_foreach( \$attr, \$content ) {
+	public function show( \$attr, \$content ) {
 		return '这是标签内容';
 	}
 }

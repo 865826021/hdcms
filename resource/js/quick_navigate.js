@@ -1,6 +1,9 @@
+/**
+ * 后台底部快捷导航菜单控制
+ */
 require(['bootstrapContextmenu'], function ($) {
     //添加菜单
-    $('.currentMenu li').contextmenu({
+    $('.currentMenu a[url]').contextmenu({
         target: '#context-menu',
         before: function (e, context) {
 
@@ -14,7 +17,7 @@ require(['bootstrapContextmenu'], function ($) {
             };
             $.post('?m=quickmenu&action=controller/site/post', data, function (json) {
                 if (json['valid'] == 1) {
-                    util.message('添加菜单成功,系统将刷新页面。', window.system.url, 'success',1);
+                    util.message('添加菜单成功,系统将刷新页面。', window.system.url, 'success', 1);
                 }
             }, 'JSON');
         }
@@ -31,7 +34,7 @@ require(['bootstrapContextmenu'], function ($) {
             };
             $.post('?m=quickmenu&action=controller/site/del', {url: data.url}, function (json) {
                 if (json['valid'] == 1) {
-                    util.message('删除菜单成功,系统将刷新页面。',window.system.url,'success',1);
+                    util.message('删除菜单成功,系统将刷新页面。', window.system.url, 'success', 1);
                 }
             }, 'JSON');
         }

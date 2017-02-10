@@ -1,4 +1,4 @@
-<?php namespace addons\store\system;
+<?php namespace module\article\system;
 
 /**
  * 模块模板视图自定义标签处理
@@ -13,9 +13,10 @@ class Tag {
 	 * @param string $content 块标签包裹的内容
 	 *
 	 * @return string
-	 * 调用方法: <tag action="store.show" id="1" name="hdphp"></tag>
 	 */
 	public function show( $attr, $content ) {
+		p($attr);
+		p($content);
 		return '这是标签内容';
 	}
 }

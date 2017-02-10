@@ -13,7 +13,7 @@ namespace module\quickmenu\controller;
 use module\HdController;
 
 /**
- * 底部快捷导航
+ * 后台底部快捷导航
  * Class Site
  * @package module\quickmenu\controller
  */

@@ -410,7 +410,7 @@
 	Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
 </div>
 <script src="{{__ROOT__}}/resource/js/menu.js"></script>
-<script src="{{__ROOT__}}/resource/js/quick_menu.js"></script>
+<script src="{{__ROOT__}}/resource/js/quick_navigate.js"></script>
 <script>
 	require(['bootstrap']);
 </script>

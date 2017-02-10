@@ -1,5 +1,5 @@
 /**
- * 后台站点菜单管理
+ * 后台站点平台左侧菜单管理
  * @type {{mark: string, menuid: string, bootstrap: Window.hdMenus.bootstrap, system: Window.hdMenus.system, search: Window.hdMenus.search}}
  */
 window.hdMenus = {

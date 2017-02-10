@@ -1,6 +1,6 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="{{__VIEW__}}/navigate/css/quickmenu.css">
-<link rel="stylesheet" href="ucenter/mobile/css/quickmenu.css">
+<link rel="stylesheet" href="{{__VIEW__}}/navigate/css/edit.css">
+<link rel="stylesheet" href="{{__ROOT__}}/resource/css/quickmenu.css">
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="active"><a href="javascript:;">微站快捷导航</a></li>
