@@ -3,83 +3,43 @@
 <link rel="stylesheet" href="{{__TEMPLATE__}}/css/index.css"/>
 <block name="content">
     <div class="slide">
-        <line action="article.slide" color="#fff" height="200" autoplay="2000"/>
+        <tag action="article.slide" color="#fff" height="200" autoplay="2000"></tag>
     </div>
     <div class="menu">
-        <tag action="article.mobile_nav" position="1">
+        <tag action="article.navigate_home" position="1">
             <a href="{{$field['url']}}">{{$field['icon']}}{{$field['name']}}</a>
         </tag>
     </div>
     <br/>
-    <div class="panel panel-danger">
-        <div class="panel-heading">
-            <h3 class="panel-title">头条文章</h3>
-        </div>
-        <ul class="list-group">
-            <tag action="article.lists" row="10" cid="1" istop="1" titlelen="20">
-                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
-            </tag>
-        </ul>
-    </div>
-
-    <!--栏目列表-->
-    <div class="text-center">
-        <tag action="article.category">
-            <a href="{{$field['url']}}" class="btn btn-success">{{$field['title']}}</a>
-        </tag>
-    </div>
-    <br/>
-    <!--栏目列表 end-->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">推荐文章</h3>
-        </div>
-        <ul class="list-group">
-            <tag action="article.lists" row="10" cid="1" iscommend="1">
-                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
-            </tag>
-        </ul>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">最新文章</h3>
-        </div>
-        <ul class="list-group">
-            <tag action="article.lists" row="10" order="new">
-                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
-            </tag>
-        </ul>
-    </div>
 </block>
 
 <style>
     body {
-        background : #eeeeee !important;
+        background: #eeeeee !important;
     }
 
     div.slide .title {
-        background : #990000;
-        opacity    : .6;
+        background: #990000;
+        opacity: .6;
     }
 
     .menu {
-        display    : flex;
-        background : #dddddd;
+        display: flex;
+        background: #dddddd;
     }
 
     .menu a {
-        flex-grow       : 1;
-        background      : #dddddd;
-        text-align      : center;
-        text-decoration : none;
-        margin          : 5px;
-        border-radius   : 2px;
+        flex-grow: 1;
+        background: #dddddd;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px;
+        border-radius: 2px;
     }
 
     .menu a i {
-        font-size : 35px;
-        display   : block;
-        margin    : 5px auto;
+        font-size: 35px;
+        display: block;
+        margin: 5px auto;
     }
 </style>

@@ -83,7 +83,7 @@ str;
 		$autoplay = isset( $attr['autoplay'] ) ? $attr['autoplay'] : 3000;
 		$php
 		          = <<<str
-        <?php \$slideData = Db::table('web_slide')->where('web_id',Session::get('webid'))->where('siteid',SITEID)->orderBy('id','DESC')->get()?:[];?>
+        <?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('id','DESC')->get()?:[];?>
         <?php if(!empty(\$slideData)){?>
 <div class="hdcms_swiper_container">
         <div class="swiper-wrapper">
@@ -140,14 +140,14 @@ str;
 		return $php;
 	}
 
-	//微站导航菜单
-	public function mobile_nav( $attr, $content ) {
+	//微站首页导航菜单
+	public function navigate_home( $attr, $content ) {
 		$position = isset( $attr['position'] ) ? $attr['position'] : 1;
 		$php
 		          = <<<str
         <?php
-	        \$sql  ="SELECT * FROM ".tablename('web_nav').' WHERE siteid=? AND web_id=? AND position=? AND status=1';
-	        \$nav = Db::query(\$sql,[SITEID,q('get.webid',0,'intval'),$position]);
+	        \$sql  ="SELECT * FROM ".tablename('navigate').' WHERE siteid=? AND position=? AND status=1';
+	        \$nav = Db::query(\$sql,[SITEID,$position]);
 	        foreach((array)\$nav as \$field){
 	            \$css = json_decode(\$field['css'],true);
 	            if(\$field['icontype']==1){
