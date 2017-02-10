@@ -1,11 +1,11 @@
-<?php namespace addons\store\system;
+<?php namespace module\ucenter\system;
 
 use houdunwang\view\build\TagBase;
 
 /**
- * 模块模板视图自定义标签处理
- * @author 向军
- * @url http://www.hdcms.com
+ * 模板标签
+ * Class Tag
+ * @package module\ucenter\system
  */
 class Tag extends TagBase {
 	/**
@@ -26,6 +26,6 @@ class Tag extends TagBase {
 	 * @return string
 	 */
 	public function _article_foreach( $attr, $content ) {
-		return '这是标签内容';
+
 	}
 }

@@ -35,9 +35,9 @@
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 
-	<script src="{{__ROOT__}}/ucenter/mobile/js/mobile.js"></script>
-	<script src="{{__ROOT__}}/ucenter/mobile/js/quickmenu.js"></script>
-	<link rel="stylesheet" href="{{__ROOT__}}/ucenter/mobile/css/mobile.css">
+	<script src="{{__ROOT__}}/ucenter/default/mobile/js/mobile.js"></script>
+	<script src="{{__ROOT__}}/ucenter/default/mobile/js/quickmenu.js"></script>
+	<link rel="stylesheet" href="{{__ROOT__}}/ucenter/default/mobile/css/mobile.css">
 	<script>
 		require(['jquery'], function ($) {
 			//为异步请求设置CSRF令牌

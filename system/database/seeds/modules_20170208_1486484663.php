@@ -17,11 +17,10 @@ VALUES
 	(9,'uc','business','会员中心','1.0','会员中心的管理操作','会员信息的管理，包括收货地址、个人资料、会员卡券等管理','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.png','cover.jpg',0,''),
 	(10,'button','business','微信菜单','1.0','微信菜单管理','用于添加微信菜单，更新菜单后需要取消关注再关注或等微信更新缓存后有效','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
 	(11,'material','business','微信素材','1.0','微信素材','公众号经常有需要用到一些临时性的多媒体素材的场景，例如在使用接口特别是发送消息时，对多媒体文件、多媒体消息的获取和调用等操作','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
-	(12,'ucenter','business','会员中心','1.0','会员中心管理模块','提供移动端与桌面端的会员中心操作功能','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
+	(12,'ucenter','business','会员中心','1.0','会员中心管理模块','提供移动端与桌面端的会员中心操作功能','后盾','http://www.hdcms.com','1','','',0,0,1,0,0,'','thumb.jpg','cover.jpg',0,''),
 	(14,'link','business','链接管理','1.0','管理站点中的链接','主要用在调用链接组件，选择链接等功能时使用','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
 	(1000,'quickmenu','business','快捷菜单','1.0','站点管理中的快捷菜单操作','用在后台底部快捷导航菜单的管理操作功能','后盾','http://www.hdcms.com','1','','',0,0,0,0,0,'','thumb.jpg','cover.jpg',0,''),
 	(10015,'store','business','应用商店','1.0','HDCMS应用商店','提供模块、模板的发布/下载/更新的管理平台。','向军','http://store.hdcms.com','0','{\"text\":true,\"image\":true,\"voice\":true,\"video\":true,\"shortvideo\":true,\"location\":true,\"link\":true,\"subscribe\":true,\"unsubscribe\":true,\"scan\":true,\"track\":true,\"click\":true,\"view\":true}','{\"text\":true,\"image\":true,\"voice\":true,\"video\":true,\"shortvideo\":true,\"location\":true,\"link\":true,\"subscribe\":true,\"unsubscribe\":true,\"scan\":true,\"track\":true,\"click\":true,\"view\":true}',1,0,0,0,0,'[\"\"]','thumb.png','cover.png',1,'');
-
 str;
 		Db::execute($sql);
 	}
