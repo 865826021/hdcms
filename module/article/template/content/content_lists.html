@@ -1,0 +1,84 @@
+<extend file="resource/view/site"/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="javascript:;">文章管理</a></li>
+        <li><a href="{{url('content.post',['mid'=>Request::get('mid')])}}">发表文章</a></li>
+    </ul>
+    <form action="" method="post">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th width="150">排序</th>
+                        <th>栏目编号</th>
+                        <th>模型编号</th>
+                        <th>标题</th>
+                        <th>属性</th>
+                        <th width="180">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <foreach from="$data" value="$d">
+                        <tr>
+                            <td>{{$d['aid']}}</td>
+                            <td>
+                                <input type="text" class="form-control" value="{{$d['orderby']}}">
+                            </td>
+                            <td>{{$d['category_cid']}}</td>
+                            <td>{{$d['mid']}}</td>
+                            <td>{{$d['title']}}</td>
+                            <td>
+                                <if value="$d['ishot']">
+                                    <span class="label label-danger">头条</span>
+                                </if>
+                                <if value="$d['iscommend']">
+                                    <span class="label label-success">推荐</span>
+                                </if>
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <button url="{{url('entry.content',['aid'=>$d['aid'],'mid'=>$d['mid']])}}"
+                                            type="button" class="copy btn btn-default btn-sm">复制链接
+                                    </button>
+                                    <a href="{{url('content.post',['aid'=>$d['aid'],'mid'=>$d['mid']])}}"
+                                       class="btn btn-default btn-sm">编辑</a>
+                                    <button onclick="del({{$d['aid']}},{{$d['mid']}})" type="button" class="btn btn-default btn-sm">
+                                        删除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </foreach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <input type="hidden" name="data">
+        <button type="submit" class="btn btn-primary" ng-if="data.length>0">确定</button>
+    </form>
+    {{$data->links()}}
+</block>
+<script>
+    //复制链接
+    require(['util'], function (util) {
+        //复制链接
+        $('.copy').each(function () {
+            var This = this;
+            util.zclip(This, $(This).attr('url'))
+        });
+    })
+    //删除文章
+    function del(aid, mid) {
+        util.confirm('确定删除文章吗?', function () {
+            $.get('{{url("content.del")}}', {aid: aid, mid: mid}, function (res) {
+                if (res.valid) {
+                    util.message(res.message, 'refresh', 'success');
+                } else {
+                    util.message(res.message, '', 'error');
+                }
+            }, 'json');
+        })
+    }
+</script>

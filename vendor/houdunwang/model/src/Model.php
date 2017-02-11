@@ -515,6 +515,8 @@ class Model implements ArrayAccess, Iterator {
 					}
 
 					return $Collection;
+				case 'paginate':
+					return $result;
 				default:
 					/**
 					 * 返回值为查询构造器对象时

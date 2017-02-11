@@ -37,7 +37,6 @@ class Site extends HdController {
 			//添加封面回复
 			$replyCover = new ReplyCover();
 			$replyCover->where( 'rid', $rid )->delete();
-			$replyCover['web_id']      = $model['id'];
 			$replyCover['rid']         = $rid;
 			$replyCover['title']       = $data['title'];
 			$replyCover['description'] = $data['description'];

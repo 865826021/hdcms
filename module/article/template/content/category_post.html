@@ -60,6 +60,18 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="col-sm-2 control-label">封面栏目</label>
+							<div class="col-sm-9">
+								<label class="radio-inline">
+									<input type="radio" value="1" ng-model="field.ishomepage" value="1"> 是
+								</label>
+								<label class="radio-inline">
+									<input type="radio" value="0" ng-model="field.ishomepage" value="0"> 否
+								</label>
+								<span class="help-block">封面栏目不能添加文章,主要用于栏目数据的集中展示,类似专题页</span>
+							</div>
+						</div>
+						<div class="form-group">
 							<label class="col-sm-2 control-label">分类描述</label>
 							<div class="col-sm-9">
 								<textarea name="description" rows="5" class="form-control" ng-model="field.description"></textarea>
@@ -78,18 +90,6 @@
 			<div class="tab-pane fade" id="tab2">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<div class="form-group">
-							<label class="col-sm-2 control-label">封面栏目</label>
-							<div class="col-sm-9">
-								<label class="radio-inline">
-									<input type="radio" value="1" ng-model="field.ishomepage" value="1"> 是
-								</label>
-								<label class="radio-inline">
-									<input type="radio" value="0" ng-model="field.ishomepage" value="0"> 否
-								</label>
-								<span class="help-block">注意：分类模板将使用下面的封面模板做为展示</span>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">封面模板</label>
 							<div class="col-sm-8">

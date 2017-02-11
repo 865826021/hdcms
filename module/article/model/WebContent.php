@@ -1,14 +1,14 @@
 <?php namespace module\article\model;
 
+use houdunwang\model\Model;
+
 /**
  * 文章管理
- * Class WebArticle
- * @package system\model
- * @author 向军 <2300071698@qq.com>
- * @site www.houdunwang.com
+ * Class WebContent
+ * @package module\article\model
  */
-class WebArticle extends Common {
-	protected $table = 'web_article';
+class WebContent extends Model {
+	protected $table = '';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
 		[ 'title', 'required', '文章标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
@@ -22,7 +22,6 @@ class WebArticle extends Common {
 		[ 'rid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'iscommend', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'ishot', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
-		[ 'template_tid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'source', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'author', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
@@ -34,6 +33,20 @@ class WebArticle extends Common {
 		[ 'thumb', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 
+	public function __construct() {
+		$this->table = $this->tableName();
+		parent::__construct();
+	}
+
+	/**
+	 * 获取数据表
+	 *
+	 * @return string
+	 */
+	public function tableName() {
+		return ( new WebModel() )->getModelTable( Request::get( 'mid' ) );
+	}
+
 	/**
 	 * 删除文章
 	 *
@@ -42,10 +55,6 @@ class WebArticle extends Common {
 	 * @return bool
 	 */
 	public function del( $aid ) {
-		$rid = Db::table( 'reply_cover' )->where( 'module', 'article:aid:' . $aid )->pluck( 'rid' );
-		service( 'WeChat' )->removeRule( $rid );
-		Db::table( 'web_article' )->where( 'aid', $aid )->delete();
-		Db::table( 'reply_cover' )->where( 'module', 'article:aid:' . $aid )->delete();
 
 		return true;
 	}

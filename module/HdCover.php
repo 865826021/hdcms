@@ -18,7 +18,8 @@ abstract class HdCover {
 	public function __construct() {
 		$this->config   = \Module::getModuleConfig();
 		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
-		define( '__TEMPLATE__', __ROOT__ . '/' . $this->template );
+		template_path( $this->template );
+		template_url( __ROOT__ . '/' . $this->template );
 	}
 
 	//保存模块配置

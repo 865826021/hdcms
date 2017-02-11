@@ -1,10 +1,9 @@
 <?php namespace module;
 
 /**
- * 模块业务基类
- * Class hdSite
- * @package system\core
- * @author 向军
+ * 模块安装管理基类
+ * Class HdSetup
+ * @package module
  */
 abstract class HdSetup {
 	public function __construct() {

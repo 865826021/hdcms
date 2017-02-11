@@ -1,7 +1,5 @@
 <?php namespace module;
 
-use system\model\ModuleSetting;
-
 /**
  * 模块订阅消息
  * Class hdSubscribe

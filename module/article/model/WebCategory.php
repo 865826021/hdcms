@@ -38,16 +38,18 @@ class WebCategory extends Model {
 	 *
 	 * @return mixed
 	 */
-	public function getLevelCategory( $cid = 0 ) {
+	public function getLevelCategory( $cid = 0, $mid = 0 ) {
 		$category = Db::table( 'web_category' )->where( 'siteid', SITEID )->get();
 		if ( $category ) {
 			$category = Arr::tree( $category, 'catname', 'cid', 'pid' );
-			if ( $cid ) {
+			foreach ( $category as $k => $v ) {
+				//获取批定模型时只显示模块的栏目
+				if ( $mid && $v['mid'] != $mid ) {
+					unset( $category[ $k ] );
+				}
 				//编辑时在栏目选择中不显示自身与子级栏目
-				foreach ( $category as $k => $v ) {
-					if ( $v['cid'] == $cid || Arr::isChild( $category, $v['cid'], $cid ) ) {
-						unset( $category[ $k ] );
-					}
+				if ( $cid && ( $v['cid'] == $cid || Arr::isChild( $category, $v['cid'], $cid ) ) ) {
+					unset( $category[ $k ] );
 				}
 			}
 

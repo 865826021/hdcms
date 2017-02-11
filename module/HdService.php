@@ -1,22 +1,22 @@
 <?php namespace module;
 
 /**
- * 模块控制类 module.php继承
- * Class HdModule
+ * 服务业务基类
+ * Class HdService
  * @package module
- * @author 向军
  */
-abstract class HdRule {
+abstract class HdService {
+	//站点编号
+	protected $siteid;
 	//模板目录
 	protected $template;
 	//配置项
 	protected $config;
 
-	//构造函数
 	public function __construct() {
-		auth();
+		$this->siteid   = SITEID;
 		$this->config   = \Module::getModuleConfig();
-		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
+		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/service/template';
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 	}

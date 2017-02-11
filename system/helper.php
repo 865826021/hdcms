@@ -121,3 +121,21 @@ function template_url( $url = '' ) {
 
 	return $cathe;
 }
+
+/**
+ * 调用模块服务
+ *
+ * @param $path 标识
+ * @param array $args 参数
+ *
+ * @return mixed
+ * service('article.field.make')
+ */
+function service( $path, $args = [ ] ) {
+	$info   = explode( '.', $path );
+	$module = Db::table( 'modules' )->where( 'name', $info[0] )->first();
+	$class  = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . ucfirst( $info[0] )
+	          . '\\service\\'.$info[1];
+
+	return call_user_func_array( [ new $class, $info[2] ], $args );
+}
