@@ -12,16 +12,16 @@ class WebModel extends Model {
 	protected $denyInsertFields = [ 'mid' ];
 	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'title', 'required', '模型名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'name', '/[a-z]+/', '模型标识只能为英文字母', self::MUST_VALIDATE, self::MODEL_INSERT ],
-		[ 'name', 'checkName', '模型标识已经被使用了,请更换', self::MUST_VALIDATE, self::MODEL_INSERT ]
+		[ 'model_title', 'required', '模型名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'model_name', '/[a-z]+/', '模型标识只能为英文字母', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'model_name', 'checkName', '模型标识已经被使用了,请更换', self::MUST_VALIDATE, self::MODEL_INSERT ]
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ]
 	];
 	protected $filter = [
 		//更新时过滤模型标签不允许修改
-		[ 'name', self::MUST_FILTER, self::MODEL_UPDATE ]
+		[ 'model_name', self::MUST_FILTER, self::MODEL_UPDATE ]
 	];
 
 	//验证模型表是否已经存在
@@ -76,5 +76,27 @@ sql;
 		}
 
 		return $this->destory();
+	}
+
+	//获取当前站点的模型列表
+	public function getLists() {
+		return Db::table( 'web_model' )->where( 'siteid', SITEID )->get();
+	}
+
+	/**
+	 * 根据mid获取模型的表名
+	 *
+	 * @param $mid
+	 *
+	 * @return string
+	 */
+	public function getModelTable( $mid ) {
+		static $cache = [ ];
+		if ( ! isset( $cache[ $mid ] ) ) {
+			$name          = Db::table( 'web_model' )->where( 'mid', $mid )->where( 'siteid', SITEID )->pluck( 'model_name' );
+			$cache[ $mid ] = "web_content_" . $name . SITEID;
+		}
+
+		return $cache[ $mid ];
 	}
 }

@@ -1,4 +1,5 @@
 <?php namespace module\article\controller;
+
 /** .-------------------------------------------------------------------
  * |  Software: [HDPHP framework]
  * |      Site: www.hdphp.com  www.hdcms.com
@@ -14,11 +15,22 @@ use module\HdController;
  * Class Template
  * @package module\article\controller
  */
-class Template extends HdController{
+class Template extends HdController {
 	//选择模板
 	public function lists() {
-		$data = \Template::getSiteAllTemplate( SITEID, Request::get('type') );
+		$data = \Template::getSiteAllTemplate( SITEID, Request::get( 'type' ) );
+
 		return view( $this->template . '/template_lists.html' )->with( [ 'data' => $data ] );
 	}
 
+	/**
+	 * 当前风格中的模板文件
+	 */
+	public function files() {
+		$template = \Template::getTemplateData();
+		$dir      = "theme/{$template['name']}/web";
+		View::with( 'data', glob( $dir . '/*.html' ) );
+
+		return view( $this->template . '/template/template_files.html' );
+	}
 }

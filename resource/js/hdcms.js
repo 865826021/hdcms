@@ -90,6 +90,22 @@
                 }
             }
         },
+        //文章模块中选择模板
+        template: function (callback) {
+            var modalobj = util.modal({
+                content: ['?m=article&action=controller/template/files'],
+                title: '选择模板文件',
+                width: 600,
+                show: true,//直接显示
+                footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>'
+            });
+            window.selectArticleTemplateComplete = function (link) {
+                if ($.isFunction(callback)) {
+                    callback(link);
+                    modalobj.modal('hide');
+                }
+            }
+        },
         /**
          * 模块选择
          * @param callback
@@ -163,13 +179,13 @@
          * 预览图片
          * @param url 图片URL地址
          */
-        preview:function(url){
-            require(['util'],function(util){
+        preview: function (url) {
+            require(['util'], function (util) {
                 util.modal({
-                    title:'图片预览',
-                    width:700,
-                    height:500,
-                    content:'<div style="text-align: center"><img style="max-width: 650px;max-height: 500px;" src="'+url+'"/></div>'
+                    title: '图片预览',
+                    width: 700,
+                    height: 500,
+                    content: '<div style="text-align: center"><img style="max-width: 650px;max-height: 500px;" src="' + url + '"/></div>'
                 })
             })
         }

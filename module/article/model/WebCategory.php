@@ -1,5 +1,7 @@
 <?php namespace module\article\model;
 
+use houdunwang\model\Model;
+
 /**
  * 官网栏目管理
  * Class WebCategory
@@ -7,27 +9,25 @@
  * @author 向军 <2300071698@qq.com>
  * @site www.houdunwang.com
  */
-class WebCategory extends Common {
+class WebCategory extends Model {
 	protected $table = 'web_category';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'title', 'required', '栏目标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'catname', 'required', '栏目标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'orderby', 'num:0,255', '排序数字为0~255之间的字符', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'status', 'num:0,1', '栏目状态为0或1', self::EXIST_VALIDATE, self::MODEL_BOTH ],
+		[ 'mid', 'required', '请选择模型类型', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'orderby', 'intval', 'function', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
-		[ 'icontype', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		[ 'template_tid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'linkurl', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'ishomepage', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		[ 'css', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
-		[ 'isnav', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
-		[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+	];
+	protected $filter = [
+		[ 'mid', self::MUST_FILTER, self::MODEL_UPDATE ]
 	];
 
 	/**
@@ -41,11 +41,11 @@ class WebCategory extends Common {
 	public function getLevelCategory( $cid = 0 ) {
 		$category = Db::table( 'web_category' )->where( 'siteid', SITEID )->get();
 		if ( $category ) {
-			$category = Data::tree( $category, 'title', 'cid', 'pid' );
+			$category = Arr::tree( $category, 'catname', 'cid', 'pid' );
 			if ( $cid ) {
 				//编辑时在栏目选择中不显示自身与子级栏目
 				foreach ( $category as $k => $v ) {
-					if ( $v['cid'] == $cid || Data::isChild( $category, $v['cid'], $cid ) ) {
+					if ( $v['cid'] == $cid || Arr::isChild( $category, $v['cid'], $cid ) ) {
 						unset( $category[ $k ] );
 					}
 				}
@@ -53,5 +53,16 @@ class WebCategory extends Common {
 
 			return $category;
 		}
+	}
+
+	/**
+	 * 删除栏目
+	 * @return bool
+	 */
+	public function delCategory() {
+		$table = ( new WebModel() )->getModelTable( $this['mid'] );
+		Db::table( $table )->where( 'category_cid', $this['cid'] )->delete();
+
+		return $this->destory();
 	}
 }

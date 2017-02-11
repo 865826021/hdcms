@@ -37,7 +37,7 @@ class Field extends Model {
 	//向表中添加字段
 	public function createField( $options ) {
 		$options = json_decode( $options, true );
-		$name    = Db::table( 'web_model' )->where( 'mid', Request::get( 'mid' ) )->pluck( 'name' );
+		$name    = Db::table( 'web_model' )->where( 'mid', Request::get( 'mid' ) )->pluck( 'model_name' );
 		$table   = "web_content_{$name}" . SITEID;
 		//字段不存在时创建
 		if ( ! Schema::fieldExists( $options['name'], $table ) ) {
@@ -47,7 +47,7 @@ class Field extends Model {
 
 	//删除字段
 	public function delField() {
-		$name  = Db::table( 'web_model' )->where( 'mid', $this['mid'] )->pluck( 'name' );
+		$name  = Db::table( 'web_model' )->where( 'mid', $this['mid'] )->pluck( 'model_name' );
 		$table = "web_content_" . $name . SITEID;
 		if ( Schema::dropField( $table, $this['name'] ) ) {
 			return $this->destory();

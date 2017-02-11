@@ -14,17 +14,19 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">模型名称</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="title" value="{{$field['title']}}">
+                        <input type="text" class="form-control" name="model_title" value="{{$field['model_title']}}">
                         <span class="help-block">请输入中文可识别的标题如文章模型</span>
                     </div>
                 </div>
+                <if value="!Request::get('mid')">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">模型表名</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="name" value="{{$field['name']}}">
+                        <input type="text" class="form-control" name="model_name" value="{{$field['model_name']}}">
                         <span class="help-block">必须输入英文字母不能超过10个字符.添加后不能修改</span>
                     </div>
                 </div>
+                </if>
             </div>
         </div>
         <button class="btn btn-primary" type="submit">保存模型</button>

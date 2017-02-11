@@ -35,7 +35,7 @@ class Model extends HdController {
 		if ( IS_POST ) {
 			$model->save( Request::post() );
 			//添加时创建表
-			$model->createModelTable( Request::post( 'name' ) );
+			$model->createModelTable( Request::post( 'model_name' ) );
 			message( '模型保存成功', url( 'model.lists' ) );
 		}
 		View::with( 'field', $model ?: [ ] );
