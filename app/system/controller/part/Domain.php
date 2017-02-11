@@ -53,7 +53,7 @@ php;
                     <label class="col-sm-2 control-label">域名</label>
                     <div class="col-sm-9">
                         <input type="text" class="form-control" name="domain" value="{{\$domain}}">
-                        <span class="help-block">请保证域名已经解析到服务器</span>
+                        <span class="help-block">请保证域名已经解析到服务器, 不需要添加http协议前缀</span>
                     </div>
                 </div>
             </div>
