@@ -12,6 +12,7 @@
 use app\system\controller\part\Business;
 use app\system\controller\part\Config;
 use app\system\controller\part\Cover;
+use app\system\controller\part\Domain;
 use app\system\controller\part\Navigate;
 use app\system\controller\part\Processor;
 use app\system\controller\part\Rule;
@@ -143,7 +144,8 @@ class Module {
 			Navigate::make( $data );
 			Business::make( $data );
 			Setup::make( $data );
-			Service::make($data);
+			Service::make( $data );
+			Domain::make( $data );
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块创建成功', 'prepared' );
 		}
@@ -185,6 +187,7 @@ class Module {
 			$model['setting']     = $config['setting'];
 			$model['crontab']     = $config['crontab'];
 			$model['router']      = $config['router'];
+			$model['domain']      = $config['domain'];
 			$model['permissions'] = preg_split( '/\n/', $config['permission'] );
 			$model['locality']    = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
 			$model->save();

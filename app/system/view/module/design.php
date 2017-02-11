@@ -108,6 +108,16 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">独立域名</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.domain">
+						开启独立域名访问
+					</label>
+					<span class="help-block">当访问域名时直接访问到模块</span>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">路由规则</label>
 				<div class="col-sm-10 col-xs-12">
 					<label class="checkbox-inline">
@@ -445,10 +455,10 @@
 
 			<!--模块入口设置-->
 			<h5 class="page-header">模块入口设置
-				<small>模块的入口导航设置</small>
+				<small>模块的桌面访问入口导航设置</small>
 			</h5>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">入口导航</label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">桌面入口</label>
 				<div class="col-sm-10">
 					<div class="col-xs-12 col-sm-12 col-md-6">
 						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
@@ -464,11 +474,9 @@
 						</div>
 					</div>
 					<span class="help-block" style="clear: both;">
-						在站点设置中设置模块为默认模块时, 通过站点域名进入后默认执行的动作。
+						开启 "独立域名" 功能后本功能才有效, 当通过域名访问时会员执行这个动作。
 					</span>
-					<div class="alert alert-warning col-md-11">
-						只有在站点设置中将模块定义为默认模块时本功能才有意义
-					</div>
+					<span class="help-block"><strong>注意: 桌面入口导航在 system/Navigate.php 文件中实现</strong></span>
 				</div>
 			</div>
 			<h5 class="page-header">桌面导航设置
@@ -684,6 +692,7 @@
 					"tag": true,
 					"crontab":true,
 					"router":true,
+					"domain":true,
 					"web": {
 						"entry": {
 							"title": "桌面入口导航",

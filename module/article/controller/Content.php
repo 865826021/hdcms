@@ -76,6 +76,7 @@ class Content extends HdController {
 		//编辑时获取原数据
 		//微信关键词信息
 		$wechat = [ ];
+		$field  = [ ];
 		if ( $aid ) {
 			$field = WebContent::find( $aid )->toArray();
 
@@ -84,6 +85,8 @@ class Content extends HdController {
 		}
 		//栏目列表
 		$category = WebCategory::getLevelCategory( $aid ? $field['category_cid'] : '' );
+		$extField = service( 'article.field.make', $field );
+		View::with( 'extField', $extField );
 		View::with( [ 'category' => $category, 'field' => $field, 'wechat' => $wechat ] );
 
 		return view( $this->template . '/content/content_post.html' );

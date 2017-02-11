@@ -32,8 +32,8 @@
                                     <option value="{{$v['cid']}}" selected="selected">{{$v['catname']}}</option>
                                     <elseif value="$v['ishomepage']">
                                         <option value="{{$v['cid']}}" disabled="disabled">{{$v['catname']}}(封)</option>
-                                    <else/>
-                                    <option value="{{$v['cid']}}">{{$v['_catname']}}</option>
+                                        <else/>
+                                        <option value="{{$v['cid']}}">{{$v['_catname']}}</option>
                                 </if>
                             </foreach>
                         </select>
@@ -66,7 +66,7 @@
                                 <input type="checkbox" name="iscommend" value="1" checked="checked">
                                 推荐
                                 <else/>
-                                <input type="checkbox" name="iscommend" value="1" > 推荐
+                                <input type="checkbox" name="iscommend" value="1"> 推荐
                             </if>
                         </label>
                     </div>
@@ -142,13 +142,16 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">扩展字段</h3>
+        <if value="$extField">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">扩展字段</h3>
+                </div>
+                <div class="panel-body">
+                    {{$extField}}
+                </div>
             </div>
-            <div class="panel-body">
-            </div>
-        </div>
+        </if>
         <button class="btn btn-primary" type="submit">确定</button>
     </form>
 </block>

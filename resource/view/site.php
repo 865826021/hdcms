@@ -245,6 +245,18 @@
 								</a>
 							</li>
 						</if>
+						<if value="$LINKS['module']['domain']">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?m={{$LINKS['module']['name']}}&action=system/domain/set"
+								   menuid="domain"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
+									<i class="fa fa-wordpress"></i> 域名设置
+								</a>
+							</li>
+						</if>
 					</ul>
 				</if>
 				<!------------------------回复规则列表与功能封面------------------------>

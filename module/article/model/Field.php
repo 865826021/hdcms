@@ -75,6 +75,7 @@ class Field extends Model {
 		return $table->comment( $options['title'] )->add();
 	}
 
+	//长文本,可用文本域或编辑器显示
 	protected function _text( $table, $options ) {
 		$table = new Blueprint( $table );
 		$table->text( $options['name'] );
@@ -82,6 +83,7 @@ class Field extends Model {
 		return $table->comment( $options['title'] )->add();
 	}
 
+	//数值
 	protected function _int( $table, $options ) {
 		$table = new Blueprint( $table );
 		switch ( $options['field'] ) {
@@ -96,6 +98,13 @@ class Field extends Model {
 				break;
 		}
 
+		return $table->comment( $options['title'] )->add();
+	}
+
+	//单图
+	protected function _image( $table, $options ) {
+		$table = new Blueprint( $table );
+		$table->string( $options['name'], 300);
 		return $table->comment( $options['title'] )->add();
 	}
 }

@@ -1,13 +1,8 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('site.lists')}}">返回站点列表</a></li>
-        <li><a href="{{url('slide.lists',array('webid'=>$_GET['webid']))}}">管理</a></li>
-        <if value="isset($_GET['id'])">
-            <li class="active"><a href="javascript:;">编辑</a></li>
-            <else/>
-            <li class="active"><a href="javascript:;">添加</a></li>
-        </if>
+        <li><a href="{{url('slide.lists',array('webid'=>$_GET['webid']))}}">轮换图片管理</a></li>
+            <li class="active"><a href="javascript:;">编辑图片</a></li>
     </ul>
     <form action="" method="post" class="form-horizontal">
         {{csrf_field()}}

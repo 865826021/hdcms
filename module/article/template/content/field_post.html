@@ -63,6 +63,7 @@
                             <option value="string">字符串</option>
                             <option value="text">长文本</option>
                             <option value="int">数字类型</option>
+                            <option value="image">图片</option>
                         </select>
                     </div>
                 </div>
@@ -120,6 +121,18 @@
                                 </div>
                             </div>
                         </div>
+                        <!--图片-->
+                        <div class="well well-sm" ng-show="type=='image'">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">允许大小</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" aria-describedby="basic-addon2" ng-model="active.size">
+                                        <span class="input-group-addon" id="basic-addon2">MB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,6 +159,17 @@
                     field: 'varchar',
                     form: 'input',
                     length: 100
+                },
+                image: {
+                    title: '',
+                    name: '',
+                    orderby: 0,
+                    required: 0,
+                    type: 'image',
+                    field: 'varchar',
+                    form: 'input',
+                    length: 300,
+                    size:2
                 },
                 text: {title: '', name: '', orderby: 0, required: 0, type: 'text', field: 'text', form: 'ueditor'},
                 int: {title: '', name: '', orderby: 0, required: 0, type: 'int', field: 'integer', form: 'input'}
