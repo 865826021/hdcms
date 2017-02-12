@@ -34,10 +34,6 @@
 	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
 	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
 	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
-
-	<script src="{{__ROOT__}}/ucenter/default/mobile/js/mobile.js"></script>
-	<script src="{{__ROOT__}}/ucenter/default/mobile/js/quickmenu.js"></script>
-	<link rel="stylesheet" href="{{__ROOT__}}/ucenter/default/mobile/css/mobile.css">
 	<script>
 		require(['jquery'], function ($) {
 			//为异步请求设置CSRF令牌
@@ -84,9 +80,5 @@
 	</nav>
 </widget>
 <!--会员卡底部 end-->
-<!--快捷导航-->
-<if value="IS_MOBILE">
-	<line action="uc.quick_menu"/>
-</if>
 </body>
 </html>

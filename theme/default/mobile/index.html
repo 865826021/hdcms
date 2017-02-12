@@ -6,7 +6,7 @@
         <tag action="article.slide" color="#fff" height="200" autoplay="2000"></tag>
     </div>
     <div class="menu">
-        <tag action="article.navigate_home" position="1">
+        <tag action="article.navigate" position="1">
             <a href="{{$field['url']}}">{{$field['icon']}}{{$field['name']}}</a>
         </tag>
     </div>
@@ -49,16 +49,12 @@
             </tag>
         </ul>
     </div>
+    <!--快捷导航-->
+    <tag action="article.quickmenu"></tag>
 </block>
-
 <style>
     body {
         background: #eeeeee !important;
-    }
-
-    div.slide .title {
-        background: #990000;
-        opacity: .6;
     }
 
     .menu {

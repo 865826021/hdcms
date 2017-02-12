@@ -26,9 +26,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label ">所属栏目</label>
                     <div class="col-sm-9">
-                        <select class="form-control" name="category_cid">
+                        <select class="form-control" name="cid">
                             <foreach from="$category" value="$v">
-                                <if value="$field['category_cid']==$v['cid']">
+                                <if value="$field['cid']==$v['cid']">
                                     <option value="{{$v['cid']}}" selected="selected">{{$v['catname']}}</option>
                                     <elseif value="$v['ishomepage']">
                                         <option value="{{$v['cid']}}" disabled="disabled">{{$v['catname']}}(封)</option>

@@ -1,31 +1,28 @@
 <?php namespace module\ucenter\system;
 
-use houdunwang\view\build\TagBase;
+class Tag {
+	//快捷导航
+	public function quickmenu( $attr ) {
+		$php
+			= <<<str
+        <?php
+            \$res = Db::table('web_page')->where(siteid,SITEID)->where('type',1)->first();
+            if(\$res){
+                \$params = json_decode(\$res['params'],true);
+                if(empty(\$params['modules'])){
+					echo '<div style="height:60px;"></div>'.\$res['html'];
+                }else{
+	                foreach(\$params['modules'] as \$v){
+	                    if(\$v['mid']==v('module.mid')){
+	                        echo '<div style="height:60px;"></div>'.\$res['html'];
+	                        break;
+	                    }
+	                }
+                }
+            }
+        ?>
+str;
 
-/**
- * 模板标签
- * Class Tag
- * @package module\ucenter\system
- */
-class Tag extends TagBase {
-	/**
-	 * 标签名要以下划线+模块名(小写)开始
-	 * block 块标签时为true,行标签时为false
-	 * level 块可以嵌套层数,行标签不需要填充
-	 */
-	public $tags = [
-		'article_foreach' => [ 'block' => true, 'level' => 5 ],
-	];
-
-	/**
-	 * 标签定义
-	 *
-	 * @param array $attr 标签使用的属性
-	 * @param string $content 块标签包裹的内容
-	 *
-	 * @return string
-	 */
-	public function _article_foreach( $attr, $content ) {
-
+		return $php;
 	}
 }

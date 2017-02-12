@@ -11,6 +11,7 @@
 namespace module\article\controller;
 
 use module\article\model\WebCategory;
+use module\article\model\WebContent;
 use module\HdController;
 
 /**
@@ -39,11 +40,19 @@ class Entry extends HdController {
 	/**
 	 * 栏目访问入口
 	 */
-	public function category() {echo 11;
+	public function category() {
+		$category = WebCategory::find( Request::get( 'cid' ) );
+		//设置模型编号
+		Request::set( 'get.mid', $category['mid'] );
+
+//		$db = new WebContent();
+//		$db->where('category_cid',Request::get('cid'))->where('siteid',SITEID);
+//        p(Request::get());
+//        $_data = $db->paginate(3);exit;
+
 		if ( IS_MOBILE ) {
 			return view( $this->template . '/article_list.html' );
 		} else {
-			$category = WebCategory::find( Request::get( 'cid' ) );
 
 		}
 	}

@@ -1,4 +1,5 @@
 <?php namespace module\article\system;
+
 use module\article\model\WebCategory;
 
 /**
@@ -19,8 +20,8 @@ class Tag {
 		$php
 		           = <<<str
 		<?php
-		Request::set('get.mid',$mid);
-		\$db = module\article\model\WebContent::where('siteid',SITEID)->limit($row);
+		\$model = new module\article\model\WebContent($mid);
+		\$db = \$model->where('siteid',SITEID)->limit($row);
 		//栏目检索
 		\$cid = array_filter(explode(',','$cid'));
 		if(!empty(\$cid)){
@@ -47,7 +48,7 @@ class Tag {
 		\$_result = \$db->get();
 		\$_result =\$_result?\$_result->toArray():[]; 
 		foreach(\$_result as \$field){
-			\$field['_category']=module\article\model\WebCategory::getByCid(\$field['cid']);
+			\$field['category']=module\article\model\WebCategory::getByCid(\$field['cid']);
 			\$field['url'] = Link::get(\$field['_category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
@@ -147,7 +148,7 @@ str;
 	}
 
 	//微站首页导航菜单
-	public function navigate_home( $attr, $content ) {
+	public function navigate( $attr, $content ) {
 		$position = isset( $attr['position'] ) ? $attr['position'] : 1;
 		$php
 		          = <<<str
@@ -173,10 +174,13 @@ str;
 
 
 	//头部导航条(手机)
-	public function mobile_header() {
-		if ( $cid = q( 'get.cid', 0, 'intval' ) ) {
+	public function category_menu() {
+		if ( $cid = Request::get( 'cid' ) ) {
+			$__ROOT__ = __ROOT__;
 			$php
-				= <<<str
+			          = <<<str
+		<link rel="stylesheet" href="{$__ROOT__}/module/article/system/tag/css/category_menu.css">
+		<script src="{{__ROOT__}}/module/article/system/tag/js/category_menu.js"></script>
         <div class="mobile_header">
         <a class="back_url" href="javascript:history.back();">
             <i class="fa fa-chevron-left"></i>
@@ -189,15 +193,17 @@ str;
             <dl>
                 <?php
                  \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get()?:[];
-                 \$categoryData = Data::channelLevel(\$categoryData,0,'','cid','pid');
+                 \$categoryData = \Arr::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
-                        \$d['url']=empty(\$d['linkurl'])?url('entry/category',['cid'=>\$d['cid']],'article'):\$d['linkurl'];
-                        echo "<dt><a href='{\$d['url']}'>{\$d['title']}</a></dt>";
+                        \$d['url']=Link::get(\$d['html_category'],\$d);
+                        \$d['url']=str_replace('{page}',Request::get('page',1), \$d['url']);
+                        echo "<dt><a href='{\$d['url']}'>{\$d['catname']}</a></dt>";
                         if(!empty(\$d['_data'])){
                             echo '<dd>';
                             foreach(\$d['_data'] as \$_m){
-                                \$_m['url']=empty(\$_m['linkurl'])?url('entry/category',['cid'=>\$_m['cid']],'article'):\$_m['linkurl'];
-                                echo "<a href='{\$_m['url']}'>{\$_m['title']}</a>";
+                                \$_m['url']=Link::get(\$_m['html_category'],\$_m);
+                                \$_m['url']=str_replace('{page}',Request::get('page',1), \$_m['url']);
+                                echo "<a href='{\$_m['url']}'>{\$_m['catname']}</a>";
                             }
                             echo '</dd>';
                         }
@@ -244,10 +250,11 @@ str;
 		$row       = isset( $attr['row'] ) ? $attr['row'] : 10;
 		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
 		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
-		$php
-		           = <<<str
+		$php       = <<<str
         <?php
-        \$db = Db::table('web_article')->where('category_cid',q('get.cid',0,'intval'))->where('siteid',SITEID);
+        \$db = new module\article\model\WebContent();
+        p(Request::get('cid'));
+        \$db->where('cid',Request::get('cid'))->where('siteid',SITEID);
         //头条
         if($ishot){
             \$db->where('ishot',1);
@@ -255,31 +262,15 @@ str;
         if($iscommend){
             \$db->where('iscommend',1);
         }
-        \$count = \$db->count();
-        unset(\$_GET['s']);
-        \$page_show = Page::pageNum(8)->row($row)->make(\$count);
-        \$db = Db::table('web_article')->where('category_cid',q('get.cid',0,'intval'))->where('siteid',SITEID);
-        //头条
-        if($ishot){
-            \$db->where('ishot','=',1);
-        }
-        if($iscommend){
-            \$db->where('iscommend','=',1);
-        }
-        \$_data=\$db->limit(Page::limit())->get()?:[];
         //栏目数据
-        \$_category = Db::table('web_category')->where('cid',q('get.cid',0,'intval'))->where('siteid',SITEID)->first();
+        \$_category = Db::table('web_category')->where('cid',Request::get('cid'))->where('siteid',SITEID)->first();
         //栏目链接
-        \$_category['url']=empty(\$_category['cat_linkurl'])?__ROOT__."/index.php?a=/entry/category&m=article&t=web&siteid={\$_category['siteid']}&cid={\$_category['cid']}":\$_category['cat_linkurl'];
-            //栏目图标
-            \$css = unserialize(\$_category['css']);
-            if(\$_category['icontype']==1){
-                //字体图标
-                \$_category['icon']='<i class="'.\$css['icon'].'" style="color:'.\$css['color'].';font-size:'.\$css['size'].'px;"></i>';
-            }else{
-				//图片图标
-                \$_category['icon']='<i class="icon" style="background:url(\''.\$css['image'].'\') no-repeat;background-size:cover;"></i>';
-            }
+        \$_category['url']=Link::get(\$d['html_category'],\$_category);
+        \$_category['url']=str_replace('{page}',Request::get('page',1), \$d['url']);
+        //分页地址设置
+        houdunwang\page\Page::url(Link::get(\$d['html_category'],\$_category));
+        \$_data = \$db->paginate($row);
+        
         foreach(\$_data as \$field){
             \$field['category']=\$_category;
             //文章缩略图
@@ -287,7 +278,7 @@ str;
                 \$field['thumb']=__ROOT__."/{\$field['thumb']}";
             }
             //文章链接
-            \$field['url']=empty(\$field['linkurl'])?url('entry/content',['cid'=>\$_category['cid'],'aid'=>\$field['aid']],'article'):\$field['linkurl'];
+            \$field['url'] = Link::get(\$_category['html_content'],\$field);
         ?>
         $content
         <?php }?>
@@ -298,10 +289,42 @@ str;
 	}
 
 	//页码
-	public function pagenum() {
-		$php
-			= <<<str
-        <?php echo isset(\$page_show)?\$page_show:'';?>
+	public function pagination() {
+		$php = <<<str
+        <?php echo \$db->links();?>
+str;
+		return $php;
+	}
+
+	//底部快捷导航
+	public function quickmenu( $attr ) {
+		$php = <<<str
+	<link rel="stylesheet" href="resource/css/quickmenu.css">
+	<script src="resource/js/quickmenu.js"></script>
+    <style>
+        .quickmenu {
+            position: fixed;
+        }
+        .quickmenu .normal dl dd {
+            display: none;
+        }
+    </style>
+        <?php
+            \$res = Db::table('page')->where(siteid,SITEID)->where('type','quickmenu')->first();
+            if(\$res){
+                \$params = json_decode(\$res['params'],true);
+                if(empty(\$params['modules'])){
+					echo '<div style="height:60px;"></div>'.\$res['html'];
+                }else{
+	                foreach(\$params['modules'] as \$v){
+	                    if(\$v['mid']==v('module.mid')){
+	                        echo '<div style="height:60px;"></div>'.\$res['html'];
+	                        break;
+	                    }
+	                }
+                }
+            }
+        ?>
 str;
 
 		return $php;

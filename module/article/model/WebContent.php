@@ -10,9 +10,11 @@ use houdunwang\model\Model;
 class WebContent extends Model {
 	protected $table = '';
 	protected $allowFill = [ '*' ];
+	//模型编号
+	protected $mid;
 	protected $validate = [
 		[ 'title', 'required', '文章标题不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'category_cid', 'required', '请选择文章栏目', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'cid', 'required', '请选择文章栏目', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'content', 'required', '文章内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'description', 'required', '摘要不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'orderby', 'num:0,255', '排序只能是0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
@@ -33,7 +35,12 @@ class WebContent extends Model {
 		[ 'thumb', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 
-	public function __construct() {
+	public function __construct( $mid = 0 ) {
+		//设置模型编号
+		$this->mid = $mid ?: Request::get( 'mid' );
+		if ( empty( $this->mid ) ) {
+			$this->mid = Db::table( 'web_model' )->where( 'siteid', SITEID )->pluck( 'mid' );
+		}
 		$this->table = $this->tableName();
 		parent::__construct();
 	}
@@ -44,13 +51,7 @@ class WebContent extends Model {
 	 * @return string
 	 */
 	public function tableName() {
-		//设置模型编号
-		$mid = Request::get( 'mid' );
-		if ( empty( $mid ) ) {
-			$mid = Db::table( 'web_model' )->where( 'siteid', SITEID )->pluck( 'mid' );
-		}
-
-		return ( new WebModel() )->getModelTable( $mid );
+		return ( new WebModel() )->getModelTable( $this->mid );
 	}
 
 	/**
