@@ -65,14 +65,19 @@ str;
 		$titlelen = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
 		$php
 		          = <<<str
-		<?php \$db = Db::table('web_article')->where('siteid',SITEID)->limit($row);
+		<?php 
+		\$model = new module\article\model\WebContent();
+		\$db = \$model->where('siteid',SITEID)->limit($row);
 		//栏目检索
-		\$db->where('category_cid',\$_GET['cid']);
+		\$db->where('cid',Request::get('cid'));
 		//排序
 		\$db->orderBy('rand()');
-		\$_result = \$db->get()?:[];
+		\$_result = \$db->get();
+		\$_result =\$_result?\$_result->toArray():[];
+		\$category = module\article\model\WebCategory::getByCid(Request::get('cid'));
 		foreach(\$_result as \$field){
-			\$field['url'] = url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
+			\$field['category']=\$category;
+			\$field['url'] = Link::get(\$category['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content

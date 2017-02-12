@@ -44,16 +44,11 @@ class Entry extends HdController {
 		$category = WebCategory::find( Request::get( 'cid' ) );
 		//设置模型编号
 		Request::set( 'get.mid', $category['mid'] );
-
-//		$db = new WebContent();
-//		$db->where('category_cid',Request::get('cid'))->where('siteid',SITEID);
-//        p(Request::get());
-//        $_data = $db->paginate(3);exit;
-
+		View::with( 'hdcms', $category->toArray() );
 		if ( IS_MOBILE ) {
 			return view( $this->template . '/article_list.html' );
 		} else {
-
+			//PC模板
 		}
 	}
 
@@ -61,6 +56,17 @@ class Entry extends HdController {
 	 * 文章内容页访问入口
 	 */
 	public function content() {
-		echo 1221;
+		$model = new WebContent();
+		$hdcms = $model->find( Request::get( 'aid' ) );
+		View::with( [ 'hdcms' => $hdcms ] );
+		if ( IS_MOBILE ) {
+			return view( $this->template . '/article.html' );
+		} else {
+			//PC模板
+			$category = WebCategory::find( Request::get( 'cid' ) );
+			$template = \Template::getTemplateData();
+
+			return view( "theme/{$template['name']}/web/{$category['content_tpl']}");
+		}
 	}
 }

@@ -3,10 +3,8 @@
 <block name="title">{{$hdcms['title']}}</block>
 <block name="content">
     <!--头部导航-->
-    <line action="article.mobile_header"/>
-    <div class="slide">
-        <line action="article.slide" color="#fff" height="200" autoplay="2000"/>
-    </div>
+    <tag action="article.category_menu"></tag>
+
     <br/>
 
     <div class="panel panel-default">
