@@ -1,5 +1,4 @@
 <?php namespace module\article\system;
-
 /**
  * 模块模板视图自定义标签处理
  * @author 向军
@@ -9,16 +8,19 @@ class Tag {
 	//获取文章
 	public function lists( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
-		$cid       = isset( $attr['cid'] ) ? ( $attr['cid'][0] == '$' ? $attr['cid'] : "'{$attr['cid']}'" ) : "''";
-		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
-		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
+		$mid       = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
+		$cid       = isset( $attr['cid'] ) ? $attr['cid'] : "";
+		$iscommend = isset( $attr['iscommend'] ) ? $attr['iscommend'] : 0;
+		$ishot     = isset( $attr['ishot'] ) ? $attr['ishot'] : 0;
 		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
 		$order     = isset( $attr['order'] ) ? $attr['order'] : 'new';
 		$php
 		           = <<<str
-		<?php \$db = Db::table('web_article')->where('siteid',SITEID)->limit($row);
+		<?php
+		Request::set('get.mid',$mid);
+		\$db = module\article\model\WebContent::where('siteid',SITEID)->limit($row);
 		//栏目检索
-		\$cid = array_filter(explode(',',$cid));
+		\$cid = array_filter(explode(',','$cid'));
 		if(!empty(\$cid)){
 			\$db->whereIn('category_cid',\$cid);
 		}
@@ -40,15 +42,14 @@ class Tag {
 				\$db->orderBy('aid','ASC');
 				break;
 		}
-		\$_result = \$db->get()?:[];
+		\$_result = \$db->get()? \$db->get()->toArray():[];
 		foreach(\$_result as \$field){
-			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
+			\$field['url'] = service('article.url.content',\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
 		<?php }?>
 str;
-
 		return $php;
 	}
 
@@ -65,7 +66,7 @@ str;
 		\$db->orderBy('rand()');
 		\$_result = \$db->get()?:[];
 		foreach(\$_result as \$field){
-			\$field['url'] = web_url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
+			\$field['url'] = url('entry/content',['aid'=>\$field['aid'],'cid'=>\$field['category_cid']],'article');
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
@@ -185,12 +186,12 @@ str;
                  \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get()?:[];
                  \$categoryData = Data::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
-                        \$d['url']=empty(\$d['linkurl'])?web_url('entry/category',['cid'=>\$d['cid']],'article'):\$d['linkurl'];
+                        \$d['url']=empty(\$d['linkurl'])?url('entry/category',['cid'=>\$d['cid']],'article'):\$d['linkurl'];
                         echo "<dt><a href='{\$d['url']}'>{\$d['title']}</a></dt>";
                         if(!empty(\$d['_data'])){
                             echo '<dd>';
                             foreach(\$d['_data'] as \$_m){
-                                \$_m['url']=empty(\$_m['linkurl'])?web_url('entry/category',['cid'=>\$_m['cid']],'article'):\$_m['linkurl'];
+                                \$_m['url']=empty(\$_m['linkurl'])?url('entry/category',['cid'=>\$_m['cid']],'article'):\$_m['linkurl'];
                                 echo "<a href='{\$_m['url']}'>{\$_m['title']}</a>";
                             }
                             echo '</dd>';
@@ -222,7 +223,7 @@ if(\$cid){
 \$_category =\$db->get()?:[];
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['url']=empty(\$field['cat_linkurl'])?web_url('entry/category',['cid'=>\$field['cid']],'article'):\$field['cat_linkurl'];
+    \$field['url']=empty(\$field['cat_linkurl'])?url('entry/category',['cid'=>\$field['cid']],'article'):\$field['cat_linkurl'];
     \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
     \$css = json_decode(\$field['css']);
     if(!empty(\$field['icon'])){
@@ -288,7 +289,7 @@ str;
                 \$field['thumb']=__ROOT__."/{\$field['thumb']}";
             }
             //文章链接
-            \$field['url']=empty(\$field['linkurl'])?web_url('entry/content',['cid'=>\$_category['cid'],'aid'=>\$field['aid']],'article'):\$field['linkurl'];
+            \$field['url']=empty(\$field['linkurl'])?url('entry/content',['cid'=>\$_category['cid'],'aid'=>\$field['aid']],'article'):\$field['linkurl'];
         ?>
         $content
         <?php }?>

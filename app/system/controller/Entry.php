@@ -9,7 +9,6 @@ use system\model\User;
  * @package system\controller
  */
 class Entry {
-
 	/**
 	 * 通过域名访问时执行的方法
 	 * 首先根据域名判断该域名是否是站点的默认域名

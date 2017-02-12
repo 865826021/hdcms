@@ -18,7 +18,7 @@ class Site extends Common {
 	 * 系统启动时执行的站点信息初始化
 	 */
 	public function siteInitialize() {
-		if ( isset( $_GET['siteid'] ) && empty( $_GET['siteid'] ) ) {
+		if ( !Request::get( 'siteid' ) ) {
 			message( '你访问的站点不存在', 'back', 'error' );
 		}
 		/**

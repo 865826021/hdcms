@@ -13,6 +13,7 @@ namespace module\article\controller;
 use module\article\model\WebCategory;
 use module\article\model\WebModel;
 use module\HdController;
+use system\model\Router;
 
 /**
  * 栏目管理
@@ -38,7 +39,14 @@ class Category extends HdController {
 		$cid = Request::get( 'cid' );
 		if ( IS_POST ) {
 			$model = $cid ? WebCategory::find( $cid ) : new WebCategory();
-			$model->save( json_decode( Request::post( 'data' ), true ) );
+			$data = json_decode( Request::post( 'data' ), true );
+			$model->save( $data );
+			//添加路由规则
+			$routerData=[
+				['title'=>'栏目静态规则','router'=>$data['html_category'],'url'=>'m=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}'],
+				['title'=>'文章静态规则','router'=>$data['html_content'],'url'=>'m=article&action=controller/entry/content&siteid={siteid}&cid={cid}']
+			];
+			Router::addRouter( $routerData );
 			message( '栏目保存成功', url( 'category.lists' ) );
 		}
 		$category = WebCategory::getLevelCategory( $cid );

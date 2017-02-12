@@ -3,6 +3,7 @@
 /**
  * 应用启动时执行的中间件
  * 不能进行SESSION操作
+ * 不能执行数据库操作
  * Class Boot
  * @package system\middleware
  */

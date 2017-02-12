@@ -23,6 +23,8 @@ class Base {
 	protected $routeArgs = [ ];
 
 	public function run( $routeArgs = [ ] ) {
+		//控制器开始运行中间件
+		\Middleware::system( 'controller_start' );
 		$this->routeArgs = $routeArgs;
 		//URL结构处理
 		$param = array_filter( explode( '/', Request::get( Config::get( 'http.url_var' ) ) ) );
@@ -63,16 +65,14 @@ class Base {
 
 		//控制器不存在执行中间件
 		if ( ! class_exists( $class ) ) {
-			Middleware::exe('CONTROLLER_NOT_FOUND');
+			Middleware::system('controller_not_found');
 		}
 
 		//方法不存在时执行中间件
 		if(!method_exists($class,ACTION)){
-			Middleware::exe('ACTION_NOT_FOUND');
+			Middleware::system('action_not_found');
 		}
 
-		//控制器开始运行中间件
-		Middleware::exe( 'controller_begin' );
 		$controller = Container::make( $class, true );
 
 		//执行控制器中间件

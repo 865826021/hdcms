@@ -44,7 +44,13 @@ class WebContent extends Model {
 	 * @return string
 	 */
 	public function tableName() {
-		return ( new WebModel() )->getModelTable( Request::get( 'mid' ) );
+		//设置模型编号
+		$mid = Request::get( 'mid' );
+		if ( empty( $mid ) ) {
+			$mid = Db::table( 'web_model' )->where( 'siteid', SITEID )->pluck( 'mid' );
+		}
+
+		return ( new WebModel() )->getModelTable( $mid );
 	}
 
 	/**

@@ -125,7 +125,9 @@ class Base {
 		if ( ! is_file( $file ) ) {
 			if ( defined( 'MODULE' ) ) {
 				//模块视图文件夹
-				$file = Config::get( 'controller.app' ) . '/' . strtolower( MODULE . '/view/' . CONTROLLER ) . '/' . ( $file ?: ACTION . $this->config( 'prefix' ) );
+				$file = Config::get( 'controller.app' ) . '/' . strtolower( MODULE . '/view/' . CONTROLLER )
+				        . '/' . ( $file ?: ACTION . $this->config( 'prefix' ) );
+
 				if ( ! is_file( $file ) ) {
 					trigger_error( "模板不存在:$file", E_USER_ERROR );
 				}

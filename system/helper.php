@@ -5,7 +5,7 @@
 |--------------------------------------------------------------------------
 */
 function siteid() {
-	return SITEID;
+	return defined( 'SITEID' ) ? SITEID : 0;
 }
 
 /**
