@@ -15,19 +15,20 @@ class AppBegin {
 		 * 根据站点编号读取该站点规则
 		 * 并设置到系统路由队列中
 		 */
-		if ( isset( $_SERVER['PATH_INFO'] ) ) {
-			$pathInfo = trim( $_SERVER['PATH_INFO'], '/' );
-			preg_match( '@^([a-z]+)_(\d+)@', $pathInfo, $match );
+		$url = preg_replace( '@/index.php/@', '', $_SERVER['REQUEST_URI'] );
+		$url = trim( $url, '/' );
+		if ( preg_match( '@^([a-z]+)_(\d+)@', $url, $match ) ) {
 			if ( count( $match ) == 3 ) {
 				//设置站点与模块变量
 				Request::set( 'get.siteid', $match[2] );
 				Request::set( 'get.m', $match[1] );
 			}
-		}
-		if ( $siteid = Request::get( 'siteid' ) ) {
-			$routes = Db::table( 'router' )->where( 'siteid', $siteid )->get();
-			foreach ( $routes as $r ) {
-				Route::alias( $r['module'] . '_' . $r['router'], $r['url'] );
+			if ( $siteid = Request::get( 'siteid' ) ) {
+				$routes = Db::table( 'router' )->where( 'siteid', $siteid )->get();
+				foreach ( $routes as $r ) {
+					$r['url'] = str_replace( '{siteid}', $siteid, $r['url'] );
+					Route::alias( $r['router'], $r['url'] );
+				}
 			}
 		}
 	}

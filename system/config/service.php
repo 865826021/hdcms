@@ -20,7 +20,8 @@ return [
 		'system\service\credit\CreditProvider',
 		'system\service\ticket\TicketProvider',
 		'system\service\web\WebProvider',
-		'system\service\navigate\NavigateProvider'
+		'system\service\navigate\NavigateProvider',
+		'system\service\link\LinkProvider'
 	],
 
 	/*
@@ -44,6 +45,7 @@ return [
 		'Credit'   => 'system\service\credit\CreditFacade',
 		'Ticket'   => 'system\service\ticket\TicketFacade',
 		'Web'      => 'system\service\web\WebFacade',
-		'Navigate' => 'system\service\navigate\NavigateFacade'
+		'Navigate' => 'system\service\navigate\NavigateFacade',
+		'Link'     => 'system\service\link\LinkFacade'
 	]
 ];

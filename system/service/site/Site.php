@@ -18,8 +18,10 @@ class Site extends Common {
 	 * 系统启动时执行的站点信息初始化
 	 */
 	public function siteInitialize() {
-		if ( !Request::get( 'siteid' ) ) {
-			message( '你访问的站点不存在', 'back', 'error' );
+		if ( $siteid = Request::get( 'siteid' ) ) {
+			if ( ! Db::table( 'site' )->where( 'siteid', $siteid )->get() ) {
+				message( '你访问的站点不存在', 'back', 'error' );
+			}
 		}
 		/**
 		 * 站点编号

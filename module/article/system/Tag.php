@@ -1,4 +1,6 @@
 <?php namespace module\article\system;
+use module\article\model\WebCategory;
+
 /**
  * 模块模板视图自定义标签处理
  * @author 向军
@@ -42,14 +44,17 @@ class Tag {
 				\$db->orderBy('aid','ASC');
 				break;
 		}
-		\$_result = \$db->get()? \$db->get()->toArray():[];
+		\$_result = \$db->get();
+		\$_result =\$_result?\$_result->toArray():[]; 
 		foreach(\$_result as \$field){
-			\$field['url'] = service('article.url.content',\$field);
+			\$field['_category']=module\article\model\WebCategory::getByCid(\$field['category_cid']);
+			\$field['url'] = Link::get('article',\$field['_category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
 		<?php }?>
 str;
+
 		return $php;
 	}
 

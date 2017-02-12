@@ -67,4 +67,20 @@ class WebCategory extends Model {
 
 		return $this->destory();
 	}
+
+	/**
+	 * 根据栏目编号获取数据
+	 *
+	 * @param $cid 栏目编号
+	 *
+	 * @return mixed
+	 */
+	public function getByCid( $cid ) {
+		static $cache = [ ];
+		if ( ! isset( $cache[ $cid ] ) ) {
+			$cache[ $cid ] = Db::table( 'web_category' )->find( $cid );
+		}
+
+		return $cache[ $cid ];
+	}
 }

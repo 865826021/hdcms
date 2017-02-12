@@ -1,6 +1,7 @@
 <?php namespace system\middleware;
 
 use houdunwang\request\Request;
+use module\article\model\WebContent;
 use system\model\Modules;
 use system\model\Router;
 
