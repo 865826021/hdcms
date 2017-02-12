@@ -7,7 +7,7 @@ use module\article\model\WebCategory;
  * @url http://www.hdcms.com
  */
 class Tag {
-	//获取文章
+	//文章列表
 	public function lists( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
 		$mid       = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
@@ -47,8 +47,8 @@ class Tag {
 		\$_result = \$db->get();
 		\$_result =\$_result?\$_result->toArray():[]; 
 		foreach(\$_result as \$field){
-			\$field['_category']=module\article\model\WebCategory::getByCid(\$field['category_cid']);
-			\$field['url'] = Link::get('article',\$field['_category']['html_content'],\$field);
+			\$field['_category']=module\article\model\WebCategory::getByCid(\$field['cid']);
+			\$field['url'] = Link::get(\$field['_category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
@@ -228,16 +228,9 @@ if(\$cid){
 \$_category =\$db->get()?:[];
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['url']=empty(\$field['cat_linkurl'])?url('entry/category',['cid'=>\$field['cid']],'article'):\$field['cat_linkurl'];
+    \$field['url']=Link::get(\$field['html_category'],\$field);
+    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
     \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
-    \$css = json_decode(\$field['css']);
-    if(!empty(\$field['icon'])){
-                //有图标 2
-                \$field['icon']='<i class="icon" style="background:url(\''.\$css['icon'].'\') no-repeat;background-size:cover;"></i>';
-            }else{
-                \$css = unserialize(\$field['css']);
-                \$field['icon']='<i class="'.\$css['icon'].'" style="color:'.\$css['color'].';font-size:'.\$css['size'].'px;"></i>';
-            }
 ?>
 $content
 <?php }?>

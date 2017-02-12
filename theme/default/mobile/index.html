@@ -21,6 +21,34 @@
             </tag>
         </ul>
     </div>
+    <!--栏目列表-->
+    <div class="text-center">
+        <tag action="article.category">
+            <a href="{{$field['url']}}" class="btn btn-success">{{$field['catname']}}</a>
+        </tag>
+    </div>
+    <br/>
+    <!--栏目列表 end-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">推荐文章</h3>
+        </div>
+        <ul class="list-group">
+            <tag action="article.lists" row="10" iscommend="1">
+                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
+            </tag>
+        </ul>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">最新文章</h3>
+        </div>
+        <ul class="list-group">
+            <tag action="article.lists" row="10" order="new">
+                <a class="list-group-item" href="{{$field['url']}}">{{$field['title']}}</a>
+            </tag>
+        </ul>
+    </div>
 </block>
 
 <style>

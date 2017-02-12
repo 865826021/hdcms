@@ -44,7 +44,7 @@ class Category extends HdController {
 			//添加路由规则
 			$routerData=[
 				['title'=>'栏目静态规则','router'=>$data['html_category'],'url'=>'m=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}'],
-				['title'=>'文章静态规则','router'=>$data['html_content'],'url'=>'m=article&action=controller/entry/content&siteid={siteid}&cid={cid}']
+				['title'=>'文章静态规则','router'=>$data['html_content'],'url'=>'m=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}']
 			];
 			Router::addRouter( $routerData );
 			message( '栏目保存成功', url( 'category.lists' ) );

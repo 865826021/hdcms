@@ -19,7 +19,22 @@ class Router extends Common {
 		[ 'status', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'module', 'getModule', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'condition', 'getCondition', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
 	];
+
+	protected function getCondition( $val, $data ) {
+		preg_match_all( '/{([a-z]+)}/', $data['router'], $matchs );
+		if ( $matchs ) {
+			$args = [ ];
+			foreach ( $matchs[1] as $k => $v ) {
+				$args[ $v ] = '[a-z0-9]+';
+			}
+
+			return json_encode( $args, JSON_UNESCAPED_UNICODE );
+		}
+
+		return '';
+	}
 
 	protected function getModule( $val, $data ) {
 		return v( 'module.name' );
@@ -37,6 +52,7 @@ class Router extends Common {
 		foreach ( $data as $d ) {
 			( new self() )->save( $d );
 		}
+
 		return true;
 	}
 

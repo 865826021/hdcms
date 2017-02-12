@@ -39,9 +39,9 @@ class WebModel extends Model {
 			$sql = <<<sql
 CREATE TABLE `hd_{$table}` (
   `aid` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `siteid` int(10) unsigned NOT NULL,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
   `rid` int(10) unsigned NOT NULL COMMENT '微信规则编号',
-  `category_cid` int(10) unsigned NOT NULL COMMENT '栏目编号',
+  `cid` int(10) unsigned NOT NULL COMMENT '栏目编号',
   `keyword` varchar(30) NOT NULL COMMENT '微信回复关键词',
   `iscommend` tinyint(1) unsigned NOT NULL COMMENT '推荐',
   `ishot` tinyint(1) unsigned NOT NULL COMMENT '头条',
@@ -57,7 +57,7 @@ CREATE TABLE `hd_{$table}` (
   `createtime` int(10) unsigned NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`aid`),
   KEY `siteid` (`siteid`),
-  KEY `category_cid` (`category_cid`)
+  KEY `cid` (`cid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='文章模块内容表';
 sql;
 			Db::execute( $sql );

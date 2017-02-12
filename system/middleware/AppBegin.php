@@ -17,7 +17,7 @@ class AppBegin {
 		 */
 		$url = preg_replace( '@/index.php/@', '', $_SERVER['REQUEST_URI'] );
 		$url = trim( $url, '/' );
-		if ( preg_match( '@^([a-z]+)_(\d+)@', $url, $match ) ) {
+		if ( preg_match( '@^([a-z]+)(\d+)@', $url, $match ) ) {
 			if ( count( $match ) == 3 ) {
 				//设置站点与模块变量
 				Request::set( 'get.siteid', $match[2] );
@@ -26,8 +26,7 @@ class AppBegin {
 			if ( $siteid = Request::get( 'siteid' ) ) {
 				$routes = Db::table( 'router' )->where( 'siteid', $siteid )->get();
 				foreach ( $routes as $r ) {
-					$r['url'] = str_replace( '{siteid}', $siteid, $r['url'] );
-					Route::alias( $r['router'], $r['url'] );
+					Route::alias( $r['router'], $r['url'] )->where( json_decode( $r['condition'], true ) );
 				}
 			}
 		}

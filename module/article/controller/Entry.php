@@ -10,6 +10,7 @@
 
 namespace module\article\controller;
 
+use module\article\model\WebCategory;
 use module\HdController;
 
 /**
@@ -38,14 +39,19 @@ class Entry extends HdController {
 	/**
 	 * 栏目访问入口
 	 */
-	public function category() {
+	public function category() {echo 11;
+		if ( IS_MOBILE ) {
+			return view( $this->template . '/article_list.html' );
+		} else {
+			$category = WebCategory::find( Request::get( 'cid' ) );
 
+		}
 	}
 
 	/**
 	 * 文章内容页访问入口
 	 */
 	public function content() {
-
+		echo 1221;
 	}
 }
