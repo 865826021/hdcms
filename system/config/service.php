@@ -21,7 +21,8 @@ return [
 		'system\service\ticket\TicketProvider',
 		'system\service\web\WebProvider',
 		'system\service\navigate\NavigateProvider',
-		'system\service\link\LinkProvider'
+		'system\service\link\LinkProvider',
+		'system\service\pay\PayProvider'
 	],
 
 	/*
@@ -46,6 +47,7 @@ return [
 		'Ticket'   => 'system\service\ticket\TicketFacade',
 		'Web'      => 'system\service\web\WebFacade',
 		'Navigate' => 'system\service\navigate\NavigateFacade',
-		'Link'     => 'system\service\link\LinkFacade'
+		'Link'     => 'system\service\link\LinkFacade',
+		'Pay'      => 'system\service\pay\PayFacade'
 	]
 ];

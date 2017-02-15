@@ -71,7 +71,7 @@
             //积分类型 credit1积分  credit2余额
             var type = $(obj).data('type');
             util.modal({
-                content: ['?m=member&action=site/trade&uid=' + uid + "&type=" + type],//加载的远程地址
+                content: ['{{url("site/trade")}}&uid=' + uid + "&type=" + type],//加载的远程地址
                 title: '会员积分操作',
                 width: 800,
                 //直接显示

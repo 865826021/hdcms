@@ -9,6 +9,7 @@
  */
 class Member extends Common {
 	protected $table = 'member';
+	protected $allowFill=['*'];
 	protected $filter = [
 		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
 	];

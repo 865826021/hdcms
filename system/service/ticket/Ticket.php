@@ -1,5 +1,8 @@
 <?php namespace system\service\ticket;
 
+use system\model\Ticket as TicketModel;
+use system\model\TicketRecord;
+
 /**
  * 卡券管理服务
  * Class Ticket
@@ -41,39 +44,29 @@ class Ticket {
 	 * @return bool
 	 */
 	public function convert( $tid ) {
-		Db::lock( 'ticket,ticket_record,member,credits_record' );
+		Db::beginTransaction();
 		//会员已经兑换的数量
-		$TicketRecord = new TicketRecord();
-		$count        = $TicketRecord->getNumByTid( $tid, Session::get( 'member.uid' ) );
+		$count = $this->getNumByTid( $tid, v( 'member.info.uid' ) );
 		//卡券信息
-		$ticket      = $this->where( 'tid', $tid )->where( 'siteid', SITEID )->first();
-		$ticketTitle = $this->getTitleByType( $ticket['type'] );
+		$ticket      = TicketModel::where( 'tid', $tid )->where( 'siteid', SITEID )->first();
+		$ticketTitle = $this->title( $ticket['type'] );
 		if ( $count >= $ticket['limit'] ) {
-			$this->error = '只能兑换' . $ticket['limit'] . '个' . $ticketTitle . ',你已经全部兑换完毕';
-			Db::unlock();
-
-			return false;
+			return '只能兑换' . $ticket['limit'] . '个' . $ticketTitle . ',你已经全部兑换完毕';
 		}
 		//减掉会员积分
 		$Member             = new Member();
 		$data               = [ ];
-		$data['uid']        = Session::get( 'member.uid' );
+		$data['uid']        = v( 'member.info.uid' );
 		$data['credittype'] = $ticket['credittype'];
 		$data['num']        = - 1 * $ticket['credit'];
 		$data['module']     = v( 'module.name' );
-		$data['remark']     = '兑换' . $ticketTitle . ':' . $ticket['title'] . ',消耗' . $ticket['credit'] . $Member->getCreditTitle( $ticket['credittype'] );
-		if ( ! $Member->changeCredit( $data ) ) {
-			$this->error = $Member->getError();
-			Db::unlock();
-
-			return false;
-		}
-		$this->where( 'tid', $tid )->decrement( 'amount', 1 );
-
+		$data['remark']     = '兑换' . $ticketTitle . ':' . $ticket['title'] . ',消耗' . $ticket['credit'] . \Credit::title( $ticket['credittype'] );
+		//使用用积分兑换卡券
+		\Credit::change( $data );
+		TicketModel::where( 'tid', $tid )->decrement( 'amount', 1 );
 		//记录卡券兑换日志
-		$record             = new TicketRecord();
 		$data               = [ ];
-		$data['uid']        = Session::get( 'member.uid' );
+		$data['uid']        = v( 'member.info.uid' );
 		$data['createtime'] = time();
 		$data['usetime']    = 0;//使用时间
 		$data['status']     = 1;
@@ -81,9 +74,9 @@ class Ticket {
 		$data['tid']        = $tid;
 		$data['manage']     = 0;//核销员编号
 		$data['module']     = v( 'module.name' );
-		$data['remark']     = '兑换' . $ticketTitle . ':' . $ticket['title'] . ',消耗' . $ticket['credit'] . $Member->getCreditTitle( $ticket['credittype'] );//核销员编号
-		$record->add( $data );
-		Db::unlock();
+		$data['remark']     = '兑换' . $ticketTitle . ':' . $ticket['title'] . ',消耗' . $ticket['credit'] . \Credit::title( $ticket['credittype'] );//核销员编号
+		TicketRecord::insert( $data );
+		DB::commit();
 
 		return true;
 	}

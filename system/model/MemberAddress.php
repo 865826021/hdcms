@@ -7,6 +7,7 @@
  */
 class MemberAddress extends Common {
 	protected $table = 'member_address';
+	protected $allowFill = [ '*' ];
 	protected $filter = [
 		[ 'id', self::EMPTY_FILTER, self::MODEL_BOTH ]
 	];
@@ -28,7 +29,7 @@ class MemberAddress extends Common {
 		return Db::table( 'member_address' )
 		         ->where( 'siteid', SITEID )
 		         ->where( 'id', $value )
-		         ->where( 'uid', Session::get( 'member.uid' ) )
+		         ->where( 'uid', v( 'member.info.uid' ) )
 		         ->first() ? true : false;
 	}
 

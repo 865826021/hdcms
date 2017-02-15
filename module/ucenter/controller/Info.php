@@ -7,23 +7,21 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace module\uc;
+namespace module\ucenter\controller;
 
-use module\hdSite;
 use system\model\Member;
 
-class reg extends hdSite {
-	protected $member;
+class Info extends Auth {
+	//修改会员信息
+	public function setting() {
+		if ( IS_POST ) {
+			$model = (new Member(  ))->find(v( 'member.info.uid' ));
+			if ( $model->save( Request::post() ) ) {
+				message( '修改成功', url( 'member/index' ), 'success' );
+			}
+		}
+		View::with( 'user', v( 'member.info' ) );
 
-	public function __construct() {
-		parent::__construct();
-		$this->member = new Member();
-	}
-
-
-
-	//找回密码
-	public function doWEbRetrieve() {
-
+		return View::make( $this->template . '/change_user_info.html' );
 	}
 }

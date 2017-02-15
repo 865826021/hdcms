@@ -40,11 +40,11 @@ class Site extends HdController {
 	public function delMaterial() {
 		$model = Material::find( Request::post( 'id' ) );
 		$data  = \WeChat::instance( 'material' )->delete( $model['media_id'] );
-		if ( isset( $data['errcode'] ) ) {
-			message( $data['errmsg'], '', 'error' );
-		} else {
+		if ( $data['errcode']==0) {
 			$model->destory();
 			message( '素材删除成功', '', 'success' );
+		} else {
+			message( '删除失败,请检查以下原因<br/>1. 与微信服务器通信失败,请检查站点连接配置 <br/>2. 微信服务器忙碌, 请稍后再试', '', 'error' );
 		}
 	}
 

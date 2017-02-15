@@ -34,11 +34,11 @@ if ( ! function_exists( 'u' ) ) {
 			return $path;
 		}
 		$url = C( 'http.rewrite' ) ? __ROOT__ : __ROOT__ . '/' . basename( $_SERVER['SCRIPT_FILENAME'] );
+		$path     = str_replace( '.', '/', $path );
 		if ( defined( 'MODULE' ) ) {
 			//控制器访问模式
 			//URL请求参数
 			$urlParam = explode( '/', $_GET[ c( 'http.url_var' ) ] );
-			$path     = str_replace( '.', '/', $path );
 			switch ( count( explode( '/', $path ) ) ) {
 				case 2:
 					$path = $urlParam[0] . '/' . $path;

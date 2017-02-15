@@ -14,23 +14,23 @@
                     <label class="col-sm-2 control-label">微信支付</label>
                     <div class="col-sm-10">
                         <label class="radio-inline">
-                            <input type="radio" name="pay[weichat][open]" ng-model="pay.weichat.open" value="1"> 开启
+                            <input type="radio" name="pay[wechat][open]" ng-model="pay.wechat.open" value="1"> 开启
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="pay[weichat][open]" ng-model="pay.weichat.open" value="0"> 关闭
+                            <input type="radio" name="pay[wechat][open]" ng-model="pay.wechat.open" value="0"> 关闭
                         </label>
                         <span class="help-block">是否使用微信支付</span>
                     </div>
                 </div>
-                <div ng-show="pay.weichat.open==1">
+                <div ng-show="pay.wechat.open==1">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">接口类型</label>
                         <div class="col-sm-10">
                             <label class="radio-inline" ng-init="version=1">
-                                <input type="radio" name="pay[weichat][version]" ng-model="version" value="0"> 旧版
+                                <input type="radio" name="pay[wechat][version]" ng-model="version" value="0"> 旧版
                             </label>
                             <label class="radio-inline">
-                                <input type="radio" name="pay[weichat][version]" ng-model="version" value="1"> 新版(2014年9月之后申请的)
+                                <input type="radio" name="pay[wechat][version]" ng-model="version" value="1"> 新版(2014年9月之后申请的)
                             </label>
                             <span class="help-block">由于微信支付接口调整，需要根据申请时间来区分支付接口</span>
                         </div>
@@ -62,7 +62,7 @@
                     <div class="form-group" ng-show="version==1">
                         <label class="col-sm-2 control-label">微信支付商户号<br/>(MchId)</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="pay[weichat][mch_id]" ng-model="pay.weichat.mch_id">
+                            <input type="text" class="form-control" name="pay[wechat][mch_id]" ng-model="pay.wechat.mch_id">
                             <span class="help-block">公众号支付请求中用于加密的密钥Key</span>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <label class="col-sm-2 control-label">商户支付密钥<br/>(API密钥)</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="pay[weichat][key]" ng-model="pay.weichat.key">
+                                <input type="text" class="form-control" name="pay[wechat][key]" ng-model="pay.wechat.key">
                                 <span class="input-group-addon" style="cursor: pointer" ng-click="createWeichatApi()">生成新的</span>
                             </div>
                             <span class="help-block">此值需要手动在腾讯商户后台API密钥保持一致。查看设置教程</span>
@@ -81,7 +81,7 @@
                     <div class="form-group" ng-show="version==0">
                         <label class="col-sm-2 control-label">商户身份<br/>(partnerId)</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="pay[weichat][partnerid]" ng-model="pay.weichat.partnerid">
+                            <input type="text" class="form-control" name="pay[wechat][partnerid]" ng-model="pay.wechat.partnerid">
                             <span class="help-block">财付通商户身份标识</span>
                             <span class="help-block">公众号支付请求中用于加密的密钥Key</span>
                         </div>
@@ -89,48 +89,48 @@
                     <div class="form-group" ng-show="version==0">
                         <label class="col-sm-2 control-label">商户密钥<br/>(partnerKey)</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="pay[weichat][partnerkey]" ng-model="pay.weichat.partnerkey">
+                            <input type="text" class="form-control" name="pay[wechat][partnerkey]" ng-model="pay.wechat.partnerkey">
                             <span class="help-block">财付通商户权限密钥Key</span>
                         </div>
                     </div>
                     <div class="form-group" ng-show="version==0">
                         <label class="col-sm-2 control-label">通信密钥<br/>(paySignKey)</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="pay[weichat][paysignkey]" ng-model="pay.weichat.paysignkey">
+                            <input type="text" class="form-control" name="pay[wechat][paysignkey]" ng-model="pay.wechat.paysignkey">
                             <span class="help-block">公众号支付请求中用于加密的密钥Key</span>
                         </div>
                     </div>
                     <!--旧版start-->
                     <!--证书-->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">证书pem格式<br/>(apiclient_cert)</label>
+                        <label class="col-sm-2 control-label">证书格式<br/>(apiclient_cert.pem)</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="pay[weichat][apiclient_cert]" readonly="" ng-model="pay.weichat.apiclient_cert">
+                                <input type="text" class="form-control" name="pay[wechat][apiclient_cert]" readonly="" ng-model="pay.wechat.apiclient_cert">
                                 <div class="input-group-btn">
-                                    <button onclick="upFile('pay[weichat][apiclient_cert]')" class="btn btn-default" type="button">选择证书文件</button>
+                                    <button onclick="upFile('pay[wechat][apiclient_cert]')" class="btn btn-default" type="button">选择证书文件</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">证书密钥pem格式<br/>(apiclient_key)</label>
+                        <label class="col-sm-2 control-label">证书密钥格式<br/>(apiclient_key.pem)</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="pay[weichat][apiclient_key]" readonly="" ng-model="pay.weichat.apiclient_key">
+                                <input type="text" class="form-control" name="pay[wechat][apiclient_key]" readonly="" ng-model="pay.wechat.apiclient_key">
                                 <div class="input-group-btn">
-                                    <button onclick="upFile('pay[weichat][apiclient_key]')" class="btn btn-default" type="button">选择证书文件</button>
+                                    <button onclick="upFile('pay[wechat][apiclient_key]')" class="btn btn-default" type="button">选择证书文件</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">CA证书<br/>(rootca)</label>
+                        <label class="col-sm-2 control-label">CA证书<br/>(rootca.pem)</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" name="pay[weichat][rootca]" readonly="" ng-model="pay.weichat.rootca">
+                                <input type="text" class="form-control" name="pay[wechat][rootca]" readonly="" ng-model="pay.wechat.rootca">
                                 <div class="input-group-btn">
-                                    <button onclick="upFile('pay[weichat][rootca]')" class="btn btn-default" type="button">选择证书文件</button>
+                                    <button onclick="upFile('pay[wechat][rootca]')" class="btn btn-default" type="button">选择证书文件</button>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
             $scope.pay = <?php echo json_encode(v('site.setting.pay'));?>;
             $scope.createWeichatApi = function () {
-                $scope.pay.weichat.api = md5(Math.random());
+                $scope.pay.wechat.key = md5(Math.random());
             }
         }]);
         angular.bootstrap($("#form")[0], ['app']);

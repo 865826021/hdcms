@@ -1,12 +1,13 @@
 <extend file='resource/view/mobile'/>
 <block name="title">我的钱包-代金券</block>
+<link rel="stylesheet" href="{{template_url()}}/css/ticket.css">
 <block name="content">
-    <parent name="header" title="我的钱包-{{$_GET['type']==1?'折扣券':'代金券'}}"/>
+    <tag action="ucenter.header" title="我的钱包-{{$_GET['type']==1?'折扣券':'代金券'}}"></tag>
     <div class="text-center">
         <div class="btn-group">
-            <a href="{{web_url('ticket/lists')}}&type={{$_GET['type']}}&status=1" class="btn {{$_GET['status']==1?'btn-primary':'btn-default'}}" role="button">未使用</a>
-            <a href="{{web_url('ticket/lists')}}&type={{$_GET['type']}}&status=2" class="btn {{$_GET['status']==2?'btn-primary':'btn-default'}}" role="button">已使用</a>
-            <a href="{{web_url('ticket/lists')}}&type={{$_GET['type']}}&status=3" class="btn {{$_GET['status']==3?'btn-primary':'btn-default'}}" role="button">已过期</a>
+            <a href="{{url('ticket/lists')}}&type={{$_GET['type']}}&status=1" class="btn {{$_GET['status']==1?'btn-primary':'btn-default'}}" role="button">未使用</a>
+            <a href="{{url('ticket/lists')}}&type={{$_GET['type']}}&status=2" class="btn {{$_GET['status']==2?'btn-primary':'btn-default'}}" role="button">已使用</a>
+            <a href="{{url('ticket/lists')}}&type={{$_GET['type']}}&status=3" class="btn {{$_GET['status']==3?'btn-primary':'btn-default'}}" role="button">已过期</a>
         </div>
     </div>
     <div class="ticket">
@@ -29,7 +30,7 @@
                             </if>
                         </div>
                         <div class="desc">
-                            ★订单满{{$d['condition']}}元可使用
+                            ★ 订单满{{$d['condition']}}元可使用
                         </div>
                     </div>
                     <div class="right-i">
@@ -43,7 +44,7 @@
                 </div>
                 <div class="convert">
                     <if value="$_GET['status']==1">
-                        <a href="{{web_url('ticket/employ')}}&tid={{$d['tid']}}&type={{$_GET['type']}}">立即使用</a>
+                        <a href="{{url('ticket/employ')}}&tid={{$d['tid']}}&type={{$_GET['type']}}">立即使用</a>
                     </if>
                     <if value="$_GET['status']==2">
                         <a href="javascript:;">已经使用</a>
@@ -54,7 +55,7 @@
                 </div>
             </div>
         </foreach>
-        <parent name="ticket_footer"/>
+        <tag action="ucenter.ticket_footer"></tag>
     </div>
 </block>
 

@@ -24,5 +24,7 @@ class ControllerStart {
 		\User::initUserInfo();
 		//载入前台用户信息到全局变量
 		\Member::initMemberInfo();
+		//同步通知地址
+		c( 'wechat.back_url', u( 'site.pay.weChatNotify' ) );
 	}
 }

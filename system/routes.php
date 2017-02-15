@@ -6,6 +6,9 @@
 | 如果使用普通GET方式访问时不需要设置路由规则
 | 当然也可以根据业务需要两种方式都使用
 |-------------------------------------------------------------------------*/
+//微信支付异步通知地址
+Route::any('wxnotifyurl', 'site/pay/weChatAsyncNotify');
+
 //后台管理员登录
 Route::any( 'hdcms', function () {
 	Session::set( 'system.login', 'hdcms' );

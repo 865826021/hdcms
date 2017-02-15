@@ -1,16 +1,17 @@
 <extend file='resource/view/mobile'/>
-<block name="title">会员充值</block>
 <block name="content">
-    <parent name="header" title="修改手机号"/>
+    <tag action="ucenter.header" title="修改手机号"></tag>
     <div class="panel panel-default">
         <div class="panel-body">
             <form action="" method="post" class="form-horizontal">
+                <if value="v('member.info.mobile')">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">原手机号</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static">{{Session::get('member.mobile')}}</p>
+                        <p class="form-control-static">{{v('member.info.mobile')}}</p>
                     </div>
                 </div>
+                </if>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">新手机号</label>
                     <div class="col-sm-10">

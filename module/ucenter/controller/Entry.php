@@ -8,7 +8,9 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace module\ucenter\controller;
+
 use module\HdController;
+
 /**
  * 会员登录注册管理
  * Class Entry
@@ -65,10 +67,10 @@ class Entry extends HdController {
 	}
 
 	//使用微信openid登录
-	public function openidLogin() {
+	public function weChatLogin() {
 		//微信自动登录
-		if ( service( 'member' )->weixinLogin() ) {
-			$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
+		if ( \Member::weChatLogin() ) {
+			$url = q( 'get.backurl', url( 'member/index' ) );
 			go( $url );
 		}
 		message( '微信登录失败,请检查微信公众号是否验证', 'back', 'error' );

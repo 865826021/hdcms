@@ -66,11 +66,11 @@ class Site extends Common {
 			"encodingaeskey" => v( 'site.wechat.encodingaeskey' ),
 			"appid"          => v( 'site.wechat.appid' ),
 			"appsecret"      => v( 'site.wechat.appsecret' ),
-			"mch_id"         => v( 'site.setting.pay.weichat.mch_id' ),
-			"key"            => v( 'site.setting.pay.weichat.key' ),
-			"apiclient_cert" => v( 'site.setting.pay.weichat.apiclient_cert' ),
-			"apiclient_key"  => v( 'site.setting.pay.weichat.apiclient_key' ),
-			"rootca"         => v( 'site.setting.pay.weichat.rootca' ),
+			"mch_id"         => v( 'site.setting.pay.wechat.mch_id' ),
+			"key"            => v( 'site.setting.pay.wechat.key' ),
+			"apiclient_cert" => v( 'site.setting.pay.wechat.apiclient_cert' ),
+			"apiclient_key"  => v( 'site.setting.pay.wechat.apiclient_key' ),
+			"rootca"         => v( 'site.setting.pay.wechat.rootca' ),
 			"back_url"       => ''
 		];
 		//设置微信通信数据配置

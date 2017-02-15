@@ -1,6 +1,7 @@
 <?php namespace system\service\member;
 
 use houdunwang\validate\Validate;
+use system\model\MemberAuth;
 use system\service\Common;
 use system\model\Member as MemberModel;
 
@@ -21,7 +22,7 @@ class Member extends Common {
 		if ( $member_uid = Session::get( "member_uid" ) ) {
 			$user          = [ ];
 			$user['info']  = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
-			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['member']['group_id'] )->first();
+			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
 			v( 'member', $user );
 		}
 	}
@@ -51,25 +52,24 @@ class Member extends Common {
 	}
 
 	//微信自动登录
-	public function weixinLogin() {
+	public function weChatLogin() {
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 ) {
 			//认证订阅号或服务号,并且开启自动登录时获取微信帐户openid自动登录
 			if ( $info = \WeChat::instance( 'oauth' )->snsapiUserinfo() ) {
-				$user = $this->db->where( 'openid', $info['openid'] )->first();
-				if ( ! $user ) {
+				$auth = MemberAuth::where( 'wechat', $info['openid'] )->first();
+				if ( ! $auth ) {
 					//帐号不存在时使用openid添加帐号
-					$this->db['openid']   = $info['openid'];
-					$this->db['nickname'] = $info['nickname'];
-					$this->db['icon']     = $info['headimgurl'];
-					$this->db['group_id'] = \Site::getDefaultGroup();
-					$uid                  = $this->db->save();
-					$user                 = $this->db->find( $uid );
+					$user             = new MemberModel();
+					$user['nickname'] = $info['nickname'];
+					$user['icon']     = $info['headimgurl'];
+					$user['group_id'] = $this->getDefaultGroup();
+					$user->save();
+					$model           = new MemberAuth();
+					$model['uid']    = $user['uid'];
+					$model['wechat'] = $info['openid'];
+					$model->save();
 				}
-				//更新access_token
-				$user['access_token'] = md5( $user['username'] . $user['password'] . c( 'app.key' ) );
-				$user->save();
-				Session::set( 'member_uid', $user['uid'] );
-
+				Session::set( 'member_uid', $auth['uid'] );
 				return true;
 			}
 		}
@@ -182,7 +182,7 @@ class Member extends Common {
 	 * @return mixed
 	 */
 	public function getDefaultAddress() {
-		return $this->where( 'uid', Session::get( 'member.uid' ) )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->first();
+		return Db::table( 'member_address' )->where( 'uid', v( 'member.info.uid' ) )->where( 'siteid', SITEID )->where( 'isdefault', 1 )->first();
 	}
 
 	/**
@@ -211,4 +211,6 @@ class Member extends Common {
 
 		return $data;
 	}
+
+
 }

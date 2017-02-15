@@ -346,7 +346,7 @@ class Model implements ArrayAccess, Iterator {
 					$data = Arr::filterKeys( $data, $this->denyFill, 1 );
 				}
 			}
-			$this->original = $data;
+			$this->original = array_merge($this->original,$data);
 		}
 		//不允许设置主键字段
 		if ( isset( $this->original[ $this->pk ] ) ) {

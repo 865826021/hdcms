@@ -69,7 +69,10 @@ function authIdentity( $tag ) {
 	\User::authIdentity( $tag );
 }
 
-
+//验证会员是否登录
+function memberIsLogin(){
+	return \Member::isLogin();
+}
 /**
  * 生成模块控制器链接地址
  *

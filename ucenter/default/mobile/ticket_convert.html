@@ -1,11 +1,13 @@
 <extend file='resource/view/mobile'/>
-<block name="title">我的钱包-代金券</block>
+<link rel="stylesheet" href="{{template_url()}}/css/ticket.css">
 <block name="content">
-    <parent name="header" title="我的钱包-{{$_GET['t']==1?'折扣券':'代金券'}}"/>
+    <tag action="ucenter.header" title="我的钱包-{{$_GET['t']==1?'折扣券':'代金券'}}"></tag>
     <div class="text-center">
         <div class="btn-group">
-            <a href="{{web_url('ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}" role="button">折扣券</a>
-            <a href="{{web_url('ticket/convert')}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}" role="button">代金券</a>
+            <a href="{{url('ticket/convert')}}&type=1" class="btn {{$_GET['type']==1?'btn-primary':'btn-default'}}"
+               role="button">折扣券</a>
+            <a href="{{url('ticket/convert')}}&type=2" class="btn {{$_GET['type']==2?'btn-primary':'btn-default'}}"
+               role="button">代金券</a>
         </div>
     </div>
     <div class="ticket">
@@ -43,13 +45,12 @@
     function convert(tid) {
         $.post('{{__URL__}}', {tid: tid}, function (res) {
             require(['util'], function (util) {
-                util.message(res.message, '', (res.valid ? 'success' : 'error'),
-                        {
+                util.message(res.message, '', (res.valid ? 'success' : 'error'),3, {
                             width: '',
                             events: {
                                 'hidden.bs.modal': function () {
                                     if (res.valid) {
-                                        location.href = "{{ web_url( 'ticket/lists', [ 'type' => $_GET['type'],'status'=>1 ], 'uc' )}}";
+                                        location.href = "{{ url( 'ticket/lists', [ 'type' => $_GET['type'],'status'=>1 ])}}";
                                     }
                                 }
                             }

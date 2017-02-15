@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>
-		<blade name="title"/>
-	</title>
+	<title></title>
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 	<if value="IS_WEIXIN">
 		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
@@ -23,11 +22,13 @@
 		};
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",
-			user: <?php echo json_encode( Session::get( 'user' ) );?>,
+			user: <?php echo json_encode( v('member.info') );?>,
 			root: "<?php echo __ROOT__;?>",
 			url: "{{__URL__}}",
 			siteid: <?php echo SITEID;?>,
-			module: "<?php echo v( 'module.name' );?>"
+			module: "<?php echo v( 'module.name' );?>",
+			//用于上传等组件使用标识当前是后台用户
+			user_type: 'member'
 		}
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
@@ -52,33 +53,5 @@
 </head>
 <body>
 <blade name="content"/>
-<!--会员头部固定条-->
-<widget name="header">
-	<div class="container">
-		<nav class="navbar navbar-default navbar-fixed-top uc-header">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="{{web_url('entry/home')}}" style="position: absolute;">
-					<i class="fa fa-chevron-left"></i>
-				</a>
-				<p class="navbar-text navbar-right text-center">{{title}}</p>
-			</div>
-		</nav>
-	</div>
-	<div style="height: 55px"></div>
-</widget>
-<!--会员头部固定条 end-->
-<!--会员卡底部-->
-<widget name="ticket_footer">
-	<div style="height:60px;"></div>
-	<nav class="navbar navbar-default navbar-fixed-bottom card_footer">
-		<a href="{{web_url('ticket/convert')}}&type={{$_GET['type']}}">
-			<i class="fa fa-credit-card" aria-hidden="true"></i> 兑换
-		</a>
-		<a href="{{web_url('entry/home')}}">
-			<i class="fa fa-user"></i> 会员中心
-		</a>
-	</nav>
-</widget>
-<!--会员卡底部 end-->
 </body>
 </html>

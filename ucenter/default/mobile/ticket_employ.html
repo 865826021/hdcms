@@ -1,8 +1,8 @@
 <extend file='resource/view/mobile'/>
-<block name="title">我的钱包-代金券</block>
+<link rel="stylesheet" href="{{template_url()}}/css/ticket.css">
 <block name="content">
     <div class="ticket">
-        <parent name="header" title="使用{{$_GET['type']==1?'折扣券':'代金券'}}"/>
+        <tag action="ucenter.header" title="使用{{$_GET['type']==1?'折扣券':'代金券'}}"></tag>
         <div class="employ">
             <div class="card">
                 <div class="item">
