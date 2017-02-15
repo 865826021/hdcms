@@ -74,7 +74,7 @@ class Style extends HdController {
 			$replyCoverModel['description'] = $ucenter['description'];
 			$replyCoverModel['thumb']       = $ucenter['thumb'];
 			$replyCoverModel['module']      = 'ucenter';
-			$replyCoverModel['url']         = "?m=ucenter&action=controller/member/home&siteid=" . SITEID;
+			$replyCoverModel['url']         = "?m=ucenter&action=controller/member/index&siteid=" . SITEID;
 			$replyCoverModel->save();
 			message( '会员中心视图保存成功', 'refresh', 'success' );
 		}
@@ -98,6 +98,6 @@ class Style extends HdController {
 		View::with( 'rid', Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##移动端会员中心##' )->pluck( 'rid' ) ?: 0 );
 		View::with( [ 'modules' => $modules, 'menus' => json_encode( $menus ) ] );
 
-		return view( $this->template . '/mobile_post.html' );
+		return view( $this->template . '/style_post.html' );
 	}
 }
