@@ -37,7 +37,6 @@
 	</div>
 	<h5 class="page-header">未安装的本地模块</h5>
 	<foreach from="$locality" value="$local">
-		<if value="$local['locality']">
 			<div class="media">
 				<div class="pull-right">
 					<div style="margin-right: 10px;">
@@ -57,7 +56,6 @@
 				</div>
 				<div class="alert alert-info" role="alert"><strong>功能介绍</strong>： {{$local['detail']}}</div>
 			</div>
-		</if>
 	</foreach>
 	<style>
 		.media {

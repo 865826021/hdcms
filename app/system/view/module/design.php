@@ -671,12 +671,12 @@
 		$(function () {
 			angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
 				$scope.industry = [
-					{id: 1, title: '主要业务', name: 'business'},
-					{id: 1, title: '客户关系', name: 'customer'},
-					{id: 1, title: '营销与活动', name: 'marketing'},
-					{id: 1, title: '常用服务与工具', name: 'tools'},
-					{id: 1, title: '行业解决方案', name: 'industry'},
-					{id: 1, title: '其他', name: 'other'}
+					{title: '主要业务', name: 'business'},
+					{title: '客户关系', name: 'customer'},
+					{title: '营销与活动', name: 'marketing'},
+					{title: '常用服务与工具', name: 'tools'},
+					{title: '行业解决方案', name: 'industry'},
+					{title: '其他', name: 'other'}
 				];
 				$scope.field = {
 					"manifest_code": "2.0",

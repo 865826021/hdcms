@@ -1,5 +1,6 @@
 <?php namespace system\service\template;
 
+use system\model\Package;
 use system\model\SiteTemplate;
 use system\model\Template as TemplateModel;
 
@@ -142,5 +143,30 @@ class Template {
 		if ( $name ) {
 			return Db::table( 'template' )->where( 'name', $name )->first();
 		}
+	}
+
+	/**
+	 * 删除模板
+	 *
+	 * @param $name 模板标识
+	 *
+	 * @return bool
+	 */
+	public function remove( $name ) {
+		//删除模板数据
+		TemplateModel::where( 'name', $name )->delete();
+		//更新套餐数据
+		$package = Db::table( 'package' )->get() ?: [ ];
+		foreach ( $package as $p ) {
+			$p['template'] = json_decode( $p['template'], true ) ?: [ ];
+			if ( $k = array_search( $name, $p['template'] ) ) {
+				unset( $p['template'][ $k ] );
+			}
+			Package::where( 'id', $p['id'] )->update( $p );
+		}
+		//更新站点缓存
+		\Site::updateAllCache();
+
+		return true;
 	}
 }

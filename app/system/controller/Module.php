@@ -47,12 +47,7 @@ class Module {
 		//压缩目录
 		\Zip::create( "{$name}" );
 		\File::download( $name . ".zip", $name . '.zip' );
-	}
-
-	//获取云商店的模块
-	public function getCloudModules() {
-		$modules = \Cloud::modules() ?: [ ];
-		ajax( json_encode( $modules ) );
+		@unlink( $name . ".zip" );
 	}
 
 	//已经安装模块
@@ -76,15 +71,7 @@ class Module {
 				$config = json_decode( file_get_contents( $d['path'] . '/package.json' ), true );
 				//去除已经安装的模块
 				if ( ! in_array( $config['name'], $modules ) ) {
-					//预览图片
-					$x['thumb']             = $config['thumb'];
-					$x['name']              = $config['name'];
-					$x['title']             = $config['title'];
-					$x['version']           = $config['version'];
-					$x['detail']            = $config['detail'];
-					$x['author']            = $config['author'];
-					$x['locality']          = ! is_file( 'addons/' . $x['name'] . '/cloud.hd' ) ? 1 : 0;
-					$locality[ $x['name'] ] = $x;
+					$locality[ $config['name'] ] = $config;
 				}
 			}
 		}
@@ -261,26 +248,6 @@ class Module {
 		$package = Package::get();
 
 		return view()->with( 'module', $config )->with( 'package', $package );
-	}
-
-	//下载远程模块
-	public function download() {
-		if ( IS_POST ) {
-			$module = q( 'get.module' );
-			$app    = Curl::get( c( 'api.cloud' ) . '?a=site/GetLastAppInfo&t=web&siteid=1&m=store&type=addons&module=' . $module );
-			$app    = json_decode( $app, true );
-			if ( $app ) {
-				$package = Curl::post( c( 'api.cloud' ) . '?a=site/download&t=web&siteid=1&m=store&type=addons', [ 'file' => $app['data']['package'] ] );
-				file_put_contents( 'tmp.zip', $package );
-				//释放压缩包
-				Zip::PclZip( 'tmp.zip' );//设置压缩文件名
-				Zip::extract( " . " );//解压缩
-				file_put_contents( 'addons/' . $module . '/cloud.hd', json_encode( $app['data'], JSON_UNESCAPED_UNICODE ) );
-				message( '模块下载成功,准备安装', '', 'success' );
-			}
-			message( '应用商店不存在模块', '', 'error' );
-		}
-		View::make();
 	}
 
 	//卸载模块

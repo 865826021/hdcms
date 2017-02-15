@@ -10,7 +10,8 @@
 		<li role="presentation"><a href="{{u('installed')}}">已经安装模板</a></li>
 		<li role="presentation" class="active"><a href="?s=system/template/prepared">安装模板</a></li>
 		<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
-		<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme" target="_blank">应用商城</a></li>
+		<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme"
+		                           target="_blank">应用商城</a></li>
 	</ul>
 	<h5 class="page-header">已购买的模板</h5>
 	<div id="myApp" ng-controller="ctrl" class="ng-cloak template clearfix" ng-cloak>
@@ -19,27 +20,24 @@
 			<img class="media-object"
 			     ng-src="{{dirname(c('api.cloud'))}}/packages/theme/@{{a.manifest.application.name['@cdata']}}/@{{a.manifest.application.thumb['@cdata']}}"/>
 			<div class="caption">
-				<a class="btn btn-default btn-xs btn-block" href="{{u('install')}}&name=@{{a.manifest.application.name['@cdata']}}">安装模板</a>
+				<a class="btn btn-default btn-xs btn-block"
+				   href="{{u('install')}}&name=@{{a.manifest.application.name['@cdata']}}">安装模板</a>
 			</div>
 		</div>
 	</div>
 	<h5 class="page-header">未安装的本地模板</h5>
 	<div class="template">
 		<foreach from="$locality" value="$m">
-			<if value="$m['locality']">
-				<div class="thumbnail action">
-					<h5>{{$m['title']}}({{$m['name']}})</h5>
-					<img class="media-object" src="{{$m['thumb']}}"/>
-					<div class="caption">
-						<if value="$m['locality']==1">
-							<a class="btn btn-default btn-xs" style="width: 45%" href="{{u('install',array('name'=>$m['name']))}}">安装模板</a>
-							<a class="btn btn-default btn-xs" style="width: 45%" href="{{u('createZip',array('name'=>$m['name']))}}">打包下载</a>
-							<else/>
-							<a class="btn btn-default btn-xs btn-block" style="width: 45%" href="{{u('install',array('name'=>$m['name']))}}">安装模板</a>
-						</if>
-					</div>
+			<div class="thumbnail action">
+				<h5>{{$m['title']}}({{$m['name']}})</h5>
+				<img class="media-object" src="{{$m['thumb']}}"/>
+				<div class="caption">
+					<a class="btn btn-default btn-xs" style="width: 45%"
+					   href="{{u('install',array('name'=>$m['name']))}}">安装模板</a>
+					<a class="btn btn-default btn-xs" style="width: 45%"
+					   href="{{u('createZip',array('name'=>$m['name']))}}">打包下载</a>
 				</div>
-			</if>
+			</div>
 		</foreach>
 	</div>
 </block>

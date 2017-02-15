@@ -12,9 +12,9 @@
         <li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme" target="_blank">应用商城</a></li>
     </ul>
     <div class="clearfix">
-        <h5 class="page-header">安装 {{$template['name']['@cdata']}}</h5>
+        <h5 class="page-header">安装 {{$template['name']}}</h5>
 
-        <div class="alert alert-info" role="alert">您正在安装 [{{$template['title']['@cdata']}}] 模板. 请选择哪些公众号服务套餐组可使用 [{{$template['title']['@cdata']}}] 模板 .</div>
+        <div class="alert alert-info" role="alert">您正在安装 [{{$template['title']}}] 模板. 请选择哪些公众号服务套餐组可使用 [{{$template['title']}}] 模板 .</div>
 
         <h5 class="page-header">可用的公众号服务套餐组
             <small>这里来定义哪些公众号服务套餐组可使用 测试模板 功能</small>
@@ -23,7 +23,7 @@
             <label for="" class="col-sm-2 control-label">公众号服务套餐组</label>
 
             <form action="" method="post">
-                <input type="hidden" name="name" value="{{$template['name']['@cdata']}}">
+                <input type="hidden" name="name" value="{{$template['name']}}">
 
                 <div class="col-sm-10">
                     <div class="checkbox">
@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary">确定继续安装 [{{$template['title']['@cdata']}}] 模板</button>
+                        <button type="submit" class="btn btn-primary">确定继续安装 [{{$template['title']}}] 模板</button>
                     </div>
                 </div>
 

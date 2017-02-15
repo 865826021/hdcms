@@ -17,34 +17,5 @@ namespace system\model;
  */
 class Template extends Common {
 	protected $table = 'template';
-
-	/**
-	 * 删除模板
-	 *
-	 * @param $name 模板标识
-	 *
-	 * @return bool
-	 */
-	public function remove( $name ) {
-		//删除模板数据
-		$this->where( 'name', $name )->delete();
-		//更新套餐数据
-		$package = Db::table( 'package' )->get() ?: [ ];
-		foreach ( $package as $p ) {
-			$p['template'] = unserialize( $p['template'] );
-			if ( $k = array_search( $name, $p['template'] ) ) {
-				unset( $p['template'][ $k ] );
-			}
-			$p['template'] = serialize( $p['template'] );
-			Db::table( 'package' )->where( 'id', $p['id'] )->update( $p );
-		}
-		//更新站点缓存
-		$siteids   = Db::table( 'site' )->lists( 'siteid' );
-		$siteModel = new Site();
-		foreach ( $siteids as $siteid ) {
-			service( 'site' )->updateCache( $siteid );
-		}
-
-		return true;
-	}
+	protected $allowFill = [ '*' ];
 }
