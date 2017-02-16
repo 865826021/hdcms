@@ -91,17 +91,17 @@ class Module extends Admin {
 	 */
 	public function del() {
 		$id  = Request::get( 'id' );
-		$app = Db::table( 'store_app' )->where( 'id', $id )->where( 'uid', v( 'member.info.uid' ) )->get();
+		$app = StoreModule::where( 'id', $id )->where( 'uid', v( 'member.info.uid' ) )->get();
 		if ( ! $app ) {
 			message( '应用不存在', '', 'error' );
 		}
 		//删除压缩包
-		$zips = Db::table( 'store_zip' )->where( 'appid', $app['id'] )->get();
+		$zips =StoreZip::where( 'appid', $app['id'] )->get();
 		foreach ( $zips as $z ) {
 			\Dir::delFile( $z['file'] );
 		}
-		Db::table( 'store_zip' )->where( 'appid', $app['id'] )->delete();
-		Db::table( 'store_app' )->where( 'id', $id )->delete();
+		StoreZip::where( 'appid', $app['id'] )->delete();
+		StoreModule::where( 'id', $id )->delete();
 		message( '模块删除成功', url( 'module.lists' ) );
 	}
 

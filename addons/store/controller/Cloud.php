@@ -11,7 +11,10 @@
 namespace addons\store\controller;
 
 use addons\store\model\StoreHdcms;
+use addons\store\model\StoreModule;
+use addons\store\model\StoreTemplate;
 use addons\store\model\StoreUser;
+use houdunwang\request\Request;
 
 /**
  * 云接口
@@ -62,5 +65,24 @@ class Cloud {
 		//增加下载数量
 		Db::table( "store_hdcms" )->where( 'build', $_GET['build'] )->increment( 'update_site_num', 1 );
 		ajax( [ 'message' => '更新安装数量成功', 'valid' => 1 ] );
+	}
+
+	/**
+	 * 根据类型获取模块或模板列表
+	 * 用于客户端后台应用商店显示
+	 */
+	public function apps() {
+		switch ( Request::get( 'type' ) ) {
+			case 'module':
+				$db = StoreModule::where( 'id', '>', Request::get( 'startId' ) )->paginate( 1 );
+				break;
+			case 'template':
+				$db = StoreTemplate::where( 'id', '>', Request::get( 'startId' ) )->paginate( 1 );
+				break;
+		}
+		$data['apps'] = $db->toArray();
+		$data['page'] = $db->links();
+		echo json_encode( $data, true );
+		exit;
 	}
 }

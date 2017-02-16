@@ -529,5 +529,6 @@ class Model implements ArrayAccess, Iterator {
 					return $result;
 			}
 		}
+		return $result;
 	}
 }

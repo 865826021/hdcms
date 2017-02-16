@@ -61,7 +61,7 @@ class Cloud {
 	//更新安装数量
 	public function updateHDownloadNum() {
 		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum&build='
-		                   .Db::table( 'cloud' )->where( 'id', 1 )->pluck('build'));
+		                   . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
 
 		return json_decode( $res, true );
 	}
@@ -117,6 +117,19 @@ class Cloud {
 		}
 
 		return [ 'files' => $formats, 'valid' => $valid ];
+	}
+
+	/**
+	 * 获取模块或模板列表
+	 * @param $type 类型 module/template
+	 * @param $startId 开启编号
+	 *
+	 * @return mixed
+	 */
+	public function apps( $type, $startId ) {
+		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&startId={$startId}" );
+
+		return json_decode( $content, true );
 	}
 }
 
