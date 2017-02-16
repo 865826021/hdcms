@@ -42,7 +42,7 @@ class Site extends HdController {
 			$replyCover['description'] = $data['description'];
 			$replyCover['thumb']       = $data['thumb'];
 			$replyCover['module']      = 'article';
-			$replyCover['url']         = '?m=article&action=entry/home&webid=' . $model['id'];
+			$replyCover['url']         = '?m=article&action=controller/entry/index&siteid='.SITEID;
 			$replyCover->save();
 			message( '保存站点数据成功', __URL__, 'success' );
 		}

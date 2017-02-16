@@ -98,6 +98,23 @@
 					<span class="help-block">图片尺寸为225x170 会有良好的显示效果</span>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">官网展示图</label>
+				<div class="col-sm-10">
+					<div class="input-group">
+						<input type="text" class="form-control" readonly="" ng-model="field.preview">
+						<div class="input-group-btn">
+							<button ng-click="uploadPreview()" class="btn btn-default" type="button">选择图片</button>
+						</div>
+					</div>
+					<div class="input-group" style="margin-top:5px;">
+						<img ng-src="@{{field.preview}}" class="img-responsive img-thumbnail img-cover" width="150">
+						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
+						    ng-click="field.preview='resource/images/nopic.jpg'">×</em>
+					</div>
+					<span class="help-block">模块封面, 大小为 600*350, 更好的设计将会获得官方推荐位置</span>
+				</div>
+			</div>
 			<input type="hidden" name="data">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
@@ -142,6 +159,7 @@
 					"url": "url",
 					"position": 10,
 					"thumb": "resource/images/nopic.jpg",
+					"preview": "resource/images/nopic.jpg",
 				};
 				$scope.uploadThumb = function () {
 					util.image(function (images) {

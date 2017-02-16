@@ -22,6 +22,6 @@ class Entry extends HdController {
 		}
 		View::with( 'category', $category );
 		View::with( 'type_title', $type_title );
-		return view( $this->template . '/entry.home.html' );
+		return view( $this->template . '/entry/home.html' );
 	}
 }

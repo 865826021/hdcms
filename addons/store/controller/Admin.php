@@ -44,6 +44,6 @@ class Admin extends HdController {
 
 	//后台主页
 	public function home() {
-		return view( $this->template . '/admin.home.html' );
+		return view( $this->template . '/admin/home.html' );
 	}
 }

@@ -63,7 +63,7 @@ class WebCategory extends Model {
 	 */
 	public function delCategory() {
 		$table = ( new WebModel() )->getModelTable( $this['mid'] );
-		Db::table( $table )->where( 'category_cid', $this['cid'] )->delete();
+		Db::table( $table )->where( 'cid', $this['cid'] )->delete();
 
 		return $this->destory();
 	}

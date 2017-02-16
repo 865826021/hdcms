@@ -99,7 +99,7 @@ class Entry {
 						break;
 					case 'admin':
 						//站点管理平台
-						$site = Db::table( 'site' )->where( 'domain', $_SERVER['SERVER_NAME'] )->first();
+						$site = Db::table( 'module_domain' )->where( 'domain', $_SERVER['SERVER_NAME'] )->first();
 						$url  = __ROOT__ . '?s=site/entry/home&siteid=' . $site['siteid'];
 						break;
 				}

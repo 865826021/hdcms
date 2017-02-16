@@ -10,7 +10,7 @@
 
 namespace addons\store\controller;
 
-use addons\store\model\StoreApp;
+use addons\store\model\StoreModule;
 use addons\store\model\StoreZip;
 use houdunwang\request\Request;
 
@@ -22,7 +22,7 @@ use houdunwang\request\Request;
 class Module extends Admin {
 	//模块列表
 	public function lists() {
-		$apps = StoreApp::where( 'uid', v( 'member.info.uid' ) )->where( 'type', 'module' )->get();
+		$apps = StoreModule::where( 'uid', v( 'member.info.uid' ) )->get();
 		View::with( [ 'apps' => $apps ] );
 
 		return view( $this->template . '/module/lists.html' );
@@ -30,7 +30,7 @@ class Module extends Admin {
 
 	//上架或下架模块
 	public function changeModuleRacking() {
-		StoreApp::where( 'uid', v( 'member.info.uid' ) )->where( 'id', $_GET['id'] )->update( [ 'racking' => $_GET['racking'] ] );
+		StoreModule::where( 'uid', v( 'member.info.uid' ) )->where( 'id', $_GET['id'] )->update( [ 'racking' => $_GET['racking'] ] );
 		message( '模块状态修改成功', url( 'module.lists' ) );
 	}
 
@@ -40,12 +40,11 @@ class Module extends Admin {
 		if ( IS_POST ) {
 			//发表新模块
 			$data = json_decode( Request::post( 'data' ), true );
-			if ( empty( $id ) && StoreApp::where( 'name', $data['name'] )->first() ) {
+			if ( empty( $id ) && StoreModule::where( 'name', $data['name'] )->first() ) {
 				message( '模块已经存在,不允许发布同名模块', '', 'error' );
 			}
-			$data['type']    = 'module';
 			$data['package'] = Request::post( 'data' );
-			$model           = $id ? StoreApp::find( $id ) : new StoreApp();
+			$model           = $id ? StoreModule::find( $id ) : new StoreModule();
 			$res             = $model->save( $data );
 			//保存模块压缩包
 			$model          = new StoreZip();
@@ -55,7 +54,7 @@ class Module extends Admin {
 		}
 		$field = "{detail: ''}";
 		if ( $id ) {
-			$field = StoreApp::where( 'id', $id )->pluck( 'package' );
+			$field = StoreModule::where( 'id', $id )->pluck( 'package' );
 		}
 		View::with( 'field', $field );
 
@@ -109,9 +108,9 @@ class Module extends Admin {
 	//模块压缩包管理
 	public function zips() {
 		$this->has( Request::get( 'id' ) );
-		$app  = Db::table( 'store_app' )->find( Request::get( 'id' ) );
-		$zips = Db::table( 'store_zip' )->where( 'appid', Request::get( 'id' ) )->get();
-		View::with( [ 'app' => $app, 'zips' => $zips ] );
+		$module  = StoreModule::find( Request::get( 'id' ) );
+		$zips = StoreZip::where( 'appid', Request::get( 'id' ) )->get();
+		View::with( [ 'app' => $module, 'zips' => $zips ] );
 
 		return view( $this->template . '/module/zips.html' );
 	}
@@ -120,22 +119,22 @@ class Module extends Admin {
 	public function addZip() {
 		$model          = new StoreZip();
 		$model['appid'] = Request::post( 'id' );
-		$model->save( Request::post('data') );
+		$model->save( Request::post( 'data' ) );
 		message( '模块发布成功', url( 'module.lists' ), 'success' );
 	}
 
 	//删除模块压缩包
 	public function delZip() {
-		$zip = Db::table( 'store_zip' )->find( Request::get( 'id' ) );
-		$this->has( $zip['appid'] );
-		\Dir::delFile( $zip['file'] );
+		$model = StoreZip::find( Request::get( 'id' ) );
+		$this->has( $model['appid'] );
+		\Dir::delFile( $model['file'] );
 		StoreZip::where( 'id', Request::get( 'id' ) )->delete();
-		message( '压缩包删除成功', url( 'module.zips', [ 'id' => $zip['appid'] ] ), 'success' );
+		message( '压缩包删除成功', url( 'module.zips', [ 'id' => $model['appid'] ] ), 'success' );
 	}
 
 	//检查当前模块或模板是否属于当前用户
 	public function has( $id ) {
-		$res = Db::table( 'store_app' )->where( 'uid', v( 'member.info.uid' ) )->where( 'id', $id )->get();
+		$res = StoreModule::where( 'uid', v( 'member.info.uid' ) )->where( 'id', $id )->get();
 		if ( empty( $res ) ) {
 			message( '应用不存在,无法进行操作', '', 'error' );
 		}
@@ -145,9 +144,9 @@ class Module extends Admin {
 
 	//更改模块压缩包状态
 	public function changeZipRacking() {
-		$zip = Db::table( 'store_zip' )->find( Request::get( 'id' ) );
+		$zip = StoreZip::find( Request::get( 'id' ) );
 		$this->has( $zip['appid'] );
-		Db::table( 'store_zip' )->where( 'id', $_GET['id'] )->update( [ 'racking' => $_GET['racking'] ] );
+		StoreZip::where( 'id', $_GET['id'] )->update( [ 'racking' => $_GET['racking'] ] );
 		message( '压缩包状态修改成功', url( 'module.zips', [ 'id' => $zip['appid'] ] ) );
 	}
 }

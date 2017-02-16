@@ -1,8 +1,8 @@
 <extend file='addons/store/template/admin.html'/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('app.moduleLists')}}">模块列表</a></li>
-        <li class="active"><a href="{{url('app.addModule')}}">添加模块</a></li>
+        <li><a href="{{url('template.lists')}}">模板列表</a></li>
+        <li class="active"><a href="{{url('template.post')}}">添加模板</a></li>
     </ul>
     <br/>
     <form action="" class="form-horizontal ng-cloak" ng-controller="ctrl" method="post">
@@ -64,22 +64,22 @@
             </div>
         </div>
         <input type="hidden" name="data">
-        <button type="submit" class="btn btn-primary" ng-show="field.title">保存模块资料</button>
+        <button type="submit" class="btn btn-primary" ng-show="field.title">保存模板资料</button>
     </form>
 </block>
 <script>
     require(['angular', 'underscore', 'util', 'jquery'], function (angular, _, util, $) {
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
             $scope.field = <?php echo $field;?>;
-            //上传package.json文件
+            //上传压缩包
             $scope.upFile = function () {
                 options = {
                     extensions: 'zip',
-                    data: {data: 'ext_app', status: 0,uploadDir:'zips/modules'}
+                    data: {data: 'ext_app', status: 0,uploadDir:'zips/template'}
                 };
                 util.file(function (files) {
                     if (files.length == 1) {
-                        $.post('{{url("app.unpack")}}', {file: files[0],'type':'new'}, function (json) {
+                        $.post('{{url("template.unpack")}}', {file: files[0]}, function (json) {
                             if(json.valid==1){
                                 $scope.field = json.message;
                                 $scope.field.file =files[0];

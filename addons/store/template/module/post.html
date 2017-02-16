@@ -71,7 +71,7 @@
     require(['angular', 'underscore', 'util', 'jquery'], function (angular, _, util, $) {
         angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
             $scope.field = <?php echo $field;?>;
-            //上传package.json文件
+            //上传压缩包
             $scope.upFile = function () {
                 options = {
                     extensions: 'zip',

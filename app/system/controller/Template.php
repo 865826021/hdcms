@@ -49,6 +49,11 @@ class Template {
 			$info = pathinfo( $data['thumb'] );
 			copy( $data['thumb'], 'theme/' . $data['name'] . '/thumb.' . $info['extension'] );
 			$data['thumb'] = 'thumb.' . $info['extension'];
+
+			$info = pathinfo( $data['preview'] );
+			copy( $data['preview'], 'theme/' . $data['name'] . '/preview.' . $info['extension'] );
+			$data['preview'] = 'preview.' . $info['extension'];
+
 			file_put_contents( "theme/{$data['name']}/package.json", json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模板创建成功', 'prepared', 'success' );
 		}

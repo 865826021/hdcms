@@ -28,7 +28,7 @@ class Hdcms extends Admin {
 		$data = StoreHdcms::get();
 		View::with( [ 'data' => $data ] );
 
-		return view( $this->template . '/hdcms.lists.html' );
+		return view( $this->template . '/hdcms/lists.html' );
 	}
 
 	//添加压缩包
@@ -46,7 +46,7 @@ class Hdcms extends Admin {
 		}
 		View::with( 'field', $field );
 
-		return view( $this->template . '/hdcms.post.html' );
+		return view( $this->template . '/hdcms/post.html' );
 	}
 
 	public function del() {
