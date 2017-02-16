@@ -33,7 +33,7 @@
     <script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
     <script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
     <script>
-        require(['jquery','bootstrap'], function ($) {
+        require(['jquery', 'bootstrap'], function ($) {
             //为异步请求设置CSRF令牌
             $.ajaxSetup({
                 headers: {
@@ -60,8 +60,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            {{v('member.info.nickname')}} ({{v('member.info.credit1')}}{{Credit::title('credit1')}}) <span class="caret"></span>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            {{v('member.info.nickname')}} ({{v('member.info.credit1')}}{{Credit::title('credit1')}})
+                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="{{u('system/entry/quit',['from'=>url('entry.home')])}}">退出</a></li>
@@ -81,38 +83,12 @@
             <div class="category">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">核心</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <a class="list-group-item" href="{{url('hdcms.lists')}}">系统核心</a>
-                        </ul>
-                    </div>
-                    <div class="panel-heading">
                         <h3 class="panel-title">开发</h3>
                     </div>
                     <div class="panel-body">
                         <ul class="list-group">
-                            <a class="list-group-item" href="{{url('app.moduleLists',['type'=>'module'])}}">插件模块</a>
-                            <!--<a class="list-group-item" href="{{url('app.lists',['type'=>'template'])}}">风格模板</a>-->
-                        </ul>
-                    </div>
-                    <!--<div class="panel-heading">-->
-                        <!--<h3 class="panel-title">购买</h3>-->
-                    <!--</div>-->
-                    <!--<div class="panel-body">-->
-                        <!--<ul class="list-group">-->
-                            <!--<a class="list-group-item" href="{{url('app/buys',['type'=>'addons'])}}">购买记录</a>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                    <div class="panel-heading">
-                        <h3 class="panel-title">资料</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <a class="list-group-item" href="{{url('member.secret')}}">密钥管理</a>
-                            <!--<a class="list-group-item" href="{{url('member/mobileValid')}}">手机验证</a>-->
-                            <!--<a class="list-group-item" href="{{url('member/mailValid')}}">邮箱验证</a>-->
+                            <a class="list-group-item" href="{{url('module.lists')}}">插件模块</a>
+                            <a class="list-group-item" href="{{url('template.lists')}}">风格模板</a>
                         </ul>
                     </div>
                 </div>

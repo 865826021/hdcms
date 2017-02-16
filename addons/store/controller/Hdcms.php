@@ -18,6 +18,12 @@ use addons\store\model\StoreHdcms;
  * @package addons\store\controller
  */
 class Hdcms extends Admin {
+	public function __construct() {
+		parent::__construct();
+		auth();
+	}
+
+	//软件包列表
 	public function lists() {
 		$data = StoreHdcms::get();
 		View::with( [ 'data' => $data ] );

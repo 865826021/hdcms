@@ -68,7 +68,7 @@
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">发布页</label>
 
-				<div class="col-sm-10 col-xs-12">
+				<div class="col-sm-10 col-x s-12">
 					<input type="text" class="form-control" ng-model="field.url">
 					<span class="help-block">模板的发布页, 用于发布模板更新信息的页面 </span>
 				</div>
@@ -98,7 +98,7 @@
 					<span class="help-block">图片尺寸为225x170 会有良好的显示效果</span>
 				</div>
 			</div>
-			<input type="hidden" ng-model="data" name="data">
+			<input type="hidden" name="data">
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label"></label>
 
@@ -177,8 +177,7 @@
 						util.message(msg, '', 'warning');
 						return false;
 					}
-					$scope.data = angular.toJson($scope.field);
-					$scope.$apply();
+					$("[name='data']").val(angular.toJson($scope.field));
 				})
 			}])
 

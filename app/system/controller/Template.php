@@ -17,7 +17,7 @@ class Template {
 	//设置新模板
 	public function design() {
 		if ( IS_POST ) {
-			$data = json_decode( q( 'post.data' ), JSON_UNESCAPED_UNICODE );
+			$data = json_decode( Request::post('data'), JSON_UNESCAPED_UNICODE );
 			//字段基本检测
 			Validate::make( [
 				[ 'title', 'required', '模板名称不能为空' ],

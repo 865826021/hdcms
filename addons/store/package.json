@@ -1,108 +1,115 @@
 {
-    "manifest_code": "2.0",
-    "title": "应用商店",
-    "name": "store",
-    "version": "1.0",
-    "industry": "business",
-    "resume": "HDCMS应用商店",
-    "detail": "提供模块、模板的发布\/下载\/更新的管理平台。",
-    "author": "向军",
-    "url": "http:\/\/store.hdcms.com",
-    "setting": true,
-    "tag": true,
-    "web": {
-        "entry": {
-            "title": "桌面入口导航",
-            "do": "home"
-        },
-        "member": [
-
-        ]
+  "manifest_code": "2.0",
+  "title": "应用商店",
+  "name": "store",
+  "version": "1.0",
+  "industry": "business",
+  "resume": "HDCMS应用商店",
+  "detail": "提供模块、模板的发布\/下载\/更新的管理平台。",
+  "author": "向军",
+  "url": "http:\/\/store.hdcms.com",
+  "crontab": false,
+  "router": false,
+  "domain": false,
+  "setting": true,
+  "tag": true,
+  "web": {
+    "entry": {
+      "title": "桌面入口导航",
+      "do": "home"
     },
-    "mobile": {
-        "home": [
-
-        ],
-        "member": [
-
-        ]
-    },
-    "subscribes": {
-        "text": true,
-        "image": true,
-        "voice": true,
-        "video": true,
-        "shortvideo": true,
-        "location": true,
-        "link": true,
-        "subscribe": true,
-        "unsubscribe": true,
-        "scan": true,
-        "track": true,
-        "click": true,
-        "view": true
-    },
-    "processors": {
-        "text": true,
-        "image": true,
-        "voice": true,
-        "video": true,
-        "shortvideo": true,
-        "location": true,
-        "link": true,
-        "subscribe": true,
-        "unsubscribe": true,
-        "scan": true,
-        "track": true,
-        "click": true,
-        "view": true
-    },
-    "cover": [
-        {
-            "title": "功能封面1",
-            "do": "fengmian1"
-        },
-        {
-            "title": "功能封面2",
-            "do": "fengmian2"
-        }
+    "member": [
+    ]
+  },
+  "mobile": {
+    "home": [
     ],
-    "rule": false,
-    "business": [
+    "member": [
+    ]
+  },
+  "subscribes": {
+    "text": true,
+    "image": true,
+    "voice": true,
+    "video": true,
+    "shortvideo": true,
+    "location": true,
+    "link": true,
+    "subscribe": true,
+    "unsubscribe": true,
+    "scan": true,
+    "track": true,
+    "click": true,
+    "view": true
+  },
+  "processors": {
+    "text": true,
+    "image": true,
+    "voice": true,
+    "video": true,
+    "shortvideo": true,
+    "location": true,
+    "link": true,
+    "subscribe": true,
+    "unsubscribe": true,
+    "scan": true,
+    "track": true,
+    "click": true,
+    "view": true
+  },
+  "cover": [
+  ],
+  "rule": false,
+  "business": [
+    {
+      "title": "模块管理",
+      "controller": "moduleManage",
+      "action": [
         {
-            "title": "模块管理",
-            "controller": "module",
-            "action": [
-                {
-                    "title": "审核模块",
-                    "do": "audit"
-                },
-                {
-                    "title": "模块列表",
-                    "do": "lists",
-                    "directly": false
-                }
-            ]
+          "title": "审核模块",
+          "do": "audit"
         },
         {
-            "title": "开发者管理",
-            "controller": "user",
-            "action": [
-                {
-                    "title": "开发者列表",
-                    "do": "lists",
-                    "directly": false
-                }
-            ]
+          "title": "模块列表",
+          "do": "lists",
+          "directly": false
         }
-    ],
-    "permissions": "",
-    "compatible_version": {
-        "version2": true
+      ]
     },
-    "thumb": "thumb.png",
-    "preview": "cover.png",
-    "install": "",
-    "uninstall": "",
-    "upgrade": ""
+    {
+      "title": "模板管理",
+      "controller": "templateManage",
+      "action": [
+        {
+          "title": "审核模板",
+          "do": "audit"
+        },
+        {
+          "title": "模板列表",
+          "do": "lists",
+          "directly": false
+        }
+      ]
+    },
+    {
+      "title": "系统包",
+      "controller": "hdcms",
+      "action": [
+        {
+          "title": "发布列表",
+          "do": "lists",
+          "directly": false
+        }
+      ]
+    }
+  ],
+  "permissions": "",
+  "compatible_version": {
+    "version2": true
+  },
+  "thumb": "thumb.png",
+  "preview": "cover.png",
+  "install": "",
+  "uninstall": "",
+  "upgrade": ""
 }

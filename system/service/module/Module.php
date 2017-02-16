@@ -39,7 +39,11 @@ class Module {
 		 * 加载模块数据到全局变量窗口中
 		 */
 		if ( $name = Request::get( 'm' ) ) {
-			v( 'module', Db::table( 'modules' )->where( 'name', $name )->first() );
+			$module = Db::table( 'modules' )->where( 'name', $name )->first();
+			if ( empty( $module ) ) {
+				message( '你访问的模块不存在或已经卸载,无法继续操作。', '', 'warning' );
+			}
+			v( 'module', $module );
 		}
 		/**
 		 * 扩展模块单独使用变量访问

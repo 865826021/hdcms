@@ -20,7 +20,7 @@ class Template extends HdController {
 	public function lists() {
 		$data = \Template::getSiteAllTemplate( SITEID, Request::get( 'type' ) );
 
-		return view( $this->template . '/template_lists.html' )->with( [ 'data' => $data ] );
+		return view( $this->template . '/template/template_lists.html' )->with( [ 'data' => $data ] );
 	}
 
 	/**

@@ -188,7 +188,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function loginAuth( $deal = 'show' ) {
-		if ( v( 'user' ) ) {
+		if ( Session::get( 'admin_uid' ) ) {
 			return true;
 		}
 		switch ( $deal ) {

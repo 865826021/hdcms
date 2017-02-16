@@ -43,12 +43,11 @@ class Template {
 	 *
 	 * @param int $siteId 站点编号
 	 * @param string $industry 模板类型
-	 * @param string $module 模块
 	 *
 	 * @return array|mixed
 	 * @throws \Exception
 	 */
-	public function getSiteAllTemplate( $siteId = 0, $industry = '', $module = '' ) {
+	public function getSiteAllTemplate( $siteId = 0, $industry = '' ) {
 		$siteId = $siteId ?: SITEID;
 		if ( empty( $siteId ) ) {
 			throw new \Exception( '站点编号不存在' );
@@ -58,7 +57,7 @@ class Template {
 			return $cache[ $siteId ];
 		}
 		//系统模板默认包含
-		$db = Db::table( 'template' )->orWhere( 'is_system', 1 );
+		$db = Db::table( 'template' )->where( 'tid', '>', 0 )->orWhere( 'is_system', 1 );
 		//获取站点可使用的所有套餐
 		$package = \Package::getSiteAllPackageData( $siteId );
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
@@ -66,9 +65,7 @@ class Template {
 			if ( $industry ) {
 				$db->where( 'industry', $industry );
 			}
-			if ( $module ) {
-				$db->where( 'module', $module );
-			}
+
 			$templates = $db->get();
 		} else {
 			$templateNames = [ ];
@@ -79,9 +76,6 @@ class Template {
 			if ( ! empty( $templateNames ) ) {
 				if ( $industry ) {
 					$db->where( 'industry', $industry );
-				}
-				if ( $module ) {
-					$db->where( 'module', $module );
 				}
 				$db->whereIn( 'name', $templateNames );
 			}

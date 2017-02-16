@@ -1,7 +1,7 @@
 <extend file='addons/store/template/admin.html'/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('app.moduleLists')}}">返回模块列表</a></li>
+        <li><a href="{{url('module.lists')}}">返回模块列表</a></li>
     </ul>
     <div style="padding: 10px 0px;">
         <button class="btn btn-primary" onclick="upFile()">添加压缩包</button>
@@ -9,7 +9,7 @@
     <form class="form-horizontal">
         <div class="panel panel-default">
             <div class="panel-heading">
-               <b> {{$app['title']}}</b> 插件压缩包列表
+                <b> {{$app['title']}}</b> 插件压缩包列表
             </div>
             <div class="panel-body">
                 <table class="table table-striped">
@@ -34,14 +34,14 @@
                                     <i class="fa fa-times-circle text-danger"></i>
                                 </if>
                             </td>
-                            <td>{{date('Y/m/d h:i',$d['createtime'])}}</td>
+                            <td>{{date('Y/m/d h:i',$d['build'])}}</td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <if value="$d['racking']==1">
-                                        <a href="{{url('app.changeModuleZipRacking',['id'=>$d['id'],'racking'=>0])}}"
+                                        <a href="{{url('module.changeZipRacking',['id'=>$d['id'],'racking'=>0])}}"
                                            class="btn btn-default btn-sm">下架</a>
                                         <else/>
-                                        <a href="{{url('app.changeModuleZipRacking',['id'=>$d['id'],'racking'=>1])}}"
+                                        <a href="{{url('module.changeZipRacking',['id'=>$d['id'],'racking'=>1])}}"
                                            class="btn btn-default btn-sm">上架</a>
                                     </if>
                                     <a href="javascript:;" onclick="del({{$d['id']}})"
@@ -61,16 +61,25 @@
         require(['util'], function (util) {
             options = {
                 extensions: 'zip',
-                data: {data: 'ext_app', status: 0,uploadDir:'zips/addons/hdcms'},
-                fileSingleSizeLimit:5 * 1024 * 1024,
+                data: {data: 'ext_app', status: 0, uploadDir: 'zips/modules'},
+                fileSingleSizeLimit: 5 * 1024 * 1024
             };
             util.file(function (files) {
                 if (files.length == 1) {
-                    $.post('{{url("app.addModuleZip",["id"=>$_GET["id"]])}}', {file: files[0]}, function (json) {
+                    //获取压缩包配置文件数据
+                    $.post('{{url("module.unpack")}}', {file: files[0], 'action': 'zip'}, function (json) {
                         if (json.valid == 1) {
-                            util.message('模块压缩包添加成功', 'refresh', 'success');
+                            //将压缩包数据添加到压缩包表
+                            json.message.file = files[0];
+                            $.post('{{url("module.addZip")}}', {'id':"{{$_GET['id']}}",'data':json.message}, function (json) {
+                                if (json.valid == 1) {
+                                    util.message(json.message, 'refresh', 'success');
+                                } else {
+                                    util.message(json.message, '', 'error');
+                                }
+                            }, 'json');
                         } else {
-                            util.message(json.message, '','error');
+                            util.message(json.message, '', 'error');
                         }
                     }, 'json');
                 }
@@ -81,7 +90,7 @@
     function del(id) {
         require(['util'], function (util) {
             util.confirm('确定删除模块压缩包吗?', function () {
-                location.href = "{{url('app.delModuleZip')}}&id=" + id;
+                location.href = "{{url('module.delZip')}}&id=" + id;
             })
         })
     }
