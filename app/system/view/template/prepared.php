@@ -10,8 +10,7 @@
 		<li role="presentation"><a href="{{u('installed')}}">已经安装模板</a></li>
 		<li role="presentation" class="active"><a href="?s=system/template/prepared">安装模板</a></li>
 		<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
-		<li role="presentation"><a href="{{c('api.cloud')}}?a=site/store&t=web&siteid=1&m=store&type=theme"
-		                           target="_blank">应用商城</a></li>
+		<li role="presentation"><a href="{{u('shop.lists',['type'=>'template'])}}">模板商城</a>
 	</ul>
 	<h5 class="page-header">已购买的模板</h5>
 	<div id="myApp" ng-controller="ctrl" class="ng-cloak template clearfix" ng-cloak>

@@ -10,7 +10,7 @@
 			<li role="presentation" class="active"><a href="javascript:;">已经安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/prepared">安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
-			<li role="presentation"><a href="{{u('shop.lists')}}">模块商城</a>
+			<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a>
 			</li>
 		</ul>
 		<h5 class="page-header">菜单列表</h5>

@@ -9,7 +9,7 @@
 		<li role="presentation"><a href="{{u('installed')}}">已经安装模块</a></li>
 		<li role="presentation" class="active"><a href="?s=system/module/prepared">安装模块</a></li>
 		<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
-		<li role="presentation"><a href="{{u('shop.lists')}}">模块商城</a>
+		<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a>
 	</ul>
 	<h5 class="page-header">已购买的模块</h5>
 	<div id="myApp" ng-controller="ctrl" class="ng-cloak">
@@ -39,8 +39,9 @@
 	<foreach from="$locality" value="$local">
 			<div class="media">
 				<div class="pull-right">
-					<div style="margin-right: 10px;">
-						<a class="btn btn-default btn-sm" href="{{u('install',array('module'=>$local['name']))}}">安装模块</a>
+					<div class="btn-group" role="group" aria-label="...">
+						<a class="btn btn-success btn-sm" href="{{u('install',array('module'=>$local['name']))}}">安装模块</a>
+						<a href="{{u('createZip',['name'=>$local['name']])}}" class="btn btn-default btn-sm">打包下载</a>
 					</div>
 				</div>
 				<div class="media-left">

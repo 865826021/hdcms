@@ -139,19 +139,25 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function apps( $type, $page ) {
+		if(empty($type) || empty($page)){
+			message('参数错误无法获取应用列表','','warning');
+		}
 		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&page={$page}" );
 		$apps    = json_decode( $content, true );
-		//已经安装的所模块
-		$modules = Modules::lists( 'name' );
-		foreach ( $apps['apps'] as $k => $v ) {
-			//是否安装
-			$apps['apps'][ $k ]['is_install'] = false;
-			if ( in_array( $v['name'], $modules ) ) {
-				$apps['apps'][ $k ]['is_install'] = true;
+		if ( $apps['valid'] == 1 ) {
+			//已经安装的所模块
+			$modules = Modules::lists( 'name' );
+			foreach ( $apps['apps'] as $k => $v ) {
+				//是否安装
+				$apps['apps'][ $k ]['is_install'] = false;
+				if ( in_array( $v['name'], $modules ) ) {
+					$apps['apps'][ $k ]['is_install'] = true;
+				}
 			}
-		}
 
-		return $apps;
+			return $apps;
+		}
+		message( $apps['message'], '', 'error' );
 	}
 
 	/**
@@ -161,28 +167,65 @@ class Cloud {
 	 * @param $id
 	 */
 	public function downloadApp( $type, $id ) {
+		if(empty($type) || empty($id)){
+			message('参数错误无法执行安装','','warning');
+		}
 		//获取模块信息
 		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
 		$app = json_decode( $app, true );
-		if ( Modules::where( 'name', $app['name'] )->get() ) {
-			message( '应用已经安装,不允许重复安装!', '', 'error' );
-		}
-		if ( ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
-			message( '已经存在本地开发的同名模块', u( 'shop.lists' ), 'error' );
-		}
-		$content = \Curl::get( $this->host . "/{$app['zip']['file']}" );
-		$file    = "addons/{$app['name']}.zip";
-		file_put_contents( $file, $content );
-		Zip::PclZip( $file );//设置压缩文件名
-		Zip::extract( 'addons' );
-		@unlink( $file );
 
-		file_put_contents( "addons/{$app['name']}/cloud.app", '来自云应用' );
-		ajax( [
-			'message' => '数据下载完成,准备开始安装',
-			'config'  => $app,
-			'valid'   => 1
-		] );
+		//安装前检测
+		switch ( $type ) {
+			case 'module':
+				if ( Modules::where( 'name', $app['name'] )->get() ) {
+					message( '应用已经安装,不允许重复安装!', '', 'error' );
+				}
+				if ( is_dir( "addons/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
+					message( '已经存在本地开发的同名模块', u( 'shop.lists', [ 'type' => 'module' ] ), 'error' );
+				}
+				break;
+			case 'template':
+				if ( is_dir( "theme/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
+					message( '同名模板已经存在', u( 'shop.lists', [ 'type' => 'template' ] ), 'error' );
+				}
+				break;
+		}
+
+		//下载文件
+		$content = \Curl::get( $this->host . "/{$app['zip']['file']}" );
+
+		//文件保存
+		switch ( $type ) {
+			case 'module':
+				$file = "addons/{$app['name']}.zip";
+				file_put_contents( $file, $content );
+				Zip::PclZip( $file );//设置压缩文件名
+				Zip::extract( 'addons' );
+				file_put_contents( "addons/{$app['name']}/cloud.app", '来自云应用' );
+				//删除下载压缩包
+				\Dir::delFile( $file );
+				ajax( [
+					'message' => '模块下载完成,准备开始安装',
+					'config'  => $app,
+					'url'     => u( 'module.install', [ 'module' => $app['name'] ] ),
+					'valid'   => 1
+				] );
+				break;
+			case 'template':
+				$file = "theme/{$app['name']}.zip";
+				file_put_contents( $file, $content );
+				Zip::PclZip( $file );//设置压缩文件名
+				Zip::extract( 'theme' );
+				ajax( [
+					'message' => '模板安装完成',
+					'config'  => $app,
+					'url'     => u( 'template.installed' ),
+					'valid'   => 1
+				] );
+				break;
+		}
+
+
 	}
 }
 

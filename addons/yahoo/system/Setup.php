@@ -36,6 +36,7 @@ sql;
 	 * 建议使用HDPHP中的Schema组件完成数据安装
 	 */
 	public function uninstall() {
+		Db::execute('DROP TABLE hd_a9999999999');
 	}
 	
 	/**

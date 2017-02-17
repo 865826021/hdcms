@@ -309,23 +309,18 @@ class Module {
 	 * 从系统中删除模块
 	 *
 	 * @param string $name 模块标识
-	 * @param bool $removeData 删除模块数据
 	 *
 	 * @return bool
 	 */
-	public function remove( $name, $removeData = false ) {
+	public function remove( $name ) {
 		$module = Db::table( 'modules' )->where( 'name', $name )->first();
-		if ( empty( $module ) ) {
-			message( '模块不存在无法进行操作', 'back', 'error' );
+		if ( empty( $module ) || $module['is_system'] == 1) {
+			message( '模块不存或者模块为系统模块无法删除', 'back', 'error' );
 		}
-		if ( $module['is_system'] == 1 ) {
-			message( '系统模块不允许卸载', 'back', 'error' );
-		}
-		//删除封面关键词数据
-		if ( $removeData ) {
-			//执行卸载程序
-			$this->uninstall( $name );
-		}
+		//执行模块本身的卸载程序
+		$class = 'addons\\' . $name . '\system\Setup';
+		call_user_func_array( [ new $class, 'uninstall' ], [ ] );
+
 		//更新套餐数据
 		\Package::removeModule( $name );
 		foreach ( $this->relationTables as $t ) {
@@ -334,23 +329,11 @@ class Module {
 		//删除模块使用的微信规则与关键词数据
 		\Wx::removeRuleByModule( $name );
 		Modules::where( 'name', $name )->delete();
+
 		//更新所有站点缓存
 		\Site::updateAllCache();
 
 		return true;
 	}
 
-	/**
-	 * 卸载模块时执行模块配置文件中的卸载SQL语句或文件
-	 *
-	 * @param string $module 模块名称
-	 *
-	 * @return bool
-	 */
-	public function uninstall( $module ) {
-		//模块卸载类
-		$class = 'addons\\' . $module . '\system\Setup';
-
-		return call_user_func_array( [ new $class, 'uninstall' ], [ ] );
-	}
 }

@@ -70,7 +70,7 @@ class Module {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/package.json' ) ) {
 				$config = json_decode( file_get_contents( $d['path'] . '/package.json' ), true );
 				//去除已经安装的模块和远程模块
-				if ( ! in_array( $config['name'], $modules ) && !is_file($d['path'].'/cloud.app')) {
+				if ( ! in_array( $config['name'], $modules ) && ! is_file( $d['path'] . '/cloud.app' ) ) {
 					$locality[ $config['name'] ] = $config;
 				}
 			}
@@ -246,21 +246,13 @@ class Module {
 			message( "模块安装成功", 'installed' );
 		}
 		$package = Package::get();
+
 		return view()->with( 'module', $config )->with( 'package', $package );
 	}
 
 	//卸载模块
 	public function uninstall() {
-		$module = Request::get( 'module' );
-		//更改错误为直接显示
-		c( 'validate.dispose', 'show' );
-		if ( ! isset( $_GET['confirm'] ) ) {
-			confirm( '卸载模块时同时删除模块数据吗？', u( 'uninstall', [
-				'confirm' => 1,
-				'module'  => $module
-			] ), u( 'uninstall', [ 'confirm' => 0, 'module' => $module ] ) );
-		}
-		if ( ! \Module::remove( $module, $_GET['confirm'] ) ) {
+		if ( ! \Module::remove(  Request::get( 'module' ) ) ) {
 			message( \Module::getError(), '', 'error' );
 		}
 		message( '模块卸载成功', u( 'installed' ) );

@@ -81,8 +81,15 @@ class Cloud {
 				$db = StoreTemplate::paginate( 12 );
 				break;
 		}
-		$data['apps'] = $db->toArray();
-		$data['page'] = \Page::strList();
+		if ( $db ) {
+			$data['valid']   = 1;
+			$data['message'] = 3434;
+			$data['apps']    = $db->toArray();
+			$data['page']    = \Page::strList();
+		} else {
+			$data['valid']   = 0;
+			$data['message'] = '获取应用列表失败,请修改再试';
+		}
 		echo json_encode( $data, true );
 		exit;
 	}
@@ -100,12 +107,15 @@ class Cloud {
 				$db = StoreTemplate::find( Request::get( 'id' ) );
 				break;
 		}
-		$data = [ ];
 		if ( $db ) {
-			$data        = $db->toArray();
-			$data['zip'] = StoreZip::where( 'appid', $db['id'] )->orderBy( 'id', 'DESC' )->first()->toArray();
-		}
+			$data          = $db->toArray();
+			$data['valid'] = 1;
+			$data['zip']   = StoreZip::where( 'appid', $db['id'] )->orderBy( 'id', 'DESC' )->first()->toArray();
 
-		return json_encode( $data );
+			return json_encode( $data );
+		} else {
+			$data['valid']   = 0;
+			$data['message'] = '获取应用失败,请稍后再试';
+		}
 	}
 }

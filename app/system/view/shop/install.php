@@ -20,7 +20,7 @@
 			if(json.valid==0){
 				util.message(json.message,'{{u('lists')}}','error',5);
 			}else{
-				util.message(json.message,"{{u('module.install')}}&module="+json.config.name,3);
+				util.message(json.message,json.url,3);
 			}
 		}, 'json');
 	})
