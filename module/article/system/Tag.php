@@ -99,8 +99,8 @@ str;
 	//幻灯图
 	public function slide( $attr ) {
 		$color    = isset( $attr['color'] ) ? $attr['color'] : '#FFFFFF';
-		$width    = isset( $attr['width'] ) ? $attr['width'] : '100%';
-		$height   = isset( $attr['height'] ) ? $attr['height'] : '200px';
+		$width    = isset( $attr['width'] ) ? $attr['width'] : 'window.innerWidth';
+		$height   = isset( $attr['height'] ) ? $attr['height'] : '200';
 		$autoplay = isset( $attr['autoplay'] ) ? $attr['autoplay'] : 3000;
 		$php      = <<<str
         <?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('displayorder','DESC')->get()?:[];?>
@@ -121,8 +121,8 @@ str;
     </div>
     <style>
         .hdcms_swiper_container {
-            width      : {$width};
-            height     : {$height};
+            width      : {$width}px;
+            height     : {$height}px;
             background : #aaa;
             overflow:hidden;
         }
@@ -142,19 +142,21 @@ str;
         }
     </style>
     <script>
-        $(function () {
-            require(['swiper'], function ($) {
+//        $(function () {
+//            require(['swiper'], function ($) {
+window.onload = function() {
                 var mySwiper = new Swiper('.hdcms_swiper_container', {
-                    width: '{$width}',
-                    height: '{$height}',
+                    width: {$width},
+                    height: {$height},
                     autoplay: {$autoplay},
                     direction: 'horizontal',
                     loop: true,
                     //如果需要分页器
                     pagination: '.hdcms_swiper_pagination',
                 })
-            })
-        })
+}
+//            })
+//        })
     </script>
     <?php }?>
 str;

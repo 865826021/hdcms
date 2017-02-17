@@ -2,11 +2,14 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>首页</title>
+		<title>首页111</title>
 		<link rel="stylesheet" type="text/css" href="{{template_url()}}/css/index.css"/>
-		<script src="{{template_url()}}/js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="{{template_url()}}/js/index.js" type="text/javascript" charset="utf-8"></script>
-		<!--<script src="{{__ROOT__}}/node_modules/js/swiper-3.3.1"></script>-->
+
+
+
+		<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
+		<link rel="stylesheet" href="{{__ROOT__}}/node_modules/hdjs/css/swiper-3.3.1.min.css">
+		<script src="{{__ROOT__}}/node_modules/hdjs/js/swiper-3.3.1.min.js"></script>
 	</head>
 	<body>
 		
@@ -15,21 +18,14 @@
 		<!--头部结束-->
 		<!--导航条-->
 		
-		<tag action="article.category_top">
-       	{{$field['icon']}}  <a href="{{$field['cat_url']}}">{{$field['catname']}}</a>
-		</tag>
-
 		<div id="menu">
 			<div class="center">
-				<a href="" class="cur">22222</a>
-				<a href="">不锈钢制管机</a>
-				<a href="">不锈钢工业管制管机</a>
-				<a href="">不锈钢抛光机</a>
-				<a href="">远兴鸿产品</a>
-				<a href="">客户案例</a>
-				<a href="">关于远兴鸿</a>
-				<a href="">新闻资讯</a>
-				<a href="">联系远兴鸿</a>
+				<a href="/" class="cur">首页</a>
+				
+				<tag action="article.category_top">
+				     <a href="{{$field['url']}}">{{$field['catname']}}</a>
+				</tag>
+
 			</div>
 		</div>
 		<!--导航条结束-->
@@ -53,10 +49,7 @@
 		<!--轮播图-->
 		<!--注意：直接向下面的div中遍历输出a标签即可，小圆点会根据a标签的数量自动创建，边界条件会自动判断。-->
 		<div id="flash">
-			<a href=""><img src="{{template_url()}}/images/flash/1.jpg" /></a>
-			<a href=""><img src="{{template_url()}}/images/flash/2.jpg" /></a>
-			<a href=""><img src="{{template_url()}}/images/flash/3.jpg" /></a>
-			<ul></ul>
+			<tag action="article.slide" color="#fff" width="960" height="400" autoplay="2000"></tag>
 		</div>
 		<!--轮播图结束-->
 		
@@ -64,48 +57,18 @@
 		<div class="main">
 			<div class="left">
 				
-				<tag action="article.category" cid="7,8,9">
-     父栏目: <a href="{{$field['url']}}">{{$field['catname']}}</a>
-      <tag action="article.category_level">
-               <li>
-                   子栏目:<a href="{{$field['url']}}">{{$field['catname']}}</a>
-               </li>
-      </tag>
-</tag>
-				
 				<h3>远兴鸿产品中心</h3>
-				<dl>
-					<dt><a href="">不锈钢制管机</a></dt>
-    				<dd><a href="">不锈钢工业管制管机</a></dd>
-    				<dd><a href="">热交换器管制管机</a></dd>
-					<dd><a href="">流体管卫生用管制管机</a></dd>
-					<dd><a href="">汽车排气管制管机</a></dd>
-					<dd><a href="">石油化工专用制管机</a></dd>
-				</dl>
-				<dl>
-					<dt><a href="">不锈钢制管机</a></dt>
-    				<dd><a href="">不锈钢工业管制管机</a></dd>
-    				<dd><a href="">热交换器管制管机</a></dd>
-					<dd><a href="">流体管卫生用管制管机</a></dd>
-					<dd><a href="">汽车排气管制管机</a></dd>
-					<dd><a href="">石油化工专用制管机</a></dd>
-				</dl>
-				<dl>
-					<dt><a href="">不锈钢制管机</a></dt>
-    				<dd><a href="">不锈钢工业管制管机</a></dd>
-    				<dd><a href="">热交换器管制管机</a></dd>
-					<dd><a href="">流体管卫生用管制管机</a></dd>
-					<dd><a href="">汽车排气管制管机</a></dd>
-					<dd><a href="">石油化工专用制管机</a></dd>
-				</dl>
-				<dl>
-					<dt><a href="">不锈钢制管机</a></dt>
-    				<dd><a href="">不锈钢工业管制管机</a></dd>
-    				<dd><a href="">热交换器管制管机</a></dd>
-					<dd><a href="">流体管卫生用管制管机</a></dd>
-					<dd><a href="">汽车排气管制管机</a></dd>
-					<dd><a href="">石油化工专用制管机</a></dd>
-				</dl>
+				<tag action="article.category" cid="7,8,9">
+				
+			    <dl><dt><a href="{{$field['url']}}">{{$field['catname']}}</a><dt>
+			      <tag action="article.category_level">
+			               <dd>
+			                  <a href="{{$field['url']}}">{{$field['catname']}}</a>
+			               </dd>
+			      </tag>
+			     </dl>
+			</tag>
+
 			</div>
 			
 			<!--右侧-->
@@ -193,50 +156,14 @@
 			<img src="{{template_url()}}/images/ico_r01.jpg" class="icon2" />
 			<div class="center">
 				<ul>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
-					<li>
-						<img src="{{template_url()}}/images/20131106172412_91601.jpg" />
-						<a href="">晋中新大宇不锈钢制品有限公司</a>
-					</li>
+					
+					<tag action="article.lists" row="10" iscommend='1'>
+					    <li>
+					    	<img src="/{{$field['thumb']}}" />
+					    	<a href="{{$field['url']}}">{{$field['title']}}</a>
+					    </li>
+					</tag>
+					
 				</ul>
 			</div>
 		</div>
@@ -260,10 +187,7 @@
 		<!--友情链接结束-->
 		
 		<!--底部-->
-		<div id="footer">
-			<p>佛山市远兴鸿焊管机械模具有限公司</p>
-			<p>粤ICP备粤ICP备08131188号-2 技术支持</p>
-		</div>
+		
 		<!--底部结束-->
 		
 	</body>

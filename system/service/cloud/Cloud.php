@@ -179,8 +179,35 @@ class Cloud {
 	 * @param $name 模块标识
 	 */
 	public function upgradeModuleByName( $name ) {
-		$module = Db::table('modules')->where( 'name', $name )->first();
+		$module  = Db::table( 'modules' )->where( 'name', $name )->first();
+		$content = \Curl::post( $this->url . "/cloud/getModuleUpgrade", $module );
+		$app     = json_decode( $content, true );
+		if ( $app['valid'] == 1 ) {
+			$file = "addons/{$app['name']}.zip";
+			file_put_contents( $file, $content );
+			Zip::PclZip( $file );//设置压缩文件名
+			Zip::extract( 'addons' );
+			file_put_contents( "addons/{$app['name']}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
+			//删除下载压缩包
+			\Dir::delFile( $file );
+			//执行模块更新表语句
+			$class = 'addons\\' . $app['name'] . '\system\Setup';
+			call_user_func_array( [ new $class, 'upgrade' ], [ ] );
+			//更新数据表模块编译版本
+			$data = [ 'build' => $app['zip']['build'] ];
+			Modules::where( 'name', $name )->update( $data );
 
+			ajax( [
+				'message' => '模块更新完毕',
+				'config'  => $app,
+				'valid'   => 1
+			] );
+		} else {
+			ajax( [
+				'message' => $app['message'],
+				'valid'   => 0
+			] );
+		}
 	}
 
 	/**

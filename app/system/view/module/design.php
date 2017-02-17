@@ -7,7 +7,7 @@
 			<li class="active">设置新模块</li>
 		</ol>
 		<ul class="nav nav-tabs">
-			<li role="presentation"><a href="{{u('installed')}}">已经安装模块</a></li>
+			<li role="presentation"><a href="{{u('module.installed')}}">已经安装模块</a></li>
 			<li role="presentation"><a href="?s=system/module/prepared">安装模块</a></li>
 			<li role="presentation" class="active"><a href="?s=system/module/design">设计新模块</a></li>
 			<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a></li>

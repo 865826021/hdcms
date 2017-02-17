@@ -16,7 +16,6 @@ use addons\store\model\StoreTemplate;
 use addons\store\model\StoreUser;
 use addons\store\model\StoreZip;
 use houdunwang\request\Request;
-use system\model\Modules;
 
 /**
  * 云接口
@@ -141,5 +140,20 @@ class Cloud {
 			$data['valid']   = 0;
 			$data['message'] = '获取应用失败,请稍后再试';
 		}
+	}
+
+	/**
+	 * 获取模块更新
+	 */
+	public function getModuleUpgrade() {
+		$post = Request::post();
+		$data            = Db::table( 'store_module' )->where( 'name', $post['name'] )->first();
+		$zip             = Db::table( 'store_zip' )->where( 'appid', $data['id'] )
+		                     ->where( 'build', '>', $post['build'] )->first();
+		$data['valid']   = 1;
+		$data['package'] = json_decode( $data['package'], true );
+		$data['zip']     = $zip;
+
+		return json_encode( $data );
 	}
 }

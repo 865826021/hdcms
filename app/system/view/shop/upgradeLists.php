@@ -36,7 +36,18 @@
 						<h3>@{{v.title}}</h3>
 						<p>@{{v.resume}}</p>
 						<p>
-							<a ng-if="!v.is_install" href="{{u('upgrade')}}&name=@{{v.name}}" class="btn btn-primary" role="button">开始更新</a>
+							<a ng-if="v.message=='开始更新'" ng-click="upgrade(v)" class="btn btn-default"
+							   role="button">
+								@{{v.message}}
+							</a>
+							<a ng-if="v.message=='正在更新...'" class="btn btn-primary"
+							   role="button">
+								@{{v.message}}
+							</a>
+							<a ng-if="v.message=='更新完毕'" class="btn btn-success"
+							   role="button">
+								@{{v.message}}
+							</a>
 						</p>
 					</div>
 				</div>
@@ -59,12 +70,28 @@
 				$.post("{{u('shop.upgradeLists')}}", function (json) {
 					if (json.valid == 1) {
 						$scope.field = json;
+						for (var i = 0; i < $scope.field.apps.length; i++) {
+							$scope.field.apps[i].message = '开始更新';
+						}
 						$scope.field.page = $sce.trustAsHtml($scope.field.page);
 					} else {
 						$scope.error = json.message;
 					}
 					$scope.$apply();
 				}, 'json');
+
+				//更新模块
+				$scope.upgrade = function (v) {
+					v.message='正在更新...';
+					$.post("{{u('upgrade')}}&name="+v.name, function (json) {
+						if(json.valid==0){
+							v.message=json.message;
+						}else{
+							v.message='更新完毕';
+						}
+						$scope.$apply();
+					}, 'json');
+				}
 			}])
 
 			angular.bootstrap(document.body, ['app']);
