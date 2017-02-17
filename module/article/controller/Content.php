@@ -35,7 +35,7 @@ class Content extends HdController {
 	//文章列表
 	public function lists() {
 		$model = new WebContent();
-		$data  = $model->paginate( 10 );
+		$data  = $model->orderBy('aid','DESC')->paginate( 10 );
 		View::with( 'data', $data );
 
 		return view( $this->template . '/content/content_lists.html' );

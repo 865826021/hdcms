@@ -7,7 +7,7 @@ use houdunwang\model\Model;
  * Class StoreTemplate
  * @package addons\store\model
  */
-class StoreTemplate extends Model {
+class StoreTemplate extends Model { 
 	protected $table = 'store_template';
 	protected $allowFill = [ '*' ];
 	protected $validate = [

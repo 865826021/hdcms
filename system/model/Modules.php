@@ -45,5 +45,6 @@ class Modules extends Common {
 		[ 'rule', 'intval', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'permissions', 'json_encode', 'function', self::NOT_EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'locality', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'build', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 }

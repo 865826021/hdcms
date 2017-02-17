@@ -147,8 +147,12 @@ class Template {
 	 * @return bool
 	 */
 	public function remove( $name ) {
+		$model = TemplateModel::where( 'name', $name )->first();
+		if ( $model['is_system'] ) {
+			message( '系统模板不允许删除', '', 'back' );
+		}
 		//删除模板数据
-		TemplateModel::where( 'name', $name )->delete();
+		$model->destory();
 		//更新套餐数据
 		$package = Db::table( 'package' )->get() ?: [ ];
 		foreach ( $package as $p ) {

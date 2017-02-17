@@ -66,7 +66,6 @@ class Template {
 		$template = Db::table( 'template' )->get();
 		foreach ( $template as $k => $m ) {
 			$template[ $k ]['thumb']    = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
-			$template[ $k ]['locality'] = ! is_file( "theme/{$m['name']}/cloud.hd" ) ? 1 : 0;
 		}
 
 		return view()->with( 'template', $template );

@@ -16,6 +16,7 @@ use addons\store\model\StoreTemplate;
 use addons\store\model\StoreUser;
 use addons\store\model\StoreZip;
 use houdunwang\request\Request;
+use system\model\Modules;
 
 /**
  * 云接口
@@ -83,7 +84,7 @@ class Cloud {
 		}
 		if ( $db ) {
 			$data['valid']   = 1;
-			$data['message'] = 3434;
+			$data['message'] = '获取成功';
 			$data['apps']    = $db->toArray();
 			$data['page']    = \Page::strList();
 		} else {
@@ -95,7 +96,29 @@ class Cloud {
 	}
 
 	/**
-	 * 根据编辑获取应用信息
+	 * 获取模块更新列表
+	 */
+	public function getModuleUpgradeLists() {
+		$userModules = Request::post();
+		$modules     = Db::table( 'store_module' )->whereIn( 'name', array_keys( $userModules ) )->get();
+		$apps        = [ ];
+		foreach ( $modules as $m ) {
+			$zip = StoreZip::where( 'appid', $m['id'] )
+			               ->where( 'build', '>', $userModules[ $m['name'] ] )
+			               ->orderBy( 'id', 'ASC' )->first();
+			if ( $zip ) {
+				$apps[] = $m;
+			}
+		}
+		$data['valid']   = 1;
+		$data['message'] = '获取成功';
+		$data['apps']    = $apps;
+		echo json_encode( $data, true );
+		exit;
+	}
+
+	/**
+	 * 根据编号获取应用信息
 	 * @return string
 	 */
 	public function getLastAppById() {
@@ -108,9 +131,10 @@ class Cloud {
 				break;
 		}
 		if ( $db ) {
-			$data          = $db->toArray();
-			$data['valid'] = 1;
-			$data['zip']   = StoreZip::where( 'appid', $db['id'] )->orderBy( 'id', 'DESC' )->first()->toArray();
+			$data            = $db->toArray();
+			$data['valid']   = 1;
+			$data['package'] = json_decode( $data['package'], true );
+			$data['zip']     = StoreZip::where( 'appid', $db['id'] )->orderBy( 'id', 'DESC' )->first()->toArray();
 
 			return json_encode( $data );
 		} else {

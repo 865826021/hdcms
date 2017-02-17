@@ -1,4 +1,5 @@
 <?php namespace app\system\controller;
+
 use system\model\Modules;
 
 /**
@@ -15,16 +16,39 @@ class Shop {
 
 	//应用商店
 	public function lists() {
-		return view( 'lists' );
+		if ( IS_POST ) {
+			//远程获取应用列表
+			$apps = \Cloud::apps( Request::get( 'type' ), Request::get( 'page' ) ) ?: [ ];
+			ajax( $apps );
+		}
+
+		return view();
 	}
 
 	/**
-	 * 远程获取应用列表
-	 * 包括模块与模板
+	 * 更新模块列表
 	 */
-	public function getCloudLists() {
-		$apps = \Cloud::apps( Request::get( 'type' ), Request::get( 'page' ) ) ?: [ ];
-		ajax( $apps );
+	public function upgradeLists() {
+		if ( IS_POST ) {
+			$apps = \Cloud::getModuleUpgradeLists();
+			ajax( $apps );
+		}
+
+		return view( 'upgradeLists' );
+	}
+
+	/**
+	 * 根据编号更新模块
+	 * 模板不能更新
+	 */
+	public function upgrade() {
+		if ( IS_POST ) {
+			//更新模块
+			$apps = \Cloud::upgradeModuleByName( Request::get( 'name' ) );
+			ajax( $apps );
+		}
+
+		return view();
 	}
 
 	//安装云模块

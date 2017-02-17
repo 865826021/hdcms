@@ -13,10 +13,11 @@ class Tag {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
 		$mid       = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
 		$cid       = isset( $attr['cid'] ) ? $attr['cid'] : "";
-		$iscommend = isset( $attr['iscommend'] ) ? $attr['iscommend'] : 0;
-		$ishot     = isset( $attr['ishot'] ) ? $attr['ishot'] : 0;
+		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
+		$isthumb   = isset( $attr['isthumb'] ) ? 1 : 0;
+		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
 		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
-		$order     = isset( $attr['order'] ) ? $attr['order'] : 'new';
+		$order     = isset( $attr['order'] ) ? $attr['order'] : 'DESC';
 		$php       = <<<str
 		<?php
 		\$model = new module\article\model\WebContent($mid);
@@ -24,7 +25,7 @@ class Tag {
 		//栏目检索
 		\$cid = array_filter(explode(',','$cid'));
 		if(!empty(\$cid)){
-			\$db->whereIn('category_cid',\$cid);
+			\$db->whereIn('cid',\$cid);
 		}
 		//推荐文章
 		if($iscommend){
@@ -34,17 +35,12 @@ class Tag {
 		if($ishot){
 			\$db->where('ishot',1);
 		}
-		//排序
-		\$order = "$order";
-		switch(\$order){
-			case 'new':
-				\$db->orderBy('aid','DESC');
-				break;
-			case 'old':
-				\$db->orderBy('aid','ASC');
-				break;
+		//缩略图
+		if($isthumb){
+			\$db->where('thumb','<>','');
 		}
-		\$_result = \$db->get();
+		//排序
+		\$_result = \$db->orderBy('aid','$order')->get();
 		\$_result =\$_result?\$_result->toArray():[]; 
 		foreach(\$_result as \$field){
 			\$field['category']=module\article\model\WebCategory::getByCid(\$field['cid']);
@@ -86,22 +82,37 @@ str;
 		return $php;
 	}
 
+	//幻灯图数据列表
+	public function slide_lists( $attr, $content ) {
+		$php = <<<str
+<?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('displayorder','DESC')->get()?:[];
+foreach(\$slideData as \$field){?>
+str;
+
+		$php .= $content;
+		$php .= '<?php }?>';
+
+		return $php;
+
+	}
+
 	//幻灯图
 	public function slide( $attr ) {
 		$color    = isset( $attr['color'] ) ? $attr['color'] : '#FFFFFF';
-		$width    = isset( $attr['width'] ) ? $attr['width'] : 'window.innerWidth';
-		$height   = isset( $attr['height'] ) ? $attr['height'] : 200;
+		$width    = isset( $attr['width'] ) ? $attr['width'] : '100%';
+		$height   = isset( $attr['height'] ) ? $attr['height'] : '200px';
 		$autoplay = isset( $attr['autoplay'] ) ? $attr['autoplay'] : 3000;
-		$php
-		          = <<<str
-        <?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('id','DESC')->get()?:[];?>
+		$php      = <<<str
+        <?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('displayorder','DESC')->get()?:[];?>
         <?php if(!empty(\$slideData)){?>
 <div class="hdcms_swiper_container">
         <div class="swiper-wrapper">
             <?php foreach(\$slideData as \$_s){?>
             <div class="swiper-slide">
-                <img src="<?php echo \$_s['thumb'];?>">
-                <div class="title"><?php echo \$_s['title'];?></div>
+                <a href="<?php echo \$_s['url'];?>"><img src="<?php echo \$_s['thumb'];?>"></a>
+                <div class="title">
+                 <a href="<?php echo \$_s['url'];?>"><?php echo \$_s['title'];?></a>
+                </div>
             </div>
             <?php }?>
         </div>
@@ -110,8 +121,8 @@ str;
     </div>
     <style>
         .hdcms_swiper_container {
-            width      : 100%;
-            height     : {$height}px;
+            width      : {$width};
+            height     : {$height};
             background : #aaa;
             overflow:hidden;
         }
@@ -134,8 +145,8 @@ str;
         $(function () {
             require(['swiper'], function ($) {
                 var mySwiper = new Swiper('.hdcms_swiper_container', {
-                    width: {$width},
-                    height: {$height},
+                    width: '{$width}',
+                    height: '{$height}',
                     autoplay: {$autoplay},
                     direction: 'horizontal',
                     loop: true,
@@ -251,8 +262,7 @@ str;
 
 	//获取一级栏目列表即PID为0的
 	public function category_top( $attr, $content ) {
-		$php
-			= <<<str
+		$php = <<<str
 <?php
 \$_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',0)->get();
 foreach(\$_category as \$field){

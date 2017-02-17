@@ -167,7 +167,12 @@
 						$scope.$apply();
 					})
 				}
-
+				$scope.uploadPreview = function () {
+					util.image(function (images) {
+						$scope.field.preview = images[0];
+						$scope.$apply();
+					})
+				}
 				$("form").submit(function () {
 					var msg = ''
 					if ($scope.field.title == '') {

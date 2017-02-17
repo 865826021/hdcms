@@ -240,7 +240,11 @@ class Module {
 			//远程模块更新模块数据与删除package.json
 			if ( is_file( $dir . '/cloud.app' ) ) {
 				\Dir::delFile( $dir . '/package.json' );
-				Modules::where( 'name', $config['name'] )->update( [ 'locality' => 0 ] );
+				//设置云信息包括云模块编译时间
+				$config = include $dir . '/cloud.app';
+				$data   = [ 'locality' => 0, 'build' => $config['zip']['build'] ];
+				Modules::where( 'name', $config['name'] )->update( $data );
+
 			}
 			\Site::updateAllCache();
 			message( "模块安装成功", 'installed' );
@@ -252,7 +256,7 @@ class Module {
 
 	//卸载模块
 	public function uninstall() {
-		if ( ! \Module::remove(  Request::get( 'module' ) ) ) {
+		if ( ! \Module::remove( Request::get( 'module' ) ) ) {
 			message( \Module::getError(), '', 'error' );
 		}
 		message( '模块卸载成功', u( 'installed' ) );

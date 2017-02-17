@@ -18,9 +18,9 @@
 	require(['angular', 'util', 'underscore', 'jquery', 'angular.sanitize'], function (angular, util, _, $) {
 		$.post("{{u('install',['id'=>$_GET['id'],'type'=>$_GET['type']])}}", function (json) {
 			if(json.valid==0){
-				util.message(json.message,'{{u('lists')}}','error',5);
+				util.message(json.message,"{{u('shop.lists',['type'=>$_GET['type']])}}",'warning',8);
 			}else{
-				util.message(json.message,json.url,3);
+				util.message(json.message,json.url,'success',3);
 			}
 		}, 'json');
 	})

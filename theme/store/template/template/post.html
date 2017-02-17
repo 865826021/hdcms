@@ -1,0 +1,138 @@
+<extend file='addons/store/template/admin.html'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="{{url('template.lists')}}">模板列表</a></li>
+        <li class="active"><a href="{{url('template.post')}}">添加模板</a></li>
+    </ul>
+    <br/>
+    <form action="" class="form-horizontal ng-cloak" ng-controller="ctrl" method="post">
+        <input type="hidden" name="type" value="{{$_GET['type']}}">
+        <div class="alert alert-info">
+            <strong class="text-danger"><i class="fa fa-info-circle"></i> 每个帐号初始会有 100 <b>{{Credit::title('credit1')}}</b> ,当{{Credit::title('credit1')}}为零时不允许发布应用。</strong>
+            <br/>
+            <i class="fa fa-info-circle"></i> 初次发布{{$app_title}}时需要添加模块的基本信息,然后再上传zip压缩包。
+            <br/>
+            <i class="fa fa-info-circle"></i> 模块需要管理员审核后会在应用商店进行全网展示
+        </div>
+        <if value="!Request::get('id')">
+        <button ng-click="upFile()" class="btn btn-success" type="button" style="margin: 10px 0px;">选择模板压缩包
+        </button>
+        </if>
+        <div class="panel panel-default" ng-show="field.title">
+            <div class="panel-heading">
+                模块资料管理
+            </div>
+            <div class="panel-body">
+                <div >
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="field.title" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">标识</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="field.name" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">作者</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="field.author">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">发布页</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" ng-model="field.url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">简介</label>
+                        <div class="col-sm-10">
+                            <textarea ng-model="field.resume" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">详细介绍</label>
+                        <div class="col-sm-10">
+                            <textarea id="container" style="height:300px;width:100%;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="data">
+        <button type="submit" class="btn btn-primary" ng-show="field.title">保存模板资料</button>
+    </form>
+</block>
+<script>
+    require(['angular', 'underscore', 'util', 'jquery'], function (angular, _, util, $) {
+        angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
+            $scope.field = <?php echo $field;?>;
+            //上传压缩包
+            $scope.upFile = function () {
+                options = {
+                    extensions: 'zip',
+                    data: {data: 'ext_app', status: 0,uploadDir:'zips/template'}
+                };
+                util.file(function (files) {
+                    if (files.length == 1) {
+                        $.post('{{url("template.unpack")}}', {file: files[0]}, function (json) {
+                            if(json.valid==1){
+                                $scope.field = json.message;
+                                $scope.field.file =files[0];
+                                $scope.$apply();
+                            }else{
+                                util.message(json.message,'','error');
+                            }
+                        }, 'json');
+                    }
+                }, options)
+            }
+            //图文编辑器
+            util.ueditor('container', {}, function (editor) {
+                editor.addListener('contentChange', function () {
+                    $scope.field.detail = editor.getContent();
+                });
+                editor.addListener('ready', function () {
+                    if (editor && editor.getContent() != $scope.field.detail) {
+                        editor.setContent($scope.field.detail);
+                    }
+                    $scope.$watch('field', function (item) {
+                        if (editor && editor.getContent() != item.detail) {
+                            editor.setContent(item.detail ? item.detail : '');
+                        }
+                    }, true);
+                });
+                editor.addListener('clearRange', function () {
+                    $scope.field.detail = editor.getContent();
+                    $scope.$apply();
+                });
+            });
+            //提交表单
+            $("form").submit(function () {
+                var msg = '';
+                if ($.trim($scope.field.url) == '') {
+                    msg += '发布页不能为空<br/>';
+                }
+                if ($.trim($scope.field.resume) == '') {
+                    msg += '简介不能为空<br/>';
+                }
+                if ($.trim($scope.field.detail) == '') {
+                    msg += '详细介绍不能为空<br/>';
+                }
+                if (msg) {
+                    util.message(msg, '', 'warning');
+                    return false;
+                }
+                $("[name='data']").val(angular.toJson($scope.field));
+                return true;
+            })
+        }]);
+        $(function () {
+            angular.bootstrap($("form")[0], ['app']);
+        });
+    });
+</script>

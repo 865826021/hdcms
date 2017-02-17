@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        开发者中心
+    </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script>
+        //HDJS组件需要的配置
+        hdjs = {
+            'base': 'node_modules/hdjs',
+            'uploader': '{{u("system/component/uploader")}}',
+            'filesLists': '{{u("system/component/filesLists")}}',
+            'removeImage': '{{u("system/component/removeImage")}}',
+        };
+        window.system = {
+            attachment: "{{__ROOT__}}/attachment",
+            root: "{{__ROOT__}}",
+            url: "{{__URL__}}",
+            siteid: "{{SITEID}}",
+            module: "{{v( 'module.name' )}}",
+            //用于上传等组件使用标识当前是后台用户
+            user_type: 'member'
+        }
+    </script>
+    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{template_url()}}/css/admin.css" rel="stylesheet">
+    <script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
+    <script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
+    <script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
+    <script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
+    <script>
+        require(['jquery', 'bootstrap'], function ($) {
+            //为异步请求设置CSRF令牌
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        })
+        if (navigator.appName == 'Microsoft Internet Explorer') {
+            if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
+                alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="?m=store&action=controller/admin/home&siteid={{SITEID}}">
+                    <strong>开发者中心</strong>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            {{v('member.info.nickname')}} ({{v('member.info.credit1')}}{{Credit::title('credit1')}})
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{u('system/entry/quit',['from'=>url('entry.home')])}}">退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a class="" href="{{url('entry.home')}}">应用商店</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="container-fluid apps">
+    <div class="row">
+        <div class="col-sm-2 col-xs-12">
+            <div class="category">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">开发</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul class="list-group">
+                            <a class="list-group-item" href="{{url('module.lists')}}">插件模块</a>
+                            <a class="list-group-item" href="{{url('template.lists')}}">风格模板</a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-10 col-xs-12 edits">
+            <div class="edit-box">
+                <blade name="content"/>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="active"><a href="{{url('hdcms.lists')}}">压缩包列表</a></li>
+		<li><a href="{{url('hdcms.post')}}">添加压缩包</a></li>
+	</ul>
+	<br/>
+	<form class="form-horizontal">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				HDCMS更新包列表
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped">
+					<thead>
+					<tr>
+						<th width="80">编号</th>
+						<th>版本</th>
+						<th>创建日期</th>
+						<th>压缩包类型</th>
+						<th>更新站点数量</th>
+						<th width="180">操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<foreach from="$data" value="$d">
+						<tr>
+							<td>{{$d['id']}}</td>
+							<td>{{$d['version']}}</td>
+							<td>{{date('Y/m/d h:i',$d['build'])}}</td>
+							<td>
+								<if value="$d['type']=='upgrade'">
+									更新包
+								</if>
+								<if value="$d['type']=='full'">
+									完整包
+								</if>
+							</td>
+							<td><strong>{{$d['update_site_num']}}</strong> 站点更新</td>
+							<td>
+								<div class="btn-group" role="group" aria-label="...">
+									<a href="{{url('hdcms.post',['id'=>$d['id']])}}" class="btn btn-default btn-sm">修改资料</a>
+									<a href="javascript:;" onclick="del({{$d['id']}})" class="btn btn-default btn-sm">删除压缩包</a>
+								</div>
+							</td>
+						</tr>
+					</foreach>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</form>
+</block>
+<script>
+	//删除压缩包
+	function del(id){
+		require(['util'],function(util){
+			util.confirm('确定删除数据包吗?',function(){
+				location.href="{{url('hdcms.del')}}&id="+id;
+			})
+		})
+	}
+</script>

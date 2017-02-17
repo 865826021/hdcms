@@ -54,8 +54,8 @@
 				<div class="thumbnail" industry="{{$m['industry']}}">
 					<h5>{{$m['title']}}</h5>
 					<img class="media-object" src="{{$m['thumb']}}"/>
+
 					<div class="caption">
-						<span class="label label-info">{{$m['locality']?  '本地模板' : '应用商店模板'}}</span>
 						<if value="$m['is_system']">
 							<a href="javascript:;" class="btn btn-default btn-xs btn-block">系统模板不允许卸载</a>
 							<else/>

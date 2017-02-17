@@ -1,0 +1,92 @@
+@import "common";
+body {
+  background : #ebeeed !important;
+}
+table{
+  th{
+    font-weight: normal;
+  }
+}
+.ng-cloak{
+  display: none;
+}
+div.panel{
+  border-radius: 0px;
+  //border-color: #ffffff;
+  &>.panel-heading{
+    background-color: #fcfcfc;
+  }
+}
+.container-fluid {
+  padding-left  : 0px !important;
+  padding-right : 0px !important;
+  .navbar {
+    border-radius : 0px;
+    background    : #ffffff !important;
+    margin-bottom : 0px;
+    box-shadow : #ddd -5px 3px 6px ;
+    height: 60px;
+    padding-top: 6px;
+    .navbar-header {
+      text-indent : 30px;
+    }
+  }
+  //左侧菜单
+  .category {
+    height     : 750px;
+    background : #ffffff;
+    box-shadow : #ddd 5px 3px 10px;
+    .panel {
+      background    : #ffffff;
+      border-radius : 0px;
+      border-color  : #ffffff;
+      padding-left  : 20px;
+      .panel-heading {
+        background : #ffffff;
+        color      : #a1bf29;
+        padding: 20px 15px;
+      }
+      .panel-body {
+        .list-group {
+          a.list-group-item {
+            border-top : solid 1px #ffffff !important;
+          }
+        }
+      }
+    }
+  }
+  //编辑区域
+  .edits {
+    padding    : 15px 15px 0px 0px;
+
+    .edit-box {
+      margin     : 20px;
+      padding    : 20px;
+      background : #ffffff !important;
+      box-shadow : #ddd -5px 3px 6px ;
+    }
+  }
+}
+
+.apps {
+  .category {
+    .panel {
+      .panel-body {
+        padding : 0px !important;
+        .list-group {
+          margin-bottom : 0px;
+          .list-group-item {
+            border     : none;
+            border-top : solid 1px #dddddd !important;
+            &:first-child {
+              border-radius : 0px;
+              border-top    : none !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  .edits {
+  }
+}

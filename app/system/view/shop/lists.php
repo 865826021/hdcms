@@ -14,21 +14,21 @@
 		</if>
 	</ul>
 	<div class="clearfix ng-cloak" ng-controller="ctrl" ng-cloak>
-		<div class="row" ng-if="error">
+		<div class="row" ng-if="field.valid==0">
 			<div class="col-sm-12 col-md-12">
 				<div class="alert alert-danger">
-					@{{error}}
+					@{{field.message}}
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-show="complete==false">
+		<div class="row" ng-show="!field.valid">
 			<div class="col-sm-12 col-md-12">
 				<div class="alert alert-info">
 					正在获取应用列表
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-show="field.apps.length>0">
+		<div class="row" ng-show="field.valid==1">
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps">
 				<div class="thumbnail">
 					<img ng-src="@{{'http://dev.hdcms.com/'+v.app_preview}}"
@@ -48,19 +48,14 @@
 		<div ng-bind-html="field.page" class="pagination"></div>
 	</div>
 </block>
-
 <script>
 	require(['angular', 'util', 'underscore', 'jquery', 'angular.sanitize'], function (angular, util, _, $) {
 		$(function () {
 			angular.module('app', ['ngSanitize']).controller('ctrl', ['$scope', '$sce', function ($scope, $sce) {
 				$scope.field = {'apps': [], 'page': ''};
-				//请求失败时错误信息
-				$scope.error = '';
-				//请求完成
-				$scope.complete = false;
 				//起始页
 				$scope.get = function (page) {
-					$.get("{{u('shop.getCloudLists')}}", {type: '{{$_GET["type"]}}', page: page}, function (json) {
+					$.post("{{u('shop.lists',['type'=>$_GET["type"]])}}&page="+page,function (json) {
 						$scope.complete = true;
 						if (json.valid == 1) {
 							$scope.field = json;
