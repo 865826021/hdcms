@@ -348,7 +348,7 @@ class Module {
 	 * @return bool
 	 */
 	public function uninstall( $module ) {
-		//本地安装的模块删除处理
+		//模块卸载类
 		$class = 'addons\\' . $module . '\system\Setup';
 
 		return call_user_func_array( [ new $class, 'uninstall' ], [ ] );

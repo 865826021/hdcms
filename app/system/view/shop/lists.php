@@ -17,29 +17,37 @@
 					<div class="caption">
 						<h3>@{{v.title}}</h3>
 						<p>@{{v.resume}}</p>
-						<p><a href="#" class="btn btn-primary" role="button">安装应用</a></p>
+						<p><a ng-if="!v.is_install" href="{{u('install',['type'=>'module'])}}&id=@{{v.id}}" class="btn btn-primary" role="button">安装应用</a></p>
+						<p><span ng-if="v.is_install" class="btn btn-default">已经安装</span></p>
 					</div>
 				</div>
 			</div>
 		</div>
+		<div ng-bind-html="field.page" class="pagination"></div>
 	</div>
 </block>
 
 <script>
-	require(['angular', 'util', 'underscore', 'jquery'], function (angular, util, _, $) {
+	require(['angular', 'util', 'underscore', 'jquery','angular.sanitize'], function (angular, util, _, $) {
 		$(function () {
-			angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
+			angular.module('app', ['ngSanitize']).controller('ctrl', ['$scope','$sce', function ($scope,$sce) {
 				$scope.field = {'apps': [], 'page': ''};
-				//起始编号
-				var startId = 0;
-				$.get("{{u('shop.getCloudLists')}}", {type: 'module', 'startId': startId}, function (json) {
-					$scope.field = json;
-					$scope.$apply();
-				}, 'json');
+				//起始页
+				$scope.get = function (page){
+					$.get("{{u('shop.getCloudLists')}}", {type: 'module',page:page}, function (json) {
+						$scope.field = json;
+						$scope.field.page =$sce.trustAsHtml($scope.field.page);
+						$scope.$apply();
+					}, 'json');
+				}
+				$scope.get(1);
+				$('.pagination').delegate('li a','click',function(){
+					$scope.get($(this).text());
+					return false;
+				})
 			}])
 
 			angular.bootstrap(document.body, ['app']);
 		})
-
 	})
 </script>

@@ -14,6 +14,7 @@ use addons\store\model\StoreHdcms;
 use addons\store\model\StoreModule;
 use addons\store\model\StoreTemplate;
 use addons\store\model\StoreUser;
+use addons\store\model\StoreZip;
 use houdunwang\request\Request;
 
 /**
@@ -74,15 +75,37 @@ class Cloud {
 	public function apps() {
 		switch ( Request::get( 'type' ) ) {
 			case 'module':
-				$db = StoreModule::where( 'id', '>', Request::get( 'startId' ) )->paginate( 1 );
+				$db = StoreModule::paginate( 12 );
 				break;
 			case 'template':
-				$db = StoreTemplate::where( 'id', '>', Request::get( 'startId' ) )->paginate( 1 );
+				$db = StoreTemplate::paginate( 12 );
 				break;
 		}
 		$data['apps'] = $db->toArray();
-		$data['page'] = $db->links();
+		$data['page'] = \Page::strList();
 		echo json_encode( $data, true );
 		exit;
+	}
+
+	/**
+	 * 根据编辑获取应用信息
+	 * @return string
+	 */
+	public function getLastAppById() {
+		switch ( Request::get( 'type' ) ) {
+			case 'module':
+				$db = StoreModule::find( Request::get( 'id' ) );
+				break;
+			case 'template':
+				$db = StoreTemplate::find( Request::get( 'id' ) );
+				break;
+		}
+		$data = [ ];
+		if ( $db ) {
+			$data        = $db->toArray();
+			$data['zip'] = StoreZip::where( 'appid', $db['id'] )->orderBy( 'id', 'DESC' )->first()->toArray();
+		}
+
+		return json_encode( $data );
 	}
 }

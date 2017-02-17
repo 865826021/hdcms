@@ -17,8 +17,7 @@ class Tag {
 		$ishot     = isset( $attr['ishot'] ) ? $attr['ishot'] : 0;
 		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
 		$order     = isset( $attr['order'] ) ? $attr['order'] : 'new';
-		$php
-		           = <<<str
+		$php       = <<<str
 		<?php
 		\$model = new module\article\model\WebContent($mid);
 		\$db = \$model->where('siteid',SITEID)->limit($row);
@@ -250,6 +249,52 @@ str;
 		return $php;
 	}
 
+	//获取一级栏目列表即PID为0的
+	public function category_top( $attr, $content ) {
+		$php
+			= <<<str
+<?php
+\$_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',0)->get();
+foreach(\$_category as \$field){
+    //栏目链接
+    \$field['url']=Link::get(\$field['html_category'],\$field);
+    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
+    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
+?>
+$content
+<?php }?>
+str;
+
+		return $php;
+	}
+
+	/**
+	 * 栏目嵌套读取
+	 * 本标签支持两层栏目嵌套读取列表。
+	 *
+	 * @param $attr
+	 * @param $content
+	 *
+	 * @return string
+	 */
+	public function category_level( $attr, $content ) {
+		$php
+			= <<<str
+<?php
+\$_son_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',\$field['cid'])->get();
+foreach(\$_son_category as \$field){
+    //栏目链接
+    \$field['url']=Link::get(\$field['html_category'],\$field);
+    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
+    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
+?>
+$content
+<?php }?>
+str;
+
+		return $php;
+	}
+
 	//栏目列表数据
 	public function pagelist( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? $attr['row'] : 10;
@@ -298,6 +343,7 @@ str;
 		$php = <<<str
         <?php echo \$db->links();?>
 str;
+
 		return $php;
 	}
 

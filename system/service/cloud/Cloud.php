@@ -1,6 +1,7 @@
 <?php namespace system\service\cloud;
 
 use system\model\Cloud as CloudModel;
+use system\model\Modules;
 
 /**
  * 远程云请求
@@ -18,6 +19,13 @@ class Cloud {
 
 	public function __construct() {
 		$this->accounts = Db::table( 'cloud' )->first();
+	}
+
+	//验证云帐号状态
+	public function checkAccount() {
+		if ( $this->accounts['status'] == 0 ) {
+			message( '请先绑定云帐号后执行操作', u( 'cloud.account' ), 'warning' );
+		}
 	}
 
 	/**
@@ -58,7 +66,10 @@ class Cloud {
 		return json_decode( $res, true );
 	}
 
-	//更新安装数量
+	/**
+	 * 更新HDCMS安装数量
+	 * @return mixed
+	 */
 	public function updateHDownloadNum() {
 		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum&build='
 		                   . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
@@ -121,15 +132,57 @@ class Cloud {
 
 	/**
 	 * 获取模块或模板列表
+	 *
 	 * @param $type 类型 module/template
-	 * @param $startId 开启编号
+	 * @param $page 页数
 	 *
 	 * @return mixed
 	 */
-	public function apps( $type, $startId ) {
-		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&startId={$startId}" );
+	public function apps( $type, $page ) {
+		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&page={$page}" );
+		$apps    = json_decode( $content, true );
+		//已经安装的所模块
+		$modules = Modules::lists( 'name' );
+		foreach ( $apps['apps'] as $k => $v ) {
+			//是否安装
+			$apps['apps'][ $k ]['is_install'] = false;
+			if ( in_array( $v['name'], $modules ) ) {
+				$apps['apps'][ $k ]['is_install'] = true;
+			}
+		}
 
-		return json_decode( $content, true );
+		return $apps;
+	}
+
+	/**
+	 * 下载应用
+	 *
+	 * @param $type
+	 * @param $id
+	 */
+	public function downloadApp( $type, $id ) {
+		//获取模块信息
+		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
+		$app = json_decode( $app, true );
+		if ( Modules::where( 'name', $app['name'] )->get() ) {
+			message( '应用已经安装,不允许重复安装!', '', 'error' );
+		}
+		if ( ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
+			message( '已经存在本地开发的同名模块', u( 'shop.lists' ), 'error' );
+		}
+		$content = \Curl::get( $this->host . "/{$app['zip']['file']}" );
+		$file    = "addons/{$app['name']}.zip";
+		file_put_contents( $file, $content );
+		Zip::PclZip( $file );//设置压缩文件名
+		Zip::extract( 'addons' );
+		@unlink( $file );
+
+		file_put_contents( "addons/{$app['name']}/cloud.app", '来自云应用' );
+		ajax( [
+			'message' => '数据下载完成,准备开始安装',
+			'config'  => $app,
+			'valid'   => 1
+		] );
 	}
 }
 

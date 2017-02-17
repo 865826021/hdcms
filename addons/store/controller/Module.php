@@ -86,9 +86,7 @@ class Module extends Admin {
 		message( $config, '', 'success' );
 	}
 
-	/**
-	 * 删除模块并删除应用的所有压缩包
-	 */
+	//删除模块并删除应用的所有压缩包
 	public function del() {
 		$id  = Request::get( 'id' );
 		$app = StoreModule::where( 'id', $id )->where( 'uid', v( 'member.info.uid' ) )->get();

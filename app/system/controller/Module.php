@@ -69,8 +69,8 @@ class Module {
 		foreach ( Dir::tree( 'addons' ) as $d ) {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/package.json' ) ) {
 				$config = json_decode( file_get_contents( $d['path'] . '/package.json' ), true );
-				//去除已经安装的模块
-				if ( ! in_array( $config['name'], $modules ) ) {
+				//去除已经安装的模块和远程模块
+				if ( ! in_array( $config['name'], $modules ) && !is_file($d['path'].'/cloud.app')) {
 					$locality[ $config['name'] ] = $config;
 				}
 			}
@@ -146,7 +146,7 @@ class Module {
 		$module = Request::get( 'module' );
 		$dir    = "addons/{$module}";
 		if ( \Module::isInstall( $module ) ) {
-			message( '模块已经安装或已经存在系统模块, 你可以卸载后重新安装', 'back', 'error' );
+			message( '模块已经安装或已经存在系统模块, 你可以卸载后重新安装', u( 'module.prepared' ), 'error' );
 		}
 		//获取模块xml数据
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
@@ -237,16 +237,15 @@ class Module {
 					Package::where( 'name', $p['name'] )->update( $p );
 				}
 			}
+			//远程模块更新模块数据与删除package.json
+			if ( is_file( $dir . '/cloud.app' ) ) {
+				\Dir::delFile( $dir . '/package.json' );
+				Modules::where( 'name', $config['name'] )->update( [ 'locality' => 0 ] );
+			}
 			\Site::updateAllCache();
 			message( "模块安装成功", 'installed' );
 		}
-
-		//远程应用先下载后安装
-		if ( ! is_file( $dir . '/package.json' ) ) {
-			go( u( 'download', [ 'module' => $module ] ) );
-		}
 		$package = Package::get();
-
 		return view()->with( 'module', $config )->with( 'package', $package );
 	}
 
