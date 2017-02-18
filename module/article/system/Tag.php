@@ -12,7 +12,7 @@ class Tag {
 	public function lists( $attr, $content ) {
 		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
 		$mid       = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
-		$cid       = isset( $attr['cid'] ) ? $attr['cid'] : "";
+		$cid       = isset( $attr['cid'] ) ? ( $attr['cid'][0] == '$' ? $attr['cid'] : "{$attr['cid']}" ) : "''";
 		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
 		$isthumb   = isset( $attr['isthumb'] ) ? 1 : 0;
 		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
@@ -23,7 +23,7 @@ class Tag {
 		\$model = new module\article\model\WebContent($mid);
 		\$db = \$model->where('siteid',SITEID)->limit($row);
 		//栏目检索
-		\$cid = array_filter(explode(',','$cid'));
+		\$cid = array_filter(explode(',',$cid));
 		if(!empty(\$cid)){
 			\$db->whereIn('cid',\$cid);
 		}
@@ -44,8 +44,9 @@ class Tag {
 		\$_result =\$_result?\$_result->toArray():[]; 
 		foreach(\$_result as \$field){
 			\$field['category']=module\article\model\WebCategory::getByCid(\$field['cid']);
-			\$field['url'] = Link::get(\$field['_category']['html_content'],\$field);
+			\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
+			\$field['thumb'] =__ROOT__.'/'.(\$field['thumb']?:'resource/images/nopic_small.jpg');
 		?>
 			$content
 		<?php }?>
@@ -240,10 +241,12 @@ str;
 	//栏目列表
 	public function category( $attr, $content ) {
 		$cid = isset( $attr['cid'] ) ? $attr['cid'] : '';
-		$php
-		     = <<<str
+		$php = <<<str
 <?php
 \$cid = array_filter(explode(',','$cid'));
+if(empty(\$cid)){
+	\$cid = Db::table('web_category')->where('pid',Request::get('cid',0))->lists('cid,cid');
+}
 \$db =  Db::table('web_category')->where('siteid',SITEID);
 if(\$cid){
 	\$db->whereIn('cid',\$cid);
@@ -253,7 +256,7 @@ foreach(\$_category as \$field){
     //栏目链接
     \$field['url']=Link::get(\$field['html_category'],\$field);
     \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
-    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
+    \$field['current_category']=\Request::get('cid')==\$field['cid']?'current_category':'';
 ?>
 $content
 <?php }?>
@@ -271,7 +274,7 @@ foreach(\$_category as \$field){
     //栏目链接
     \$field['url']=Link::get(\$field['html_category'],\$field);
     \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
-    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
+    \$field['current_category']=\Request::get('cid')==\$field['cid']?'current_category':'';
 ?>
 $content
 <?php }?>
@@ -290,21 +293,43 @@ str;
 	 * @return string
 	 */
 	public function category_level( $attr, $content ) {
-		$php
-			= <<<str
+		$php = <<<str
 <?php
 \$_son_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',\$field['cid'])->get();
 foreach(\$_son_category as \$field){
     //栏目链接
     \$field['url']=Link::get(\$field['html_category'],\$field);
     \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
-    \$field['active']=isset(\$_GET['cid']) && \$_GET['cid']==\$field['cid']?true:false;
 ?>
 $content
 <?php }?>
 str;
 
 		return $php;
+	}
+
+	//文章内容页面包屑导航
+	public function breadcrumb( $attr, $content ) {
+		$separator = isset( $attr['separator'] ) ? $attr['separator'] : '';
+
+		return <<<str
+<ol class="breadcrumb">
+  <li><a href="{{__ROOT__}}">首页</a>{$separator}</li>
+  <?php \$_categorys = Db::table('web_category')->where('siteid',SITEID)->get();
+  \$_cid  = isset(\$hdcms['category']['cid'])?\$hdcms['category']['cid']:\$hdcms['cid']; 
+  \$_categorys = array_reverse(Arr::parentChannel(\$_categorys,\$_cid)?:[]);
+  foreach(\$_categorys as \$_cat){?>
+	  <li>
+	    <a href="{{str_replace('{page}',Request::get('page',1),Link::get(\$_cat['html_category'],\$_cat))}}">{{\$_cat['catname']}}</a>
+	    <?php if(isset(\$hdcms['category'])){echo '{$separator}';}?>
+	  </li>
+  <?php }?>
+  <?php if(isset(\$hdcms['category'])){?>
+		<li class="active">{{\$hdcms['title']}}</li>
+	<?php }?>
+</ol>
+str;
+
 	}
 
 	//栏目列表数据
@@ -315,7 +340,6 @@ str;
 		$php       = <<<str
         <?php
         \$db = new module\article\model\WebContent();
-        p(Request::get('cid'));
         \$db->where('cid',Request::get('cid'))->where('siteid',SITEID);
         //头条
         if($ishot){
@@ -330,9 +354,8 @@ str;
         \$_category['url']=Link::get(\$d['html_category'],\$_category);
         \$_category['url']=str_replace('{page}',Request::get('page',1), \$d['url']);
         //分页地址设置
-        houdunwang\page\Page::url(Link::get(\$d['html_category'],\$_category));
+        houdunwang\page\Page::url(Link::get(\$_category['html_category'],\$_category));
         \$_data = \$db->paginate($row);
-        
         foreach(\$_data as \$field){
             \$field['category']=\$_category;
             //文章缩略图

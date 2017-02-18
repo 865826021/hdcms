@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row" ng-show="!field.valid">
+		<div class="row" ng-show="field.valid==undefined">
 			<div class="col-sm-12 col-md-12">
 				<div class="alert alert-info">
 					正在获取应用列表
@@ -34,11 +34,17 @@
 					<img ng-src="@{{'http://dev.hdcms.com/'+v.app_preview}}"
 					     style="height: 200px; width: 100%; display: block;">
 					<div class="caption">
-						<h3>@{{v.title}}</h3>
+						<h3>
+							@{{v.title}}
+						</h3>
+						<small>
+							价格: <span ng-show="v.price>0" >@{{v.price}} 元</span>
+							<span ng-show="v.price<=0" class="label label-info">免费</span>
+						</small>
 						<p>@{{v.resume}}</p>
 						<p>
-							<a ng-if="!v.is_install" href="{{u('install',['type'=>$_GET["type"]])}}&id=@{{v.id}}"
-							class="btn btn-primary" role="button">开始安装</a>
+							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary"
+							   role="button">开始安装</a>
 						</p>
 						<p><span ng-if="v.is_install" class="btn btn-default">已经安装</span></p>
 					</div>
@@ -55,22 +61,35 @@
 				$scope.field = {'apps': [], 'page': ''};
 				//起始页
 				$scope.get = function (page) {
-					$.post("{{u('shop.lists',['type'=>$_GET["type"]])}}&page="+page,function (json) {
+					$.post("{{u('shop.lists',['type'=>$_GET["type"]])}}&page=" + page, function (json) {
 						$scope.complete = true;
+						$scope.field = json;
 						if (json.valid == 1) {
-							$scope.field = json;
 							$scope.field.page = $sce.trustAsHtml($scope.field.page);
 						} else {
-							$scope.error = json.message;
+							$scope.message = json.message;
 						}
 						$scope.$apply();
-					}, 'json');
+					}, 'json'
+					)
+					;
 				}
 				$scope.get(1);
 				$('.pagination').delegate('li a', 'click', function () {
 					$scope.get($(this).text());
 					return false;
 				})
+
+				//安装模块
+				$scope.install = function (module) {
+					$.post("{{u('install',['type'=>$_GET['type']])}}&id="+module.id, function (json) {
+						if(json.valid==0){
+							util.message(json.message,"{{u('shop.lists',['type'=>$_GET['type']])}}",'warning',8);
+						}else{
+							util.message(json.message,json.url,'success',3);
+						}
+					}, 'json');
+				}
 			}])
 
 			angular.bootstrap(document.body, ['app']);

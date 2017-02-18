@@ -14,6 +14,7 @@ use app\system\controller\part\Config;
 use app\system\controller\part\Cover;
 use app\system\controller\part\Domain;
 use app\system\controller\part\Navigate;
+use app\system\controller\part\Pay;
 use app\system\controller\part\Processor;
 use app\system\controller\part\Rule;
 use app\system\controller\part\Service;
@@ -133,6 +134,7 @@ class Module {
 			Setup::make( $data );
 			Service::make( $data );
 			Domain::make( $data );
+			Pay::make( $data );
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块创建成功', 'prepared' );
 		}

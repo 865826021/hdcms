@@ -53,11 +53,6 @@ class Shop {
 
 	//安装云模块
 	public function install() {
-		if ( IS_POST ) {
-			//下载文件
-			\Cloud::downloadApp( Request::get( 'type' ), Request::get( 'id' ) );
-		}
-
-		return view();
+		\Cloud::downloadApp( Request::get( 'type' ), Request::get( 'id' ) );
 	}
 }

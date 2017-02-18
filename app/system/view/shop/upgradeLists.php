@@ -6,7 +6,7 @@
 		<li class="active">应用商店</li>
 	</ol>
 	<ul class="nav nav-tabs">
-		<li role="presentation"><a href="{{u('installed')}}">已经安装模块</a></li>
+		<li role="presentation"><a href="{{u('module.installed')}}">已经安装模块</a></li>
 		<li role="presentation"><a href="?s=system/module/prepared">安装模块</a></li>
 		<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
 		<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a></li>
@@ -40,7 +40,7 @@
 							   role="button">
 								@{{v.message}}
 							</a>
-							<a ng-if="v.message=='正在更新...'" class="btn btn-primary"
+							<a ng-if="v.valid==0" class="btn btn-danger"
 							   role="button">
 								@{{v.message}}
 							</a>
@@ -54,7 +54,7 @@
 			</div>
 			<div class="col-sm-12 col-md-12" ng-show="field.apps.length==0">
 				<div class="alert alert-info">
-					恭喜! 所有模块都是最新版本。
+					@{{field.message}}
 				</div>
 			</div>
 		</div>
@@ -70,6 +70,7 @@
 				$.post("{{u('shop.upgradeLists')}}", function (json) {
 					if (json.valid == 1) {
 						$scope.field = json;
+						//有更新模块时
 						for (var i = 0; i < $scope.field.apps.length; i++) {
 							$scope.field.apps[i].message = '开始更新';
 						}
@@ -82,12 +83,13 @@
 
 				//更新模块
 				$scope.upgrade = function (v) {
-					v.message='正在更新...';
-					$.post("{{u('upgrade')}}&name="+v.name, function (json) {
-						if(json.valid==0){
-							v.message=json.message;
-						}else{
-							v.message='更新完毕';
+					v.message = '正在更新...';
+					$.post("{{u('upgrade')}}&name=" + v.name, function (json) {
+						if (json.valid == 0) {
+							v.message = json.message;
+							v.valid = 0;
+						} else {
+							v.message = '更新完毕';
 						}
 						$scope.$apply();
 					}, 'json');

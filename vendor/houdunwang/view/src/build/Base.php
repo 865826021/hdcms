@@ -94,10 +94,10 @@ class Base {
 	public function with( $name, $value = '' ) {
 		if ( is_array( $name ) ) {
 			foreach ( $name as $k => $v ) {
-				self::$vars[ $k ] = $v;
+				self::$vars= Arr::set(self::$vars,$k,$v);
 			}
 		} else {
-			self::$vars[ $name ] = $value;
+			self::$vars = Arr::set(self::$vars,$name,$value);
 		}
 
 		return $this;

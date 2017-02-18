@@ -128,6 +128,16 @@
 					<span class="help-block">用于管理模块链接的路由器设置</span>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">支付功能</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.pay">
+						开启支付功能
+					</label>
+					<span class="help-block">用于管理微信、支付宝等支付功能</span>
+				</div>
+			</div>
 			<h5 class="page-header">公众平台消息处理选项
 				<small>这里来定义公众平台消息相关处理</small>
 			</h5>
@@ -694,6 +704,7 @@
 					"crontab":true,
 					"router":true,
 					"domain":true,
+					"pay":true,
 					"web": {
 						"entry": {
 							"title": "桌面入口导航",

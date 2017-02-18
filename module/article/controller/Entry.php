@@ -27,6 +27,8 @@ class Entry extends HdController {
 		$this->template = "theme/{$template['name']}/" . ( IS_MOBILE ? 'mobile' : 'web' );
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
+		View::with( 'module.site', json_decode( Db::table( 'web' )->pluck( 'site_info' ), true ) );
+
 	}
 
 	/**
@@ -46,9 +48,13 @@ class Entry extends HdController {
 		Request::set( 'get.mid', $category['mid'] );
 		View::with( 'hdcms', $category->toArray() );
 		if ( IS_MOBILE ) {
+			//移动端模板
 			return view( $this->template . '/article_list.html' );
 		} else {
 			//PC模板
+			$tpl = $category['ishomepage'] ? $category['index_tpl'] : $category['category_tpl'];
+
+			return view( $this->template . "/{$tpl}" );
 		}
 	}
 
@@ -57,7 +63,8 @@ class Entry extends HdController {
 	 */
 	public function content() {
 		$model = new WebContent();
-		$hdcms = $model->find( Request::get( 'aid' ) );
+		$hdcms = $model->find( Request::get( 'aid' ) )->toArray();
+		$hdcms['category'] = WebCategory::find($hdcms['cid'])->toArray();
 		View::with( [ 'hdcms' => $hdcms ] );
 		if ( IS_MOBILE ) {
 			return view( $this->template . '/article.html' );
@@ -66,7 +73,7 @@ class Entry extends HdController {
 			$category = WebCategory::find( Request::get( 'cid' ) );
 			$template = \Template::getTemplateData();
 
-			return view( "theme/{$template['name']}/web/{$category['content_tpl']}");
+			return view( "theme/{$template['name']}/web/{$category['content_tpl']}" );
 		}
 	}
 }

@@ -71,7 +71,7 @@ class Module extends Admin {
 		Zip::PclZip( $file['path'] );//设置压缩文件名
 		Zip::extract();
 		Zip::extract( "temp/module" );//解压缩到hd目录
-		$name = preg_replace( '/\.zip/i', '', $file['name'] );
+		$name = preg_replace( '/[^\w]/', '', preg_replace( '/\.zip/i', '', $file['name'] ) );
 		//解析配置文件
 		$dir    = "temp/module/$name";
 		$config = json_decode( file_get_contents( $dir . '/package.json' ), true );
@@ -94,7 +94,7 @@ class Module extends Admin {
 			message( '应用不存在', '', 'error' );
 		}
 		//删除压缩包
-		$zips =StoreZip::where( 'appid', $app['id'] )->get();
+		$zips = StoreZip::where( 'appid', $app['id'] )->get();
 		foreach ( $zips as $z ) {
 			\Dir::delFile( $z['file'] );
 		}
@@ -106,8 +106,9 @@ class Module extends Admin {
 	//模块压缩包管理
 	public function zips() {
 		$this->has( Request::get( 'id' ) );
-		$module  = StoreModule::find( Request::get( 'id' ) );
-		$zips = StoreZip::where( 'appid', Request::get( 'id' ) )->get();
+		$module = StoreModule::find( Request::get( 'id' ) );
+		$zips   = StoreZip::where( 'appid', Request::get( 'id' ) )->get();
+		p($zips->toArray());
 		View::with( [ 'app' => $module, 'zips' => $zips ] );
 
 		return view( $this->template . '/module/zips.html' );

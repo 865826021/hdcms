@@ -55,7 +55,11 @@
         <div class="list-group">
             <foreach from="$menus" value="$m">
                 <a href="{{$m['url']}}" class="list-group-item">
-                    <i class="{{$m['icon']}}"></i> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i>
+                    <if value="$m['icontype'] == 1">
+                       <i class="{{$m['css']['icon']}}"></i> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i>
+                        <else/>
+                        <img src="{{__ROOT__}}/{{$m['css']['image']}}" style="max-width: 50px;max-height: 35px;"> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i>
+                    </if>
                 </a>
             </foreach>
         </div>

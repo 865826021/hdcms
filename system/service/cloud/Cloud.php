@@ -13,12 +13,13 @@ use system\model\Modules;
 class Cloud {
 	//云主机
 	protected $host = 'http://store.hdcms.com';
-	protected $url = 'http://store.hdcms.com?m=store&siteid=13&action=controller';
+	protected $url;
 	//云帐号
 	protected $accounts;
 
 	public function __construct() {
 		$this->accounts = Db::table( 'cloud' )->first();
+		$this->url      = "http://store.hdcms.com?&secret={$this->accounts['secret']}&uid={$this->accounts['uid']}&m=store&siteid=13&action=controller";
 	}
 
 	//验证云帐号状态
@@ -131,7 +132,7 @@ class Cloud {
 	}
 
 	/**
-	 * 获取模块或模板列表
+	 * 获取商城中的模块或模板列表
 	 *
 	 * @param $type 类型 module/template
 	 * @param $page 页数
@@ -139,6 +140,7 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function apps( $type, $page ) {
+		$this->checkAccount();
 		if ( empty( $type ) || empty( $page ) ) {
 			message( '参数错误无法获取应用列表', '', 'warning' );
 		}
@@ -164,13 +166,17 @@ class Cloud {
 	 * 获取模块更新列表
 	 */
 	public function getModuleUpgradeLists() {
-		$post    = Modules::where( 'locality', 0 )->lists( 'name,build' );
+		$this->checkAccount();
+		$post = Modules::where( 'locality', 0 )->lists( 'name,build' );
+		if ( empty( $post ) ) {
+			ajax( [ 'valid' => 1, 'message' => '系统没有安装任何模块, 去应用商店转转吧。', 'apps' => [ ] ] );
+		}
 		$content = \Curl::post( $this->url . "/cloud/getModuleUpgradeLists", $post );
 		$apps    = json_decode( $content, true );
 		if ( $apps['valid'] == 1 ) {
-			return $apps;
+			ajax( $apps );
 		}
-		message( $apps['message'], '', 'error' );
+		ajax( [ 'valid' => 0, 'message' => $apps['message'] ] );
 	}
 
 	/**
@@ -179,34 +185,35 @@ class Cloud {
 	 * @param $name 模块标识
 	 */
 	public function upgradeModuleByName( $name ) {
-		$module  = Db::table( 'modules' )->where( 'name', $name )->first();
-		$content = \Curl::post( $this->url . "/cloud/getModuleUpgrade", $module );
-		$app     = json_decode( $content, true );
+		$this->checkAccount();
+		$module = Db::table( 'modules' )->where( 'name', $name )->first();
+		$res    = \Curl::post( $this->url . "/cloud/getModuleUpgrade", $module );
+		$app    = json_decode( $res, true );
+
 		if ( $app['valid'] == 1 ) {
-			$file = "addons/{$app['name']}.zip";
+			//下载压缩文件
+			$content = \Curl::get( $this->host . '/' . $app['zip']['file'] );
+			\Dir::create( 'upgrade/module' );
+			$file = "addons/{$name}.zip";
 			file_put_contents( $file, $content );
 			Zip::PclZip( $file );//设置压缩文件名
 			Zip::extract( 'addons' );
-			file_put_contents( "addons/{$app['name']}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
+			file_put_contents( "addons/{$name}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
 			//删除下载压缩包
 			\Dir::delFile( $file );
 			//执行模块更新表语句
 			$class = 'addons\\' . $app['name'] . '\system\Setup';
 			call_user_func_array( [ new $class, 'upgrade' ], [ ] );
 			//更新数据表模块编译版本
-			$data = [ 'build' => $app['zip']['build'] ];
+			$data = [ 'version' => $app['zip']['version'], 'build' => $app['zip']['build'] ];
 			Modules::where( 'name', $name )->update( $data );
-
 			ajax( [
 				'message' => '模块更新完毕',
 				'config'  => $app,
 				'valid'   => 1
 			] );
 		} else {
-			ajax( [
-				'message' => $app['message'],
-				'valid'   => 0
-			] );
+			ajax( $app );
 		}
 	}
 
@@ -217,12 +224,17 @@ class Cloud {
 	 * @param $id
 	 */
 	public function downloadApp( $type, $id ) {
+		$this->checkAccount();
 		if ( empty( $type ) || empty( $id ) ) {
 			message( '参数错误无法执行安装', '', 'warning' );
 		}
 		//获取模块信息
 		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
 		$app = json_decode( $app, true );
+
+		if($app['valid']==0){
+			ajax($app);
+		}
 		//安装前检测
 		switch ( $type ) {
 			case 'module':

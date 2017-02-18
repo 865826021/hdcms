@@ -1,7 +1,5 @@
 <?php namespace module\ucenter\system;
-
 use module\HdPay;
-
 /**
  * 微信支付通知页面
  * Class Pay
