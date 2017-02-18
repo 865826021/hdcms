@@ -77,7 +77,8 @@ class Site extends Common {
 		c( 'wechat', array_merge( c( 'wechat' ), $config ) );
 		//设置邮箱配置
 		c( 'mail', v( 'site.setting.smtp' ) );
-
+		//会员中心默认风格
+		define('__UCENTER_TEMPLATE__',v('site.info.ucenter_template'));
 		return true;
 	}
 

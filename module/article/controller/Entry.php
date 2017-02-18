@@ -62,9 +62,14 @@ class Entry extends HdController {
 	 * 文章内容页访问入口
 	 */
 	public function content() {
-		$model = new WebContent();
-		$hdcms = $model->find( Request::get( 'aid' ) )->toArray();
-		$hdcms['category'] = WebCategory::find($hdcms['cid'])->toArray();
+		$model             = new WebContent();
+		$hdcms             = $model->find( Request::get( 'aid' ) )->toArray();
+		$category          = WebCategory::find( $hdcms['cid'] )->toArray();
+		//设置栏目链接
+		$category['url']   = Link::get( $category['html_category'], $category );
+		$category['url']   = str_replace( '{page}', Request::get( 'page', 1 ), $category['url'] );
+		
+		$hdcms['category'] = $category;
 		View::with( [ 'hdcms' => $hdcms ] );
 		if ( IS_MOBILE ) {
 			return view( $this->template . '/article.html' );

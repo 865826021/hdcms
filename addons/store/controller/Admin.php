@@ -41,9 +41,4 @@ class Admin extends HdController {
 			\Credit::change( $data );
 		}
 	}
-
-	//后台主页
-	public function home() {
-		return view( $this->template . '/admin/home.html' );
-	}
 }

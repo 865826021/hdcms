@@ -108,7 +108,6 @@ class Module extends Admin {
 		$this->has( Request::get( 'id' ) );
 		$module = StoreModule::find( Request::get( 'id' ) );
 		$zips   = StoreZip::where( 'appid', Request::get( 'id' ) )->get();
-		p($zips->toArray());
 		View::with( [ 'app' => $module, 'zips' => $zips ] );
 
 		return view( $this->template . '/module/zips.html' );

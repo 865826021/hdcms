@@ -132,6 +132,7 @@ str;
         }
         .hdcms_swiper_container .swiper-slide img {
             width : 100%;
+            height: {$height}px;
         }
         .hdcms_swiper_container .swiper-slide div.title {
             position   : absolute;
@@ -139,25 +140,29 @@ str;
             text-align : center;
             width      : 100%;
             font-size  : 1em;
-            color      : {$color};
+        }
+        .hdcms_swiper_container .swiper-slide div.title a{
+            text-shadow: 1px 1px 1px #000;
+            color      : {$color} !important;
+            background: -webkit-linear-gradient(top,transparent,rgba(0,0,0,0.6));
+			width: 100%;
+			line-height: 1.5em;
+			padding-top: 2%;
+			display: block;
         }
     </style>
     <script>
-//        $(function () {
-//            require(['swiper'], function ($) {
-window.onload = function() {
-                var mySwiper = new Swiper('.hdcms_swiper_container', {
-                    width: {$width},
-                    height: {$height},
-                    autoplay: {$autoplay},
-                    direction: 'horizontal',
-                    loop: true,
-                    //如果需要分页器
-                    pagination: '.hdcms_swiper_pagination',
-                })
-}
-//            })
-//        })
+	    require(['swiper'],function($){
+	        var mySwiper = new Swiper('.hdcms_swiper_container', {
+	            width: {$width},
+				height: {$height},
+	            autoplay: {$autoplay},
+	            direction: 'horizontal',
+	            loop: true,
+	            //如果需要分页器
+	            pagination: '.hdcms_swiper_pagination',
+			})
+		})
     </script>
     <?php }?>
 str;
