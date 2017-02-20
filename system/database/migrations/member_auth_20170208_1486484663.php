@@ -11,11 +11,11 @@ class member_auth extends Migration {
 		$sql = <<<sql
 CREATE TABLE `hd_member_auth` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `siteid` int(10) unsigned DEFAULT NULL,
+  `siteid` int(10) unsigned NOT NULL,
   `uid` int(10) unsigned NOT NULL,
-  `qq` varchar(100) NOT NULL DEFAULT '',
-  `wechat` varchar(100) NOT NULL DEFAULT '',
-  `weibo` varchar(100) NOT NULL DEFAULT '',
+  `qq` varchar(300) NOT NULL DEFAULT '',
+  `wechat` varchar(300) NOT NULL DEFAULT '',
+  `weibo` varchar(300) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='第三方帐号登录数据';
 sql;

@@ -30,7 +30,8 @@ CREATE TABLE `hd_modules` (
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '模块缩略图',
   `preview` varchar(255) NOT NULL DEFAULT '' COMMENT '模块封面图',
   `locality` tinyint(1) unsigned NOT NULL COMMENT '本地应用',
-  `releaseCode` varchar(50) NOT NULL DEFAULT '' COMMENT '发行版本号',
+  `domain` tinyint(1) unsigned NOT NULL COMMENT '域名设置',
+  `build` int(10) unsigned NOT NULL COMMENT '云模块编译时间',
   PRIMARY KEY (`mid`),
   UNIQUE KEY `name` (`name`),
   KEY `is_system` (`is_system`)

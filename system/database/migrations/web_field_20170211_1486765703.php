@@ -16,10 +16,10 @@ CREATE TABLE `hd_web_field` (
   `title` varchar(100) NOT NULL DEFAULT '' COMMENT '中文名称',
   `name` varchar(30) NOT NULL DEFAULT '' COMMENT '标识',
   `status` tinyint(1) unsigned NOT NULL COMMENT '开启',
-  `options` varchar(1000) NOT NULL DEFAULT '' COMMENT '选项JSON格式',
+  `options` text NOT NULL COMMENT '选项JSON格式',
   `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
   `required` tinyint(1) unsigned NOT NULL COMMENT '必须输入',
-  `is_system` tinyint(1) unsigned NOT NULL COMMENT '系统字段',
+  `type` varchar(50) NOT NULL DEFAULT '' COMMENT '字段类型',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='自字义字段参数表';
 sql;

@@ -12,8 +12,8 @@ class web_model extends Migration {
 CREATE TABLE `hd_web_model` (
   `mid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `siteid` int(11) DEFAULT NULL COMMENT '站点编号',
-  `title` varchar(100) NOT NULL DEFAULT '' COMMENT '模型名称',
-  `name` char(10) NOT NULL DEFAULT '' COMMENT '模型表名标识',
+  `model_title` varchar(100) NOT NULL DEFAULT '' COMMENT '模型名称',
+  `model_name` char(10) NOT NULL DEFAULT '' COMMENT '模型表名标识',
   `is_system` tinyint(3) unsigned NOT NULL COMMENT '系统模型',
   PRIMARY KEY (`mid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='模型名称';

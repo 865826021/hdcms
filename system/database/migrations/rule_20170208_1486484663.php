@@ -17,7 +17,7 @@ CREATE TABLE `hd_rule` (
   `status` tinyint(1) unsigned NOT NULL COMMENT '是否禁用',
   PRIMARY KEY (`rid`),
   KEY `siteid` (`siteid`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='回复规则';
 sql;
 		Db::execute( $sql );
     }

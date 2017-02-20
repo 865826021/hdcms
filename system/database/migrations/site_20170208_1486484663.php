@@ -14,8 +14,6 @@ CREATE TABLE `hd_site` (
   `weid` int(10) unsigned NOT NULL COMMENT '微信编号',
   `createtime` int(10) unsigned NOT NULL COMMENT '站点创建时间',
   `description` varchar(300) NOT NULL DEFAULT '' COMMENT '描述',
-  `domain` varchar(100) NOT NULL DEFAULT '' COMMENT '域名',
-  `module` char(20) NOT NULL DEFAULT '' COMMENT '通过域名访问时的默认模块',
   `ucenter_template` varchar(50) NOT NULL DEFAULT '' COMMENT '会员中心模板',
   PRIMARY KEY (`siteid`),
   KEY `weid` (`weid`)
