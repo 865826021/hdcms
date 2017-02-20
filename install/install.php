@@ -8,7 +8,8 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$download_file_url = 'http://store.hdcms.com/?m=store&action=controller/cloud/downloadFullHdcms&siteid=13';
+$cloudHost         = 'http://store.hdcms.com';
+$cloudUrl          = $cloudHost."?m=store&&siteid=13&action=controller/cloud";
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -81,11 +82,11 @@ if ( $action == 'downloadFile' ) {
 		echo 1;
 		exit;
 	} else {
-		$hdcms             = curl_get( $download_file_url );
+		$hdcms             = curl_get( $cloudUrl . '/downloadFullHdcms' );
 		$_SESSION['hdcms'] = json_decode( $hdcms, true );
 		//更新下载数量
-		curl_get( 'http://store.hdcms.com?m=store&siteid=13&action=controller/cloud/updateHDownloadNum&build=' . $_SESSION['hdcms']['build'] );
-		$d = curl_get( 'http://store.hdcms.com/' . $_SESSION['hdcms']['file'] );
+		curl_get( $cloudUrl . '/updateHDownloadNum&build=' . $_SESSION['hdcms']['build'] );
+		$d = curl_get( $cloudHost . '/' . $_SESSION['hdcms']['file'] );
 		if ( strlen( $d ) < 2787715 ) {
 			//下载失败
 			exit;
