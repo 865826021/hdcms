@@ -143,8 +143,8 @@ if ( $action == 'table' ) {
 	//更新系统版本号
 	$version = include 'data/upgrade.php';
 	$build   = $_SESSION['hdcms']['build'];
-	$sql     = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,build)
-		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$build)";
+	$sql     = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,build,status)
+		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$build,1)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {

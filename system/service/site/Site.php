@@ -248,7 +248,7 @@ class Site extends Common {
 		//站点模块
 		$data['modules'] = \Module::getSiteAllModules( $siteId, false );
 		foreach ( $data as $key => $value ) {
-			d( "{$key}:{$siteId}", $value );
+			d( "{$key}:{$siteId}", $value,0, [ 'siteid' => $siteId ] );
 		}
 
 		return true;
