@@ -16,6 +16,6 @@ class Navigate extends HdNavigate {
 	 * 当使用配置的域名访问时会执行这个方法
 	 */
 	public function web() {
-		return call_user_func_array( [ new Entry(), 'index' ], [ ] );
+		controller_action('article.entry.index');
 	}
 }

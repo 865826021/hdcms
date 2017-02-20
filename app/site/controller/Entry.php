@@ -18,6 +18,39 @@ use system\model\Modules;
  */
 class Entry {
 	/**
+	 * 通过域名访问时执行的方法
+	 * 首先根据域名判断该域名是否是站点的默认域名
+	 * 然后通过域名执行默认模块
+	 * @return mixed
+	 */
+	public function index() {
+		$domain = Db::table( 'module_domain' )->where( 'domain', $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ) )->first();
+		if ( $domain && ! empty( $domain['module'] ) ) {
+			//站点设置了默认访问模块时访问模块的桌面入口页面
+			$module = Db::table( 'modules_bindings' )
+			            ->join( 'modules', 'modules.name', '=', 'modules_bindings.module' )
+			            ->join( 'module_domain', 'module_domain.module', '=', 'modules.name' )
+			            ->where( 'module_domain.siteid', $domain['siteid'] )
+			            ->where( 'entry', 'web' )->first();
+			if ( $module && ! empty( $module['do'] ) ) {
+				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['module'] . '\system\Navigate';
+				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
+					Request::set( 'get.siteid', $domain['siteid'] );
+					Request::set( 'get.m', $module['module'] );
+					//初始站点数据
+					\Site::siteInitialize();
+					//初始模块数据
+					\Module::moduleInitialize();
+
+					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
+				}
+			}
+		}
+
+		return view();
+	}
+
+	/**
 	 * 执行模块动作
 	 * 动作分为系统动作与控制器动作
 	 */
@@ -68,6 +101,7 @@ class Entry {
 	 */
 	public function module() {
 		auth();
+
 		return view();
 	}
 }

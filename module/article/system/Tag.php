@@ -42,8 +42,9 @@ class Tag {
 		//排序
 		\$_result = \$db->orderBy('aid','$order')->get();
 		\$_result =\$_result?\$_result->toArray():[]; 
+		\$_category = new \module\article\model\WebCategory();
 		foreach(\$_result as \$field){
-			\$field['category']=module\article\model\WebCategory::getByCid(\$field['cid']);
+			\$field['category']=\$_category->getByCid(\$field['cid']);
 			\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 			\$field['thumb'] =__ROOT__.'/'.(\$field['thumb']?:'resource/images/nopic_small.jpg');
@@ -70,7 +71,8 @@ str;
 		\$db->orderBy('rand()');
 		\$_result = \$db->get();
 		\$_result =\$_result?\$_result->toArray():[];
-		\$category = module\article\model\WebCategory::getByCid(Request::get('cid'));
+		\$_WebCategory = new \module\article\model\WebCategory();
+		\$category = \$_WebCategory->getByCid(Request::get('cid'));
 		foreach(\$_result as \$field){
 			\$field['category']=\$category;
 			\$field['url'] = Link::get(\$category['html_content'],\$field);

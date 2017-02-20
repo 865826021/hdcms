@@ -154,5 +154,6 @@ function controller_action() {
 	$class  = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $info[0]
 	          . '\\controller\\' . ucfirst( $info[1] );
 
-	return call_user_func_array( [ new $class, $info[2] ], $args );
+	$res =  call_user_func_array( [ new $class, $info[2] ], $args );
+	die($res);
 }

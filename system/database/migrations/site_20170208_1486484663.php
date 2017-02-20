@@ -11,12 +11,10 @@ class site extends Migration {
 CREATE TABLE `hd_site` (
   `siteid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '站点名称',
-  `weid` int(10) unsigned NOT NULL COMMENT '微信编号',
   `createtime` int(10) unsigned NOT NULL COMMENT '站点创建时间',
   `description` varchar(300) NOT NULL DEFAULT '' COMMENT '描述',
   `ucenter_template` varchar(50) NOT NULL DEFAULT '' COMMENT '会员中心模板',
-  PRIMARY KEY (`siteid`),
-  KEY `weid` (`weid`)
+  PRIMARY KEY (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点信息';
 sql;
 		Db::execute( $sql );

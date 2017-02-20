@@ -17,13 +17,33 @@ class Init extends HdService {
 		 * 模块域名不存时创建域名
 		 * 基本上只有第一个站点有域名
 		 */
-		if ( ! Db::table( 'module_domain' )->where( 'domain', $_SERVER['HTTP_HOST'] )->get() ) {
+		$domain = $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] );
+		if ( ! Db::table( 'module_domain' )->where( 'domain', $domain )->get() ) {
 			Db::table( 'module_domain' )->insert( [
 				'siteid' => $siteId,
-				'domain' => $_SERVER['HTTP_HOST'],
+				'domain' => $domain,
 				'module' => 'article'
 			] );
 		}
+
+		//默认战点数据
+		$sql=<<<sql
+INSERT INTO `hd_web` (`siteid`, `title`, `template_name`, `site_info`, `status`)
+VALUES
+	({$siteId},'后盾人','default','{\"rid\":\"1\",\"status\":1,\"is_default\":0,\"close_message\":\"网站暂时关闭,请稍候访问\",\"title\":\"后盾人\",\"template_tid\":\"1\",\"template_title\":\"默认模板\",\"template_name\":\"default\",\"template_thumb\":\"thumb.jpg\",\"keyword\":\"b\",\"thumb\":\"attachment/56701486678778.jpg\",\"keywords\":\"后盾人 人人做后盾\",\"description\":\"后盾人 人人做后盾\",\"id\":\"1\",\"footer\":\"<p>我们的使命：帮助中小企业快速实现互联网价值,增长企业效益!</p><p>Copyright © 2010-2017 hdcms.com All Rights Reserved 京ICP备京ICP备12048441号-7</p>\"}',1);
+sql;
+		Db::execute($sql);
+
+		//添加幻灯片
+		$sql=<<<sql
+INSERT INTO `hd_web_slide` (`siteid`, `title`, `url`, `thumb`, `displayorder`)
+VALUES
+	({$siteId},'vivo Funtouch OS 3.0 Lite公测版开放更新：老机型福音','?m=article&action=controller/entry/index&siteid={$siteId}','attachment/5741487320606.jpg',0),
+	({$siteId},'创新圆形设计/不再为空间烦恼，品胜1.8米3位3USB智能宽座插线板59.9元','?m=ucenter&action=controller/member/index&siteid={$siteId}','attachment/2521487320628.jpg',0),
+	({$siteId},'222222','?m=article&action=controller/entry/index&siteid={$siteId}','attachment/98491487320653.jpg',0);
+sql;
+		Db::execute($sql);
+
 
 		//创建模型表
 		$model = new WebModel();
