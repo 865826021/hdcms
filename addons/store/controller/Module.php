@@ -19,7 +19,7 @@ use houdunwang\request\Request;
  * Class App
  * @package addons\store\controller
  */
-class Module extends Admin {
+class Module extends Member {
 	//模块列表
 	public function lists() {
 		$apps = StoreModule::where( 'uid', v( 'member.info.uid' ) )->get();

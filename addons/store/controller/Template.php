@@ -18,7 +18,7 @@ use houdunwang\request\Request;
  * Class Template
  * @package addons\store\controller
  */
-class Template extends Admin {
+class Template extends Member {
 	//模板列表
 	public function lists() {
 		$apps = StoreTemplate::where( 'uid', v( 'member.info.uid' ) )->get();

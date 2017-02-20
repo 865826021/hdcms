@@ -11,13 +11,14 @@
 namespace addons\store\controller;
 
 use addons\store\model\StoreHdcms;
+use module\HdController;
 
 /**
  * 系统核心包管理
  * Class Hdcms
  * @package addons\store\controller
  */
-class Hdcms extends Admin {
+class Hdcms extends HdController{
 	public function __construct() {
 		parent::__construct();
 		auth();

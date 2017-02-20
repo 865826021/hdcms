@@ -14,12 +14,12 @@ use addons\store\model\StoreUser;
 use module\HdController;
 
 /**
- * 后台主控制器
+ * 会员中心验证控制器
  * 用于其他控制器继承使用
- * Class Admin
+ * Class Member
  * @package addons\store\controller
  */
-class Admin extends HdController {
+class Member extends HdController {
 	public function __construct() {
 		parent::__construct();
 		\Member::isLogin();
