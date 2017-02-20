@@ -76,7 +76,8 @@ class Entry {
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );
 		}
-
+		//清除站点缓存
+		Session::del( 'siteid');
 		return view('app/system/view/entry/login.php');
 	}
 
