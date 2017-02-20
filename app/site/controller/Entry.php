@@ -24,18 +24,19 @@ class Entry {
 	 * @return mixed
 	 */
 	public function index() {
-		$domain = Db::table( 'module_domain' )->where( 'domain', $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ) )->first();
-		if ( $domain && ! empty( $domain['module'] ) ) {
+		$domain=trim($_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ),'/');
+		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
+		if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
 			//站点设置了默认访问模块时访问模块的桌面入口页面
 			$module = Db::table( 'modules_bindings' )
 			            ->join( 'modules', 'modules.name', '=', 'modules_bindings.module' )
 			            ->join( 'module_domain', 'module_domain.module', '=', 'modules.name' )
-			            ->where( 'module_domain.siteid', $domain['siteid'] )
+			            ->where( 'module_domain.siteid', $moduleDomain['siteid'] )
 			            ->where( 'entry', 'web' )->first();
 			if ( $module && ! empty( $module['do'] ) ) {
 				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['module'] . '\system\Navigate';
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
-					Request::set( 'get.siteid', $domain['siteid'] );
+					Request::set( 'get.siteid', $moduleDomain['siteid'] );
 					Request::set( 'get.m', $module['module'] );
 					//初始站点数据
 					\Site::siteInitialize();

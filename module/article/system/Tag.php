@@ -1,7 +1,5 @@
 <?php namespace module\article\system;
 
-use module\article\model\WebCategory;
-
 /**
  * 模块模板视图自定义标签处理
  * @author 向军

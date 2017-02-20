@@ -1,6 +1,5 @@
 <?php namespace module\article\system;
 
-use module\article\controller\Entry;
 use module\HdNavigate;
 
 /**

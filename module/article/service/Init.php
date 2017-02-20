@@ -17,7 +17,7 @@ class Init extends HdService {
 		 * 模块域名不存时创建域名
 		 * 基本上只有第一个站点有域名
 		 */
-		$domain = $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] );
+		$domain=trim($_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ),'/');
 		if ( ! Db::table( 'module_domain' )->where( 'domain', $domain )->get() ) {
 			Db::table( 'module_domain' )->insert( [
 				'siteid' => $siteId,
