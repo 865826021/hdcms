@@ -1,8 +1,6 @@
 <?php namespace module\article\service;
 
-use houdunwang\view\View;
 use module\article\model\WebCategory;
-use module\article\model\WebContent;
 use module\article\model\WebModel;
 use module\HdService;
 
