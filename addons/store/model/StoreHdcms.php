@@ -13,6 +13,7 @@ class StoreHdcms extends Model {
 	protected $validate = [
 		[ 'file', 'required', '压缩包文件不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 		[ 'logs', 'required', '更新日志不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'version', 'required', '版本号不能为空', self::EMPTY_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
 		//发布时间

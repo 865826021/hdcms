@@ -62,7 +62,7 @@ class Cloud {
 	 */
 	public function getUpgradeVersion() {
 		$data = CloudModel::find( 1 )->toArray();
-		$res  = Curl::post( $this->url . '/cloud/getUpgradeVersion', $data );
+		$res = Curl::post( $this->url . '/cloud/getUpgradeVersion', $data );
 
 		return json_decode( $res, true );
 	}
@@ -72,7 +72,7 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function updateHDownloadNum() {
-		$res = Curl::post( $this->url . '/cloud/updateHDownloadNum&build='
+		$res = Curl::get( $this->url . '/cloud/updateHDownloadNum&build='
 		                   . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
 
 		return json_decode( $res, true );
@@ -232,8 +232,8 @@ class Cloud {
 		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
 		$app = json_decode( $app, true );
 
-		if($app['valid']==0){
-			ajax($app);
+		if ( $app['valid'] == 0 ) {
+			ajax( $app );
 		}
 		//安装前检测
 		switch ( $type ) {
