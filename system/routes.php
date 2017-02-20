@@ -7,12 +7,13 @@
 | 当然也可以根据业务需要两种方式都使用
 |-------------------------------------------------------------------------*/
 //微信支付异步通知地址
-Route::any('wxnotifyurl', 'site/pay/weChatAsyncNotify');
+Route::any( 'wxnotifyurl', 'site/pay/weChatAsyncNotify' );
 
 //后台管理员登录
 Route::any( 'hdcms', function () {
 	Session::set( 'system.login', 'hdcms' );
-	controller( 'system/entry/login' );
+
+	action( 'system.entry.login' );
 } );
 
 /**
@@ -22,5 +23,6 @@ Route::any( 'hdcms', function () {
  */
 Route::any( 'admin', function () {
 	Session::set( 'system.login', 'admin' );
-	controller( 'system/entry/login' );
+
+	action( 'system.entry.login' );
 } );

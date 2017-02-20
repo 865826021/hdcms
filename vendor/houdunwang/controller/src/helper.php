@@ -8,17 +8,9 @@
  * @return bool|mixed
  */
 function action( $action, $args = [ ] ) {
-	$info  = str_replace( '.', '\\', $action );
+	$info  = explode( '.', $action );
 	$class = Config::get( 'controller.app' ) . '\\' . $info[0] . '\\controller\\' . ucfirst( $info[1] );
-	//控制器不存在执行中间件
-	if ( ! class_exists( $class ) ) {
-		return false;
-	}
-
-	//方法不存在时
-	if ( ! method_exists( $class, $info[2] ) ) {
-		return false;
-	}
-
-	return call_user_func_array( [ new $class, $info[2] ], $args );
+	$res   = call_user_func_array( [ new $class, $info[2] ], $args );
+	echo  $res ;
+	die;
 }

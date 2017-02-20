@@ -16,10 +16,10 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         'c54daba5473de13d796733fe0422e2c2' => __DIR__ . '/..' . '/houdunwang/collection/src/helper.php',
         'faaf22bd2d61568b16e9dac83f4a95a0' => __DIR__ . '/..' . '/houdunwang/controller/src/helper.php',
         'b200b64f4d1415a1ec31d557162a91e1' => __DIR__ . '/..' . '/houdunwang/loader/src/helper.php',
-        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
         '0fdb93813e3129bfd50d293224a2095e' => __DIR__ . '/..' . '/houdunwang/error/src/helper.php',
         'b11d97b9b970a5b38ef908a59daee669' => __DIR__ . '/..' . '/houdunwang/cli/src/helper.php',
         '50d0a9eb2eaa09019de1d3a8d2c45e4e' => __DIR__ . '/..' . '/houdunwang/view/src/helper.php',
+        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
         '252420c3cb244c300529dbbdc1b6f21a' => __DIR__ . '/..' . '/houdunwang/framework/src/helper.php',
         '5be7e55f4e1232b42dcf75258888ab3c' => __DIR__ . '/../..' . '/system/helper.php',
     );

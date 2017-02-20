@@ -110,7 +110,7 @@ class Entry {
 			go( 'system/site/lists' );
 		}
 
-		return view();
+		return view('app/system/view/entry/login.php');
 	}
 
 	//验证码
@@ -122,6 +122,6 @@ class Entry {
 	public function quit() {
 		Session::flush();
 		$url = __WEB__ . '/' . q( 'session.system.login', 'hdcms' );
-		message( '退出系统成功,系统将自动进行跳转', $url );
+		go($url);
 	}
 }
