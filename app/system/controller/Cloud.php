@@ -64,7 +64,6 @@ class Cloud {
 					cli( 'hd migrate:make' );
 					cli( 'hd seed:make' );
 					ajax(['valid'=>1,'message'=>'数据表更新成功']);
-					exit;
 				}
 				return view( 'updateSql' );
 				break;

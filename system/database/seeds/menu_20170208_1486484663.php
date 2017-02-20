@@ -16,9 +16,9 @@ VALUES
 	(35,33,'会员','member_users','?m=member&action=controller/site/memberlists','?m=member&action=controller/site/MemberPost','fa fa-cubes',0,1,1,'member'),
 	(36,33,'会员组','member_groups','?m=member&action=controller/site/groupLists','?m=member&action=controller/site/groupPost','fa fa-cubes',0,1,1,'member'),
 	(38,32,'积分兑换','','','','fa fa-cubes',0,1,1,'member'),
-	(39,38,'折扣券','member_coupons','?m=ticket&action=controller/site/lists&type=1','?a=site/post&t=site&type=1&m=ticket','fa fa-cubes',0,1,1,'member'),
+	(39,38,'折扣券','member_coupons','?m=ticket&action=controller/site/lists&type=1','?m=ticket&action=controller/site/post&type=1','fa fa-cubes',0,1,1,'member'),
 	(40,38,'折扣券核销','member_coupons_charge','?m=ticket&action=controller/site/charge&type=1','','fa fa-cubes',0,1,1,'member'),
-	(41,38,'代金券','member_cash','?m=ticket&action=controller/site/lists&type=2','?a=site/post&t=site&type=2&m=ticket','fa fa-cubes',0,1,1,'member'),
+	(41,38,'代金券','member_cash','?m=ticket&action=controller/site/lists&type=2','?m=ticket&action=controller/site/post&type=2','fa fa-cubes',0,1,1,'member'),
 	(42,38,'代金券核销','member_cash_charge','?m=ticket&action=controller/site/charge&type=2','','fa fa-cubes',0,1,1,'member'),
 	(55,2,'系统回复','platform_reply_special','?m=special&action=controller/site/post','','fa fa-cubes',0,1,1,'platform'),
 	(63,100,'支付配置','','','','fa fa-cubes',0,1,1,'feature'),
@@ -31,11 +31,11 @@ VALUES
 	(72,71,'官网管理','','?s=article/home/welcome','','fa fa-cubes',0,1,1,'article'),
 	(73,72,'官网模板','article_site_template','?m=article&action=controller/template/lists','','fa fa-cubes',0,1,1,'article'),
 	(74,71,'内容管理','','','','fa fa-cubes',0,1,1,'article'),
-	(75,74,'分类管理','article_category_manage','?a=content/category&t=site&m=article','?a=content/categoryPost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
-	(76,74,'文章管理','article_manage','?a=content/article&t=site&m=article','?a=content/articlePost&t=site&m=article','fa fa-cubes',0,1,1,'article'),
+	(75,74,'分类管理','article_category_manage','?m=article&action=controller/category/lists','?m=article&action=controller/category/post','fa fa-cubes',0,1,1,'article'),
+	(76,74,'文章管理','article_manage','?m=article&action=controller/content/lists','?m=article&action=controller/content/post','fa fa-cubes',0,1,1,'article'),
 	(77,72,'站点设置','article_site_manage','?m=article&action=controller/site/post','','fa fa-cubes',0,1,1,'article'),
 	(78,100,'特殊页面管理','','','','fa fa-cubes',0,1,1,'article'),
-	(80,78,'手机会员中心','feature_ucenter_post','?m=ucenter&action=controller/mobile/post','','fa fa-cubes',0,1,1,'feature'),
+	(80,78,'手机会员中心','feature_ucenter_post','?m=ucenter&action=controller/style/post','','fa fa-cubes',0,1,1,'feature'),
 	(81,27,'扩展功能管理','package_managa','?s=site/entry/package','','fa fa-cubes',0,1,1,'package'),
 	(82,1,'高级功能','','','','fa fa-cubes',0,1,1,'platform'),
 	(84,33,'会员字段管理','member_fields','?m=member&action=controller/site/fieldlists','','fa fa-cubes',0,1,1,'member'),
@@ -50,7 +50,8 @@ VALUES
 	(93,74,'模型管理','article_model_manage','?m=article&action=controller/model/lists','?m=article&action=controller/model/post','fa fa-cubes',0,1,1,'article'),
 	(100,0,'系统设置','','?s=site/entry/home','','fa fa-comments-o',20,1,1,'feature'),
 	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package'),
-	(10001,72,'轮换图片','article_site_slide','?m=article&action=controller/slide/lists','','fa fa-cubes',0,1,1,'article');
+	(10001,72,'轮换图片','article_site_slide','?m=article&action=controller/slide/lists','?m=article&action=controller/slide/post','fa fa-cubes',0,1,1,'article'),
+	(10002,72,'访问域名','article_domain_set','?m=article&action=system/domain/set','','fa fa-cubes',0,1,1,'article');
 str;
 		Db::execute($sql);
     }
