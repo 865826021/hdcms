@@ -28,7 +28,7 @@ class Category extends HdController {
 
 	//栏目列表
 	public function lists() {
-		$data = WebCategory::getLevelCategory();
+		$data = (new WebCategory())->getLevelCategory();
 		View::with( 'data', $data );
 
 		return view( $this->template . '/content/category_lists.html' );

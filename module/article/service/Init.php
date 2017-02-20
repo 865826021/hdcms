@@ -31,7 +31,8 @@ VALUES
 	($siteId,'article','栏目静态规则','article{siteid}-{cid}-{page}.html','m=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}',0,1487401724,'{\"siteid\":\"[a-z0-9]+\",\"cid\":\"[a-z0-9]+\",\"page\":\"[a-z0-9]+\"}'),
 	($siteId,'article','文章静态规则','article{siteid}-{aid}-{cid}-{mid}.html','m=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}',0,1487401724,'{\"siteid\":\"[a-z0-9]+\",\"aid\":\"[a-z0-9]+\",\"cid\":\"[a-z0-9]+\",\"mid\":\"[a-z0-9]+\"}');
 str;
-
+		Db::execute($sql);
+		
 		//默认战点数据
 		$sql=<<<sql
 INSERT INTO `hd_web` (`siteid`, `title`, `template_name`, `site_info`, `status`)
