@@ -7,7 +7,7 @@
  *
  * @return bool|mixed
  */
-function controller( $action, $args = [ ] ) {
+function action( $action, $args = [ ] ) {
 	$info  = str_replace( '.', '\\', $action );
 	$class = Config::get( 'controller.app' ) . '\\' . $info[0] . '\\controller\\' . ucfirst( $info[1] );
 	//控制器不存在执行中间件

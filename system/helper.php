@@ -150,7 +150,7 @@ function service() {
  *
  * @return mixed
  */
-function action( $action, $args = [ ], $module = '' ) {
+function controller_action( $action, $args = [ ], $module = '' ) {
 	$module = $module ?: v( 'module.name' );
 	$info   = preg_split( '/\./', $action );
 	$class  = 'addons\\' . $module . '\controller\\' . ucfirst( $info[0] );

@@ -48,12 +48,14 @@ class Entry extends HdController {
 	public function login() {
 		if ( IS_POST ) {
 			\Member::login( Request::post() );
-			message( '登录成功', Session::get( 'from', __ROOT__ ), 'success' );
+			$url = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
+			Session::del( 'from' );
+			go( $url );
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {
 			if ( service( 'member' )->weixinLogin() ) {
-				$url = q( 'get.backurl', web_url( 'entry/home', [ 'siteid' => SITEID ] ) );
+				$url = q( 'get.backurl', url( 'member.index', '', 'ucenter' ) );
 				go( $url );
 			}
 		}
@@ -78,8 +80,9 @@ class Entry extends HdController {
 
 	//退出
 	public function out() {
-		$url = Session::get( 'from', url( 'entry.login' ) );
+		$url = Session::get( 'from', url( 'entry.login', '', 'ucenter' ) );
+		Session::del( 'from' );
 		\Session::flush();
-		message( '退出成功', $url, 'success', 1 );
+		go( $url );
 	}
 }
