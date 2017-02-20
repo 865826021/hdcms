@@ -46,12 +46,12 @@ class Base {
 		$param[1] = preg_replace_callback( '/_([a-z])/', function ( $matches ) {
 			return ucfirst( $matches[1] );
 		}, $param[1] );
-		define( 'MODULE', $param[0] );
-		define( 'CONTROLLER', ucfirst( $param[1] ) );
-		define( 'ACTION', $param[2] );
-		define( 'MODULE_PATH', ROOT_PATH . '/' . Config::get( 'controller.app' ) . '/' . MODULE );
-		define( 'VIEW_PATH', MODULE_PATH . '/view' );
-		define( '__VIEW__', __ROOT__ . '/' . Config::get( 'controller.app' ) . '/' . MODULE . '/view' );
+		defined( 'MODULE' ) or define( 'MODULE', $param[0] );
+		defined( 'CONTROLLER' ) or define( 'CONTROLLER', ucfirst( $param[1] ) );
+		defined( 'ACTION' ) or define( 'ACTION', $param[2] );
+		defined( 'MODULE_PATH' ) or define( 'MODULE_PATH', ROOT_PATH . '/' . Config::get( 'controller.app' ) . '/' . MODULE );
+		defined( 'VIEW_PATH' ) or define( 'VIEW_PATH', MODULE_PATH . '/view' );
+		defined( '__VIEW__' ) or define( '__VIEW__', __ROOT__ . '/' . Config::get( 'controller.app' ) . '/' . MODULE . '/view' );
 		$this->action();
 	}
 
@@ -65,12 +65,12 @@ class Base {
 
 		//控制器不存在执行中间件
 		if ( ! class_exists( $class ) ) {
-			Middleware::system('controller_not_found');
+			Middleware::system( 'controller_not_found' );
 		}
 
 		//方法不存在时执行中间件
-		if(!method_exists($class,ACTION)){
-			Middleware::system('action_not_found');
+		if ( ! method_exists( $class, ACTION ) ) {
+			Middleware::system( 'action_not_found' );
 		}
 
 		$controller = Container::make( $class, true );

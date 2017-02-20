@@ -49,7 +49,7 @@ str;
 		//读取桌面个人中心菜单
 		\$_db = Db::table( 'navigate' )->where( 'entry', 'member' )->where( 'siteid', SITEID );
 	}
-	\$_modules_name = \$_db->lists('module');
+	\$_modules_name = \$_db->where('status',1)->lists('module');
 	\$_modules = Db::table('modules')->whereIn('name',\$_modules_name)->get();
 	foreach(\$_modules as \$field){?>
 str;

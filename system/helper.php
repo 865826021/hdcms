@@ -70,9 +70,10 @@ function authIdentity( $tag ) {
 }
 
 //验证会员是否登录
-function memberIsLogin(){
+function memberIsLogin() {
 	return \Member::isLogin();
 }
+
 /**
  * 生成模块控制器链接地址
  *
@@ -139,4 +140,20 @@ function service() {
 	          . '\\service\\' . ucfirst( $info[1] );
 
 	return call_user_func_array( [ new $class, $info[2] ], $args );
+}
+
+/**
+ * 执行控制器动作 action('entry.aa')
+ * @param $action 动作名称  控制器.动作
+ * @param array $args 参数
+ * @param string $module 模块标识为空时使用当前模块
+ *
+ * @return mixed
+ */
+function action( $action, $args = [ ], $module = '' ) {
+	$module = $module ?: v( 'module.name' );
+	$info   = preg_split( '/\./', $action );
+	$class  = 'addons\\' . $module . '\controller\\' . ucfirst( $info[0] );
+
+	return call_user_func_array( [ new $class, $info[1] ], $args );
 }

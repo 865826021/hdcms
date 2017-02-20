@@ -15,9 +15,17 @@ class Navigate extends HdNavigate {
 	 * 在网站管理中将模块设置为默认执行模块然后配置好域名
 	 * 当使用配置的域名访问时会执行这个方法
 	 */
-    public function home() {
-    	return view($this->template.'/home.html');
-    }
+	public function home() {
+		return view( $this->template . '/home.html' );
+	}
 
+	//插件模块
+	public function module() {
+		return action( 'module.lists' );
+	}
 
+	//风格模板
+	public function template() {
+		return action( 'template.lists' );
+	}
 }

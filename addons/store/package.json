@@ -13,12 +13,21 @@
   "domain": false,
   "setting": true,
   "tag": true,
+  "router": true,
+  "domain": true,
+  "pay": true,
   "web": {
-    "entry": {
-      "title": "桌面入口导航",
-      "do": "home"
-    },
+    "entry": [
+    ],
     "member": [
+      {
+        "title": "插件模块",
+        "do": "module"
+      },
+      {
+        "title": "风格模板",
+        "do": "template"
+      }
     ]
   },
   "mobile": {
