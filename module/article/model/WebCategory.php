@@ -18,13 +18,19 @@ class WebCategory extends Model {
 		[ 'mid', 'required', '请选择模型类型', self::EXIST_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
-		[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
+		[ 'pid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'orderby', 'intval', 'function', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'linkurl', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'ishomepage', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'index_tpl', 'article_index.html', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'category_tpl', 'article_list.html', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'content_tpl', 'article.html', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'html_category', 'article{siteid}-{cid}-{page}.html', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'html_content', 'article{siteid}-{aid}-{cid}-{mid}.html', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+
 	];
 	protected $filter = [
 		[ 'mid', self::MUST_FILTER, self::MODEL_UPDATE ]
@@ -33,8 +39,8 @@ class WebCategory extends Model {
 	/**
 	 * 获取树状栏目
 	 * 指定cid时过滤掉cid及其子栏目
-	 *
-	 * @param int $cid
+	 * @param int $cid 栏目编号
+	 * @param int $mid 模型编号
 	 *
 	 * @return mixed
 	 */

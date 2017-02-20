@@ -143,17 +143,16 @@ function service() {
 }
 
 /**
- * 执行控制器动作 action('entry.aa')
- * @param $action 动作名称  控制器.动作
- * @param array $args 参数
- * @param string $module 模块标识为空时使用当前模块
- *
+ * 执行控制器动作
+ * action('article.entry.aa',2,5),第二个参数开始为方法参数
  * @return mixed
  */
-function controller_action( $action, $args = [ ], $module = '' ) {
-	$module = $module ?: v( 'module.name' );
-	$info   = preg_split( '/\./', $action );
-	$class  = 'addons\\' . $module . '\controller\\' . ucfirst( $info[0] );
+function controller_action() {
+	$args   = func_get_args();
+	$info   = explode( '.', array_shift( $args ) );
+	$module = Db::table( 'modules' )->where( 'name', $info[0] )->first();
+	$class  = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $info[0]
+	          . '\\controller\\' . ucfirst( $info[1] );
 
-	return call_user_func_array( [ new $class, $info[1] ], $args );
+	return call_user_func_array( [ new $class, $info[2] ], $args );
 }

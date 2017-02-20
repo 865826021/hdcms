@@ -20,7 +20,7 @@ class WebContent extends Model {
 		[ 'orderby', 'num:0,255', '排序只能是0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'rid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'iscommend', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'ishot', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

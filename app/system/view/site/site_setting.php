@@ -26,13 +26,6 @@
                         <textarea name="description" class="form-control" cols="30" rows="5" required="required"></textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">站点域名</label>
-                    <div class="col-sm-10">
-                        <input type="text" name="domain" class="form-control" placeholder="如: www.houdunwang.com">
-                        <span class="help-block">站点使用的域名,不要添加http</span>
-                    </div>
-                </div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">保存</button>
