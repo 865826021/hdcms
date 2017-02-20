@@ -27,7 +27,7 @@
     </script>
     <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
     <link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{{template_url()}}/css/admin.css" rel="stylesheet">
+    <link href="{{__ROOT__}}/ucenter/default/web/css/admin.css" rel="stylesheet">
     <script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
     <script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
     <script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
@@ -49,7 +49,7 @@
     </script>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container-fluid menus">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -74,27 +74,37 @@
         </div>
     </nav>
 </div>
-<div class="container-fluid apps">
-    <div class="row">
-        <div class="col-sm-2 col-xs-12">
-            <div class="category">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">开发</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-group">
-                            <a class="list-group-item" href="{{url('module.lists',[],'store')}}">插件模块</a>
-                            <a class="list-group-item" href="{{url('template.lists',[],'store')}}">风格模板</a>
-                        </ul>
-                    </div>
-                </div>
+<div class="apps">
+    <div class="category">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">开发</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="list-group">
+                    <a class="list-group-item" href="{{url('module.lists',[],'store')}}">插件模块</a>
+                    <a class="list-group-item" href="{{url('template.lists',[],'store')}}">风格模板</a>
+                </ul>
             </div>
         </div>
-        <div class="col-sm-10 col-xs-12 edits">
-            <div class="edit-box">
-                <blade name="content"/>
+        <tag action="ucenter.menu_module">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{$field['title']}}</h3>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        <tag action="ucenter.menu">
+                            <a href="{{$field['url']}}" class="list-group-item">{{$field['name']}}</a>
+                        </tag>
+                    </ul>
+                </div>
             </div>
+        </tag>
+    </div>
+    <div class="edits">
+        <div class="col-sm-12 col-xs-12">
+            <blade name="content"/>
         </div>
     </div>
 </div>

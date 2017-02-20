@@ -23,7 +23,7 @@ class Model extends HdController {
 
 	//模块列表
 	public function lists() {
-		$data = WebModel::get();
+		$data = WebModel::where('siteid',SITEID)->get();
 		View::with( 'data', $data );
 
 		return view( $this->template . '/content/model_lists.html' );

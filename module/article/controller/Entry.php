@@ -68,17 +68,15 @@ class Entry extends HdController {
 		//设置栏目链接
 		$category['url']   = Link::get( $category['html_category'], $category );
 		$category['url']   = str_replace( '{page}', Request::get( 'page', 1 ), $category['url'] );
-		
+
 		$hdcms['category'] = $category;
 		View::with( [ 'hdcms' => $hdcms ] );
 		if ( IS_MOBILE ) {
 			return view( $this->template . '/article.html' );
 		} else {
 			//PC模板
-			$category = WebCategory::find( Request::get( 'cid' ) );
-			$template = \Template::getTemplateData();
-
-			return view( "theme/{$template['name']}/web/{$category['content_tpl']}" );
+			$tpl = $hdcms['template']?:$category['content_tpl'];
+			return view( $this->template .'/'.$tpl);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 <?php namespace system\service\site;
 
+use module\article\model\WebModel;
 use system\model\MemberFields;
 use system\model\MemberGroup;
 use system\model\SiteSetting;
@@ -78,7 +79,8 @@ class Site extends Common {
 		//设置邮箱配置
 		c( 'mail', v( 'site.setting.smtp' ) );
 		//会员中心默认风格
-		define('__UCENTER_TEMPLATE__',v('site.info.ucenter_template'));
+		define( '__UCENTER_TEMPLATE__', v( 'site.info.ucenter_template' ) );
+
 		return true;
 	}
 
@@ -195,6 +197,22 @@ class Site extends Common {
 		$data['data']   = '{"status":1,"system":[],"module":[]}';
 		$data['uid']    = v( 'user.info.uid' );
 		Db::table( 'site_quickmenu' )->insert( $data );
+
+		/*
+		|--------------------------------------------------------------------------
+		| 初始文章系统表
+		|--------------------------------------------------------------------------
+		*/
+		$model = new WebModel();
+		$model->insert( [ 'siteid' => $siteId, 'model_title' => '普通文章', 'model_name' => 'news', 'is_system' => 1 ] );
+		$model->createModelTable( 'news', $siteId );
+
+		/*
+		|--------------------------------------------------------------------------
+		| 设置文章系统域名为安装域名
+		|--------------------------------------------------------------------------
+		*/
+		Db::table( 'module_domain' )->insert( ['siteid'=>$siteId, 'domain'=>$_SERVER['HTTP_HOST'], 'module' => 'article' ] );
 
 		return true;
 	}

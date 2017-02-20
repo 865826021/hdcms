@@ -37,4 +37,48 @@ str;
 str;
 
 	}
+
+	//拥有菜单的模块列表
+	public function menu_module( $attr, $content ) {
+		$php = <<<str
+<?php
+	if ( IS_MOBILE ) {
+		//读取移动端菜单
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'profile' )->where( 'siteid', SITEID );
+	} else {
+		//读取桌面个人中心菜单
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'member' )->where( 'siteid', SITEID );
+	}
+	\$_modules_name = \$_db->lists('module');
+	\$_modules = Db::table('modules')->whereIn('name',\$_modules_name)->get();
+	foreach(\$_modules as \$field){?>
+str;
+		$php .= $content;
+
+		return $php . '<?php }?>';
+	}
+
+	//会员中心菜单列表必须配置memu_module标签使用
+	public function menu( $attr, $content ) {
+		$php = <<<str
+<?php
+	if ( IS_MOBILE ) {
+		//读取移动端菜单
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'profile' );
+	} else {
+		//读取桌面个人中心菜单
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'member' );
+	}
+	\$_menus = \$_db->where( 'siteid', SITEID )->where('module',\$field['name'])->get();
+	if ( \$_menus ) {
+		foreach ( \$_menus as \$k => \$v ) {
+			\$_menus[ \$k ]['css'] = json_decode( \$v['css'], true );
+		}
+	}
+	foreach(\$_menus as \$field){?>
+str;
+		$php .= $content;
+
+		return $php . '<?php }?>';
+	}
 }

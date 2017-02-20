@@ -13,7 +13,7 @@ class WebModel extends Model {
 	protected $allowFill = [ '*' ];
 	protected $validate = [
 		[ 'model_title', 'required', '模型名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'model_name', '/[a-z]+/', '模型标识只能为英文字母', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'model_name', '/[a-z]+/', '模型表名只能为英文字母', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'model_name', 'checkName', '模型标识已经被使用了,请更换', self::MUST_VALIDATE, self::MODEL_INSERT ]
 	];
 	protected $auto = [
@@ -33,8 +33,9 @@ class WebModel extends Model {
 	}
 
 	//创建模型表
-	public function createModelTable( $name ) {
-		$table = "web_content_{$name}" . SITEID;
+	public function createModelTable( $name, $siteid = 0 ) {
+		$siteid = $siteid ?: siteid();
+		$table  = "web_content_{$name}" . $siteid;
 		if ( ! Schema::tableExists( $table ) ) {
 			$sql = <<<sql
 CREATE TABLE `hd_{$table}` (
@@ -55,6 +56,7 @@ CREATE TABLE `hd_{$table}` (
   `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
   `linkurl` varchar(145) NOT NULL COMMENT '外部链接地址',
   `createtime` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `template` varchar(300) NOT NULL DEFAULT '' COMMENT '模板文件',
   PRIMARY KEY (`aid`),
   KEY `siteid` (`siteid`),
   KEY `cid` (`cid`)

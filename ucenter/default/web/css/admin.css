@@ -65,11 +65,23 @@ div.panel {
 div.panel > .panel-heading {
   background-color: #fcfcfc;
 }
-.container-fluid {
+.menus {
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
-.container-fluid .navbar {
+.menus .navbar-header .navbar-brand {
+  padding-left: 35px;
+}
+.menus .navbar {
+  border-radius: 0px !important;
+  border: 0px !important;
+  box-shadow: #ddd 5px 3px 10px;
+}
+.apps {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.apps .navbar {
   border-radius: 0px;
   background: #ffffff !important;
   margin-bottom: 0px;
@@ -77,34 +89,39 @@ div.panel > .panel-heading {
   height: 60px;
   padding-top: 6px;
 }
-.container-fluid .navbar .navbar-header {
+.apps .navbar .navbar-header {
   text-indent: 30px;
 }
-.container-fluid .category {
-  height: 750px;
+.apps .category {
+  position: fixed;
+  width: 200px;
+  left: 0px;
+  top: 60px;
+  bottom: 0px;
   background: #ffffff;
   box-shadow: #ddd 5px 3px 10px;
 }
-.container-fluid .category .panel {
+.apps .category .panel {
   background: #ffffff;
   border-radius: 0px;
   border-color: #ffffff;
   padding-left: 20px;
 }
-.container-fluid .category .panel .panel-heading {
+.apps .category .panel .panel-heading {
   background: #ffffff;
   color: #a1bf29;
   padding: 20px 15px;
 }
-.container-fluid .category .panel .panel-body .list-group a.list-group-item {
+.apps .category .panel .panel-body .list-group a.list-group-item {
   border-top: solid 1px #ffffff !important;
 }
-.container-fluid .edits {
+.apps .edits {
   padding: 15px 15px 0px 0px;
-}
-.container-fluid .edits .edit-box {
-  margin: 20px;
-  padding: 20px;
+  position: fixed;
+  left: 220px;
+  top: 60px;
+  bottom: 0px;
+  right: 0px;
   background: #ffffff !important;
   box-shadow: #ddd -5px 3px 6px;
 }

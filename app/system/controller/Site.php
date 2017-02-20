@@ -37,6 +37,7 @@ class Site {
 		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
 		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
 		     ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
+		     ->orderBy('siteid','DESC')
 		     ->groupBy( 'site.siteid' );
 		//按网站名称搜索
 		if ( $sitename = q( 'post.sitename' ) ) {
@@ -211,7 +212,8 @@ class Site {
 		if ( ! \User::isManage() ) {
 			message( '你没有编辑站点的权限', 'with' );
 		}
-		if ( IS_POST ) {p($_POST);
+		if ( IS_POST ) {
+			p( $_POST );
 			//更新站点数据
 			$site                     = SiteModel::find( SITEID );
 			$site['name']             = Request::post( 'name' );
@@ -224,6 +226,7 @@ class Site {
 			message( '网站数据保存成功', 'back', 'success' );
 		}
 		$site = SiteModel::where( 'siteid', SITEID )->first();
+
 		return view()->with( [ 'site' => $site ] );
 	}
 

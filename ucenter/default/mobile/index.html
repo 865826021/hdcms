@@ -53,15 +53,20 @@
         </div>
         <!--菜单列表-->
         <div class="list-group">
-            <foreach from="$menus" value="$m">
-                <a href="{{$m['url']}}" class="list-group-item">
-                    <if value="$m['icontype'] == 1">
-                       <i class="{{$m['css']['icon']}}"></i> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i>
-                        <else/>
-                        <img src="{{__ROOT__}}/{{$m['css']['image']}}" style="max-width: 50px;max-height: 35px;"> {{$m['name']}} <i class="fa fa-angle-right pull-right"></i>
-                    </if>
-                </a>
-            </foreach>
+            <tag action="ucenter.menu_module">
+                <tag action="ucenter.menu">
+                    <a href="{{$field['url']}}" class="list-group-item">
+                        <if value="$field['icontype'] == 1">
+                            <i class="{{$field['css']['icon']}}"></i> {{$field['name']}} <i
+                                class="fa fa-angle-right pull-right"></i>
+                            <else/>
+                            <img src="{{__ROOT__}}/{{$field['css']['image']}}"
+                                 style="max-width: 50px;max-height: 35px;"> {{$field['name']}} <i
+                                class="fa fa-angle-right pull-right"></i>
+                        </if>
+                    </a>
+                </tag>
+            </tag>
         </div>
         <!--自定义内容-->
         {{$uc['html']}}
