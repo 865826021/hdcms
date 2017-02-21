@@ -20,8 +20,8 @@ class Modules extends Common {
 	protected $validate = [
 		[
 			'name',
-			'regexp:/^\w+$/',
-			'模块标识符, 对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能由字母数字下划线组成',
+			'regexp:/^[a-z]+$/',
+			'模块标识符, 对应模块文件夹的名称, 系统按照此标识符查找模块定义, 只能由字母组成',
 			self::MUST_VALIDATE,
 			self::MODEL_INSERT
 		],

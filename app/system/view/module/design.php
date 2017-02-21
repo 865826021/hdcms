@@ -641,9 +641,9 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail img-thumb" width="150">
+						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-thumb" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    ng-click="field.thumb='resource/images/nopic.jpg'">×</em>
+						    ng-click="field.thumb=''">×</em>
 					</div>
 					<span class="help-block">用 80*80 的图片来让你的模块更吸引眼球吧</span>
 				</div>
@@ -658,9 +658,9 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.preview}}" class="img-responsive img-thumbnail img-cover" width="150">
+						<img ng-src="@{{field.preview?field.preview:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-cover" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    ng-click="field.preview='resource/images/nopic.jpg'">×</em>
+						    ng-click="field.preview=''">×</em>
 					</div>
 					<span class="help-block">模块封面, 大小为 600*350, 更好的设计将会获得官方推荐位置</span>
 				</div>
@@ -690,13 +690,13 @@
 					{title: '其他', name: 'other'}
 				];
 				$scope.field = {
-					"title": "a",
-					"name": "a",
-					"version": "3",
+					"title": "",
+					"name": "",
+					"version": "",
 					"industry": "business",
-					"resume": "a",
-					"detail": "a",
-					"author": "a",
+					"resume": "",
+					"detail": "",
+					"author": "",
 					"url": "http://www.hdcms.com",
 					"setting": false,
 					"tag": false,
@@ -783,8 +783,8 @@
 					"compatible_version": {
 						"version2": true
 					},
-					"thumb": "resource/images/nopic.jpg",
-					"preview": "resource/images/nopic.jpg",
+					"thumb": "",
+					"preview": "",
 					"install": "",
 					"uninstall": "",
 					"upgrade": ""
@@ -859,8 +859,8 @@
 					if ($scope.field.title == '') {
 						msg += '模块名称不能为空<br/>';
 					}
-					if ($scope.field.name == '') {
-						msg += '模块标识不能为空<br/>';
+					if ($scope.field.name == '' || !/^[a-z]+$/.test($scope.field.name)) {
+						msg += '模块标识必须为英文小写字母<br/>';
 					}
 					if ($scope.field.resume == '') {
 						msg += '模块简述不能为空<br/>';

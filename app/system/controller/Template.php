@@ -17,13 +17,12 @@ class Template {
 	//设置新模板
 	public function design() {
 		if ( IS_POST ) {
-			$data = json_decode( Request::post('data'), JSON_UNESCAPED_UNICODE );
+			$data = json_decode( Request::post( 'data' ), JSON_UNESCAPED_UNICODE );
 			//字段基本检测
 			Validate::make( [
 				[ 'title', 'required', '模板名称不能为空' ],
 				[ 'industry', 'required', '请选择行业类型' ],
-				[ 'name', 'regexp:/^[a-z]\w+$/i', '模板标识必须以英文字母开始, 后跟英文,字母,数字或下划线' ],
-				[ 'version', 'regexp:/^[\d\.]+$/i', '请设置版本号, 版本号只能为数字或小数点' ],
+				[ 'name', 'regexp:/^[a-z]+$/i', '模板标识必须为英文字母' ],
 				[ 'resume', 'required', '模板简述不能为空' ],
 				[ 'author', 'required', '作者不能为空' ],
 				[ 'url', 'required', '请输入发布url' ],
@@ -65,7 +64,7 @@ class Template {
 	public function installed() {
 		$template = Db::table( 'template' )->get();
 		foreach ( $template as $k => $m ) {
-			$template[ $k ]['thumb']    = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
+			$template[ $k ]['thumb'] = is_file( "theme/{$m['name']}/{$m['thumb']}" ) ? "theme/{$m['name']}/{$m['thumb']}" : "resource/images/nopic_small.jpg";
 		}
 
 		return view()->with( 'template', $template );

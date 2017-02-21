@@ -33,14 +33,6 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">版本</label>
-
-				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" ng-model="field.version">
-					<span class="help-block">模板当前版本, 此版本号用于模板的版本更新 </span>
-				</div>
-			</div>
-			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模板类型</label>
 				<div class="col-sm-10 col-xs-12">
 					<select ng-model="field.industry" class="form-control"
@@ -77,7 +69,7 @@
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">微站导航菜单数量</label>
 
 				<div class="col-sm-10 col-xs-12">
-					<input type="text" class="form-control" ng-model="field.position">
+					<input type="number" class="form-control" ng-model="field.position">
 					<span class="help-block">微站导航菜单数量 </span>
 				</div>
 			</div>
@@ -91,9 +83,9 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail img-thumb" width="150">
+						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-thumb" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    ng-click="field.thumb='resource/images/nopic.jpg'">×</em>
+						    ng-click="field.thumb=''">×</em>
 					</div>
 					<span class="help-block">图片尺寸为225x170 会有良好的显示效果</span>
 				</div>
@@ -108,9 +100,9 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.preview}}" class="img-responsive img-thumbnail img-cover" width="150">
+						<img ng-src="@{{field.preview?field.preview:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-cover" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    ng-click="field.preview='resource/images/nopic.jpg'">×</em>
+						    ng-click="field.preview=''">×</em>
 					</div>
 					<span class="help-block">模块封面, 大小为 600*350, 更好的设计将会获得官方推荐位置</span>
 				</div>
@@ -149,17 +141,16 @@
 					{title: '其他', name: 'other'}
 				];
 				$scope.field = {
-					"title": "aaa",
-					"name": "hdcms",
-					"version": "1.0",
+					"title": "",
+					"name": "",
 					"industry": "often",
-					"resume": "resume",
-					"author": "author",
-					"detail": "detail",
-					"url": "url",
-					"position": 10,
-					"thumb": "resource/images/nopic.jpg",
-					"preview": "resource/images/nopic.jpg",
+					"resume": "",
+					"author": "",
+					"detail": "",
+					"url": "http://www.hdcms.com",
+					"position": 0,
+					"thumb": "",
+					"preview": "",
 				};
 				$scope.uploadThumb = function () {
 					util.image(function (images) {
@@ -178,8 +169,11 @@
 					if ($scope.field.title == '') {
 						msg += '模板名称不能为空<br/>';
 					}
-					if ($scope.field.name == '') {
-						msg += '模板标识不能为空<br/>';
+					if ($scope.field.name == '' || !/^[a-z]+$/.test($scope.field.name)) {
+						msg += '模板标识必须为英文小写字母<br/>';
+					}
+					if (!/^\d+$/.test($scope.field.position)) {
+						msg += '微站导航菜单数量必须为数字<br/>';
 					}
 					if ($scope.field.resume == '') {
 						msg += '模板简述不能为空<br/>';
@@ -195,6 +189,9 @@
 					}
 					if ($scope.field.thumb == '') {
 						msg += '模板缩略图不能为空<br/>';
+					}
+					if ($scope.field.preview == '') {
+						msg += '官网展示图不能为空<br/>';
 					}
 					if (msg != '') {
 						util.message(msg, '', 'warning');

@@ -12,7 +12,6 @@ CREATE TABLE `hd_template` (
   `tid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL COMMENT '模板名称',
   `title` varchar(200) NOT NULL COMMENT '中文标题',
-  `version` varchar(45) NOT NULL COMMENT '版本号',
   `resume` varchar(500) NOT NULL DEFAULT '' COMMENT '模板描述',
   `author` varchar(45) NOT NULL COMMENT '作者',
   `url` varchar(300) NOT NULL COMMENT '发布页URL地址',
