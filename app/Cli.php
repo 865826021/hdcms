@@ -66,7 +66,8 @@ class Cli extends Base {
 		foreach ( $news as $f ) {
 			$info = preg_split( '@\s+@', trim( $f ) );
 			if ( in_array( $info[1], $this->filterFiles ) ||
-			     substr( $info[1], 0, 6 ) == 'addons'
+			     substr( $info[1], 0, 6 ) == 'addons' ||
+			     substr( $info[1], 0, 5 ) == 'theme'
 			) {
 				continue;
 			}
