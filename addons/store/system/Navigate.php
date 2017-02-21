@@ -21,11 +21,11 @@ class Navigate extends HdNavigate {
 
 	//插件模块
 	public function module() {
-		return controller_action( 'module.lists' );
+		return controller_action( 'store.module.lists');
 	}
 
 	//风格模板
 	public function template() {
-		return controller_action( 'template.lists' );
+		return controller_action( 'store.template.lists');
 	}
 }

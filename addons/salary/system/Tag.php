@@ -6,17 +6,29 @@
  * @author 后盾团队
  * @url http://www.hdcms.com
  */
-class Tag{
+class Tag {
 	/**
-	 * 标签定义
+	 * 学生列表
 	 *
-	 * @param array $attr 标签使用的属性
-	 * @param string $content 块标签包裹的内容
+	 * @param $attr
+	 * @param $content
 	 *
 	 * @return string
-	 * 调用方法: <tag action="salary.show" id="1" name="hdphp"></tag>
+	 * 调用方法: <tag action="salary.lists" order="id desc"></tag>
 	 */
-	public function show( $attr, $content ) {
-		return '这是标签内容';
+	public function lists( $attr, $content ) {
+		$order = isset( $attr['order'] ) ? $attr['order'] : 'wage desc';
+		$row   = isset( $attr['row'] ) ? $attr['row'] : 100;
+		$php   = <<<str
+<?php
+	\$info  = preg_split( '/\s+/', trim( '$order' ) );
+	\$_db    = Db::table( 'salary_student' )->limit( $row )->orderBy( \$info[0], \$info[1] )->get();
+	foreach(\$_db as \$field){
+?>
+str;
+		$php .= $content;
+		$php .= '<?php }?>';
+
+		return $php;
 	}
 }

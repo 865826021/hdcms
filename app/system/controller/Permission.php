@@ -109,11 +109,11 @@ class Permission {
 			message( '操作人员权限设置成功', 'refresh', 'success' );
 		}
 		//读取菜单表
-		$menus = service( 'menu' )->getLevelMenuLists();
+		$menus = \Menu::getLevelMenuLists();
 		//获取原有权限
 		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
 		//获取可使用的模块
-		$modules = service( 'module' )->getSiteAllModules( SITEID, false );
+		$modules = \Module::getSiteAllModules( SITEID, false );
 
 		//模块权限
 		return view()->with( [

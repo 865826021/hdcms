@@ -17,7 +17,7 @@ class Menu {
 	public function getLevelMenuLists() {
 		$menu = Db::table( 'menu' )->get() ?: [ ];
 
-		return Data::channelLevel( $menu ?: [ ], 0, '', 'id', 'pid' );
+		return \Arr::channelLevel( $menu ?: [ ], 0, '', 'id', 'pid' );
 	}
 
 	/**

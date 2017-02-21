@@ -12,8 +12,14 @@
 			Hi，<span class="text-strong">{{v('user.info.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.info.group.name')}}</span>，
 			账号有效期限：
 			<span class="text-strong">{{date('Y-m-d',v('user.info.starttime'))}} ~~ {{v('user.info.endtime')?date('Y-m-d',v('user.info.endtime')):'无限制'}}</span>，
-			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，已添加<span class="text-strong">
-            </span>个，还可添加 <span class="text-strong">{{v('user.group.maxsite')-service('user')->siteNums(v('user.info.uid'))}} </span>个公众号。
+			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，已添加<span class="text-strong"> {{\User::siteNums()}} </span>个，
+			还可添加 <span class="text-strong">{{v('user.group.maxsite')-\User::siteNums()}} </span>个公众号。
+		</div>
+		<else/>
+		<div class="alert alert-success">
+			温馨提示：
+			<i class="fa fa-info-circle"></i>
+			Hi，<span class="text-strong">{{v('user.info.username')}}</span> 您是系统超级管理员不受任何功能限制。
 		</div>
 	</if>
 	<div class="clearfix">

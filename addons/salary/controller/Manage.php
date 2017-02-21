@@ -19,6 +19,7 @@ class Manage extends HdController {
 
 	//学生列表
 	public function lists() {
+
 		if ( IS_POST ) {
 			foreach ( (array) $_POST['orderby'] as $id => $order ) {
 				$model            = Student::find( $id );

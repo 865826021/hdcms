@@ -32,5 +32,19 @@ class Setup extends HdSetup {
 	 * 建议使用HDPHP中的Schema组件完成数据安装
 	 */
 	public function upgrade() {
+		$sql = <<<sql
+CREATE TABLE `hd_salary_student` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(30) NOT NULL DEFAULT '' COMMENT '学生姓名',
+  `graduation` varchar(100) NOT NULL DEFAULT '' COMMENT '毕业时间',
+  `wage` varchar(100) NOT NULL DEFAULT '' COMMENT '就业薪资',
+  `present` varchar(100) NOT NULL DEFAULT '' COMMENT '目前薪资',
+  `address` varchar(100) NOT NULL DEFAULT '' COMMENT '工作地址',
+  `createtime` int(11) unsigned NOT NULL COMMENT '创建时间',
+  `orderby` tinyint(3) unsigned NOT NULL COMMENT '排序',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+sql;
+		Db::execute( $sql );
 	}
 }
