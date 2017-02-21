@@ -32,7 +32,7 @@ VALUES
 	(73,72,'官网模板','article_site_template','?m=article&action=controller/template/lists','','fa fa-cubes',0,1,1,'article'),
 	(74,71,'内容管理','','','','fa fa-cubes',0,1,1,'article'),
 	(75,74,'分类管理','article_category_manage','?m=article&action=controller/category/lists','?m=article&action=controller/category/post','fa fa-cubes',0,1,1,'article'),
-	(76,74,'文章管理','article_manage','?m=article&action=controller/content/lists','?m=article&action=controller/content/post','fa fa-cubes',0,1,1,'article'),
+	(76,74,'文章管理','article_manage','?m=article&action=controller/content/lists','','fa fa-cubes',0,1,1,'article'),
 	(77,72,'站点设置','article_site_manage','?m=article&action=controller/site/post','','fa fa-cubes',0,1,1,'article'),
 	(78,100,'特殊页面管理','','','','fa fa-cubes',0,1,1,'article'),
 	(80,78,'手机会员中心','feature_ucenter_post','?m=ucenter&action=controller/style/post','','fa fa-cubes',0,1,1,'feature'),

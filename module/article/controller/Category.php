@@ -28,7 +28,7 @@ class Category extends HdController {
 
 	//栏目列表
 	public function lists() {
-		$data = (new WebCategory())->getLevelCategory();
+		$data = ( new WebCategory() )->getLevelCategory();
 		View::with( 'data', $data );
 
 		return view( $this->template . '/content/category_lists.html' );
@@ -39,12 +39,18 @@ class Category extends HdController {
 		$cid = Request::get( 'cid' );
 		if ( IS_POST ) {
 			$model = $cid ? WebCategory::find( $cid ) : new WebCategory();
-			$data = json_decode( Request::post( 'data' ), true );
+			$data  = json_decode( Request::post( 'data' ), true );
 			$model->save( $data );
 			//添加路由规则
-			$routerData=[
-				['title'=>'栏目静态规则','router'=>$data['html_category'],'url'=>'m=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}'],
-				['title'=>'文章静态规则','router'=>$data['html_content'],'url'=>'m=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}&mid={mid}']
+			$routerData = [
+				[ 'title'  => '栏目静态规则',
+				  'router' => $data['html_category'],
+				  'url'    => 'm=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}'
+				],
+				[ 'title'  => '文章静态规则',
+				  'router' => $data['html_content'],
+				  'url'    => 'm=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}&mid={mid}'
+				]
 			];
 			Router::addRouter( $routerData );
 			message( '栏目保存成功', url( 'category.lists' ) );
@@ -61,7 +67,14 @@ class Category extends HdController {
 
 	//删除栏目
 	public function del() {
-		$model = WebCategory::find( Request::get( 'cid' ) );
+		$cid = Request::get( 'cid' );
+		//删除子栏目
+		$child = \Arr::channelList( Db::table( 'web_category' )->get(), $cid );
+		if ( $child ) {
+			message( '请先删除子栏目', '', 'error' );
+		}
+
+		$model = WebCategory::find( $cid );
 		if ( $model->delCategory() ) {
 			message( '栏目删除成功', url( 'category.lists' ), 'success' );
 		} else {

@@ -257,13 +257,19 @@ str;
 	//栏目列表
 	public function category( $attr, $content ) {
 		$cid = isset( $attr['cid'] ) ? $attr['cid'] : '';
+		$pid = isset( $attr['pid'] ) ? $attr['pid'] : - 1;
 		$php = <<<str
 <?php
 \$cid = array_filter(explode(',','$cid'));
 if(empty(\$cid)){
 	\$cid = Db::table('web_category')->where('pid',Request::get('cid',0))->lists('cid,cid');
 }
+
 \$db =  Db::table('web_category')->where('siteid',SITEID);
+if($pid!=-1){
+	\$db->where('pid',$pid);
+}
+
 if(\$cid){
 	\$db->whereIn('cid',\$cid);
 }

@@ -55,12 +55,12 @@
 </block>
 <script>
     function del(cid) {
-        util.confirm('确定删除栏目吗? 删除栏目将删除栏目下的所有文章!', function () {
+        util.confirm('删除栏目将删除栏目下的所有文章! 确定删除栏目吗? ', function () {
             $.get('{{url("category.del")}}&cid=' + cid, function (res) {
                 if (res.valid) {
                     util.message(res.message, 'refresh', 'success');
                 } else {
-                    util.message(res.message, '', 'error');
+                    util.message(res.message, '', 'warning');
                 }
             }, 'json');
         })

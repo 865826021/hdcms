@@ -39,6 +39,7 @@ class WebCategory extends Model {
 	/**
 	 * 获取树状栏目
 	 * 指定cid时过滤掉cid及其子栏目
+	 *
 	 * @param int $cid 栏目编号
 	 * @param int $mid 模型编号
 	 *
@@ -69,6 +70,7 @@ class WebCategory extends Model {
 	 */
 	public function delCategory() {
 		$table = ( new WebModel() )->getModelTable( $this['mid'] );
+		//删除文章
 		Db::table( $table )->where( 'cid', $this['cid'] )->delete();
 
 		return $this->destory();

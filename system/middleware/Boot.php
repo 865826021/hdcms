@@ -11,6 +11,8 @@ class Boot {
 	//自动执行的方法
 	public function run() {
 		$this->install();
+		//加载配置项
+		$this->config();
 	}
 
 	/**
@@ -32,5 +34,21 @@ class Boot {
 		}
 	}
 
-
+	/**
+	 * 加载系统配置项
+	 * 只加载系统配置不加载网站配置
+	 * 当install方法执行失败时才会执行config
+	 * 即网站安装成功后才有系统配置可加载
+	 * 因为那时已经有数据表存在了
+	 */
+	protected function config() {
+		$config             = Db::table( 'config' )->field( 'site,register' )->first();
+		$config['site']     = json_decode( $config['site'], true );
+		$config['register'] = json_decode( $config['register'], true );
+		v( 'config', $config );
+		//上传配置
+		c( 'upload', array_merge( c( 'upload' ), v( 'config.site.upload' ) ) );
+		c( 'app', array_merge( c( 'app' ), v( 'config.site.app' ) ) );
+		c( 'http', array_merge( c( 'http' ), v( 'config.site.http' ) ) );
+	}
 }

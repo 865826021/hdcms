@@ -18,9 +18,9 @@ class WebContent extends Model {
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
-		[ 'title', '', 'string', self::EMPTY_AUTO, self::MODEL_BOTH ],
-		[ 'content', '', 'string', self::EMPTY_AUTO, self::MODEL_BOTH ],
-		[ 'description', '', 'string', self::EMPTY_AUTO, self::MODEL_BOTH ],
+		[ 'title', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'content', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'description', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'rid', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'iscommend', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'ishot', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
