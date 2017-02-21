@@ -46,6 +46,7 @@ class Tag {
 			\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 			\$field['thumb'] =__ROOT__.'/'.(\$field['thumb']?:'resource/images/nopic_small.jpg');
+			\$field['current_article'] =\Request::get('aid')==\$field['aid'];
 		?>
 			$content
 		<?php }?>

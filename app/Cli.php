@@ -18,18 +18,20 @@ class Cli extends Base {
 	 */
 	public function upgrade() {
 		$files = $this->format();
-		foreach ( $files as $f ) {
-			if ( in_array( $f[0], [ 'A', 'M' ] ) ) {
-				$info = preg_split( '@\s+@', trim( $f ) );
-				\Dir::copyFile( $info[1], 'build/hdcms/' . $info[1] );
+		if ( ! empty( $files ) ) {
+			foreach ( $files as $f ) {
+				if ( in_array( $f[0], [ 'A', 'M' ] ) ) {
+					$info = preg_split( '@\s+@', trim( $f ) );
+					\Dir::copyFile( $info[1], 'build/hdcms/' . $info[1] );
+				}
 			}
+			file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ) );
+			chdir( 'build' );
+			Zip::PclZip( 'hdcms.zip' );
+			Zip::create( 'hdcms' );
+			copy( 'hdcms.zip', '../hdcms.zip' );
+			chdir( '..' );
 		}
-		file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ) );
-		chdir( 'build' );
-		Zip::PclZip( 'hdcms.zip' );
-		Zip::create( 'hdcms' );
-		copy( 'hdcms.zip', '../hdcms.zip' );
-		chdir( '..' );
 		\Dir::del( 'build' );
 		@unlink( 'files.php' );
 	}
@@ -40,6 +42,9 @@ class Cli extends Base {
 	 * @return array
 	 */
 	protected function format() {
+		if(!is_file('files.php')){
+			self::error('请选择创建版本差异文件 files.php');
+		}
 		$news = $files = preg_split( '@\n@', file_get_contents( 'files.php' ) );
 		foreach ( $files as $k => $f ) {
 			//把替换的文件更改成删除与添加
@@ -60,11 +65,12 @@ class Cli extends Base {
 		$data = [ ];
 		foreach ( $news as $f ) {
 			$info = preg_split( '@\s+@', trim( $f ) );
-			if ( ! in_array( $info[1], $this->filterFiles ) &&
-			     substr( $info[1], 0, 5 ) != 'addons'
+			if ( in_array( $info[1], $this->filterFiles ) ||
+			     substr( $info[1], 0, 6 ) == 'addons'
 			) {
-				$data[] = "{$info[0]}\t{$info[1]}";
+				continue;
 			}
+			$data[] = "{$info[0]}\t{$info[1]}";
 		}
 
 		return $data;
