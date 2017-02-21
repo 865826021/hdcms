@@ -207,6 +207,8 @@ class Cloud {
 			//更新数据表模块编译版本
 			$data = [ 'version' => $app['zip']['version'], 'build' => $app['zip']['build'] ];
 			Modules::where( 'name', $name )->update( $data );
+			//更新模块安装数量
+			\Curl::post( $this->url . "/cloud/updateModuleInstallNum", $app );
 			ajax( [
 				'message' => '模块更新完毕',
 				'config'  => $app,

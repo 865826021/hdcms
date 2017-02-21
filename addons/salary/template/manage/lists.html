@@ -21,6 +21,7 @@
                     <th>目前薪资</th>
                     <th>就业地址</th>
                     <th>毕业时间</th>
+                    <th>工作单位</th>
                     <th width="180">操作</th>
                 </tr>
                 </thead>
@@ -36,6 +37,7 @@
                         <td>{{$d['present']}}</td>
                         <td>{{$d['address']}}</td>
                         <td>{{$d['graduation']}}</td>
+                        <td>{{$d['company']}}</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
                                 <a href="{{url('manage.post',['id'=>$d['id']])}}"

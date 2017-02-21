@@ -58,7 +58,7 @@
 					//更新成功时继续更新数据表
 					setTimeout(function(){
 						location.href="{{u('upgrade',['action'=>'sql'])}}";
-					},2000);
+					},1000);
 				}
 				$scope.$apply();
 			}, 'json')

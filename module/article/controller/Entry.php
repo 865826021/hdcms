@@ -26,6 +26,7 @@ class Entry extends HdController {
 		$template       = \Template::getTemplateData();
 		$this->template = "theme/{$template['name']}/" . ( IS_MOBILE ? 'mobile' : 'web' );
 		template_path( $this->template );
+		define( '__ARTICLE_STYLE_PATH__', $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 		View::with( 'module.site', json_decode( Db::table( 'web' )->pluck( 'site_info' ), true ) );
 
@@ -62,12 +63,12 @@ class Entry extends HdController {
 	 * 文章内容页访问入口
 	 */
 	public function content() {
-		$model             = new WebContent();
-		$hdcms             = $model->find( Request::get( 'aid' ) )->toArray();
-		$category          = WebCategory::find( $hdcms['cid'] )->toArray();
+		$model    = new WebContent();
+		$hdcms    = $model->find( Request::get( 'aid' ) )->toArray();
+		$category = WebCategory::find( $hdcms['cid'] )->toArray();
 		//设置栏目链接
-		$category['url']   = Link::get( $category['html_category'], $category );
-		$category['url']   = str_replace( '{page}', Request::get( 'page', 1 ), $category['url'] );
+		$category['url'] = Link::get( $category['html_category'], $category );
+		$category['url'] = str_replace( '{page}', Request::get( 'page', 1 ), $category['url'] );
 
 		$hdcms['category'] = $category;
 		View::with( [ 'hdcms' => $hdcms ] );
@@ -75,8 +76,9 @@ class Entry extends HdController {
 			return view( $this->template . '/article.html' );
 		} else {
 			//PC模板
-			$tpl = $hdcms['template']?:$category['content_tpl'];
-			return view( $this->template .'/'.$tpl);
+			$tpl = $hdcms['template'] ?: $category['content_tpl'];
+
+			return view( $this->template . '/' . $tpl );
 		}
 	}
 }

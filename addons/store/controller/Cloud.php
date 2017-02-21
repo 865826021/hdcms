@@ -159,7 +159,7 @@ class Cloud {
 		 * 如果模块有售价时检测用户余额
 		 * 如果用户已经购买过不进行扣费操作
 		 */
-		$where = [
+		$where    = [
 			[ 'uid', Request::get( 'uid' ) ],
 			[ 'type', Request::get( 'type' ) ],
 			[ 'name', $db['name'] ],
@@ -180,9 +180,10 @@ class Cloud {
 				ajax( $data );
 			}
 			//添加购买记录
-			$StoreBuy->save( [ 'uid'  => Request::get( 'uid' ),
-			                    'type' => Request::get( 'type' ),
-			                    'name' => $db['name']
+			$StoreBuy->save( [
+				'uid'  => Request::get( 'uid' ),
+				'type' => Request::get( 'type' ),
+				'name' => $db['name']
 			] );
 		}
 
@@ -218,5 +219,13 @@ class Cloud {
 		}
 
 		return json_encode( $data );
+	}
+
+	/**
+	 * 更新模块安装数量
+	 * 模块安装成功后进行更新
+	 */
+	public function updateModuleInstallNum() {
+		Db::table( 'store_zip' )->where( 'appid', Request::post( 'id' ) )->increment( 'install_nums', 1 );
 	}
 }
