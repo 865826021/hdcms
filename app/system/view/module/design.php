@@ -401,7 +401,7 @@
 						<div class="col-xs-12 col-sm-12 col-md-5">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
-								<input class="form-control" ng-model="d.do" type="text" placeholder="请输入操作入口">
+								<input class="form-control" ng-model="d.do" type="text" placeholder="请输入动作操作名称">
 							</div>
 						</div>
 
@@ -690,96 +690,91 @@
 					{title: '其他', name: 'other'}
 				];
 				$scope.field = {
-					"manifest_code": "2.0",
-					"title": "aaa",
-					"name": "hdcms",
-					"version": "1.0",
+					"title": "a",
+					"name": "a",
+					"version": "3",
 					"industry": "business",
-					"resume": "resume",
-					"detail": "detail",
-					"author": "author",
-					"url": "url",
-					"setting": true,
-					"tag": true,
-					"crontab":true,
-					"router":true,
-					"domain":true,
-					"pay":true,
+					"resume": "a",
+					"detail": "a",
+					"author": "a",
+					"url": "http://www.hdcms.com",
+					"setting": false,
+					"tag": false,
+					"crontab":false,
+					"router":false,
+					"domain":false,
+					"pay":false,
+					"rule": false,
 					"web": {
 						"entry": {
-							"title": "桌面入口导航",
-							"do": "zuomianrukou",
+							"title": "",
+							"do": "",
 						},
 						"member": [
 							{
-								"title": "桌面会员中心",
-								"do": "zuomianmember",
+								"title": "",
+								"do": "",
 							}
 						]
 					},
 					"mobile": {
 						"home": [
 							{
-								"title": "移动端首页导航",
-								"do": "mobilesouye",
+								"title": "",
+								"do": "",
 							}
 						],
 						"member": [
 							{
-								"title": "移动端会员中心",
-								"do": "mobilemember",
+								"title": "",
+								"do": "",
 							}
 						]
 					},
 					"subscribes": {
-						"text": true,
-						"image": true,
-						"voice": true,
-						"video": true,
-						"shortvideo": true,
-						"location": true,
-						"link": true,
-						"subscribe": true,
-						"unsubscribe": true,
-						"scan": true,
-						"track": true,
-						"click": true,
-						"view": true
+						"text": false,
+						"image": false,
+						"voice": false,
+						"video": false,
+						"shortvideo": false,
+						"location": false,
+						"link": false,
+						"subscribe": false,
+						"unsubscribe": false,
+						"scan": false,
+						"track": false,
+						"click": false,
+						"view": false
 					},
 					"processors": {
-						"text": true,
-						"image": true,
-						"voice": true,
-						"video": true,
-						"shortvideo": true,
-						"location": true,
-						"link": true,
-						"subscribe": true,
-						"unsubscribe": true,
-						"scan": true,
-						"track": true,
-						"click": true,
-						"view": true
+						"text": false,
+						"image": false,
+						"voice": false,
+						"video": false,
+						"shortvideo": false,
+						"location": false,
+						"link": false,
+						"subscribe": false,
+						"unsubscribe": false,
+						"scan": false,
+						"track": false,
+						"click": false,
+						"view": false
 					},
 					"cover": [
 						{
-							"title": "功能封面1",
-							"do": "fengmian1",
-						},
-						{
-							"title": "功能封面2",
-							"do": "fengmian2",
+							"title": "",
+							"do": "",
 						}
 					],
-					"rule": true,
 					"business": [
 						{
-							"title": "业务功能",
-							"controller": "business",
+							"title": "",
+							"controller": "",
 							"action": [
 								{
-									"title": "控制器动作",
-									"do": "action"
+									"title": "",
+									"do": ""
 								}
 							]
 						}
@@ -882,10 +877,12 @@
 					if ($scope.field.thumb == '') {
 						msg += '模块缩略图不能为空<br/>';
 					}
-					if ($scope.field.cover == '') {
+					if ($scope.field.preview == '') {
 						msg += '模块封面图不能为空<br/>';
 					}
-
+					if(!/^[0-9\.]+$/.test($scope.field.version)){
+						msg += '版本号只能为数字<br/>';
+					}
 					if (msg != '') {
 						util.message(msg, '', 'warning');
 						return false;

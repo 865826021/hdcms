@@ -11,19 +11,25 @@ class Business {
 	public static function make( $data ) {
 		if ( $data['business'] ) {
 			foreach ( $data['business'] as $b ) {
-				$action = '';
-				foreach ( $b['action'] as $a ) {
-					$action .= self::action( $a );
+				if ( ! empty( $b['controller'] ) ) {
+					$action = '';
+					foreach ( $b['action'] as $a ) {
+						if ( ! empty( $a['title'] ) && ! empty( $a['do'] ) ) {
+							$action .= self::action( $a );
+						}
+					}
+					if ( ! empty( $action ) ) {
+						self::controller( $data, $b, $action );
+					}
 				}
-				self::controller( $data, $b, $action );
 			}
 		}
 	}
 
 	protected static function controller( $data, $controller, $action ) {
 		$class = ucfirst( $controller['controller'] );
-		$file = "addons/{$data['name']}/controller/" .$class  . ".php";
-		$tpl  = <<<php
+		$file  = "addons/{$data['name']}/controller/" . $class . ".php";
+		$tpl   = <<<php
 <?php namespace addons\\{$data['name']}\\controller;
 
 /**

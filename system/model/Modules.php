@@ -27,7 +27,7 @@ class Modules extends Common {
 		],
 		[ 'industry', 'required', '模块类型不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'title', 'maxlen:10', '模块名称不能超过10个字符', self::MUST_VALIDATE, self::MODEL_INSERT ],
-		[ 'version', 'regexp:/^\d+\.?\d*$/', '版本只能为数字', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'version', 'regexp:/^[\d\.]+$/', '版本号只能为数字', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'resume', 'required', '模块简述不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'detail', 'required', '详细介绍不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[ 'author', 'required', '作者不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],

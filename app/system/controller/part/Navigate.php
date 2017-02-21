@@ -10,23 +10,31 @@
 class Navigate {
 	public static function make( $data ) {
 		$action = '';
-		if ( $data['web']['entry'] ) {
-			$action .= self::entry( $data['web']['entry'] )."\n\n";
+		if ( ! empty( $data['web']['entry'] ) && ! empty( $data['web']['entry']['title'] )
+		     && ! empty( $data['web']['entry']['do'] )
+		) {
+			$action .= self::entry( $data['web']['entry'] ) . "\n\n";
 		}
 
-		if ( $data['web']['member'] ) {
+		if ( ! empty( $data['web']['member'] ) ) {
 			foreach ( $data['web']['member'] as $d ) {
-				$action .= self::webMember( $d )."\n\n";
+				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
+					$action .= self::webMember( $d ) . "\n\n";
+				}
 			}
 		}
-		if ( $data['mobile']['home'] ) {
+		if ( ! empty( $data['mobile']['home'] ) ) {
 			foreach ( $data['mobile']['home'] as $d ) {
-				$action .= self::mobileHome( $d )."\n\n";
+				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
+					$action .= self::mobileHome( $d ) . "\n\n";
+				}
 			}
 		}
-		if ( $data['mobile']['member'] ) {
+		if ( ! empty( $data['mobile']['member'] ) ) {
 			foreach ( $data['mobile']['member'] as $d ) {
-				$action .= self::mobileMember( $d )."\n\n";
+				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
+					$action .= self::mobileMember( $d ) . "\n\n";
+				}
 			}
 		}
 		if ( ! empty( $action ) ) {
