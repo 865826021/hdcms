@@ -1,0 +1,67 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#tab1" role="tab" data-toggle="tab">开班列表</a></li>
+        <li><a href="{{url('manage.post')}}">添加班级</a></li>
+    </ul>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            开班列表
+        </div>
+        <div class="panel-body">
+            <form action="" method="post">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th width="80">编号</th>
+                    <th width="80">排序</th>
+                    <th>班级</th>
+                    <th>城市</th>
+                    <th>开班时间</th>
+                    <th width="180">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach from="$data" value="$d">
+                    <tr>
+                        <td>{{$d['id']}}</td>
+                        <td>
+                            <input type="text" name="orderby[{{$d['id']}}]" value="{{$d['orderby']}}" class="form-control">
+                        </td>
+                        <td>{{$d['name']}}</td>
+                        <td>{{$d['city']}}</td>
+                        <td>{{$d['times']}}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a href="{{url('manage.post',['id'=>$d['id']])}}"
+                                   class="btn btn-default btn-sm">修改班级</a>
+                                <a href="javascript:;" onclick="del({{$d['id']}},'{{$d['name']}}')"
+                                   class="btn btn-default btn-sm">删除班级</a>
+                            </div>
+                        </td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </table>
+                <input type="submit" value="更新排序" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+
+</block>
+<script>
+    function del(id, name) {
+        require(['util', 'jquery'], function (util, $) {
+            util.confirm('确定删除班级 [' + name + '] 的资料吗?', function () {
+                $.get('{{url("manage.del")}}', {id: id}, function (json) {
+                    if (json.valid == 1) {
+                        util.message(json.message, "refresh", 'success');
+                    } else {
+                        util.message(json.message, "", 'warning');
+                    }
+                }, 'json');
+            })
+        })
+    }
+</script>

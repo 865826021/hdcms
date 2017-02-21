@@ -1,9 +1,9 @@
-#学生薪资模块
+#开班模块
 
-##获取学生列表
+##获取开班列表
 
 ```
-<tag action="salary.lists" order="id desc" row="3">
+<tag action="course.lists" order="id desc" row="3">
     {{$field['name']}}
 </tag>
 ```

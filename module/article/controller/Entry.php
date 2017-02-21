@@ -63,8 +63,11 @@ class Entry extends HdController {
 	 * 文章内容页访问入口
 	 */
 	public function content() {
-		$model    = new WebContent();
-		$hdcms    = $model->find( Request::get( 'aid' ) )->toArray();
+		$model = WebContent::find( Request::get( 'aid' ) );
+		if ( empty( $model ) ) {
+			message( '你访问的文章不存在', '', 'error' );
+		}
+		$hdcms    = $model->toArray();
 		$category = WebCategory::find( $hdcms['cid'] )->toArray();
 		//设置栏目链接
 		$category['url'] = Link::get( $category['html_category'], $category );

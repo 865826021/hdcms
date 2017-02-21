@@ -24,7 +24,7 @@
             <div class="col-sm-10">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="javascript:;">文章管理</a></li>
-                    <li><a href="{{url('content.post',['mid'=>Request::get('mid')])}}">发表文章</a></li>
+                    <li><a href="{{url('content.post',['mid'=>Request::get('mid'),'cid'=>Request::get('cid')])}}">发表文章</a></li>
                 </ul>
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -44,7 +44,7 @@
                                 <tr>
                                     <td>{{$d['aid']}}</td>
                                     <td>
-                                        <input type="text" class="form-control" value="{{$d['orderby']}}">
+                                        <input type="text" class="form-control" name="orderby[{{$d['aid']}}]" value="{{$d['orderby']}}">
                                     </td>
                                     <td>
                                         <a href="{{url('content.post',['mid'=>$d['mid'],'cid'=>$d['cid']])}}">{{$d['catname']}}</a>
@@ -76,10 +76,9 @@
                         </table>
                     </div>
                 </div>
+                <button type="submit" class="btn btn-primary">更新排序</button>
             </div>
         </div>
-        <input type="hidden" name="data">
-        <button type="submit" class="btn btn-primary" ng-if="data.length>0">更新排序</button>
     </form>
     {{$data->links()}}
 </block>

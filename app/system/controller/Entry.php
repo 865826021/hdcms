@@ -47,7 +47,7 @@ class Entry {
 	 */
 	public function login() {
 		//必须使用路由访问
-		if ( empty( Route::getMatchRoute() ) ) {
+		if ( ! Route::getMatchRoute()  ) {
 			go( __WEB__ . '/hdcms' );
 		}
 		if ( IS_POST ) {

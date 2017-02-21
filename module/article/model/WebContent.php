@@ -13,7 +13,7 @@ class WebContent extends Model {
 	//模型编号
 	protected $mid;
 	protected $validate = [
-		[ 'cid', 'required', '请选择文章栏目', self::MUST_VALIDATE, self::MODEL_BOTH ],
+		[ 'cid', 'required', '请选择文章栏目', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'orderby', 'num:0,255', '排序只能是0~255之间的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [

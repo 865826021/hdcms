@@ -34,9 +34,17 @@ class Content extends HdController {
 
 	//文章列表
 	public function lists() {
+		if(IS_POST){
+			foreach($_POST['orderby'] as $aid=>$order){
+				$model = WebContent::find($aid);
+				$model['orderby']=$order;
+				$model->save();
+			}
+		}
 		$model = new WebContent();
 		$table = $model->getTableName();
-		$db    = $model->orderBy( 'aid', 'DESC' )->join( 'web_category', "{$table}.cid", '=', 'web_category.cid' );
+		$db    = $model->field("*,{$table}.orderby")->orderBy("{$table}.orderby","desc")->orderBy( 'aid', 'DESC' )
+			->join( 'web_category', "{$table}.cid", '=', 'web_category.cid' );
 		if ( $cid = Request::get( 'cid' ) ) {
 			$db->where( 'web_category.cid', $cid );
 		}

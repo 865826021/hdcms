@@ -43,10 +43,14 @@ class Tag {
 		\$_category = new \module\article\model\WebCategory();
 		foreach(\$_result as \$field){
 			\$field['category']=\$_category->getByCid(\$field['cid']);
-			\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
+			if(empty(\$field['linkurl'])){
+				\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
+			}else{
+				\$field['url']=\$field['linkurl'];
+			}
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 			\$field['thumb'] =__ROOT__.'/'.(\$field['thumb']?:'resource/images/nopic_small.jpg');
-			\$field['current_article'] =\Request::get('aid')==\$field['aid'];
+			\$field['current_article'] =\Request::get('aid')==\$field['aid']?'current_article':'';
 		?>
 			$content
 		<?php }?>
@@ -74,7 +78,11 @@ str;
 		\$category = \$_WebCategory->getByCid(Request::get('cid'));
 		foreach(\$_result as \$field){
 			\$field['category']=\$category;
-			\$field['url'] = Link::get(\$category['html_content'],\$field);
+			if(empty(\$field['linkurl'])){
+				\$field['url'] = Link::get(\$category['html_content'],\$field);
+			}else{
+				\$field['url']=\$field['linkurl'];
+			}
 			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
 		?>
 			$content
@@ -220,13 +228,15 @@ str;
                  \$categoryData = \Arr::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
                         \$d['url']=Link::get(\$d['html_category'],\$d);
-                        \$d['url']=str_replace('{page}',Request::get('page',1), \$d['url']);
                         echo "<dt><a href='{\$d['url']}'>{\$d['catname']}</a></dt>";
                         if(!empty(\$d['_data'])){
                             echo '<dd>';
                             foreach(\$d['_data'] as \$_m){
-                                \$_m['url']=Link::get(\$_m['html_category'],\$_m);
-                                \$_m['url']=str_replace('{page}',Request::get('page',1), \$_m['url']);
+                                if(empty(\$_m['linkurl'])){
+                                    \$_m['url']=Link::get(\$_m['html_category'],\$_m);
+                                }else{
+                                    \$_m['url']=\$_m['linkurl'];
+                                }
                                 echo "<a href='{\$_m['url']}'>{\$_m['catname']}</a>";
                             }
                             echo '</dd>';
@@ -260,8 +270,11 @@ if(\$cid){
 \$_category =\$db->get()?:[];
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['url']=Link::get(\$field['html_category'],\$field);
-    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
+    if(empty(\$field['linkurl'])){
+        \$field['url']=Link::get(\$field['html_category'],\$field);
+    }else{
+         \$field['url']=\$field['linkurl'];
+    }
     \$field['current_category']=\Request::get('cid')==\$field['cid']?'current_category':'';
 ?>
 $content
@@ -278,8 +291,11 @@ str;
 \$_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',0)->get();
 foreach(\$_category as \$field){
     //栏目链接
-    \$field['url']=Link::get(\$field['html_category'],\$field);
-    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
+    if(empty(\$field['linkurl'])){
+        \$field['url']=Link::get(\$field['html_category'],\$field);
+    }else{
+        \$field['url'] = \$field['linkurl'];
+    }
     \$field['current_category']=\Request::get('cid')==\$field['cid']?'current_category':'';
 ?>
 $content
@@ -304,8 +320,11 @@ str;
 \$_son_category =  Db::table('web_category')->where('siteid',SITEID)->where('pid',\$field['cid'])->get();
 foreach(\$_son_category as \$field){
     //栏目链接
-    \$field['url']=Link::get(\$field['html_category'],\$field);
-    \$field['url']=str_replace('{page}',Request::get('page',1),\$field['url']);
+    if(empty(\$field['linkurl'])){
+        \$field['url']=Link::get(\$field['html_category'],\$field);
+    }else{
+        \$field['url'] = \$field['linkurl'];
+    }
 ?>
 $content
 <?php }?>
@@ -326,7 +345,7 @@ str;
   \$_categorys = array_reverse(Arr::parentChannel(\$_categorys,\$_cid)?:[]);
   foreach(\$_categorys as \$_cat){?>
 	  <li>
-	    <a href="{{str_replace('{page}',Request::get('page',1),Link::get(\$_cat['html_category'],\$_cat))}}">{{\$_cat['catname']}}</a>
+	    <a href="{{Link::get(\$_cat['html_category'],\$_cat)}}">{{\$_cat['catname']}}</a>
 	    <?php if(isset(\$hdcms['category'])){echo '{$separator}';}?>
 	  </li>
   <?php }?>
@@ -358,7 +377,6 @@ str;
         \$_category = Db::table('web_category')->where('cid',Request::get('cid'))->where('siteid',SITEID)->first();
         //栏目链接
         \$_category['url']=Link::get(\$d['html_category'],\$_category);
-        \$_category['url']=str_replace('{page}',Request::get('page',1), \$d['url']);
         //分页地址设置
         houdunwang\page\Page::url(Link::get(\$_category['html_category'],\$_category));
         \$_data = \$db->paginate($row);
@@ -369,7 +387,11 @@ str;
                 \$field['thumb']=__ROOT__."/{\$field['thumb']}";
             }
             //文章链接
-            \$field['url'] = Link::get(\$_category['html_content'],\$field);
+            if(empty(\$field['linkurl'])){
+                \$field['url'] = Link::get(\$_category['html_content'],\$field);
+            }else{
+                \$field['url']=\$field['linkurl'];
+            }
         ?>
         $content
         <?php }?>

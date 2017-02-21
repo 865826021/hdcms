@@ -22,7 +22,8 @@ class Link {
 			$url = str_replace( '{' . $k . '}', $v, $url );
 		}
 
-		return $url;
+		//替换{page}
+		return str_replace( '{page}', Request::get( 'page', 1 ), $url );
 	}
 }
 
