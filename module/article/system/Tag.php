@@ -38,7 +38,7 @@ class Tag {
 			\$db->where('thumb','<>','');
 		}
 		//排序
-		\$_result = \$db->orderBy('aid','$order')->get();
+		\$_result = \$db->orderBy('orderby','desc')->orderBy('aid','$order')->get();
 		\$_result =\$_result?\$_result->toArray():[]; 
 		\$_category = new \module\article\model\WebCategory();
 		foreach(\$_result as \$field){

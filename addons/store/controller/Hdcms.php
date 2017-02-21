@@ -26,7 +26,7 @@ class Hdcms extends HdController{
 
 	//软件包列表
 	public function lists() {
-		$data = StoreHdcms::get();
+		$data = StoreHdcms::orderBy('id','desc')->get();
 		View::with( [ 'data' => $data ] );
 
 		return view( $this->template . '/hdcms/lists.html' );
