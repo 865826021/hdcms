@@ -24,7 +24,7 @@ class Entry {
 	 * @return mixed
 	 */
 	public function index() {
-		$domain=trim($_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ),'/');
+		$domain=trim($_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ),'/\\');
 		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
 		if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
 			//站点设置了默认访问模块时访问模块的桌面入口页面

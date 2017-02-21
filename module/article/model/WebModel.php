@@ -82,7 +82,7 @@ sql;
 	}
 
 	//获取当前站点的模型列表
-	public function getLists() {
+	public static function getLists() {
 		return Db::table( 'web_model' )->where( 'siteid', SITEID )->get();
 	}
 

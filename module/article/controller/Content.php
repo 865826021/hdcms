@@ -35,7 +35,7 @@ class Content extends HdController {
 	//文章列表
 	public function lists() {
 		$model = new WebContent();
-		$data  = $model->orderBy('aid','DESC')->paginate( 10 );
+		$data  = $model->orderBy( 'aid', 'DESC' )->paginate( 10 );
 		View::with( 'data', $data );
 
 		return view( $this->template . '/content/content_lists.html' );
@@ -51,27 +51,32 @@ class Content extends HdController {
 			$model->save( $data );
 			$aid = $aid ?: $model['aid'];
 			//添加回复规则
-			$rule             = [ ];
-			$rule['rid']      = Request::post( 'wechat_rid' );
-			$rule['module']   = 'cover';
-			$rule['name']     = 'article:content:' . $aid;
-			$rule['keywords'] = [ [ 'content' => $data['wechat_keyword'] ] ];
-			$rid              = \Wx::rule( $rule );
-			//添加封面回复
-			$replyCover = new ReplyCover();
-			$replyCover->where( 'rid', $rid )->delete();
-			$replyCover['rid']         = $rid;
-			$replyCover['title']       = $data['title'];
-			$replyCover['description'] = $data['description'];
-			$replyCover['thumb']       = $data['thumb'];
-			$replyCover['module']      = 'article';
-			$replyCover['url']         = url( 'entry.content', [
-				'aid' => $aid,
-				'mid' => $_GET['mid'],
-				'cid' => $data['category_cid']
-			] );
-			$replyCover->save();
+			if ( empty( $data['wechat_keyword'] ) ) {
+				\Wx::removeRule( Request::post( 'wechat_rid' ) );
+			} else {
+				$rule             = [ ];
+				$rule['rid']      = Request::post( 'wechat_rid' );
+				$rule['module']   = 'cover';
+				$rule['name']     = 'article:content:' . $aid;
+				$rule['keywords'] = [ [ 'content' => $data['wechat_keyword'] ] ];
+				$rid              = \Wx::rule( $rule );
+				//添加封面回复
+				$replyCover = new ReplyCover();
+				$replyCover->where( 'rid', $rid )->delete();
+				$replyCover['rid']         = $rid;
+				$replyCover['title']       = $data['title'];
+				$replyCover['description'] = $data['description'];
+				$replyCover['thumb']       = $data['thumb'];
+				$replyCover['module']      = 'article';
+				$replyCover['url']         = url( 'entry.content', [
+					'aid' => $aid,
+					'mid' => $_GET['mid'],
+					'cid' => $data['category_cid']
+				] );
+				$replyCover->save();
+			}
 			message( '文章保存成功', url( 'content.lists' ) );
+
 		}
 		//编辑时获取原数据
 		//微信关键词信息

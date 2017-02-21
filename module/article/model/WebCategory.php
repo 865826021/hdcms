@@ -44,7 +44,7 @@ class WebCategory extends Model {
 	 *
 	 * @return mixed
 	 */
-	public function getLevelCategory( $cid = 0, $mid = 0 ) {
+	public static function getLevelCategory( $cid = 0, $mid = 0 ) {
 		$category = Db::table( 'web_category' )->where( 'siteid', SITEID )->get();
 		if ( $category ) {
 			$category = Arr::tree( $category, 'catname', 'cid', 'pid' );

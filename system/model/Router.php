@@ -47,7 +47,7 @@ class Router extends Common {
 	 *
 	 * @return bool
 	 */
-	public function addRouter( $data ) {
+	public static function addRouter( $data ) {
 		Db::table( 'router' )->where( 'module', v( 'module.name' ) )->delete();
 		foreach ( $data as $d ) {
 			( new self() )->save( $d );
@@ -60,7 +60,7 @@ class Router extends Common {
 	 * 获取站点的所有路由规则
 	 * @return mixed
 	 */
-	public function getSiteRouter() {
+	public static function getSiteRouter() {
 		return Db::table( 'router' )->where( 'siteid', siteid() )->get();
 	}
 }
