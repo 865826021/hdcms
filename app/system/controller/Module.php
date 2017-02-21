@@ -80,11 +80,58 @@ class Module {
 		return view()->with( 'locality', $locality );
 	}
 
+	//格式化package.json数据
+	protected function formatPackageJson( $data ) {
+		if ( empty( $data['web']['entry']['title'] ) || empty( $data['web']['entry']['do'] ) ) {
+			$data['web']['entry'] = [ ];
+		}
+		//桌面会员中心
+		foreach ( $data['web']['member'] as $k => $d ) {
+			if ( empty( $d['title'] ) || empty( $d['do'] ) ) {
+				unset( $data['web']['member'][ $k ] );
+			}
+		}
+		//移动端导航设置
+		foreach ( $data['mobile']['home'] as $k => $d ) {
+			if ( empty( $d['title'] ) || empty( $d['do'] ) ) {
+				unset( $data['mobile']['home'][ $k ] );
+			}
+		}
+		//移动端会员中心
+		foreach ( $data['mobile']['member'] as $k => $d ) {
+			if ( empty( $d['title'] ) || empty( $d['do'] ) ) {
+				unset( $data['mobile']['member'][ $k ] );
+			}
+		}
+		//封面回复
+		foreach ( $data['cover'] as $k => $d ) {
+			if ( empty( $d['title'] ) || empty( $d['do'] ) ) {
+				unset( $data['cover'][ $k ] );
+			}
+		}
+		//业务动作
+
+		foreach ( $data['business'] as $k => $d ) {
+			//检测动作完整性
+			foreach ( $data['business'][ $k ]['action'] as $n => $m ) {
+				if ( empty( $m['title'] ) || empty( $m['do'] ) ) {
+					unset( $data['business'][ $k ]['action'][ $n ] );
+				}
+			}
+			//控制器数据不完整时删除
+			if ( empty( $d['title'] ) || empty( $d['controller'] ) || empty( $data['business'][ $k ]['action'] ) ) {
+				unset( $data['business'][ $k ] );
+			}
+		}
+
+		return $data;
+	}
+
 	//设计新模块
 	public function design() {
 		if ( IS_POST ) {
 			//模块结构数据
-			$data = json_decode( q( 'post.data' ), JSON_UNESCAPED_UNICODE );
+			$data = $this->formatPackageJson( json_decode( Request::post( 'data' ), true ) );
 			//字段基本检测
 			Validate::make( [
 				[ 'title', 'required', '模块名称不能为空' ],
@@ -174,6 +221,7 @@ class Module {
 			$model['subscribes']  = $config['subscribes'];
 			$model['processors']  = $config['processors'];
 			$model['setting']     = $config['setting'];
+			$model['middleware']  = $config['middleware'];
 			$model['crontab']     = $config['crontab'];
 			$model['router']      = $config['router'];
 			$model['domain']      = $config['domain'];

@@ -13,17 +13,13 @@ class Cover {
 			//组合方法字符串
 			$action = '';
 			foreach ( $data['cover'] as $d ) {
-				if(!empty($d['title']) && !empty($d['do'])){
 				$action .= self::action( $d );
-				}
 			}
-			if(!empty($action)){
-			self::php( $data,$action);
-			}
+			self::php( $data, $action );
 		}
 	}
 
-	protected static function php( $data,$action ) {
+	protected static function php( $data, $action ) {
 		$tpl = <<<php
 <?php namespace addons\\{$data['name']}\\system;
 

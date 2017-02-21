@@ -138,6 +138,16 @@
 					<span class="help-block">用于管理微信、支付宝等支付功能</span>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">中间件</label>
+				<div class="col-sm-10 col-xs-12">
+					<label class="checkbox-inline">
+						<input type="checkbox" value="true" ng-model="field.middleware">
+						开启中间件功能
+					</label>
+					<span class="help-block">中间件是程序运行过程中的不同节点,模块可以在不同中间件中设置功能</span>
+				</div>
+			</div>
 			<h5 class="page-header">公众平台消息处理选项
 				<small>这里来定义公众平台消息相关处理</small>
 			</h5>
@@ -445,7 +455,7 @@
 					<span class="help-block col-md-11">
                         如果您设计的模块添加的业务需要权限设置(后台管理使用)，您可以在这里输入权限标识，
 权限标识由：控制器名_方法名组成。例如,商城模块的添加商品权限标识：goods_add",说明:控制器名称为：goods,方法为：add,则对应标识为：goods_add
-,多个权限标识使用换行隔开。模块方法中使用auth('goods_add')进行权限验证
+,多个权限标识使用换行隔开。模块方法中使用 authIdentity('goods_add') 进行权限验证
                     </span>
 				</div>
 			</div>
@@ -641,7 +651,8 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-thumb" width="150">
+						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}"
+						     class="img-responsive img-thumbnail img-thumb" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
 						    ng-click="field.thumb=''">×</em>
 					</div>
@@ -658,7 +669,8 @@
 						</div>
 					</div>
 					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.preview?field.preview:'resource/images/nopic.jpg'}}" class="img-responsive img-thumbnail img-cover" width="150">
+						<img ng-src="@{{field.preview?field.preview:'resource/images/nopic.jpg'}}"
+						     class="img-responsive img-thumbnail img-cover" width="150">
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
 						    ng-click="field.preview=''">×</em>
 					</div>
@@ -700,10 +712,11 @@
 					"url": "http://www.hdcms.com",
 					"setting": false,
 					"tag": false,
-					"crontab":false,
-					"router":false,
-					"domain":false,
-					"pay":false,
+					"crontab": false,
+					"router": false,
+					"domain": false,
+					"middleware": false,
+					"pay": false,
 					"rule": false,
 					"web": {
 						"entry": {
@@ -880,15 +893,21 @@
 					if ($scope.field.preview == '') {
 						msg += '模块封面图不能为空<br/>';
 					}
-					if(!/^[0-9\.]+$/.test($scope.field.version)){
+					if (!/^[0-9\.]+$/.test($scope.field.version)) {
 						msg += '版本号只能为数字<br/>';
 					}
 					if (msg != '') {
 						util.message(msg, '', 'warning');
 						return false;
 					}
-					$scope.data = angular.toJson($scope.field);
-					$scope.$apply();
+					$.post('{{__URL__}}', {data:angular.toJson($scope.field)}, function (json) {
+						if (json.valid == 1) {
+							util.message(json.message, "{{u('prepared')}}", 'success');
+						} else {
+							util.message(json.message, '', 'warning');
+						}
+					}, 'json');
+					return false;
 				})
 			}])
 

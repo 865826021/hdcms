@@ -125,7 +125,7 @@
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
 							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
-								<a href="javascript:;" onclick="delSite({{$s['siteid']}})"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
+								<a href="javascript:;" onclick="delSite({{$s['siteid']}},'{{$s['name']}}')"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>
 						</div>
@@ -181,9 +181,9 @@
 		})
 
 		//删除站点
-		function delSite(siteid) {
+		function delSite(siteid,name) {
 			require(['util'], function (util) {
-				util.confirm('删除站点将删除所有站点数据, 确定删除吗?', function () {
+				util.confirm('确定删除 ['+name+'] 站点吗? 将删除站点的所有数据!', function () {
 					$.get('?s=system/site/remove&siteid=' + siteid, function (res) {
 						if (res.valid) {
 							util.message(res.message, 'refresh', 'success');

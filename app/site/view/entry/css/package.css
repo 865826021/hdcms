@@ -1,6 +1,7 @@
 .apps .thumbnail {
   border-radius: 0px;
   padding: 0px;
+  background: #f3f3f3;
 }
 .apps .thumbnail .img {
   height: 150px;
@@ -8,6 +9,7 @@
 }
 .apps .thumbnail .img img {
   width: 100%;
+  height: 150px;
 }
 .apps .thumbnail .caption {
   padding: 0px;

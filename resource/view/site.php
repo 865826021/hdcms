@@ -171,6 +171,7 @@
 				</foreach>
 				<!--系统菜单 end-->
 				<!----------返回模块列表 start------------>
+
 				<if value="$LINKS['module']">
 					<div class="panel-heading hide module_back module_action" mark="package">
 						<h4 class="panel-title">系统功能</h4>
@@ -254,6 +255,18 @@
 								   module="{{$LINKS['module']['name']}}"
 								   mark="package">
 									<i class="fa fa-wordpress"></i> 域名设置
+								</a>
+							</li>
+						</if>
+						<if value="$LINKS['module']['domain']">
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="?s=site/middleware/post&m={{$LINKS['module']['name']}}"
+								   menuid="middleware"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
+									<i class="fa fa-twitch"></i>  中间件设置
 								</a>
 							</li>
 						</if>

@@ -32,6 +32,7 @@ CREATE TABLE `hd_modules` (
   `locality` tinyint(1) unsigned NOT NULL COMMENT '本地应用',
   `domain` tinyint(1) unsigned NOT NULL COMMENT '域名设置',
   `build` int(10) unsigned NOT NULL COMMENT '云模块编译时间',
+  `middleware` tinyint(1) unsigned NOT NULL COMMENT '中间件',
   PRIMARY KEY (`mid`),
   UNIQUE KEY `name` (`name`),
   KEY `is_system` (`is_system`)

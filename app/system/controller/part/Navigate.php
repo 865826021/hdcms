@@ -10,31 +10,23 @@
 class Navigate {
 	public static function make( $data ) {
 		$action = '';
-		if ( ! empty( $data['web']['entry'] ) && ! empty( $data['web']['entry']['title'] )
-		     && ! empty( $data['web']['entry']['do'] )
-		) {
+		if ( ! empty( $data['web']['entry'] ) ) {
 			$action .= self::entry( $data['web']['entry'] ) . "\n\n";
 		}
 
 		if ( ! empty( $data['web']['member'] ) ) {
 			foreach ( $data['web']['member'] as $d ) {
-				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
-					$action .= self::webMember( $d ) . "\n\n";
-				}
+				$action .= self::webMember( $d ) . "\n\n";
 			}
 		}
 		if ( ! empty( $data['mobile']['home'] ) ) {
 			foreach ( $data['mobile']['home'] as $d ) {
-				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
-					$action .= self::mobileHome( $d ) . "\n\n";
-				}
+				$action .= self::mobileHome( $d ) . "\n\n";
 			}
 		}
 		if ( ! empty( $data['mobile']['member'] ) ) {
 			foreach ( $data['mobile']['member'] as $d ) {
-				if ( ! empty( $d['title'] ) && ! empty( $d['do'] ) ) {
-					$action .= self::mobileMember( $d ) . "\n\n";
-				}
+				$action .= self::mobileMember( $d ) . "\n\n";
 			}
 		}
 		if ( ! empty( $action ) ) {

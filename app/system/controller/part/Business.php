@@ -11,17 +11,11 @@ class Business {
 	public static function make( $data ) {
 		if ( $data['business'] ) {
 			foreach ( $data['business'] as $b ) {
-				if ( ! empty( $b['controller'] ) ) {
-					$action = '';
-					foreach ( $b['action'] as $a ) {
-						if ( ! empty( $a['title'] ) && ! empty( $a['do'] ) ) {
-							$action .= self::action( $a );
-						}
-					}
-					if ( ! empty( $action ) ) {
-						self::controller( $data, $b, $action );
-					}
+				$action = '';
+				foreach ( $b['action'] as $a ) {
+					$action .= self::action( $a );
 				}
+				self::controller( $data, $b, $action );
 			}
 		}
 	}
