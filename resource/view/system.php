@@ -146,7 +146,7 @@
 		<a href="http://www.hdphp.com">开源框架</a>
 		<a href="http://bbs.houdunwang.com">后盾论坛</a>
 		<br/>
-		Powered by hdcms {{Db::table('cloud')->pluck('version')}} © 2014-2019 www.hdcms.com
+		Powered by hdcms <?php $cloud = Db::table('cloud')->first()?> {{$cloud['version']}} Build: {{date('Y-m-d H:i:s',$cloud['build'])}} © 2014-2019 www.hdcms.com
 	</div>
 	<div class="hdcms-upgrade">
 		<a href="{{u('system/cloud/upgrade')}}"><span class="label label-danger">亲:) 有新版本了,快更新吧</span></a>
