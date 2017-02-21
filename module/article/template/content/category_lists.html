@@ -13,7 +13,7 @@
                     <th>栏目名称</th>
                     <th>封面栏目</th>
                     <th>栏目状态</th>
-                    <th width="110">操作</th>
+                    <th width="180">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,6 +35,11 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="...">
+                                <?php
+                                $d['url']=Link::get($d['html_category'],$d);
+    $d['url']=str_replace('{page}',Request::get('page',1),$d['url']);
+    ?>
+                                <a href="{{$d['url']}}" target="_blank" class="copy btn btn-default btn-sm">预览</a>
                                 <a href="{{url('category.post',['cid'=>$d['cid']])}}"
                                    class="btn btn-default btn-sm">编辑</a>
                                 <button onclick="del({{$d['cid']}})" type="button" class="btn btn-default btn-sm">删除
