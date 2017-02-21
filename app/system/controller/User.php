@@ -126,6 +126,7 @@ class User {
 	 * @return mixed
 	 */
 	public function myPassword() {
+		auth();
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'password', 'required', '密码不能为空' ],

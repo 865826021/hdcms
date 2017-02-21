@@ -1,10 +1,10 @@
 <extend file="resource/view/site"/>
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
-        <li><a href="{{url('content.lists',['mid'=>$_GET['mid']])}}">文章管理</a></li>
+        <li><a href="{{url('content.lists',['mid'=>Request::get('mid')])}}">文章管理</a></li>
         <li class="active"><a href="javascript:;">发表文章</a></li>
     </ul>
-    <form action="" method="post" class="form-horizontal">
+    <form action="" method="post" class="form-horizontal" onsubmit="return false;">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">基本字段</h3>
@@ -28,11 +28,12 @@
                     <div class="col-sm-9">
                         <select class="form-control" name="cid">
                             <foreach from="$category" value="$v">
-                                <if value="$field['cid']==$v['cid']">
-                                    <option value="{{$v['cid']}}" selected="selected">{{$v['catname']}}</option>
+                                <if value="$v['mid']!=$_GET['mid']">
+                                    <elseif value="$field['cid']==$v['cid']">
+                                        <option value="{{$v['cid']}}" selected="selected">{{$v['catname']}}</option>
                                     <elseif value="$v['ishomepage']">
-                                        <option value="{{$v['cid']}}" disabled="disabled">{{$v['catname']}}(封)</option>
-                                        <else/>
+                                        <option value="{{$v['cid']}}">{{$v['catname']}}(封)</option>
+                                    <else/>
                                         <option value="{{$v['cid']}}">{{$v['_catname']}}</option>
                                 </if>
                             </foreach>
@@ -223,4 +224,16 @@
             });
         })
     }
+    require(['jquery','util'],function($,util){
+        $("form").submit(function(){
+            $.post('{{__URL__}}',$(this).serialize(),function(json){
+                if(json.valid==1){
+                    util.message(json.message,'refresh','success');
+                }else{
+                    util.message(json.message,'','warning');
+                }
+            },'json');
+            return false;
+        })
+    })
 </script>

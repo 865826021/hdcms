@@ -36,8 +36,12 @@ class Content extends HdController {
 	public function lists() {
 		$model = new WebContent();
 		$table = $model->getTableName();
-		$data  = $model->orderBy( 'aid', 'DESC' )->join('web_category',"{$table}.cid",'=','web_category.cid')->paginate( 10 );
-		View::with( 'data', $data );
+		$db    = $model->orderBy( 'aid', 'DESC' )->join( 'web_category', "{$table}.cid", '=', 'web_category.cid' );
+		if ( $cid = Request::get( 'cid' ) ) {
+			$db->where( 'web_category.cid', $cid );
+		}
+		View::with( 'data', $db->paginate( 10 ) );
+		View::with( 'category', WebCategory::getLevelCategory() );
 
 		return view( $this->template . '/content/content_lists.html' );
 	}

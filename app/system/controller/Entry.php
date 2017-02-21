@@ -46,6 +46,10 @@ class Entry {
 	 * @return mixed
 	 */
 	public function login() {
+		//必须使用路由访问
+		if ( empty( Route::getMatchRoute() ) ) {
+			go( __WEB__ . '/hdcms' );
+		}
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'username', 'required', '用户名不能为空', Validate::MUST_VALIDATE ],
@@ -77,8 +81,9 @@ class Entry {
 			go( 'system/site/lists' );
 		}
 		//清除站点缓存
-		Session::del( 'siteid');
-		return view('app/system/view/entry/login.php');
+		Session::del( 'siteid' );
+
+		return view( 'app/system/view/entry/login.php' );
 	}
 
 	//验证码
@@ -90,6 +95,6 @@ class Entry {
 	public function quit() {
 		Session::flush();
 		$url = __WEB__ . '/' . q( 'session.system.login', 'hdcms' );
-		go($url);
+		go( $url );
 	}
 }
