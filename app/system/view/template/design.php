@@ -178,9 +178,6 @@
 					if ($scope.field.resume == '') {
 						msg += '模板简述不能为空<br/>';
 					}
-					if ($scope.field.detail == '') {
-						msg += '模板介绍不能为空<br/>';
-					}
 					if ($scope.field.author == '') {
 						msg += '模板作者不能为空<br/>';
 					}
@@ -197,7 +194,14 @@
 						util.message(msg, '', 'warning');
 						return false;
 					}
-					$("[name='data']").val(angular.toJson($scope.field));
+					$.post('{{__URL__}}', {data:angular.toJson($scope.field)}, function (json) {
+						if (json.valid == 1) {
+							util.message(json.message, "{{u('prepared')}}", 'success');
+						} else {
+							util.message(json.message, '', 'warning');
+						}
+					}, 'json');
+					return false;
 				})
 			}])
 
