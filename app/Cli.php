@@ -24,7 +24,7 @@ class Cli extends Base {
 				\Dir::copyFile( $info[1], 'build/hdcms/' . $info[1] );
 			}
 		}
-		file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ));
+		file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ) );
 		chdir( 'build' );
 		Zip::PclZip( 'hdcms.zip' );
 		Zip::create( 'hdcms' );
@@ -42,6 +42,7 @@ class Cli extends Base {
 	protected function format() {
 		$news = $files = preg_split( '@\n@', file_get_contents( 'files.php' ) );
 		foreach ( $files as $k => $f ) {
+			//把替换的文件更改成删除与添加
 			if ( empty( $f ) ) {
 				unset( $news[ $k ] );
 			} elseif ( $f[0] == 'R' ) {
@@ -52,14 +53,20 @@ class Cli extends Base {
 			}
 		}
 
-		//移除不需要生成到压缩包中的文件
-		$data=[];
-		foreach($news as $f){
+		/**
+		 * 移除不需要生成到压缩包中的文件
+		 * 插件目录文件也要移除
+		 */
+		$data = [ ];
+		foreach ( $news as $f ) {
 			$info = preg_split( '@\s+@', trim( $f ) );
-			if(!in_array($info[1],$this->filterFiles)){
-				$data[]="{$info[0]}\t{$info[1]}";
+			if ( ! in_array( $info[1], $this->filterFiles ) &&
+			     substr( $info[1], 0, 5 ) != 'addons'
+			) {
+				$data[] = "{$info[0]}\t{$info[1]}";
 			}
 		}
+
 		return $data;
 	}
 }
