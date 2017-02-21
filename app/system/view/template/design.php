@@ -29,7 +29,7 @@
 
 				<div class="col-sm-10 col-xs-12">
 					<input type="text" class="form-control" ng-model="field.name">
-					<span class="help-block">模板标识符, 对应模板文件夹的名称, 系统按照此标识符查找模板定义, 只能由字母数字下划线组成 </span>
+					<span class="help-block">模板标识符, 对应模板文件夹的名称, 系统按照此标识符查找模板定义, 只能由英文字母组成 </span>
 				</div>
 			</div>
 			<div class="form-group">
