@@ -60,7 +60,7 @@ class Tag {
 			}else{
 				\$field['url']=\$field['linkurl'];
 			}
-			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8');
+			\$field['title'] = mb_substr(\$field['title'],0,$titlelen,'utf8'); 
 			\$field['thumb'] =__ROOT__.'/'.(\$field['thumb']?:'resource/images/thumb.jpg');
 			\$field['current_article'] =\Request::get('aid')==\$field['aid']?'current_article':'';
 		?>

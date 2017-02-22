@@ -4,12 +4,22 @@
 	<meta charset="utf-8"/>
 	<title>HDCMS</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<link href="resource/css/hdcms.css" rel="stylesheet">
-	<!--[if lt IE 9]>
-	<script src="http://cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
-	<script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
+	<script>
+		hdjs = {
+			'base': 'node_modules/hdjs',
+			'uploader': '{{u("system/component/uploader")}}',
+			'filesLists': '{{u("system/component/filesLists")}}',
+			'removeImage': '{{u("system/component/removeImage")}}',
+		};
+	</script>
+	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
+	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
+	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
 	<![endif]-->
 	<script>
 		if (navigator.appName == 'Microsoft Internet Explorer') {
@@ -25,17 +35,9 @@
 </div>
 <br/>
 <div class="container well" style="width:700px;">
-	<if value="$errors">
-		<div class="alert alert-warning">
-			<foreach from="$errors" value="$v">
-				<p>{{$v}}</p>
-			</foreach>
-		</div>
-	</if>
 	<div class="row ">
 		<div class="col-md-12">
 			<form method="post" action="">
-				{{csrf_field()}}
 				<div class="form-group">
 					<label class="star">用户名</label>
 					<input type="text" name="username" class="form-control" placeholder="请输入用户名">
@@ -51,10 +53,6 @@
 				<div class="form-group">
 					<label class="star">邮箱</label>
 					<input type="text" name="email" class="form-control" placeholder="请输入邮箱">
-				</div>
-				<div class="form-group">
-					<label class="star">QQ号</label>
-					<input type="text" name="qq" class="form-control" placeholder="请输入QQ号码">
 				</div>
 				<div class="form-group">
 					<label class="star">手机号</label>
@@ -78,6 +76,10 @@
 		Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
 	</div>
 </div>
-<br/><br/><br/><br/>
+<script>
+	require(['util'],function(util){
+		util.submit({'successUrl':"{{u('login')}}"});
+	})
+</script>
 </body>
 </html>

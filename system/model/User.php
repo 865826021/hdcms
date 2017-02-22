@@ -12,11 +12,11 @@ class User extends Common {
 	protected $denyInsertFields = [ 'uid' ];
 	protected $validate = [
 		[ 'username', 'required', '用户名不能为空', self::MUST_VALIDATE, self::MODEL_INSERT ],
-		[ 'username', 'minlen:3', '用户名能少于3位', self::MUST_VALIDATE, self::MODEL_INSERT ],
+		[ 'username', 'minlen:3', '用户名不能少于三位', self::MUST_VALIDATE, self::MODEL_INSERT ],
 		[
 			'username',
 			'regexp:/^[a-z][\w@]+$/i',
-			'用户名必须是字母,数字,下划线或 @ 符号,并且必须以字母开始',
+			'用户名必须是字母与数字组成',
 			self::EXIST_VALIDATE,
 			self::MODEL_BOTH
 		],

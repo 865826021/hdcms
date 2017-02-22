@@ -22,7 +22,7 @@ class Tag{
 		$php   = <<<str
 <?php
 	\$info  = preg_split( '/\s+/', trim( '$order' ) );
-	\$_db    = Db::table( 'hd_links_lists' )->limit( $row )->orderBy('orderby','desc')->orderBy( \$info[0], \$info[1] )->get();
+	\$_db    = Db::table( 'links_lists' )->limit( $row )->orderBy('orderby','desc')->orderBy( \$info[0], \$info[1] )->get();
 	foreach(\$_db as \$field){
 ?>
 str;

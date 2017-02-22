@@ -197,10 +197,10 @@
                         util.message(msg, '', 'error');
                         return false;
                     }
+                    this.data = {data: angular.toJson($scope.field)}
                     return true;
                 },
-                data: {data: angular.toJson($scope.field)},
-                successUrl: 'back'
+                successUrl: 'refresh'
             })
             //加载模板
             $scope.loadTpl = function () {

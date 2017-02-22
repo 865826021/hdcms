@@ -14,8 +14,13 @@ class Entry {
 		if ( IS_POST ) {
 			Validate::make( [
 				[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ],
+				[ 'username', 'required', '用户名不能为空', Validate::MUST_VALIDATE ],
+				[ 'password', 'required', '密码不能为空', Validate::MUST_VALIDATE ],
+				[ 'email', 'required', '邮箱不能为空', Validate::MUST_VALIDATE ],
+				[ 'mobile', 'required', '手机号码不能为空', Validate::MUST_VALIDATE ],
 				[ 'password', 'confirm:password2', '两次密码输入不一致', Validate::MUST_VALIDATE ]
 			] );
+
 			//默认用户组
 			$User             = new User();
 			$User['username'] = Request::post( 'username' );
