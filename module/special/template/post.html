@@ -57,7 +57,7 @@
 </block>
 
 <script>
-    require(['bootstrap', 'util'], function (bootstrap, util) {
+    require(['bootstrap', 'util','hdcms'], function (bootstrap, util,hdcms) {
         $('#welcome,#default').on('show.bs.dropdown', function (e) {
             var btn = e.relatedTarget;
             var ipt = $(btn).parents('div').eq(0).find('input');
@@ -79,7 +79,8 @@
                 ul.html(html);
             });
         });
-
+        //发送表单
+        util.submit({successUrl:'refresh'});
         //添加表情
         $('.emotionLink').each(function (i) {
             var input = $(this).parent().prev().find('input');

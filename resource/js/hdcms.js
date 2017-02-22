@@ -174,20 +174,6 @@
                     callback(res);
                 }
             }, 'json');
-        },
-        /**
-         * 预览图片
-         * @param url 图片URL地址
-         */
-        preview: function (url) {
-            require(['util'], function (util) {
-                util.modal({
-                    title: '图片预览',
-                    width: 700,
-                    height: 500,
-                    content: '<div style="text-align: center"><img style="max-width: 650px;max-height: 500px;" src="' + url + '"/></div>'
-                })
-            })
         }
     }
     if (typeof define === "function" && define.amd) {
