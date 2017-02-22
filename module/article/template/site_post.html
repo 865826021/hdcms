@@ -1,47 +1,48 @@
 <extend file="resource/view/site"/>
 <block name="content">
-	<ul class="nav nav-tabs" role="tablist">
-		<li class="active"><a href="javascript:;">站点设置</a></li>
-	</ul>
-	<div class="alert alert-info">
-		站点链接:<br/>
-		<i class="fa fa-adn"></i> {{__ROOT__}}?m=article&action=controller/entry/index&siteid={{SITEID}}<br/>
-		<i class="fa fa-adn"></i> 如果在<a href="?s=system/site/edit&siteid={{SITEID}}" target="_blank"><strong>站点设置</strong></a> 中定义了域名,可以直接使用域名进行访问。<br/>
-	</div>
-	<form action="" method="post" id="form" role="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
-		{{csrf_field()}}
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">站点信息</h3>
-			</div>
-			<div class="panel-body">
-				<if value="q('get.webid')">
-					<div class="form-group">
-						<label class="col-sm-2 control-label">站点链接</label>
-						<div class="col-sm-10">
-							<p class="form-control-static">
-								{{__ROOT__}}/?m=article&action=entry/home&siteid={{$_GET['webid']}}
-							</p>
-						</div>
-					</div>
-				</if>
-				<div class="form-group">
-					<label class="col-sm-2 control-label star">站点名称</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="field.title" required="required">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">网站开启</label>
-					<div class="col-sm-9">
-						<label class="radio-inline">
-							<input type="radio" value="1" ng-model="field.status"> 是
-						</label>
-						<label class="radio-inline">
-							<input type="radio" value="0" ng-model="field.status"> 否
-						</label>
-					</div>
-				</div>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="javascript:;">站点设置</a></li>
+    </ul>
+    <div class="alert alert-info">
+        站点链接:<br/>
+        <i class="fa fa-adn"></i> {{__ROOT__}}?m=article&action=controller/entry/index&siteid={{SITEID}}<br/>
+        <i class="fa fa-adn"></i> 如果在<a href="?s=system/site/edit&siteid={{SITEID}}"
+                                        target="_blank"><strong>站点设置</strong></a> 中定义了域名,可以直接使用域名进行访问。<br/>
+    </div>
+    <form action="" method="post" id="form" role="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
+        {{csrf_field()}}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">站点信息</h3>
+            </div>
+            <div class="panel-body">
+                <if value="q('get.webid')">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">站点链接</label>
+                        <div class="col-sm-10">
+                            <p class="form-control-static">
+                                {{__ROOT__}}/?m=article&action=entry/home&siteid={{$_GET['webid']}}
+                            </p>
+                        </div>
+                    </div>
+                </if>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label star">站点名称</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" ng-model="field.title" required="required">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">网站开启</label>
+                    <div class="col-sm-9">
+                        <label class="radio-inline">
+                            <input type="radio" value="1" ng-model="field.status"> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" value="0" ng-model="field.status"> 否
+                        </label>
+                    </div>
+                </div>
                 <div class="form-group" ng-show="field.status==0">
                     <label class="col-sm-2 control-label star">关闭信息</label>
                     <div class="col-sm-9">
@@ -50,160 +51,168 @@
                     </div>
                 </div>
                 <div ng-show="field.status==1">
-				<div class="form-group">
-					<label class="col-sm-2 control-label star">站点风格</label>
-					<div class="col-sm-9">
-						<button class="btn btn-success" type="button" ng-click="loadTpl(this)">选择风格</button>
-						<span class="help-block">模板分手机端与桌面端, 如果模板风格没有手机端页面将使用系统模板风格(default),桌面端也是一样的。</span>
-					</div>
-				</div>
-				<div class="form-group template" ng-show="field.template_tid">
-					<label class="col-sm-2 control-label star">当前风格</label>
-					<div class="col-sm-9 box" ng-if="field.template_tid">
-						<div class="thumbnail">
-							<h5 ng-bind="field.template_title"></h5>
-							<img ng-src="theme/@{{field.template_name}}/@{{field.template_thumb}}">
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label star">触发关键字</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" required="required" ng-blur="checkWxKeyword($event)" ng-model="field.keyword"
-						       placeholder="请输入微信关键词">
-						<span class="text-danger keyword_error"></span>
-						<span class="help-block">用户触发关键字，微信客户端发来这个关键词后系统回复此页面的图文链接</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label star">封面</label>
-					<div class="col-sm-9">
-						<div class="input-group">
-							<input type="text" class="form-control" readonly="" ng-model="field.thumb">
-							<div class="input-group-btn">
-								<button ng-click="upImage()" class="btn btn-default" type="button">选择图片</button>
-							</div>
-						</div>
-						<div class="input-group" style="margin-top:5px;">
-							<img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150" ng-hide="field.thumb">
-							<img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail" width="150" ng-show="field.thumb">
-						</div>
-						<span class="help-block">用户通过微信客户端触发关键字后，系统回复时的图文消息的封面图片</span>
-					</div>
-				</div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label star">站点风格</label>
+                        <div class="col-sm-9">
+                            <button class="btn btn-success" type="button" ng-click="loadTpl(this)">选择风格</button>
+                            <span class="help-block">模板分手机端与桌面端, 如果模板风格没有手机端页面将使用系统模板风格(default),桌面端也是一样的。</span>
+                        </div>
+                    </div>
+                    <div class="form-group template" ng-show="field.template_tid">
+                        <label class="col-sm-2 control-label star">当前风格</label>
+                        <div class="col-sm-9 box" ng-if="field.template_tid">
+                            <div class="thumbnail">
+                                <h5 ng-bind="field.template_title"></h5>
+                                <img ng-src="theme/@{{field.template_name}}/@{{field.template_thumb}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label star">触发关键字</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" required="required" ng-blur="checkWxKeyword($event)"
+                                   ng-model="field.keyword"
+                                   placeholder="请输入微信关键词">
+                            <span class="text-danger keyword_error"></span>
+                            <span class="help-block">用户触发关键字，微信客户端发来这个关键词后系统回复此页面的图文链接</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label star">封面</label>
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" readonly="" ng-model="field.thumb">
+                                <div class="input-group-btn">
+                                    <button ng-click="upImage()" class="btn btn-default" type="button">选择图片</button>
+                                </div>
+                            </div>
+                            <div class="input-group" style="margin-top:5px;">
+                                <img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150"
+                                     ng-hide="field.thumb">
+                                <img ng-src="@{{field.thumb}}" class="img-responsive img-thumbnail" width="150"
+                                     ng-show="field.thumb">
+                            </div>
+                            <span class="help-block">用户通过微信客户端触发关键字后，系统回复时的图文消息的封面图片</span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label star">页面关键字</label>
                         <div class="col-sm-9">
-                            <textarea class="form-control" rows="3" ng-model="field.keywords" required="required"></textarea>
+                            <textarea class="form-control" rows="3" ng-model="field.keywords"
+                                      required="required"></textarea>
                             <span class="help-block">用于SEO的关键词内容</span>
                         </div>
                     </div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label star">页面描述</label>
-					<div class="col-sm-9">
-						<textarea class="form-control" rows="3" ng-model="field.description" required="required"></textarea>
-						<span class="help-block">用户通过微信分享给朋友时,会自动显示页面描述, 同时也用于页面中SEO的描述内容</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">底部自定义</label>
-					<div class="col-sm-9">
-						<textarea class="form-control" rows="3" ng-model="field.footer"></textarea>
-						<span class="help-block">自定义底部信息，支持HTML</span>
-					</div>
-				</div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label star">页面描述</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" rows="3" ng-model="field.description"
+                                      required="required"></textarea>
+                            <span class="help-block">用户通过微信分享给朋友时,会自动显示页面描述, 同时也用于页面中SEO的描述内容</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">底部自定义</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" rows="3" ng-model="field.footer"></textarea>
+                            <span class="help-block">自定义底部信息，支持HTML</span>
+                        </div>
+                    </div>
                 </div>
-			</div>
-		</div>
-		<input type="hidden" name="data">
-		<button class="btn btn-primary">确定</button>
-	</form>
+            </div>
+        </div>
+        <input type="hidden" name="data">
+        <button class="btn btn-primary">确定</button>
+    </form>
 </block>
 <style>
-	.template .thumbnail {
-		height   : 270px;
-		width    : 180px;
-		overflow : hidden;
-		float    : left;
-		margin   : 3px 7px;
-	}
+    .template .thumbnail {
+        height: 270px;
+        width: 180px;
+        overflow: hidden;
+        float: left;
+        margin: 3px 7px;
+    }
 
-	.template .thumbnail .caption {
-		padding : 0px;
-	}
+    .template .thumbnail .caption {
+        padding: 0px;
+    }
 
-	.template .thumbnail h5 {
-		font-size   : 14px;
-		overflow    : hidden;
-		height      : 25px;
-		margin      : 3px 0px;
-		line-height : 2em;
-	}
+    .template .thumbnail h5 {
+        font-size: 14px;
+        overflow: hidden;
+        height: 25px;
+        margin: 3px 0px;
+        line-height: 2em;
+    }
 
-	.template .thumbnail > img {
-		height        : 225px;
-		max-width     : 168px;
-		border-radius : 3px;
-	}
+    .template .thumbnail > img {
+        height: 225px;
+        max-width: 168px;
+        border-radius: 3px;
+    }
 
-	.template .thumbnail .caption {
-		margin-top : 8px;
-	}
+    .template .thumbnail .caption {
+        margin-top: 8px;
+    }
 </style>
 <script>
-	require(['angular', 'util'], function (angular, util) {
-		angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
-			$scope.field = {{$field ? $field : '{rid: 0, status: 1, is_default: 0,close_message:"网站暂时关闭,请稍候访问"}'}};
-			//上传封面图片
-			$scope.upImage = function (obj) {
-				require(['util'], function (util) {
-					util.image(function (images) {
-						$scope.field.thumb = images[0];
-						$scope.$apply();
-					})
-				});
-			};
-			//验证关键词
-			$scope.checkWxKeyword = function (elem) {
-				var obj = $(elem.currentTarget);
-				hdcms.checkWxKeyword(obj.val(), $scope.field.rid, function (res) {
-					if (res.valid == 0) {
-						obj.next().html(res.message);
-					}else{
-						obj.next().html('');
-					}
-				});
-			}
-			//提交表单
-			$("form").submit(function () {
-				$("[name='data']").val(angular.toJson($scope.field));
-				var msg = '';
-				if (!$scope.field.thumb) {
-					msg += "请选择封面图片<br/>";
-				}
-				if ($(".keyword_error").text()) {
-					msg += "关键词已经存在<br/>";
-				}
-				if (!$scope.field.template_tid) {
-					msg += "请选择站点风格<br/>";
-				}
-				if (msg) {
-					util.message(msg, '', 'error');
-					return false;
-				}
-			});
-			//加载模板
-			$scope.loadTpl = function () {
-				hdcms.siteTemplateBrowser(function(data){
-					console.log(data);
-					$scope.field.template_tid = data.tid;
-					$scope.field.template_title = data.title;
-					$scope.field.template_name = data.name;
-					$scope.field.template_thumb = data.thumb;
-					$scope.$apply();
-				})
-			}
-		}]);
-		angular.bootstrap(document.getElementById('form'), ['app']);
-	})
+    require(['angular', 'util'], function (angular, util) {
+        angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
+            $scope.field = {{$field ? $field : '{rid: 0, status: 1, is_default: 0,close_message:"网站暂时关闭,请稍候访问"}'}};
+            //上传封面图片
+            $scope.upImage = function (obj) {
+                require(['util'], function (util) {
+                    util.image(function (images) {
+                        $scope.field.thumb = images[0];
+                        $scope.$apply();
+                    })
+                });
+            };
+            //验证关键词
+            $scope.checkWxKeyword = function (elem) {
+                var obj = $(elem.currentTarget);
+                hdcms.checkWxKeyword(obj.val(), $scope.field.rid, function (res) {
+                    if (res.valid == 0) {
+                        obj.next().html(res.message);
+                    } else {
+                        obj.next().html('');
+                    }
+                });
+            }
+            //提交表单
+            util.submit({
+                before: function () {
+                    var msg = '';
+                    if (!$scope.field.thumb) {
+                        msg += "请选择封面图片<br/>";
+                    }
+                    if ($(".keyword_error").text()) {
+                        msg += "关键词已经存在<br/>";
+                    }
+                    if (!$scope.field.template_tid) {
+                        msg += "请选择站点风格<br/>";
+                    }
+                    if (msg) {
+                        util.message(msg, '', 'error');
+                        return false;
+                    }
+                    return true;
+                },
+                data: {data: angular.toJson($scope.field)},
+                successUrl: 'back'
+            })
+            //加载模板
+            $scope.loadTpl = function () {
+                hdcms.siteTemplateBrowser(function (data) {
+                    $scope.field.template_tid = data.tid;
+                    $scope.field.template_title = data.title;
+                    $scope.field.template_name = data.name;
+                    $scope.field.template_thumb = data.thumb;
+                    $scope.$apply();
+                })
+            }
+        }]);
+        angular.bootstrap(document.getElementById('form'), ['app']);
+    })
 </script>
