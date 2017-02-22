@@ -136,7 +136,7 @@ class Module {
 			Validate::make( [
 				[ 'title', 'required', '模块名称不能为空' ],
 				[ 'industry', 'required', '请选择行业类型' ],
-				[ 'name', 'regexp:/^[a-z]\w+$/i', '模块标识必须以英文字母开始, 后跟英文,字母,数字或下划线' ],
+				[ 'name', 'regexp:/^[a-z]+$/', '模块标识必须以英文小写字母构成' ],
 				[ 'version', 'regexp:/^[\d\.]+$/i', '请设置版本号, 版本号只能为数字或小数点' ],
 				[ 'resume', 'required', '模块简述不能为空' ],
 				[ 'detail', 'required', '请输入详细介绍' ],
@@ -146,12 +146,17 @@ class Module {
 				[ 'thumb', 'required', '模块缩略图不能为空' ],
 				[ 'cover', 'required', '模块封面图不能为空' ],
 			], $data );
+
 			//模块标识转小写
 			$data['name'] = strtolower( $data['name'] );
 			$dir          = "addons/" . $data['name'];
 			//检查插件是否存在
 			if ( is_dir( "module/{$data['name']}" ) || is_dir( $dir ) ) {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
+			}
+			//系统关键字不允许定义为模块标识
+			if ( in_array( $data['name'], [ 'hdphp', 'hd', 'hdcms', 'xj' ] ) ) {
+				message( '模块已经存在,请更改模块标识', '', 'error' );
 			}
 			//创建目录创建安全文件
 			foreach ( [ 'controller', 'template', 'service/template', 'model', 'system', 'system/template' ] as $d ) {

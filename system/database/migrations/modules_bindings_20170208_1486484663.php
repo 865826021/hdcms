@@ -18,6 +18,7 @@ CREATE TABLE `hd_modules_bindings` (
   `url` varchar(100) NOT NULL DEFAULT '' COMMENT '自定义菜单的url',
   `icon` varchar(80) NOT NULL DEFAULT '' COMMENT '自定义菜单的图标图标',
   `orderby` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
+  `params` varchar(30) NOT NULL DEFAULT '' COMMENT '参数',
   PRIMARY KEY (`bid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块动作';
 sql;

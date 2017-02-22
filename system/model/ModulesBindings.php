@@ -28,6 +28,7 @@ class ModulesBindings extends Model {
 		[ 'controller', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'url', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'icon', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'params', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'orderby', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 

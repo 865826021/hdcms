@@ -312,19 +312,24 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">功能封面</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-
+						<div class="col-xs-12 col-sm-12 col-md-3">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">参数</span>
+								<input class="form-control" ng-model="v.params" type="text" placeholder="请输入链接参数">
+							</div>
+						</div>
 						<div class="col-xs-12 col-sm-12 col-md-1">
 							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
@@ -401,20 +406,25 @@
 				<div class="form-group" ng-repeat="d in v.action">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">动作方法</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="d.title" type="text"
 								       placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="d.do" type="text" placeholder="请输入动作操作名称">
 							</div>
 						</div>
-
+						<div class="col-xs-12 col-sm-12 col-md-3">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">参数</span>
+								<input class="form-control" ng-model="d.params" type="text" placeholder="请输入链接参数">
+							</div>
+						</div>
 						<div class="col-xs-12 col-sm-12 col-md-1">
 							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
@@ -481,17 +491,23 @@
 			<div class="form-group">
 				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">桌面入口</label>
 				<div class="col-sm-10">
-					<div class="col-xs-12 col-sm-12 col-md-6">
+					<div class="col-xs-12 col-sm-12 col-md-4">
 						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 							<span class="input-group-addon">操作名称</span>
 							<input class="form-control" ng-model="field.web.entry.title" type="text"
 							       placeholder="请输入中文操作名称">
 						</div>
 					</div>
-					<div class="col-xs-12 col-sm-12 col-md-5">
+					<div class="col-xs-12 col-sm-12 col-md-4">
 						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 							<span class="input-group-addon">入口标识</span>
 							<input class="form-control" ng-model="field.web.entry.do" type="text" placeholder="请输入操作入口">
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-3">
+						<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+							<span class="input-group-addon">参数</span>
+							<input class="form-control" ng-model="field.web.entry.params" type="text" placeholder="请输入链接参数">
 						</div>
 					</div>
 					<span class="help-block" style="clear: both;">
@@ -507,19 +523,24 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">会员中心</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-
+						<div class="col-xs-12 col-sm-12 col-md-3">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">参数</span>
+								<input class="form-control" ng-model="v.params" type="text" placeholder="请输入链接参数">
+							</div>
+						</div>
 						<div class="col-xs-12 col-sm-12 col-md-1">
 							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
@@ -550,19 +571,24 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">首页导航</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.name" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-
+						<div class="col-xs-12 col-sm-12 col-md-3">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">参数</span>
+								<input class="form-control" ng-model="v.params" type="text" placeholder="请输入链接参数">
+							</div>
+						</div>
 						<div class="col-xs-12 col-sm-12 col-md-1">
 							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
@@ -592,19 +618,24 @@
 				<div class="form-group">
 					<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label">会员中心</label>
 					<div class="col-sm-10">
-						<div class="col-xs-12 col-sm-12 col-md-6">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">操作名称</span>
 								<input class="form-control" ng-model="v.title" type="text" placeholder="请输入中文操作名称">
 							</div>
 						</div>
-						<div class="col-xs-12 col-sm-12 col-md-5">
+						<div class="col-xs-12 col-sm-12 col-md-4">
 							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
 								<span class="input-group-addon">入口标识</span>
 								<input class="form-control" ng-model="v.do" type="text" placeholder="请输入操作入口">
 							</div>
 						</div>
-
+						<div class="col-xs-12 col-sm-12 col-md-3">
+							<div class="input-group" style="margin-left:-15px;margin-bottom:10px">
+								<span class="input-group-addon">参数</span>
+								<input class="form-control" ng-model="v.params" type="text" placeholder="请输入链接参数">
+							</div>
+						</div>
 						<div class="col-xs-12 col-sm-12 col-md-1">
 							<div style="margin-left:-45px;">
 								<label class="checkbox-inline" style="vertical-align:bottom">
@@ -722,11 +753,13 @@
 						"entry": {
 							"title": "",
 							"do": "",
+							"params":""
 						},
 						"member": [
 							{
 								"title": "",
 								"do": "",
+								"params":""
 							}
 						]
 					},
@@ -735,12 +768,14 @@
 							{
 								"title": "",
 								"do": "",
+								"params":""
 							}
 						],
 						"member": [
 							{
 								"title": "",
 								"do": "",
+								"params":""
 							}
 						]
 					},
@@ -778,6 +813,7 @@
 						{
 							"title": "",
 							"do": "",
+							"params": ""
 						}
 					],
 					"business": [
@@ -787,7 +823,8 @@
 							"action": [
 								{
 									"title": "",
-									"do": ""
+									"do": "",
+									"params": ""
 								}
 							]
 						}
@@ -900,7 +937,7 @@
 						util.message(msg, '', 'warning');
 						return false;
 					}
-					$.post('{{__URL__}}', {data:angular.toJson($scope.field)}, function (json) {
+					$.post('{{__URL__}}', {data: angular.toJson($scope.field)}, function (json) {
 						if (json.valid == 1) {
 							util.message(json.message, "{{u('prepared')}}", 'success');
 						} else {

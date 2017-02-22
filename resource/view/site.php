@@ -294,10 +294,11 @@
 							</li>
 						</if>
 						<foreach from="$LINKS['module']['budings']['cover']" value="$f">
+							<?php $f['params'] = empty($f['params'])?'':"&{$f['params']}"?>
 							<li class="list-group-item">
 								<a href="javascript:;"
 								   onclick="hdMenus.system(this)"
-								   url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}"
+								   url="?s=site/cover/post&m={{$LINKS['module']['name']}}&bid={{$f['bid']}}{{$f['params']}}"
 								   menuid="cover{{$f['bid']}}"
 								   module="{{$LINKS['module']['name']}}"
 								   mark="package">
@@ -364,9 +365,10 @@
 						</div>
 						<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 							<foreach from="$f['do']" value="$d">
+								<?php $d['params'] = empty($d['params'])?'':"&{$d['params']}"?>
 								<li class="list-group-item">
 									<a href="javascript:;" onclick="hdMenus.system(this)"
-									   url="?m={{$LINKS['module']['name']}}&action=controller/{{$f['controller']}}/{{$d['do']}}"
+									   url="?m={{$LINKS['module']['name']}}&action=controller/{{$f['controller']}}/{{$d['do']}}{{$d['params']}}"
 									   menuid="business_{{$f['controller']}}_{{$d['do']}}"
 									   module="{{$LINKS['module']['name']}}"
 									   mark="package">

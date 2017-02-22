@@ -153,6 +153,6 @@ function controller_action() {
 	$module = Db::table( 'modules' )->where( 'name', $info[0] )->first();
 	$class  = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $info[0]
 	          . '\\controller\\' . ucfirst( $info[1] );
-	$res = call_user_func_array( [ new $class, $info[2] ], $args );
+	$res    = call_user_func_array( [ new $class, $info[2] ], $args );
 	die( $res );
 }

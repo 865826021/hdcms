@@ -1,0 +1,122 @@
+{
+    "title": "b",
+    "name": "b",
+    "version": "3",
+    "industry": "business",
+    "resume": "a",
+    "detail": "a",
+    "author": "a",
+    "url": "http:\/\/www.hdcms.com",
+    "setting": false,
+    "tag": false,
+    "crontab": false,
+    "router": false,
+    "domain": false,
+    "middleware": false,
+    "pay": false,
+    "rule": false,
+    "web": {
+        "entry": {
+            "title": "sdf",
+            "do": "dsf",
+            "params": "f=1"
+        },
+        "member": [
+            {
+                "title": "dsf",
+                "do": "fds",
+                "params": "c=3"
+            },
+            {
+                "title": "fdsfds",
+                "do": "fdsdsf",
+                "params": "a=1"
+            }
+        ]
+    },
+    "mobile": {
+        "home": [],
+        "member": [
+            {
+                "title": "fds",
+                "do": "fadfs",
+                "params": "f=2"
+            },
+            {
+                "title": "adfs",
+                "do": "sdf23",
+                "params": "dd=3"
+            }
+        ]
+    },
+    "subscribes": {
+        "text": false,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "processors": {
+        "text": false,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "cover": [
+        {
+            "title": "aa",
+            "do": "aa",
+            "params": "a=1"
+        },
+        {
+            "title": "dsf",
+            "do": "fds",
+            "params": "f=2"
+        }
+    ],
+    "business": [
+        {
+            "title": "sdf",
+            "controller": "dsf",
+            "action": [
+                {
+                    "title": "adsf",
+                    "do": "sdfsdf",
+                    "params": "b=2"
+                },
+                {
+                    "title": "sdfdsf",
+                    "do": "adf32",
+                    "directly": false,
+                    "params": "c=3"
+                }
+            ]
+        }
+    ],
+    "permissions": "",
+    "compatible_version": {
+        "version2": true
+    },
+    "thumb": "thumb.jpg",
+    "preview": "cover.png",
+    "install": "",
+    "uninstall": "",
+    "upgrade": ""
+}

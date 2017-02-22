@@ -37,9 +37,9 @@
 					<tr>
 						<th width="50">编号</th>
 						<th>图标</th>
-						<th>标题</th>
-						<th width="250">链接</th>
-						<th width="120">排序</th>
+						<th width="150">标题</th>
+						<th>链接</th>
+						<th width="80">排序</th>
 						<if value="Request::get('entry')=='home'">
 							<!--模块链接时不显示位置,位置在文章系统有效-->
 							<th width="90">位置</th>

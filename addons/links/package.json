@@ -1,0 +1,78 @@
+{
+    "title": "友情链接",
+    "name": "links",
+    "version": "1.0",
+    "industry": "business",
+    "resume": "友情链接",
+    "detail": "提供前台申请友情链接与后台友情链接动态管理",
+    "author": "后盾人团队",
+    "url": "http:\/\/www.hdcms.com",
+    "setting": false,
+    "tag": true,
+    "crontab": false,
+    "router": false,
+    "domain": false,
+    "middleware": false,
+    "pay": false,
+    "rule": false,
+    "web": {
+        "entry": [],
+        "member": []
+    },
+    "mobile": {
+        "home": [],
+        "member": []
+    },
+    "subscribes": {
+        "text": false,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "processors": {
+        "text": false,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "cover": [],
+    "business": [
+        {
+            "title": "链接管理",
+            "controller": "manage",
+            "action": [
+                {
+                    "title": "链接列表",
+                    "do": "lists"
+                }
+            ]
+        }
+    ],
+    "permissions": "",
+    "compatible_version": {
+        "version2": true
+    },
+    "thumb": "thumb.jpg",
+    "preview": "cover.jpg",
+    "install": "",
+    "uninstall": "",
+    "upgrade": ""
+}
