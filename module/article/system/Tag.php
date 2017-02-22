@@ -8,23 +8,35 @@
 class Tag {
 	//文章列表
 	public function lists( $attr, $content ) {
-		$row       = isset( $attr['row'] ) ? intval( $attr['row'] ) : 10;
-		$mid       = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
-		$cid       = isset( $attr['cid'] ) ? ( $attr['cid'][0] == '$' ? $attr['cid'] : "{$attr['cid']}" ) : "''";
-		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
-		$isthumb   = isset( $attr['isthumb'] ) ? 1 : 0;
-		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
-		$titlelen  = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
-		$order     = isset( $attr['order'] ) ? $attr['order'] : 'DESC';
-		$php       = <<<str
+		$start        = isset( $attr['start'] ) ? intval( $attr['start'] ) : 0;
+		$row          = isset( $attr['row'] ) ? intval( $attr['row'] ) : 20;
+		$mid          = isset( $attr['mid'] ) ? intval( $attr['mid'] ) : 0;
+		$cid          = isset( $attr['cid'] ) ? ( $attr['cid'][0] == '$' ? $attr['cid'] : "{$attr['cid']}" ) : "''";
+		$sub_category = isset( $attr['sub_category'] ) ? 1 : 0;
+		$iscommend    = isset( $attr['iscommend'] ) ? 1 : 0;
+		$isthumb      = isset( $attr['isthumb'] ) ? 1 : 0;
+		$ishot        = isset( $attr['ishot'] ) ? 1 : 0;
+		$titlelen     = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
+		$order        = isset( $attr['order'] ) ? $attr['order'] : 'DESC';
+		$php          = <<<str
 		<?php
-		\$model = new module\article\model\WebContent($mid);
-		\$db = \$model->where('siteid',SITEID)->limit($row);
 		//栏目检索
 		\$cid = array_filter(explode(',',$cid));
+		\$mid = $mid;
+		if(!\$mid && !empty(\$cid)){
+			\$mid = Db::table('web_category')->where('cid',\$cid[0])->pluck('mid');
+		}
+		\$model = new module\article\model\WebContent(\$mid);
+		\$db = \$model->where('siteid',SITEID)->limit($start,$row);
+		//包含子栏目
+		if(!empty(\$cid) && $sub_category){
+			\$_sub_category = array_keys(Arr::channelList(Db::table('web_category')->get(),\$cid));
+			\$cid = array_merge(\$cid,\$_sub_category);
+		}
 		if(!empty(\$cid)){
 			\$db->whereIn('cid',\$cid);
 		}
+		
 		//推荐文章
 		if($iscommend){
 			\$db->where('iscommend',1);
@@ -95,7 +107,8 @@ str;
 	//幻灯图数据列表
 	public function slide_lists( $attr, $content ) {
 		$php = <<<str
-<?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)->orderBy('displayorder','DESC')->get()?:[];
+<?php \$slideData = Db::table('web_slide')->where('siteid',SITEID)
+		->orderBy('displayorder','DESC')->orderBy('id','desc')->get()?:[];
 foreach(\$slideData as \$field){?>
 str;
 

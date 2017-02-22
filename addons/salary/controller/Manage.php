@@ -19,7 +19,6 @@ class Manage extends HdController {
 
 	//学生列表
 	public function lists() {
-
 		if ( IS_POST ) {
 			foreach ( (array) $_POST['orderby'] as $id => $order ) {
 				$model            = Student::find( $id );
@@ -27,7 +26,7 @@ class Manage extends HdController {
 				$model->save();
 			}
 		}
-		$user = Student::paginate( 10 );
+		$user = Student::paginate( 20 );
 		View::with( 'user', $user );
 
 		return view( $this->template . '/manage/lists.html' );
