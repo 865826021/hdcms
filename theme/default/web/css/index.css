@@ -198,6 +198,7 @@
 	height: 190px;
 	border: 1px solid #C3C3C3;
 	display: block;
+	overflow: hidden;
 }
 .main .product_list li .pic img{
 	width: 233px;

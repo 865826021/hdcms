@@ -17,9 +17,13 @@
 				<i class="fa fa-globe"></i>
 				<span>云帐号</span>
 			</a>
-			<a href="{{c('api.cloud')}}?a=site/store&m=store&t=web&siteid=1" class="tile img-rounded">
+			<a href="?s=system/shop/lists&type=module" class="tile img-rounded">
 				<i class="fa fa-shopping-bag"></i>
-				<span>云商城</span>
+				<span>模块商店</span>
+			</a>
+			<a href="?s=system/shop/lists&type=template" class="tile img-rounded">
+				<i class="fa fa-shopping-cart"></i>
+				<span>风格商店</span>
 			</a>
 		</div>
 	<?php endif ?>
