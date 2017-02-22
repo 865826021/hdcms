@@ -75,7 +75,7 @@ class Entry {
 						break;
 				}
 			}
-			message( '登录成功,系统准备跳转', $url );
+			go($url);
 		}
 		if ( Session::get( 'user.uid' ) ) {
 			go( 'system/site/lists' );
