@@ -18,15 +18,12 @@ use system\model\ReplyCover;
  * @package app\site\controller
  */
 class Cover {
-	public function __construct() {
-		auth();
-	}
-
 	/**
 	 * 扩展模块封面回复设置
 	 * @return mixed
 	 */
 	public function post() {
+		auth( 'system_cover' );
 		//获取模块封面回复动作信息
 		$module = Db::table( 'modules_bindings' )->where( 'bid', Request::get( 'bid' ) )->first();
 		//回复的url会记录到reply_cover数据表中用于判断当前回复是否已经设置了

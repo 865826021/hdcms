@@ -13,10 +13,12 @@ class Yewu extends HdController {
 
     //动作方法1 
     public function action1() {
+    	auth();
         echo '执行了控制器动作';
     }
     //动作方法2 
     public function action2() {
+	    auth();
         echo '执行了控制器动作';
     }
 

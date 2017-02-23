@@ -16,15 +16,12 @@ use system\model\Rule as Model;
  * @package app\site\controller
  */
 class Rule {
-	public function __construct() {
-		auth();
-	}
-
 	/**
 	 * 显示规则回复列表
 	 * @return mixed
 	 */
 	public function lists() {
+		auth( 'system_rule' );
 		$db = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'module', v( 'module.name' ) );
 		if ( $status = Request::get( 'status' ) ) {
 			$db->where( 'status', $status == 'close' ? 0 : 1 );
@@ -54,6 +51,7 @@ class Rule {
 	 * @return mixed
 	 */
 	public function post() {
+		auth( 'system_rule' );
 		//模块关于回复关键词的处理类
 		$class    = ( v( 'module.is_system' ) ? '\module\\' : 'addons\\' ) .
 		            v( 'module.name' ) . '\system\Rule';
@@ -91,6 +89,7 @@ class Rule {
 
 	//删除规则
 	public function remove() {
+		auth( 'system_rule' );
 		$rid = Request::get( 'rid' );
 		\Wx::removeRule( $rid );
 		//执行模块中的删除动作

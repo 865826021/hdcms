@@ -53,9 +53,14 @@ function record( $message ) {
 /**
  * 验证后台管理员帐号在当前站点的权限
  * 如果当前有模块动作时同时会验证帐号访问该模块的权限
+ *
+ * @param string $permission
+ * @param bool $show
+ *
+ * @return bool
  */
-function auth() {
-	\User::auth();
+function auth($permission = '', $show = true) {
+	\User::auth($permission,$show);
 }
 
 /**

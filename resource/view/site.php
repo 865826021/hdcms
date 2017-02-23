@@ -66,7 +66,7 @@
 						<li class="top_menu">
 							<a href="javascript:;"
 							   onclick="hdMenus.system(this)"
-							   url="{{$m['url']}}"
+							   url="{{$m['url']}}&menuid={{$m['id']}}"
 							   menuid="{{$m['id']}}"
 							   mark="{{$m['mark']}}">
 								<i class="'fa-w {{$m['icon']}}"></i> {{$m['title']}}
@@ -135,7 +135,6 @@
 					组合
 				</button>
 			</div>
-			<!--扩展模块动作 end-->
 			<div class="panel panel-default">
 				<!--系统菜单-->
 				<foreach from="$LINKS['menus']" value="$m">
@@ -152,7 +151,7 @@
 									<if value="$g['append_url']">
 										<a class="pull-right append_url"
 										   onclick="hdMenus.system(this)"
-										   url="{{$g['append_url']}}"
+										   url="{{$g['append_url']}}&menuid={{$g['id']}}"
 										   menuid="{{$g['id']}}"
 										   mark="{{$g['mark']}}">
 											<i class="fa fa-plus"></i>
@@ -160,7 +159,7 @@
 									</if>
 									<a href="javascript:;"
 									   onclick="hdMenus.system(this)"
-									   url="{{$g['url']}}"
+									   url="{{$g['url']}}&menuid={{$g['id']}}"
 									   menuid="{{$g['id']}}"
 									   mark="{{$g['mark']}}">{{$g['title']}}
 									</a>

@@ -14,12 +14,9 @@ namespace app\site\controller;
  * @package site\controller
  */
 class Config {
-	public function __construct() {
-		auth();
-	}
-
 	//模块配置
 	public function post() {
+		auth( 'system_setting' );
 		//后台分配菜单
 		$class = '\addons\\' . v( 'module.name' ) . '\system\Config';
 		if ( ! class_exists( $class ) || ! method_exists( $class, 'settingsDisplay' ) ) {

@@ -15,11 +15,8 @@ namespace app\site\controller;
  * @package app\site\controller
  */
 class Crontab {
-	public function __construct() {
-		auth();
-	}
-
 	public function lists() {
+		auth( 'system_crontab' );
 		return view();
 	}
 }

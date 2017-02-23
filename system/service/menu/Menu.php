@@ -78,7 +78,7 @@ class Menu {
 				//当前模块
 				'module'      => \Module::currentUseModule(),
 				//用户在站点可以使用的模块列表
-				'moduleLists' => \Module::getBySiteUser(),
+				'moduleLists' => \Module::getBySiteUser()
 			];
 		}
 

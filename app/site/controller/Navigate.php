@@ -9,16 +9,19 @@ use system\model\Page;
  * @package app\site\controller
  */
 class Navigate {
-	public function __construct() {
-		auth();
-	}
-
 	//菜单列表管理
 	public function lists() {
+		//对模块的会员中心菜单进行权限验证
+		$entry = Request::get( 'entry' );
+		if ( in_array( $entry, [ 'member', 'profile' ] ) ) {
+			auth( 'system_' . $entry );
+		} else {
+			auth();
+		}
 		if ( IS_POST ) {
 			$data = json_decode( Request::post( 'data' ), true );
 			foreach ( $data as $k => $nav ) {
-				$model        = empty( $nav['id'] ) ? new NavigateModel() : NavigateModel::find( $nav['id'] );
+				$model = empty( $nav['id'] ) ? new NavigateModel() : NavigateModel::find( $nav['id'] );
 				$model->save( $nav );
 			}
 			message( '保存导航数据成功', 'refresh', 'success' );
@@ -31,7 +34,7 @@ class Navigate {
 		 */
 		if ( Request::get( 'entry' ) == 'home' ) {
 			//当前站点模板数据
-			$template = \Template::getTemplateData( );
+			$template = \Template::getTemplateData();
 			if ( empty( $template ) ) {
 				message( '请先在站点设置中设置站点模板', '', 'error' );
 			}
@@ -54,7 +57,7 @@ class Navigate {
 		if ( v( 'module.name' ) != 'article' ) {
 			$moduleMenu = Db::table( 'modules_bindings' )->where( 'module', v( 'module.name' ) )->where( 'entry', Request::get( 'entry' ) )->get();
 			foreach ( $moduleMenu as $k => $v ) {
-				$params = empty($v['params'])?'':'&'.$v['params'];
+				$params                  = empty( $v['params'] ) ? '' : '&' . $v['params'];
 				$moduleMenu[ $k ]['url'] = "?m={$v['module']}&action=system/navigate/{$v['do']}{$params}&siteid=" . SITEID;
 				foreach ( $nav as $n ) {
 					//如果模块的菜单已经添加到数据库中的将这个菜单从列表中移除
@@ -104,13 +107,14 @@ class Navigate {
 	 * @return mixed
 	 */
 	public function post() {
+		auth();
 		if ( IS_POST ) {
 			$data                = json_decode( $_POST['data'], true );
 			$data['module']      = Request::get( 'm' );
 			$model               = empty( $data['id'] ) ? new NavigateModel() : NavigateModel::find( $data['id'] );
 			$data['css']['size'] = min( intval( $data['css']['size'] ), 100 );
 			$model->save( $data );
-			$url = u( 'lists', [ 'entry' => Request::get('entry'), 'm' => Request::get('m') ] );
+			$url = u( 'lists', [ 'entry' => Request::get( 'entry' ), 'm' => Request::get( 'm' ) ] );
 			message( '保存导航数据成功', $url, 'success' );
 		}
 		$id = Request::get( 'id' );
@@ -136,7 +140,7 @@ class Navigate {
 		 */
 		if ( Request::get( 'entry' ) == 'home' ) {
 			//当前站点模板数据
-			$template = \Template::getTemplateData( );
+			$template = \Template::getTemplateData();
 			if ( empty( $template ) ) {
 				message( '请先在站点设置中设置站点模板', '', 'error' );
 			}
@@ -144,6 +148,7 @@ class Navigate {
 			View::with( 'template_position_data', \Template::getPositionData( $template['tid'] ) );
 		}
 		View::with( 'field', Arr::stringToInt( $field ) );
+
 		return view();
 	}
 
@@ -155,6 +160,7 @@ class Navigate {
 
 	//移动端页面快捷导航
 	public function quickmenu() {
+		auth();
 		if ( IS_POST ) {
 			$data  = json_decode( $_POST['data'], true );
 			$model = empty( $data['id'] ) ? new Page() : Page::find( $data['id'] );

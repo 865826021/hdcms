@@ -15,11 +15,8 @@ namespace app\site\controller;
  * @package app\site\controller
  */
 class Middleware {
-	public function __construct() {
-		auth();
-	}
-
 	public function post() {
+		auth( 'system_middleware' );
 		return view();
 	}
 }

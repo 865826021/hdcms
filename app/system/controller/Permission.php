@@ -120,9 +120,9 @@ class Permission {
 		 */
 		$menus = Db::table( 'menu' )->get();
 		foreach ( $menus as $k => $v ) {
-			$menus[ $k ]['checked'] = '';
+			$menus[ $k ]['checked'] = 0;
 			if ( isset( $old['system'] ) && in_array( $v['permission'], $old['system'] ) ) {
-				$menus[ $k ]['checked'] = " checked='checked'";
+				$menus[ $k ]['checked'] = 1;
 			}
 		}
 		$menusAccess = \Arr::channelLevel( $menus ?: [ ], 0, '', 'id', 'pid' );
@@ -137,45 +137,43 @@ class Permission {
 			if ( $m['is_system'] == 0 ) {
 				//对扩展模块进行处理
 				if ( $m['setting'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_setting', '参数设置', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_setting', '参数设置', $old );
 				}
 				if ( $m['crontab'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_crontab', '定时任务', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_crontab', '定时任务', $old );
 				}
 				if ( $m['router'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_router', '路由规则', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_router', '路由规则', $old );
 				}
 				if ( $m['domain'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_domain', '域名设置', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_domain', '域名设置', $old );
 				}
 				if ( $m['middleware'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_middleware', '中间件设置', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_middleware', '中间件设置', $old );
 				}
 				if ( $m['rule'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_rule', '回复规则列表', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_rule', '回复规则列表', $old );
 				}
 				if ( $m['rule'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_cover', '封面回复', $old );
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_cover', '封面回复', $old );
 				}
-				if ( $m['web']['member'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_web_member', '桌面个人中心导航', $old );
+				if ( $m['budings']['member'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_member', '桌面会员中心导航', $old );
 				}
-				if ( $m['web']['member'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_mobile_member', '移动端个人中心导航', $old );
+				if ( $m['budings']['profile'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m, 'system_profile', '移动会员中心导航', $old );
 				}
 				if ( $m['budings']['business'] ) {
 					//控制器业务功能
 					foreach ( $m['budings']['business'] as $c ) {
-						$this->formatModuleAccessData( $moduleAccess, $m['name'], '', $c['title'], $old );
 						foreach ( $c['do'] as $d ) {
-							$permission = 'business_' . $c['controller'] . '_' . $d['do'];
-							$this->formatModuleAccessData( $moduleAccess, $m['name'], $permission, $d['title'], $old );
+							$permission = 'controller/' . $c['controller'] . '/' . $d['do'];
+							$this->formatModuleAccessData( $moduleAccess, $m, $permission, $d['title'], $old );
 						}
 					}
 				}
 			}
 		}
-
 		//模块权限
 		return view()->with( [
 			'menusAccess'  => $menusAccess,
@@ -187,22 +185,22 @@ class Permission {
 	 * 获取权限菜单使用的标准模块数组
 	 *
 	 * @param array $access 模块标识
-	 * @param string $name 模块标识
+	 * @param array $module 模块数据
 	 * @param string $permission 标识标识
 	 * @param string $title 菜单标题
 	 * @param array $old 旧的权限数据
 	 *
 	 * @return mixed
 	 */
-	protected function formatModuleAccessData( &$access, $name, $permission, $title, $old ) {
-		$data['name']       = "modules[{$name}][]";
+	protected function formatModuleAccessData( &$access, $module, $permission, $title, $old ) {
+		$data['name']       = "modules[{$module['name']}][]";
 		$data['title']      = $title;
 		$data['permission'] = $permission;
-		$data['checked']    = '';
-		if ( isset( $old[ $name ] ) && in_array( $permission, $old[ $name ] ) ) {
-			$data['checked'] = "checked='checked'";
+		$data['checked']    = 0;
+		if ( isset( $old[ $module['name'] ] ) && in_array( $permission, $old[ $module['name'] ] ) ) {
+			$data['checked'] = 1;
 		}
-		$access[ $name ][] = $data;
+		$access[ $module['title'] ][] = $data;
 
 		return $access;
 	}

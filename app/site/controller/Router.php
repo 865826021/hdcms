@@ -15,11 +15,8 @@ namespace app\site\controller;
  * @package app\site\controller
  */
 class Router {
-	public function __construct() {
-		auth();
-	}
-
 	public function lists() {
+		auth( 'system_router' );
 		return view();
 	}
 }

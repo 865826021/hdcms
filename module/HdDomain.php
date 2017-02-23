@@ -12,7 +12,7 @@ abstract class HdDomain {
 	protected $config;
 
 	public function __construct() {
-		auth();
+		auth( 'system_domain' );
 		$this->config   = \Module::getModuleConfig();
 		$this->template = ( v( 'module.is_system' ) ? "module/" : "addons/" ) . v( 'module.name' ) . '/system/template';
 		template_path( $this->template );
