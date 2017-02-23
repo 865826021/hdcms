@@ -5,7 +5,8 @@
 		<li role="presentation" class="active"><a href="#">扩展功能管理</a></li>
 	</ul>
 	<div class="row apps">
-		<foreach from="$data" value="$d">
+		<foreach from="$data" value="$m">
+			<foreach from="$m" value="$d">
 			<div class="col-sm-6 col-md-4 col-lg-2">
 				<div class="thumbnail">
 					<div class="img">
@@ -18,6 +19,7 @@
 					</div>
 				</div>
 			</div>
+				</foreach>
 		</foreach>
 	</div>
 </block>

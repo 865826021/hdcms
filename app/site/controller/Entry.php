@@ -90,8 +90,7 @@ class Entry {
 	 */
 	public function package() {
 		auth();
-		$data = Db::table( 'modules' )->where( 'is_system', 0 )->get();
-
+		$data = Module::getBySiteUser();
 		return view()->with( [ 'data' => $data ] );
 	}
 

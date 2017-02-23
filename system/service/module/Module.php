@@ -209,7 +209,7 @@ class Module {
 		                         ->lists( 'type' ) ?: [ ];
 
 		//获取模块按行业类型
-		return $this->getModulesByIndustry( $modules );
+		return $modules ? $this->getModulesByIndustry( $modules ) : [ ];
 	}
 
 	/**
@@ -227,7 +227,9 @@ class Module {
 			if ( ( empty( $modules ) || in_array( $m['name'], $modules ) ) && $m['is_system'] == 0 ) {
 				$data[ $this->industry[ $m['industry'] ] ][] = [
 					'title' => $m['title'],
-					'name'  => $m['name']
+					'name'  => $m['name'],
+					'preview'  => $m['preview'],
+					'thumb'  => $m['thumb'],
 				];
 			}
 		}
