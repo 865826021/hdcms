@@ -143,13 +143,13 @@ class Site {
 
 	//设置站点微信公众号
 	public function wechat() {
+		//验证当前用户站点权限
+		if ( ! \User::isManage() ) {
+			message( '您不是网站管理员无法操作' );
+		}
 		switch ( $_GET['step'] ) {
 			//修改微信公众号
 			case 'wechat':
-				//验证当前用户站点权限
-				if ( ! \User::isOwner() ) {
-					message( '您不是网站管理员无法操作' );
-				}
 				//微信帐号管理
 				if ( IS_POST ) {
 					if ( $weid = SiteWechat::where( 'siteid', SITEID )->pluck( 'weid' ) ) {
@@ -183,10 +183,6 @@ class Site {
 
 				return view()->with( 'field', $wechat );
 			case 'explain':
-				//验证当前用户站点权限
-				if ( ! \User::isOwner( SITEID ) ) {
-					message( '你没有管理该站点的权限', '', 'error' );
-				}
 				//引导页面
 				$wechat = SiteWechat::where( 'siteid', SITEID )->first();
 				if ( $wechat ) {

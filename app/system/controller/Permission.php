@@ -18,10 +18,15 @@ class Permission {
 	//站点管理员设置
 	public function users() {
 		if ( ! \User::isManage() ) {
-			message( '你没有站点的管理权限', 'back', 'error' );
+			message( '你没有功能的操作权限', 'back', 'error' );
 		}
 		//获取除站长外的站点操作员
 		$users = \User::getSiteRole( [ 'manage', 'operate' ] );
+		//移除当前用户,不允许给自己设置权限
+		$uid = v( 'user.info.uid' );
+		if ( isset( $users[ $uid ] ) ) {
+			unset( $users[ $uid ] );
+		}
 		//站长数据
 		$owner = \User::getSiteOwner( SITEID );
 
@@ -77,49 +82,128 @@ class Permission {
 
 	//设置菜单权限
 	public function menu() {
-		\User::superUserAuth();
+		if ( ! \User::isManage() ) {
+			message( '你没有操作权限', '', 'warning' );
+		}
 		//设置权限的用户
 		$uid = Request::get( 'fromuid' );
 		if ( IS_POST ) {
-			$permissionModel = new UserPermission();
-			$permissionModel->where( 'siteid', SITEID )->where( 'uid', $uid )->delete();
-			//如果选择了模块,将扩展模块菜单要选中
-			$_POST['system'] = empty( $_POST['system'] ) ? [ ] : $_POST['system'];
-			if ( ! empty( $_POST['modules'] ) && ! in_array( 'package_managa', $_POST['system'] ) ) {
-				$_POST['system'][] = 'package_managa';
-			}
+			//删除所有旧的权限
+			UserPermission::where( 'siteid', SITEID )->where( 'uid', $uid )->delete();
 			//系统权限
-			if ( ! empty( $_POST['system'] ) ) {
-				$permissionModel['siteid']     = SITEID;
-				$permissionModel['uid']        = $uid;
-				$permissionModel['type']       = 'system';
-				$permissionModel['permission'] = implode( '|', $_POST['system'] );
-				$permissionModel->save();
+			if ( $system = Request::post( 'system' ) ) {
+				$model               = new UserPermission();
+				$model['siteid']     = SITEID;
+				$model['uid']        = $uid;
+				$model['type']       = 'system';
+				$model['permission'] = implode( '|', $system );
+				$model->save();
 			}
 			//模块权限
-			if ( ! empty( $_POST['modules'] ) ) {
-				foreach ( $_POST['modules'] as $module => $actions ) {
-					$permissionModel['siteid']     = SITEID;
-					$permissionModel['uid']        = $uid;
-					$permissionModel['type']       = $module;
-					$permissionModel['permission'] = implode( '|', $actions );;
-					$permissionModel->save();
+			if ( $modules = Request::post( 'modules' ) ) {
+				foreach ( $modules as $module => $actions ) {
+					$model               = new UserPermission();
+					$model['siteid']     = SITEID;
+					$model['uid']        = $uid;
+					$model['type']       = $module;
+					$model['permission'] = implode( '|', $actions );;
+					$model->save();
 				}
 			}
-			message( '操作人员权限设置成功', 'refresh', 'success' );
+			message( '权限设置成功', 'refresh', 'success' );
 		}
-		//读取菜单表
-		$menus = \Menu::getLevelMenuLists();
-		//获取原有权限
-		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
-		//获取可使用的模块
-		$modules = \Module::getSiteAllModules( SITEID, false );
+		//获取帐号原有权限
+		$old = \User::getUserAtSiteAccess( SITEID, $uid );
+		/**
+		 * 读取系统菜单
+		 * 并根据原数据设置状态
+		 */
+		$menus = Db::table( 'menu' )->get();
+		foreach ( $menus as $k => $v ) {
+			$menus[ $k ]['checked'] = '';
+			if ( isset( $old['system'] ) && in_array( $v['permission'], $old['system'] ) ) {
+				$menus[ $k ]['checked'] = " checked='checked'";
+			}
+		}
+		$menusAccess = \Arr::channelLevel( $menus ?: [ ], 0, '', 'id', 'pid' );
+
+		/**
+		 * 对扩展模块状态进行设置
+		 */
+		$allModules = \Module::getSiteAllModules( SITEID, false );
+		//模块权限
+		$moduleAccess = [ ];
+		foreach ( $allModules as $k => $m ) {
+			if ( $m['is_system'] == 0 ) {
+				//对扩展模块进行处理
+				if ( $m['setting'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_setting', '参数设置', $old );
+				}
+				if ( $m['crontab'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_crontab', '定时任务', $old );
+				}
+				if ( $m['router'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_router', '路由规则', $old );
+				}
+				if ( $m['domain'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_domain', '域名设置', $old );
+				}
+				if ( $m['middleware'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_middleware', '中间件设置', $old );
+				}
+				if ( $m['rule'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_rule', '回复规则列表', $old );
+				}
+				if ( $m['rule'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_cover', '封面回复', $old );
+				}
+				if ( $m['web']['member'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_web_member', '桌面个人中心导航', $old );
+				}
+				if ( $m['web']['member'] ) {
+					$this->formatModuleAccessData( $moduleAccess, $m['name'], 'system_mobile_member', '移动端个人中心导航', $old );
+				}
+				if ( $m['budings']['business'] ) {
+					//控制器业务功能
+					foreach ( $m['budings']['business'] as $c ) {
+						$this->formatModuleAccessData( $moduleAccess, $m['name'], '', $c['title'], $old );
+						foreach ( $c['do'] as $d ) {
+							$permission = 'business_' . $c['controller'] . '_' . $d['do'];
+							$this->formatModuleAccessData( $moduleAccess, $m['name'], $permission, $d['title'], $old );
+						}
+					}
+				}
+			}
+		}
 
 		//模块权限
 		return view()->with( [
-			'menus'      => $menus,
-			'modules'    => $modules,
-			'permission' => $permission
+			'menusAccess'  => $menusAccess,
+			'moduleAccess' => $moduleAccess
 		] );
+	}
+
+	/**
+	 * 获取权限菜单使用的标准模块数组
+	 *
+	 * @param array $access 模块标识
+	 * @param string $name 模块标识
+	 * @param string $permission 标识标识
+	 * @param string $title 菜单标题
+	 * @param array $old 旧的权限数据
+	 *
+	 * @return mixed
+	 */
+	protected function formatModuleAccessData( &$access, $name, $permission, $title, $old ) {
+		$data['name']       = "modules[{$name}][]";
+		$data['title']      = $title;
+		$data['permission'] = $permission;
+		$data['checked']    = '';
+		if ( isset( $old[ $name ] ) && in_array( $permission, $old[ $name ] ) ) {
+			$data['checked'] = "checked='checked'";
+		}
+		$access[ $name ][] = $data;
+
+		return $access;
 	}
 }

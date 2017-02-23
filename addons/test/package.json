@@ -1,0 +1,122 @@
+{
+    "title": "全部选中的测试模块",
+    "name": "test",
+    "version": "2",
+    "industry": "business",
+    "resume": "模块简述",
+    "detail": "模块介绍",
+    "author": "模块作者",
+    "url": "http:\/\/www.hdcms.com",
+    "setting": true,
+    "tag": true,
+    "crontab": true,
+    "router": true,
+    "domain": true,
+    "middleware": true,
+    "pay": true,
+    "rule": true,
+    "web": {
+        "entry": {
+            "title": "桌面入口",
+            "do": "zuomianrukou",
+            "params": "a=1"
+        },
+        "member": [
+            {
+                "title": "会员中心1",
+                "do": "zuomianhuiyuzhongxin1",
+                "params": "b=1"
+            },
+            {
+                "title": "会员中心2",
+                "do": "zuomianhuiyuzhongxin2",
+                "params": "c=2"
+            }
+        ]
+    },
+    "mobile": {
+        "home": [],
+        "member": [
+            {
+                "title": "会员中心1",
+                "do": "yidonghuiyuan1",
+                "params": "a=1"
+            },
+            {
+                "title": "会员中心2",
+                "do": "yidonghuiyuan2",
+                "params": "b=3"
+            }
+        ]
+    },
+    "subscribes": {
+        "text": true,
+        "image": true,
+        "voice": true,
+        "video": true,
+        "shortvideo": true,
+        "location": true,
+        "link": true,
+        "subscribe": true,
+        "unsubscribe": true,
+        "scan": true,
+        "track": true,
+        "click": true,
+        "view": true
+    },
+    "processors": {
+        "text": true,
+        "image": true,
+        "voice": true,
+        "video": true,
+        "shortvideo": true,
+        "location": true,
+        "link": true,
+        "subscribe": true,
+        "unsubscribe": true,
+        "scan": true,
+        "track": true,
+        "click": true,
+        "view": true
+    },
+    "cover": [
+        {
+            "title": "功能封面1",
+            "do": "gongneng1",
+            "params": "g=1"
+        },
+        {
+            "title": "功能封面",
+            "do": "gongneng2",
+            "params": "g=2"
+        }
+    ],
+    "business": [
+        {
+            "title": "业务功能",
+            "controller": "yewu",
+            "action": [
+                {
+                    "title": "动作方法1",
+                    "do": "action1",
+                    "params": "a=1"
+                },
+                {
+                    "title": "动作方法2",
+                    "do": "action2",
+                    "directly": false,
+                    "params": "b=3"
+                }
+            ]
+        }
+    ],
+    "permissions": "添加商品:shop_add\n删除商品:shop_del",
+    "compatible_version": {
+        "version2": true
+    },
+    "thumb": "thumb.jpg",
+    "preview": "cover.jpg",
+    "install": "",
+    "uninstall": "",
+    "upgrade": ""
+}

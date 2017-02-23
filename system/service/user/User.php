@@ -231,14 +231,15 @@ class User extends Common {
 		}
 		$this->loginAuth();
 		//如果当前是模块操作时验证模块
-		$module = v( 'module.name' );
-		if ( $module ) {
+		if ( $module = v( 'module.name' ) ) {
+
+			//其他角色根据模块权限标识进行权限验证
 			$status = $this->authModule( $module, 'return' );
 		} else {
 			//如果不是站点操作员验证失败
 			$status = $this->isOperate();
 			if ( ! $status ) {
-				message( '您没访问权限, 请连接管理员获取权限', 'back', 'error' );
+				message( '访问拒绝! 请联系管理员获取权限', 'back', 'error', 3 );
 			}
 		}
 
@@ -258,23 +259,49 @@ class User extends Common {
 		static $cache = [ ];
 		$module = $module ?: v( 'module.name' );
 		$uid    = v( 'user.info.uid' );
-		if ( ! isset( $cache[ $module ] ) ) {
-			$cache[ $module ] = false;
+		//存在缓存时使用缓存处理
+		if ( isset( $cache[ $module ] ) ) {
+			if ( ! $cache[ $module ] && $deal == 'show' ) {
+				message( '你没有访问模块的权限', 'back', 'error' );
+			}
+
+			return $cache[ $module ];
+		}
+		$status = false;
+		if ( ! in_array( $module, v( 'site.modules' ) ) ) {
+			//站点具有模块时不允许操作
+			$status = false;
+		} elseif ( $this->isOwner() ) {
+			/**
+			 * 站点的站长不进行权限验证
+			 * 但管理员与操作权限是受权限标识控制的
+			 */
+			$status = true;
+		} else {
 			//如果对用户有模块权限的独立配置时先进行验证
-			$allowModules = Db::table( 'user_permission' )->where( 'siteid', SITEID )
-			                  ->where( 'uid', $uid )->lists( 'type' );
-			if ( ! empty( $allowModules ) ) {
-				$cache[ $module ] = in_array( $module, $allowModules );
-			} else if ( key_exists( $module, \Module::getSiteAllModules() ) ) {
-				//如果站点有这个模块时验证通过
-				$cache[ $module ] = true;
+			$access = Db::table( 'user_permission' )->where( 'siteid', SITEID )
+			            ->where( 'uid', $uid )->lists( 'type,permission' );
+			if ( empty( $access ) ) {
+				/**
+				 * 没有为用户设置权限标识时
+				 * 用户可以使用模块
+				 */
+				$status = true;
+			} elseif ( ! isset( $access[ $module ] ) ) {
+				/**
+				 * 为用户设置了权限标识时
+				 * 但用户没有模块时访问失败
+				 */
+				$status = false;
+			} else {
+				/**
+				 * 检测权限标识
+				 */
+
 			}
 		}
-		if ( ! $cache[ $module ] && $deal == 'show' ) {
-			message( '你没有访问模块的权限', 'back', 'error' );
-		}
 
-		return true;
+		return $cache[ $module ] = $status;
 	}
 
 	/**
@@ -468,7 +495,7 @@ class User extends Common {
 	}
 
 	/**
-	 * 获取用户在站点的权限分配
+	 * 获取为用户在站点独立设置的权限
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
@@ -482,7 +509,6 @@ class User extends Common {
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}
-
 		return $permission;
 	}
 }

@@ -124,7 +124,7 @@ class Module {
 	public function getSiteAllModules( $siteId = 0, $readFromCache = true ) {
 		$siteId = $siteId ?: SITEID;
 		if ( empty( $siteId ) ) {
-			throw new \Exception( '$siteid 参数错误' );
+			message( '获取站点模块数据时, 站点编号不能为空', '', 'error', 5 );
 		}
 		static $cache = [ ];
 		if ( isset( $cache[ $siteId ] ) ) {
@@ -203,7 +203,6 @@ class Module {
 		/**
 		 * 插件模块列表
 		 */
-
 		$modules = UserPermission::where( 'type', '<>', 'system' )
 		                         ->where( 'siteid', $siteId )
 		                         ->where( 'uid', $uid )
@@ -314,7 +313,7 @@ class Module {
 	 */
 	public function remove( $name ) {
 		$module = Db::table( 'modules' )->where( 'name', $name )->first();
-		if ( empty( $module ) || $module['is_system'] == 1) {
+		if ( empty( $module ) || $module['is_system'] == 1 ) {
 			message( '模块不存或者模块为系统模块无法删除', 'back', 'error' );
 		}
 		//执行模块本身的卸载程序

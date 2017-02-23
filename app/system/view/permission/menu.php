@@ -31,7 +31,7 @@
 						</tr>
 						</thead>
 						<tbody>
-						<?php $id = 0; ?>
+						<?php $id = 0;?>
 						<foreach from="$f['_data']" value="$d">
 							<foreach from="$d['_data']" key="$k" value="$m">
 								<if value="$id==0">
@@ -42,7 +42,8 @@
 									<div class="checkbox">
 										<label>
 											<if value="isset($permission['system']) && in_array($m['permission'],$permission['system'])">
-												<input type="checkbox" name="system[]" value="{{$m['permission']}}" checked="checked">{{$m['title']}}
+												<input type="checkbox" name="system[]" value="{{$m['permission']}}"
+												       checked="checked">{{$m['title']}}
 												<else/>
 												<input type="checkbox" name="system[]" value="{{$m['permission']}}">{{$m['title']}}
 											</if>
@@ -80,35 +81,213 @@
 											</label>
 										</div>
 										<ul class="dropdown-menu">
-											<foreach from="$m['budings']" value="$d">
-												<foreach from="$d" value="$c">
+											<!--参数设置-->
+											<if value="$m['setting']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('setting',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="setting"
+															       checked="checked"> 参数设置
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="setting">
+															参数设置
+														</if>
+													</label>
+												</li>
+											</if>
+											<!--参数设置-->
+											<if value="$m['crontab']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('crontab',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="crontab"
+															       checked="checked"> 定时任务
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="crontab">
+															定时任务
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['router']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('router',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="router"
+															       checked="checked"> 路由规则
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="router">
+															路由规则
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['domain']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('domain',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="domain"
+															       checked="checked"> 域名设置
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="domain">
+															域名设置
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['middleware']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('middleware',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="middleware"
+															       checked="checked"> 中间件设置
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="middleware">
+															中间件设置
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['rule']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('rule',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="rule"
+															       checked="checked"> 回复规则列表
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="rule">
+															回复规则列表
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['cover']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('cover',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="cover"
+															       checked="checked"> 封面回复
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="cover">
+															封面回复
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['web']['member']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('web_member',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="web_member"
+															       checked="checked"> 桌面个人中心导航
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="web_member">
+															桌面个人中心导航
+														</if>
+													</label>
+												</li>
+											</if>
+											<if value="$m['mobile']['member']">
+												<li>
+													<label>
+														<if value="isset($permission[$m['name']]) && in_array('mobile_member',$permission[$m['name']])">
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="mobile_member"
+															       checked="checked"> 移动端个人中心导航
+															<else/>
+															<input type="checkbox"
+															       name="modules[{{$m['name']}}][]"
+															       value="mobile_member">
+															移动端个人中心导航
+														</if>
+													</label>
+												</li>
+											</if>
+
+											<!--业务菜单因为有控制器方法所以单独处理-->
+											<foreach from="$m['budings']['business']" value="$c">
+												<li>
+															<span class="text-info">
+																<i class="fa fa-align-right"></i>{{$c['title']}}
+															</span>
+												</li>
+												<!--读取业务动作菜单-->
+												<foreach from="$c['do']" value="$f">
 													<li>
 														<label>
-															<if value="isset($permission[$c['module']]) && in_array($c['module'].'_'.$c['do'],$permission[$c['module']])">
-																<input type="checkbox" name="modules[{{$c['module']}}][]"
-																       value="{{$c['module']}}_{{$c['do']}}" checked="checked"> {{$c['title']}}
+															<?php $access = strtolower('business_' . $c['controller'] . '_' . $f['do'] ); ?>
+															<if value="isset($permission[$m['name']]) && in_array($access,$permission[$m['name']])">
+																<input type="checkbox"
+																       name="modules[{{$m['name']}}][]"
+																       value="{{$access}}"
+																       checked="checked"> {{$f['title']}}
 																<else/>
-																<input type="checkbox" name="modules[{{$c['module']}}][]"
-																       value="{{$c['module']}}_{{$c['do']}}"> {{$c['title']}}
+																<input type="checkbox"
+																       name="modules[{{$m['name']}}][]"
+																       value="{{$access}}">
+																{{$f['title']}}
 															</if>
 														</label>
 													</li>
 												</foreach>
 											</foreach>
+
 											<!--自定义权限-->
-											<foreach from="$m['permissions']" value="$c">
-												<?php $d = explode( ':', $c ); ?>
+											<if value="$m['permissions']">
 												<li>
-													<label>
-														<if value="isset($permission[$m['name']]) && in_array($d[1],$permission[$m['name']])">
-															<input type="checkbox" name="modules[{{$m['name']}}][]" value="{{$d[1]}}"
-															       checked="checked"> {{$d[0]}}
-															<else/>
-															<input type="checkbox" name="modules[{{$m['name']}}][]" value="{{$d[1]}}"> {{$d[0]}}
-														</if>
-													</label>
+													<span class="text-info">
+														<i class="fa fa-beer"></i> 自定义标识
+													</span>
 												</li>
-											</foreach>
+												<foreach from="$m['permissions']" value="$c">
+													<?php $access = strtolower( 'custom_' . $c['do'] ); ?>
+													<li>
+														<label>
+															<if value="isset($permission[$m['name']]) && in_array($access,$permission[$m['name']])">
+																<input type="checkbox" name="modules[{{$m['name']}}][]"
+																       value="{{$access}}"
+																       checked="checked"> {{$c['title']}}
+																<else/>
+																<input type="checkbox" name="modules[{{$m['name']}}][]"
+																       value="{{$access}}"> {{$c['title']}}
+															</if>
+														</label>
+													</li>
+												</foreach>
+											</if>
 										</ul>
 									</div>
 								</td>
@@ -116,33 +295,36 @@
 						</foreach>
 						<style>
 							.module-access .dropdown {
-								cursor : pointer;
+								cursor: pointer;
 							}
 
-							.module-access .dropdown-menu li { padding : 3px 15px; cursor : pointer }
+							.module-access .dropdown-menu li {
+								padding: 3px 15px;
+								cursor: pointer
+							}
 
 							.module-access .dropdown-menu label {
-								font-weight : normal;
+								font-weight: normal;
 							}
 
 							.module-access .dropdown .dropdown-toggle {
-								border-radius : 5px 5px 0px 0px;
-								border        : solid 1px #fff;
-								padding       : 8px 0 8px 15px !important;
+								border-radius: 5px 5px 0px 0px;
+								border: solid 1px #fff;
+								padding: 8px 0 8px 15px !important;
 							}
 
 							.module-access .dropdown:hover .dropdown-toggle {
-								background    : #fff;
-								border        : solid 1px #ddd;
-								border-bottom : 0px;
-								z-index       : 100 !important;
+								background: #fff;
+								border: solid 1px #ddd;
+								border-bottom: 0px;
+								z-index: 100 !important;
 							}
 
 							.module-access .dropdown ul {
-								margin-top    : -1px;
-								z-index       : 20;
-								border-radius : 0 5px 5px 5px;
-								padding       : 5px 10px;
+								margin-top: -1px;
+								z-index: 20;
+								border-radius: 0 5px 5px 5px;
+								padding: 5px 10px;
 							}
 						</style>
 						<script>
@@ -163,20 +345,20 @@
 
 <style>
 	.table > thead > tr > th {
-		border-bottom : 0;
-		padding       : 0px 8px;
+		border-bottom: 0;
+		padding: 0px 8px;
 	}
 
 	.table > tbody > tr > td {
-		border-top : 0;
+		border-top: 0;
 	}
 
 	.table .checkbox {
-		padding : 0px;
+		padding: 0px;
 	}
 
 	.table > tbody > tr > td {
-		padding : 0px 8px;
+		padding: 0px 8px;
 	}
 </style>
 <script>
@@ -207,4 +389,5 @@
 	$(".dropdown-toggle input").click(function () {
 		$(this).parents('.dropdown').find('input').prop('checked', $(this).is(":checked"));
 	});
+	util.submit();
 </script>

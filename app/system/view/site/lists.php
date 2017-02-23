@@ -9,10 +9,12 @@
 		<div class="alert alert-warning">
 			温馨提示：
 			<i class="fa fa-info-circle"></i>
-			Hi，<span class="text-strong">{{v('user.info.username')}}</span>，您所在的会员组 <span class="text-strong">{{v('user.info.group.name')}}</span>，
+			Hi，<span class="text-strong">{{v('user.info.username')}}</span>，
+			您所在的会员组 <span class="text-strong">{{v('user.info.group.name')}}</span>，
 			账号有效期限：
 			<span class="text-strong">{{date('Y-m-d',v('user.info.starttime'))}} ~~ {{v('user.info.endtime')?date('Y-m-d',v('user.info.endtime')):'无限制'}}</span>，
-			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，已添加<span class="text-strong"> {{\User::siteNums()}} </span>个，
+			可添加 <span class="text-strong">{{v('user.group.maxsite')}} </span>个站点，
+			已添加<span class="text-strong"> {{\User::siteNums()}} </span>个，
 			还可添加 <span class="text-strong">{{v('user.group.maxsite')-\User::siteNums()}} </span>个公众号。
 		</div>
 		<else/>
@@ -124,14 +126,16 @@
 									<i class="fa fa-key"></i> 设置权限
 								</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/site/wechat&step=wechat&siteid={{$s['siteid']}}"><i class="fa fa-comment-o"></i> 微信公众号</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/permission/users&siteid={{$s['siteid']}}"><i class="fa fa-user"></i> 操作员管理</a>&nbsp;&nbsp;&nbsp;
 							<?php } ?>
-							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
+							<?php if ( \User::isOwner( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="javascript:;" onclick="delSite({{$s['siteid']}},'{{$s['name']}}')"><i class="fa fa-trash"></i> 删除</a>&nbsp;&nbsp;&nbsp;
+							<?php } ?>
+							<?php if ( \User::isManage( $s['siteid'], v( 'user.info.uid' ) ) ) { ?>
 								<a href="?s=system/site/edit&siteid={{$s['siteid']}}"><i class="fa fa-pencil-square-o"></i> 编辑</a>
 							<?php } ?>
 						</div>

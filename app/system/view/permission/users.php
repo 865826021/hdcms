@@ -63,9 +63,13 @@
 						<td>
 							<?php if ( \User::isSuperUser() ): ?>
 								<a href="?s=system/user/edit&uid={{$u['uid']}}">编辑用户</a>&nbsp;|&nbsp;
-								<a href="?s=system/permission/menu&siteid={{$_GET['siteid']}}&fromuid={{$u['uid']}}">设置权限</a>&nbsp;|&nbsp;
 							<?php endif; ?>
-							<a href="?s=system/user/permission&uid={{$u['uid']}}">查看操作权限</a>
+							<?php if ( \User::isManage() ) : ?>
+							<a href="?s=system/permission/menu&siteid={{$_GET['siteid']}}&fromuid={{$u['uid']}}">设置权限</a>&nbsp;&nbsp;
+							<?php endif; ?>
+							<?php if ( \User::isSuperUser() ): ?>
+								| <a href="?s=system/user/permission&uid={{$u['uid']}}">查看操作权限</a>
+							<?php endif; ?>
 						</td>
 					</tr>
 				</foreach>

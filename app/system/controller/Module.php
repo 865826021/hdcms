@@ -155,7 +155,17 @@ class Module {
 				message( '模块已经存在,请更改模块标识', 'back', 'error' );
 			}
 			//系统关键字不允许定义为模块标识
-			if ( in_array( $data['name'], [ 'hdphp', 'hd', 'hdcms', 'xj' ] ) ) {
+			if ( in_array( $data['name'], [
+				'user',
+				'system',
+				'houdunwang',
+				'houdunren',
+				'houdunyun',
+				'hdphp',
+				'hd',
+				'hdcms',
+				'xj'
+			] ) ) {
 				message( '模块已经存在,请更改模块标识', '', 'error' );
 			}
 			//创建目录创建安全文件
@@ -205,10 +215,15 @@ class Module {
 		//获取模块xml数据
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
-			//执行安装指令
-			$class = 'addons\\' . $config['name'] . '\system\Setup';
-			call_user_func_array( [ new $class, 'install' ], [ ] );
 			//整合添加到模块表中的数据
+			//权限标识处理
+			$permissions = [ ];
+			foreach ( (array) preg_split( '/\n/', $config['permissions'] ) as $v ) {
+				$d = explode( ':', $v );
+				if ( count( $d ) == 2 ) {
+					$permissions[] = [ 'title' => trim( $d[0] ), 'do' => trim( $d[1] ) ];
+				}
+			}
 			$model                = new Modules();
 			$model['name']        = $config['name'];
 			$model['version']     = $config['version'];
@@ -230,9 +245,12 @@ class Module {
 			$model['crontab']     = $config['crontab'];
 			$model['router']      = $config['router'];
 			$model['domain']      = $config['domain'];
-			$model['permissions'] = preg_split( '/\n/', $config['permission'] );
+			$model['permissions'] = $permissions;
 			$model['locality']    = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
 			$model->save();
+			//执行模块安装程序
+			$class = 'addons\\' . $config['name'] . '\system\Setup';
+			call_user_func_array( [ new $class, 'install' ], [ ] );
 			//添加模块动作表数据
 			if ( ! empty( $config['web']['entry'] ) ) {
 				$d           = $config['web']['entry'];
