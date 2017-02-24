@@ -209,7 +209,6 @@ class Site {
 			message( '你没有编辑站点的权限', 'with' );
 		}
 		if ( IS_POST ) {
-			p( $_POST );
 			//更新站点数据
 			$site                     = SiteModel::find( SITEID );
 			$site['name']             = Request::post( 'name' );

@@ -169,6 +169,7 @@
          * @param rid 规则编号,编辑时使用用于排除这个规则号
          */
         checkWxKeyword: function (content, rid, callback) {
+            if(content=='')return;
             $.post('?s=site/keyword/checkWxKeyword', {content: content, rid: rid ? rid : 0}, function (res) {
                 if ($.isFunction(callback)) {
                     callback(res);

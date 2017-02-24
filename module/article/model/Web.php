@@ -14,7 +14,6 @@ class Web extends Model {
 	protected $allowFill = [ '*' ];
 	protected $validate = [
 		[ 'title', 'required', '站点名称不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'title', 'unique', '站点名称已经存在', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'template_name', 'required', '请选择网站模板风格', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'status', 'num:0,1', '网站状态只能为1或0', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'thumb', 'required', '封面图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],

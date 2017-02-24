@@ -32,7 +32,7 @@ class Site extends HdController {
 			$rule['rid']      = $data['rid'];
 			$rule['module']   = 'cover';
 			$rule['name']     = 'article:site:' . SITEID;
-			$rule['keywords'] = [ [ 'content' => $data['keyword'], ] ];
+			$rule['keywords'] = [ [ 'content' => $data['keyword']] ];
 			$rid              = \Wx::rule( $rule );
 			//添加封面回复
 			$replyCover = new ReplyCover();

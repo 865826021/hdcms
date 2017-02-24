@@ -39,3 +39,6 @@
         <button type="submit" class="btn btn-primary">保存修改</button>
     </form>
 </block>
+<script>
+    util.submit();
+</script>

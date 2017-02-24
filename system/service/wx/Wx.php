@@ -86,12 +86,14 @@ class Wx {
 		RuleKeyword::where( 'rid', $rid )->delete();
 		if ( isset( $data['keywords'] ) ) {
 			foreach ( $data['keywords'] as $keyword ) {
-				$keywordModel = new RuleKeyword();
-				foreach ( $keyword as $field => $value ) {
-					$keywordModel[ $field ] = $value;
+				if ( ! empty( $keyword['content'] ) ) {
+					$keywordModel = new RuleKeyword();
+					foreach ( $keyword as $field => $value ) {
+						$keywordModel[ $field ] = $value;
+					}
+					$keywordModel['rid'] = $rid;
+					$keywordModel->save();
 				}
-				$keywordModel['rid'] = $rid;
-				$keywordModel->save();
 			}
 		}
 
@@ -129,7 +131,7 @@ class Wx {
 	 * @param $module
 	 */
 	public function removeRuleByModule( $module ) {
-		$rids = Db::table( 'rule' )->where( 'name','like', "%{$module}:%" )->lists( 'rid' );
+		$rids = Db::table( 'rule' )->where( 'name', 'like', "%{$module}:%" )->lists( 'rid' );
 		foreach ( $rids as $rid ) {
 			$this->removeRule( $rid );
 		}
