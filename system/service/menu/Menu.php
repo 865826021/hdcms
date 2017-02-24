@@ -1,13 +1,15 @@
 <?php namespace system\service\menu;
-	/** .-------------------------------------------------------------------
-	 * |  Software: [HDPHP framework]
-	 * |      Site: www.hdphp.com
-	 * |-------------------------------------------------------------------
-	 * |    Author: 向军 <2300071698@qq.com>
-	 * |    WeChat: aihoudun
-	 * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
-	 * '-------------------------------------------------------------------*/
 
+use houdunwang\request\Request;
+
+/** .-------------------------------------------------------------------
+ * |  Software: [HDPHP framework]
+ * |      Site: www.hdphp.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
 //服务功能类
 class Menu {
 	/**
@@ -72,13 +74,20 @@ class Menu {
 	public function get() {
 		static $menus = null;
 		if ( is_null( $menus ) ) {
+			//当前访问的模块数据
+			if ( $m = Request::get( 'm' ) ) {
+				$allModules = Module::getExtModuleByUserPermission();
+				$module     = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [ ];
+			}
+			$moduleLists = Module::getModulesByIndustry( array_keys( Module::getBySiteUser() ) );
+			//当前模块的菜单数据
 			$menus = [
 				//系统菜单数据
 				'menus'       => $this->all(),
 				//当前模块
-				'module'      => \Module::currentUseModule(),
+				'module'      => $module,
 				//用户在站点可以使用的模块列表
-				'moduleLists' => \Module::getBySiteUser()
+				'moduleLists' => $moduleLists
 			];
 		}
 

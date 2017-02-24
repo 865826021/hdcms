@@ -6,20 +6,20 @@
 	</ul>
 	<div class="row apps">
 		<foreach from="$data" value="$m">
-			<foreach from="$m" value="$d">
-			<div class="col-sm-6 col-md-4 col-lg-2">
-				<div class="thumbnail">
-					<div class="img">
-						<img src="addons/{{$d['name']}}/{{$d['preview']}}">
-					</div>
-					<div class="caption">
-						<h4>
-							<a href="?s=site/entry/module&m={{$d['name']}}&mark=package">{{$d['title']}}</a>
-						</h4>
+			<if value="$m['is_system']==0">
+				<div class="col-sm-6 col-md-4 col-lg-2">
+					<div class="thumbnail">
+						<div class="img">
+							<img src="addons/{{$m['name']}}/{{$m['preview']}}">
+						</div>
+						<div class="caption">
+							<h4>
+								<a href="?s=site/entry/module&m={{$m['name']}}&mark=package">{{$m['title']}}</a>
+							</h4>
+						</div>
 					</div>
 				</div>
-			</div>
-				</foreach>
+			</if>
 		</foreach>
 	</div>
 </block>

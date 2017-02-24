@@ -51,7 +51,7 @@ VALUES
 	(100,0,'系统设置','','?s=site/entry/home','','fa fa-comments-o',20,1,1,'feature'),
 	(10000,0,'扩展模块','','?s=site/entry/home','','fa fa-arrows',100,1,1,'package'),
 	(10001,72,'轮换图片','article_site_slide','?m=article&action=controller/slide/lists','?m=article&action=controller/slide/post','fa fa-cubes',0,1,1,'article'),
-	(10002,72,'访问域名','article_domain_set','?m=article&action=system/domain/set','','fa fa-cubes',0,1,1,'article');
+	(10002,72,'访问域名','article_domain_set','?s=site/domain/post&m=article','','fa fa-cubes',0,1,1,'article');
 str;
 		Db::execute($sql);
     }

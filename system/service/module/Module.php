@@ -176,7 +176,7 @@ class Module {
 	}
 
 	/**
-	 * 当前使用的非系统模块
+	 * 当前站点使用的非系统模块
 	 * @return array
 	 */
 	public function currentUseModule() {
@@ -203,12 +203,13 @@ class Module {
 	 *
 	 * @return mixed
 	 */
-	protected function formatModuleAccessData( &$modules, $name, $identifying, $cat_name, $title, $permission, $url ) {
+	protected function formatModuleAccessData( &$modules, $name, $identifying, $cat_name, $title, $permission, $url, $ico ) {
 		$data['name']        = "$name";
 		$data['title']       = $title;
 		$data['url']         = $url;
 		$data['identifying'] = $identifying;
 		$data['status']      = 0;
+		$data['ico']         = $ico;
 		if ( empty( $permission ) ) {
 			$data['status'] = 1;
 		} elseif ( isset( $permission[ $name ] ) && in_array( $identifying, $permission[ $name ] ) ) {
@@ -231,51 +232,51 @@ class Module {
 	 * 通过属性status判断该用户对某个动作有没有权限
 	 * 可用于权限菜单与后台模块菜单显示
 	 *
-	 * @param $uid 用户编号
+	 * @param string $uid 用户编号
 	 *
 	 * @return array
 	 */
-	public function getExtModuleByUserPermission( $uid ) {
+	public function getExtModuleByUserPermission( $uid = '' ) {
 		$uid        = $uid ?: v( 'user.info.uid' );
 		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
 		$modules    = [ ];
 		foreach ( v( 'site.modules' ) as $name => $m ) {
 			//对扩展模块进行处理
 			if ( $m['setting'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_setting', '系统功能', '参数设置', $permission, "?s=site/config/post&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_setting', '系统功能', '参数设置', $permission, "?s=site/config/post&m={$name}&mark=package", 'fa fa-cog' );
 			}
 			if ( $m['crontab'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_crontab', '系统功能', '定时任务', $permission, "?s=site/crontab/lists&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_crontab', '系统功能', '定时任务', $permission, "?s=site/crontab/lists&m={$name}&mark=package", 'fa fa-globe' );
 			}
 			if ( $m['router'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_router', '系统功能', '路由规则', $permission, "?s=site/router/lists&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_router', '系统功能', '路由规则', $permission, "?s=site/router/lists&m={$name}&mark=package", 'fa fa-tachometer' );
 			}
 			if ( $m['domain'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_domain', '系统功能', '域名设置', $permission, "?m={$name}&action=system/domain/set&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_domain', '系统功能', '域名设置', $permission, "?s=site/domain/post&m={$name}&mark=package", 'fa fa-wordpress' );
 			}
 			if ( $m['middleware'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_middleware', '系统功能', '中间件设置', $permission, "?s=site/middleware/post&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_middleware', '系统功能', '中间件设置', $permission, "?s=site/middleware/post&m={$name}&mark=package", 'fa fa-twitch' );
 			}
 			if ( $m['rule'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_rule', '微信回复', '回复规则列表', $permission, "?s=site/rule/lists&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_rule', '微信回复', '回复规则列表', $permission, "?s=site/rule/lists&m={$name}&mark=package", 'fa fa-rss' );
 			}
 			if ( $m['cover'] ) {
 				foreach ( $m['cover'] as $c ) {
-					$this->formatModuleAccessData( $modules, $name, 'system_cover', '微信回复', $c['title'], $permission, "?s=site/rule/lists&m={$name}&mark=package" );
+					$this->formatModuleAccessData( $modules, $name, 'system_cover', '微信回复', $c['title'], $permission, "?s=site/rule/lists&m={$name}&mark=package", 'fa fa-file-image-o' );
 				}
 			}
 			if ( $m['budings']['member'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_member', '导航菜单', '桌面会员中心导航', $permission, "?s=site/navigate/lists&entry=member&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_member', '导航菜单', '桌面会员中心导航', $permission, "?s=site/navigate/lists&entry=member&m={$name}&mark=package", 'fa fa-renren' );
 			}
 			if ( $m['budings']['profile'] ) {
-				$this->formatModuleAccessData( $modules, $name, 'system_profile', '导航菜单', '移动会员中心导航', $permission, "?s=site/navigate/lists&entry=profile&m={$name}&mark=package" );
+				$this->formatModuleAccessData( $modules, $name, 'system_profile', '导航菜单', '移动会员中心导航', $permission, "?s=site/navigate/lists&entry=profile&m={$name}&mark=package", 'fa fa-github' );
 			}
 			if ( $m['budings']['business'] ) {
 				//控制器业务功能
 				foreach ( $m['budings']['business'] as $c ) {
 					foreach ( $c['do'] as $d ) {
 						$identifying = 'controller/' . $c['controller'] . '/' . $d['do'];
-						$this->formatModuleAccessData( $modules, $name, $identifying, $c['title'], $d['title'], $permission, "?m={$name}&action=controller/{$c['controller']}/{$d['do']}&a=1&mark=package" );
+						$this->formatModuleAccessData( $modules, $name, $identifying, $c['title'], $d['title'], $permission, "?m={$name}&action=controller/{$c['controller']}/{$d['do']}&a=1&mark=package", 'fa fa-pencil-square-o' );
 					}
 				}
 			}
@@ -286,6 +287,7 @@ class Module {
 
 	/**
 	 * 用户在站点可以使用的扩展模块数据
+	 * 只显示可用的没有权限的模块不包含
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
@@ -307,9 +309,10 @@ class Module {
 				unset( $permission['system'] );
 				$modules = array_intersect_key( $modules, $permission );
 			}
+			$cache[ $name ] = $modules;
 		}
 
-		return $cache[ $name ] = $modules;
+		return $cache[ $name ];
 	}
 
 	/**

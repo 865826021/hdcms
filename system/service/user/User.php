@@ -269,7 +269,7 @@ class User extends Common {
 				 * 系统菜单根据菜单编号进行验证
 				 */
 				$menuPermission = Db::table( 'menu' )->where( 'id', $menuId )->pluck( 'permission' );
-				if (  isset( $userPermission['system'] ) && in_array( $menuPermission, explode('|',$userPermission['system'] ) )) {
+				if ( isset( $userPermission['system'] ) && in_array( $menuPermission, explode( '|', $userPermission['system'] ) ) ) {
 					$status = true;
 				}
 			}
@@ -295,38 +295,11 @@ class User extends Common {
 	public function authModule( $module = '', $deal = 'show' ) {
 		static $cache = [ ];
 		$module = $module ?: v( 'module.name' );
-		$uid    = v( 'user.info.uid' );
 		//存在缓存时使用缓存处理
 		if ( ! isset( $cache[ $module ] ) ) {
-			$status = false;
-			if ( ! key_exists( $module, v( 'site.modules' ) ) ) {
-				//站点具有模块时不允许操作
-				$status = false;
-			} elseif ( $this->isOwner() ) {
-				/**
-				 * 站长不进行权限验证
-				 * 但管理员与操作权限是受权限标识控制的
-				 */
-				$status = true;
-			} else {
-				//如果对用户有模块权限的独立配置时先进行验证
-				$access = Db::table( 'user_permission' )->where( 'siteid', SITEID )
-				            ->where( 'uid', $uid )->lists( 'type,permission' );
-				if ( empty( $access ) ) {
-					/**
-					 * 没有为用户设置权限标识时
-					 * 用户可以使用模块
-					 */
-					$status = true;
-				} elseif ( isset( $access[ $module ] ) ) {
-					/**
-					 * 为用户设置了权限标识时
-					 * 但用户没有模块时访问失败
-					 */
-					$status = true;
-				}
-			}
-			$cache[ $module ] = $status;
+			//用户允许使用的模块数据
+			$allowModule      = Module::getBySiteUser();
+			$cache[ $module ] = isset( $allowModule[ $module ] );
 		}
 
 		if ( ! $cache[ $module ] && $deal == 'show' ) {
