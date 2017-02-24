@@ -9,8 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
 
-use system\model\Modules;
-
 /**
  * 网站入口管理
  * Class Entry
@@ -24,7 +22,7 @@ class Entry {
 	 * @return mixed
 	 */
 	public function index() {
-		$domain=trim($_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ),'/\\');
+		$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
 		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
 		if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
 			//站点设置了默认访问模块时访问模块的桌面入口页面
@@ -38,6 +36,7 @@ class Entry {
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
 					Request::set( 'get.siteid', $moduleDomain['siteid'] );
 					Request::set( 'get.m', $module['module'] );
+					Session::set( 'siteid', $moduleDomain['siteid'] );
 					//初始站点数据
 					\Site::siteInitialize();
 					//初始模块数据
@@ -91,6 +90,7 @@ class Entry {
 	public function package() {
 		auth();
 		$data = Module::getBySiteUser();
+
 		return view()->with( [ 'data' => $data ] );
 	}
 
@@ -100,6 +100,7 @@ class Entry {
 	 */
 	public function module() {
 		\User::authModule();
+
 		return view();
 	}
 }
