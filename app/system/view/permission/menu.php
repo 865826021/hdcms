@@ -22,24 +22,26 @@
 				<div ng-repeat="m in v._data">
 					<p class="col-sm-2 col-md-2 col-lg-2" ng-repeat="d in m._data">
 						<label>
-							<input type="checkbox" name="system[]" value="@{{d.permission}}" ng-checked="d.checked"> @{{d.title}}
+							<input type="checkbox" name="system[]" value="@{{d.permission}}" ng-checked="d._status"> @{{d.title}}
 						</label>
 					</p>
 				</div>
 			</div>
 		</div>
 		<!--扩展模块权限-->
-		<div class="panel panel-default" ng-repeat="(k,v) in moduleAccess">
+		<div class="panel panel-default" ng-repeat="v in moduleAccess">
 			<div class="panel-heading">
-				<label><input type="checkbox" ng-click="selectAll($event)"> @{{k}}</label>
+				<label><input type="checkbox" ng-click="selectAll($event)"> @{{v.module.title}}</label>
 			</div>
 			<div class="panel-body">
-				<p class="col-sm-2 col-md-2 col-lg-2" ng-repeat="d in v">
+				<div  ng-repeat="t in v['access']">
+				<p class="col-sm-2 col-md-2 col-lg-2" ng-repeat="d in t">
 					<label>
-						<input type="checkbox" name="@{{d.name}}" value="@{{d.permission}}" ng-checked="d.checked">
+						<input type="checkbox" name="modules[@{{v.module.name}}][]" value="@{{d.identifying}}" ng-checked="d.status">
 						@{{d.title}}
 					</label>
 				</p>
+				</div>
 			</div>
 		</div>
 		<button class="btn btn-primary">保存</button>
@@ -59,7 +61,7 @@
 		}]);
 		$(function () {
 			angular.bootstrap($("form")[0], ['app']);
-			util.submit({successUrl:''});
+			util.submit({successUrl:'refresh'});
 		});
 	});
 

@@ -90,7 +90,25 @@ class Menu {
 	 * @return array|mixed
 	 */
 	public function getQuickMenu() {
-		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where('uid',v('user.info.uid'))->pluck( 'data' );
+		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
+
 		return $data ? json_decode( $data, true ) : [ ];
+	}
+
+	public function getUserMenuAccess( $siteId = '', $uid = '' ) {
+		$siteId     = $siteId ?: SITEID;
+		$uid        = $uid ?: v( 'user.info.uid' );
+		$permission = \User::getUserAtSiteAccess( $siteId, $uid );
+		$menus      = Db::table( 'menu' )->get();
+		foreach ( $menus as $k => $v ) {
+			$menus[ $k ]['status'] = 0;
+			if ( empty( $permission ) ) {
+				$menus[ $k ]['_status'] = 1;
+			} elseif ( isset( $permission['system'] ) && in_array( $v['permission'], $permission['system'] ) ) {
+				$menus[ $k ]['_status'] = 1;
+			}
+		}
+
+		return $menus;
 	}
 }

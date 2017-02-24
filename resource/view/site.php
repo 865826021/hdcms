@@ -354,8 +354,8 @@
 					</ul>
 				</if>
 				<if value="$LINKS['module']['budings']['business']">
-					<foreach from="$LINKS['module']['budings']['business']" value="$f">
-						<div class="panel-heading hide module_action" mark="package">
+<!--					<foreach from="$LINKS['module']['bud       ings']['business']" value="$f">
+-->						<div class="panel-heading hide module_action" mark="package">
 							<h4 class="panel-title">{{$f['title']}}</h4>
 							<a class="panel-collapse" data-toggle="collapse" href="#module_business"
 							   aria-expanded="true">

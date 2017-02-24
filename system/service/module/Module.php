@@ -190,7 +190,102 @@ class Module {
 	}
 
 	/**
-	 * 用户在站点使用的模块列表
+	 * 获取权限菜单使用的标准模块数组
+	 * 供 getExtModuleByUserPermission 方法调用
+	 *
+	 * @param array $modules 扩展模块列表
+	 * @param string $name 模块标识
+	 * @param string $identifying 标识标识
+	 * @param string $cat_name 父级菜单标识
+	 * @param string $title 菜单标题
+	 * @param array $permission 原权限数据
+	 * @param string $url 链接地址
+	 *
+	 * @return mixed
+	 */
+	protected function formatModuleAccessData( &$modules, $name, $identifying, $cat_name, $title, $permission, $url ) {
+		$data['name']        = "$name";
+		$data['title']       = $title;
+		$data['url']         = $url;
+		$data['identifying'] = $identifying;
+		$data['status']      = 0;
+		if ( empty( $permission ) ) {
+			$data['status'] = 1;
+		} elseif ( isset( $permission[ $name ] ) && in_array( $identifying, $permission[ $name ] ) ) {
+			$data['status'] = 1;
+		}
+		$module                                    = v( 'site.modules.' . $name );
+		$modules[ $name ]['module']                = [
+			'title'     => $module['title'],
+			'name'      => $module['name'],
+			'is_system' => $module['is_system']
+		];
+		$modules[ $name ]['access'][ $cat_name ][] = $data;
+
+		return $modules;
+	}
+
+	/**
+	 * 根据用户权限获取用户的扩展模块权限列表
+	 * 注意:包括站点所有模块
+	 * 通过属性status判断该用户对某个动作有没有权限
+	 * 可用于权限菜单与后台模块菜单显示
+	 *
+	 * @param $uid 用户编号
+	 *
+	 * @return array
+	 */
+	public function getExtModuleByUserPermission( $uid ) {
+		$uid        = $uid ?: v( 'user.info.uid' );
+		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
+		$modules    = [ ];
+		foreach ( v( 'site.modules' ) as $name => $m ) {
+			//对扩展模块进行处理
+			if ( $m['setting'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_setting', '系统功能', '参数设置', $permission, "?s=site/config/post&m={$name}&mark=package" );
+			}
+			if ( $m['crontab'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_crontab', '系统功能', '定时任务', $permission, "?s=site/crontab/lists&m={$name}&mark=package" );
+			}
+			if ( $m['router'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_router', '系统功能', '路由规则', $permission, "?s=site/router/lists&m={$name}&mark=package" );
+			}
+			if ( $m['domain'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_domain', '系统功能', '域名设置', $permission, "?m={$name}&action=system/domain/set&mark=package" );
+			}
+			if ( $m['middleware'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_middleware', '系统功能', '中间件设置', $permission, "?s=site/middleware/post&m={$name}&mark=package" );
+			}
+			if ( $m['rule'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_rule', '微信回复', '回复规则列表', $permission, "?s=site/rule/lists&m={$name}&mark=package" );
+			}
+			if ( $m['cover'] ) {
+				foreach ( $m['cover'] as $c ) {
+					$this->formatModuleAccessData( $modules, $name, 'system_cover', '微信回复', $c['title'], $permission, "?s=site/rule/lists&m={$name}&mark=package" );
+				}
+			}
+			if ( $m['budings']['member'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_member', '导航菜单', '桌面会员中心导航', $permission, "?s=site/navigate/lists&entry=member&m={$name}&mark=package" );
+			}
+			if ( $m['budings']['profile'] ) {
+				$this->formatModuleAccessData( $modules, $name, 'system_profile', '导航菜单', '移动会员中心导航', $permission, "?s=site/navigate/lists&entry=profile&m={$name}&mark=package" );
+			}
+			if ( $m['budings']['business'] ) {
+				//控制器业务功能
+				foreach ( $m['budings']['business'] as $c ) {
+					foreach ( $c['do'] as $d ) {
+						$identifying = 'controller/' . $c['controller'] . '/' . $d['do'];
+						$this->formatModuleAccessData( $modules, $name, $identifying, $c['title'], $d['title'], $permission, "?m={$name}&action=controller/{$c['controller']}/{$d['do']}&a=1&mark=package" );
+					}
+				}
+			}
+		}
+
+		return $modules;
+	}
+
+	/**
+	 * 用户在站点可以使用的扩展模块数据
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
@@ -198,18 +293,23 @@ class Module {
 	 * @return mixed
 	 */
 	public function getBySiteUser( $siteId = 0, $uid = 0 ) {
-		$siteId = $siteId ?: SITEID;
-		$uid    = $uid ?: v( 'user.info.uid' );
-		/**
-		 * 插件模块列表
-		 */
-		$modules = UserPermission::where( 'type', '<>', 'system' )
-		                         ->where( 'siteid', $siteId )
-		                         ->where( 'uid', $uid )
-		                         ->lists( 'type' ) ?: [ ];
+		static $cache = [ ];
+		$name = "cache_{$siteId}_{$uid}";
+		if ( ! isset( $cache[ $name ] ) ) {
+			$siteId = $siteId ?: SITEID;
+			$uid    = $uid ?: v( 'user.info.uid' );
+			/**
+			 * 插件模块列表
+			 */
+			$permission = UserPermission::where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' );
+			$modules    = v( 'site.modules' );
+			if ( isset( $permission['system'] ) ) {
+				unset( $permission['system'] );
+				$modules = array_intersect_key( $modules, $permission );
+			}
+		}
 
-		//获取模块按行业类型
-		return $modules ? $this->getModulesByIndustry( $modules ) : [ ];
+		return $cache[ $name ] = $modules;
 	}
 
 	/**
@@ -224,12 +324,12 @@ class Module {
 	public function getModulesByIndustry( $modules = [ ] ) {
 		$data = [ ];
 		foreach ( (array) v( 'site.modules' ) as $m ) {
-			if ( ( empty( $modules ) || in_array( $m['name'], $modules ) ) && $m['is_system'] == 0 ) {
+			if ( in_array( $m['name'], $modules ) && $m['is_system'] == 0 ) {
 				$data[ $this->industry[ $m['industry'] ] ][] = [
-					'title' => $m['title'],
-					'name'  => $m['name'],
-					'preview'  => $m['preview'],
-					'thumb'  => $m['thumb'],
+					'title'   => $m['title'],
+					'name'    => $m['name'],
+					'preview' => $m['preview'],
+					'thumb'   => $m['thumb'],
 				];
 			}
 		}

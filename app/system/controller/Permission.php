@@ -112,96 +112,15 @@ class Permission {
 			}
 			message( '权限设置成功', 'refresh', 'success' );
 		}
-		//获取帐号原有权限
-		$old = \User::getUserAtSiteAccess( SITEID, $uid );
-		/**
-		 * 读取系统菜单
-		 * 并根据原数据设置状态
-		 */
-		$menus = Db::table( 'menu' )->get();
-		foreach ( $menus as $k => $v ) {
-			$menus[ $k ]['checked'] = 0;
-			if ( isset( $old['system'] ) && in_array( $v['permission'], $old['system'] ) ) {
-				$menus[ $k ]['checked'] = 1;
-			}
-		}
-		$menusAccess = \Arr::channelLevel( $menus ?: [ ], 0, '', 'id', 'pid' );
-
-		/**
-		 * 对扩展模块状态进行设置
-		 */
-		$allModules = \Module::getSiteAllModules( SITEID, false );
+		//系统菜单权限
+		$menus       = \Menu::getUserMenuAccess( siteid(), $uid );
+		$menusAccess = \Arr::channelLevel( $menus, 0, '', 'id', 'pid' );
 		//模块权限
-		$moduleAccess = [ ];
-		foreach ( $allModules as $k => $m ) {
-			if ( $m['is_system'] == 0 ) {
-				//对扩展模块进行处理
-				if ( $m['setting'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_setting', '参数设置', $old );
-				}
-				if ( $m['crontab'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_crontab', '定时任务', $old );
-				}
-				if ( $m['router'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_router', '路由规则', $old );
-				}
-				if ( $m['domain'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_domain', '域名设置', $old );
-				}
-				if ( $m['middleware'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_middleware', '中间件设置', $old );
-				}
-				if ( $m['rule'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_rule', '回复规则列表', $old );
-				}
-				if ( $m['rule'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_cover', '封面回复', $old );
-				}
-				if ( $m['budings']['member'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_member', '桌面会员中心导航', $old );
-				}
-				if ( $m['budings']['profile'] ) {
-					$this->formatModuleAccessData( $moduleAccess, $m, 'system_profile', '移动会员中心导航', $old );
-				}
-				if ( $m['budings']['business'] ) {
-					//控制器业务功能
-					foreach ( $m['budings']['business'] as $c ) {
-						foreach ( $c['do'] as $d ) {
-							$permission = 'controller/' . $c['controller'] . '/' . $d['do'];
-							$this->formatModuleAccessData( $moduleAccess, $m, $permission, $d['title'], $old );
-						}
-					}
-				}
-			}
-		}
+		$moduleAccess = \Module::getExtModuleByUserPermission( $uid );
 		//模块权限
 		return view()->with( [
 			'menusAccess'  => $menusAccess,
 			'moduleAccess' => $moduleAccess
 		] );
-	}
-
-	/**
-	 * 获取权限菜单使用的标准模块数组
-	 *
-	 * @param array $access 模块标识
-	 * @param array $module 模块数据
-	 * @param string $permission 标识标识
-	 * @param string $title 菜单标题
-	 * @param array $old 旧的权限数据
-	 *
-	 * @return mixed
-	 */
-	protected function formatModuleAccessData( &$access, $module, $permission, $title, $old ) {
-		$data['name']       = "modules[{$module['name']}][]";
-		$data['title']      = $title;
-		$data['permission'] = $permission;
-		$data['checked']    = 0;
-		if ( isset( $old[ $module['name'] ] ) && in_array( $permission, $old[ $module['name'] ] ) ) {
-			$data['checked'] = 1;
-		}
-		$access[ $module['title'] ][] = $data;
-
-		return $access;
 	}
 }
