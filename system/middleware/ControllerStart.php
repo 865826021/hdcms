@@ -38,7 +38,9 @@ class ControllerStart {
 		$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
 		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
 		if ( $moduleDomain ) {
-			Request::set( 'get.siteid', $moduleDomain['siteid'] );
+			if ( ! Request::get( 'siteid' ) ) {
+				Request::set( 'get.siteid', $moduleDomain['siteid'] );
+			}
 			if ( ! Request::get( 'm' ) && ! Request::get( 's' ) && ! Request::get( 'action' ) ) {
 				Request::set( 'get.m', $moduleDomain['module'] );
 			}
