@@ -11,6 +11,7 @@ namespace app\site\controller;
 
 use houdunwang\request\Request;
 use system\model\ModuleDomain;
+use system\model\Site;
 
 /**
  * 域名设置
@@ -24,19 +25,21 @@ class Domain {
 		if ( IS_POST ) {
 			//删除旧域名
 			ModuleDomain::where( 'module', v( 'module.name' ) )->where( 'siteid', siteid() )->delete();
-			$domains = array_filter( Request::post( 'domain',[] ) );
+			$domains = array_filter( Request::post( 'domain', [ ] ) );
 			foreach ( $domains as $domain ) {
-				$has = ModuleDomain::where( 'domain', $domain )->get();
-				if ( ! $has ) {
-					$model           = new ModuleDomain();
-					$model['module'] = v( 'module.name' );
-					$model['domain'] = $domain;
-					$model->save();
+				$has = ModuleDomain::where( 'domain', $domain )->first();
+				if ( $has ) {
+					$site = Site::find( $has['siteid'] );
+					message( "{$domain}已经被站点 {$site['name']}<br/>使用在 {$has['module']} 模块", '', 'error' );
 				}
+				$model           = new ModuleDomain();
+				$model['module'] = v( 'module.name' );
+				$model['domain'] = $domain;
+				$model->save();
 			}
 			message( '域名信息保存成功', '', 'success' );
 		}
-		$data = Db::table('module_domain')->where( 'module', v( 'module.name' ) )->where( 'siteid', siteid() )->get();
+		$data = Db::table( 'module_domain' )->where( 'module', v( 'module.name' ) )->where( 'siteid', siteid() )->get();
 		View::with( 'data', $data );
 
 		return view();

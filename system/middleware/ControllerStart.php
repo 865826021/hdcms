@@ -16,6 +16,7 @@ class ControllerStart {
 	public function run() {
 		//异步时隐藏父模板
 		IS_AJAX and c( 'view.blade', false );
+		$this->parseDomain();
 		//初始站点数据
 		\Site::siteInitialize();
 		//初始模块数据
@@ -28,4 +29,19 @@ class ControllerStart {
 		c( 'wechat.back_url', u( 'site.pay.weChatNotify' ) );
 	}
 
+	/**
+	 * 地址中不存在动作标识
+	 * s m a 时检测域名是否已经绑定到模块
+	 * 如果存在绑定的模块时设置当请求的的模块
+	 */
+	protected function parseDomain() {
+		if ( ! Request::get( 'm' ) && ! Request::get( 's' ) ) {
+			$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
+			$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
+			if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
+				Request::set( 'get.siteid', $moduleDomain['siteid'] );
+				Request::set( 'get.m', $moduleDomain['module'] );
+			}
+		}
+	}
 }
