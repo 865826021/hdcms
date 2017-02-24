@@ -24,7 +24,7 @@ class Domain {
 		if ( IS_POST ) {
 			//删除旧域名
 			ModuleDomain::where( 'module', v( 'module.name' ) )->where( 'siteid', siteid() )->delete();
-			$domains = array_filter( Request::post( 'domain' ) );
+			$domains = array_filter( Request::post( 'domain',[] ) );
 			foreach ( $domains as $domain ) {
 				$has = ModuleDomain::where( 'domain', $domain )->get();
 				if ( ! $has ) {

@@ -22,29 +22,34 @@ class Entry {
 	 * @return mixed
 	 */
 	public function index() {
+		/**
+		 * 如果域名在模块上绑定时
+		 * 执行模块动作
+		 */
 		$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
 		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
 		if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
+			Request::set( 'get.siteid', $moduleDomain['siteid'] );
+			Request::set( 'get.m', $moduleDomain['module'] );
+			Session::set( 'siteid', $moduleDomain['siteid'] );
+			//初始站点数据
+			\Site::siteInitialize();
+			//初始模块数据
+			\Module::moduleInitialize();
 			//站点设置了默认访问模块时访问模块的桌面入口页面
 			$module = Db::table( 'modules_bindings' )
 			            ->join( 'modules', 'modules.name', '=', 'modules_bindings.module' )
 			            ->join( 'module_domain', 'module_domain.module', '=', 'modules.name' )
 			            ->where( 'module_domain.siteid', $moduleDomain['siteid'] )
+			            ->where( 'modules.name', $moduleDomain['module'] )
 			            ->where( 'entry', 'web' )->first();
 			if ( $module && ! empty( $module['do'] ) ) {
 				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['module'] . '\system\Navigate';
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
-					Request::set( 'get.siteid', $moduleDomain['siteid'] );
-					Request::set( 'get.m', $module['module'] );
-					Session::set( 'siteid', $moduleDomain['siteid'] );
-					//初始站点数据
-					\Site::siteInitialize();
-					//初始模块数据
-					\Module::moduleInitialize();
-
 					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
 				}
 			}
+
 		}
 
 		return view();
