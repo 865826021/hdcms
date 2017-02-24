@@ -31,15 +31,15 @@ class ControllerStart {
 
 	/**
 	 * 地址中不存在动作标识
-	 * s m a 时检测域名是否已经绑定到模块
+	 * s m action 时检测域名是否已经绑定到模块
 	 * 如果存在绑定的模块时设置当请求的的模块
 	 */
 	protected function parseDomain() {
-		if ( ! Request::get( 'm' ) && ! Request::get( 's' ) ) {
-			$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
-			$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
-			if ( $moduleDomain && ! empty( $moduleDomain['module'] ) ) {
-				Request::set( 'get.siteid', $moduleDomain['siteid'] );
+		$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
+		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
+		if ( $moduleDomain ) {
+			Request::set( 'get.siteid', $moduleDomain['siteid'] );
+			if ( ! Request::get( 'm' ) && ! Request::get( 's' ) && ! Request::get( 'action' ) ) {
 				Request::set( 'get.m', $moduleDomain['module'] );
 			}
 		}

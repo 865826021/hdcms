@@ -9,7 +9,7 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
 $cloudHost         = 'http://store.hdcms.com';
-$cloudUrl          = $cloudHost."?m=store&&siteid=13&action=controller/cloud";
+$cloudUrl          = $cloudHost."?m=store&action=controller/cloud";
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );

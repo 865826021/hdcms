@@ -19,7 +19,7 @@ class Cloud {
 
 	public function __construct() {
 		$this->accounts = Db::table( 'cloud' )->first();
-		$this->url      = "http://store.hdcms.com?&secret={$this->accounts['secret']}&uid={$this->accounts['uid']}&m=store&siteid=13&action=controller";
+		$this->url      = "http://store.hdcms.com?&secret={$this->accounts['secret']}&uid={$this->accounts['uid']}&m=store&action=controller";
 	}
 
 	//验证云帐号状态
