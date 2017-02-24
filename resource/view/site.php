@@ -66,7 +66,7 @@
 						<li class="top_menu">
 							<a href="javascript:;"
 							   onclick="hdMenus.system(this)"
-							   url="{{$m['url']}}&menuid={{$m['id']}}"
+							   url="{{$m['url']}}&menuid={{$m['id']}}&siteid={{SITEID}}"
 							   menuid="{{$m['id']}}"
 							   mark="{{$m['mark']}}">
 								<i class="'fa-w {{$m['icon']}}"></i> {{$m['title']}}
@@ -151,7 +151,7 @@
 									<if value="$g['append_url']">
 										<a class="pull-right append_url"
 										   onclick="hdMenus.system(this)"
-										   url="{{$g['append_url']}}&menuid={{$g['id']}}"
+										   url="{{$g['append_url']}}&menuid={{$g['id']}}&siteid={{SITEID}}"
 										   menuid="{{$g['id']}}"
 										   mark="{{$g['mark']}}">
 											<i class="fa fa-plus"></i>
@@ -159,7 +159,7 @@
 									</if>
 									<a href="javascript:;"
 									   onclick="hdMenus.system(this)"
-									   url="{{$g['url']}}&menuid={{$g['id']}}"
+									   url="{{$g['url']}}&menuid={{$g['id']}}&siteid={{SITEID}}"
 									   menuid="{{$g['id']}}"
 									   mark="{{$g['mark']}}">{{$g['title']}}
 									</a>
@@ -181,7 +181,7 @@
 							<a href="javascript:;"
 							   onclick="hdMenus.system(this)"
 							   url="?s=site/entry/home"
-							   menuid="{{$LINKS['module']['module']['name']}}lists"
+							   menuid="{{$LINKS['module']['module']['name']}}lists&siteid={{SITEID}}"
 							   mark="package">
 								<i class="fa fa-reply-all"></i> 返回模块列表
 							</a>
@@ -189,7 +189,7 @@
 						<li class="list-group-item">
 							<a href="javascript:;"
 							   onclick="hdMenus.system(this)"
-							   url="?s=site/entry/module&m={{$LINKS['module']['module']['name']}}&mark=package"
+							   url="?s=site/entry/module&m={{$LINKS['module']['module']['name']}}&siteid={{SITEID}}&mark=package"
 							   menuid="{{$LINKS['module']['module']['name']}}"
 							   mark="package">
 								<i class="fa fa-desktop"></i> {{$LINKS['module']['module']['title']}}
@@ -210,7 +210,7 @@
 						<li class="list-group-item">
 							<a href="javascript:;"
 							   onclick="hdMenus.system(this)"
-							   url="{{$m['url']}}"
+							   url="{{$m['url']}}&siteid={{SITEID}}"
 							   menuid="{{$m['identifying']}}"
 							   module="{{$LINKS['module']['name']}}"
 							   mark="package">
@@ -234,7 +234,7 @@
 								<a href="javascript:;"
 								   onclick="hdMenus.system(this)"
 								   mark="package"
-								   url="?s=site/entry/module&m={{$g['name']}}"
+								   url="?s=site/entry/module&m={{$g['name']}}&siteid={{SITEID}}"
 								   module="{{$g['title']}}"
 								   menuid="{{$g['name']}}">
 									{{$g['title']}}

@@ -1,4 +1,5 @@
 <?php namespace module\article\model;
+
 use houdunwang\model\Model;
 
 /**

@@ -32,7 +32,7 @@ class Site extends HdController {
 			$rule['rid']      = $data['rid'];
 			$rule['module']   = 'cover';
 			$rule['name']     = 'article:site:' . SITEID;
-			$rule['keywords'] = [ [ 'content' => $data['keyword']] ];
+			$rule['keywords'] = [ [ 'content' => $data['keyword'] ] ];
 			$rid              = \Wx::rule( $rule );
 			//添加封面回复
 			$replyCover = new ReplyCover();
@@ -42,7 +42,7 @@ class Site extends HdController {
 			$replyCover['description'] = $data['description'];
 			$replyCover['thumb']       = $data['thumb'];
 			$replyCover['module']      = 'article';
-			$replyCover['url']         = '?m=article&action=controller/entry/index&siteid='.SITEID;
+			$replyCover['url']         = '?m=article&action=controller/entry/index&siteid=' . SITEID;
 			$replyCover->save();
 			message( '保存站点数据成功', __URL__, 'success' );
 		}
