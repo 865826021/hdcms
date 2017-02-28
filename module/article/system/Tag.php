@@ -18,7 +18,7 @@ class Tag {
 		$ishot        = isset( $attr['ishot'] ) ? 1 : 0;
 		$titlelen     = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
 		$order        = isset( $attr['order'] ) ? $attr['order'] : 'DESC';
-		$rand         = isset( $attr['rand'] ) ? $attr['rand'] : 1;
+		$rand         = isset( $attr['rand'] ) ? 1 : 0;
 		$php          = <<<str
 		<?php
 		//栏目检索
