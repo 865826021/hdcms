@@ -18,6 +18,7 @@ class Tag {
 		$ishot        = isset( $attr['ishot'] ) ? 1 : 0;
 		$titlelen     = isset( $attr['titlelen'] ) ? intval( $attr['titlelen'] ) : 20;
 		$order        = isset( $attr['order'] ) ? $attr['order'] : 'DESC';
+		$rand         = isset( $attr['rand'] ) ? $attr['rand'] : 1;
 		$php          = <<<str
 		<?php
 		//栏目检索
@@ -48,6 +49,10 @@ class Tag {
 		//缩略图
 		if($isthumb){
 			\$db->where('thumb','<>','');
+		}
+		//随机获取
+		if($rand){
+			\$db->orderBy('rand()');
 		}
 		//排序
 		\$_result = \$db->orderBy('orderby','desc')->orderBy('aid','$order')->get();

@@ -25,8 +25,10 @@
 						<input type="hidden" name="uid" value="{{$user['uid']}}">
 						<a href="javascript:;" onclick="selectUser()">选择用户</a> -
 						如果是新用户请先<a href="javascript:;" onclick="addUser()">添加</a>
-						<span class="help-block">一个公众号只可拥有一个主管理员，管理员有管理公众号和添加操作员的权限
-未指定主管理员时将默认属于创始人，则公众号具有所有模块及模板权限</span>
+						<span class="help-block">
+							一个公众号只可拥有一个主管理员，管理员有管理公众号和添加操作员的权限
+							未指定主管理员时将默认属于创始人，则公众号具有所有模块及模板权限
+						</span>
 					</div>
 				</div>
 			</div>
