@@ -15,8 +15,12 @@ class Cli extends Base {
 
 	/**
 	 * 生成HDCMS更新压缩包
+	 *
+	 * @param $old 上版本号
+	 * @param $new 新版本号
 	 */
-	public function upgrade() {
+	public function upgrade( $old, $new ) {
+		exec( "git diff $old $new --name-status > files.php" );
 		$files = $this->format();
 		if ( ! empty( $files ) ) {
 			foreach ( $files as $f ) {
@@ -42,8 +46,8 @@ class Cli extends Base {
 	 * @return array
 	 */
 	protected function format() {
-		if(!is_file('files.php')){
-			self::error('请选择创建版本差异文件 files.php');
+		if ( ! is_file( 'files.php' ) ) {
+			self::error( '请选择创建版本差异文件 files.php' );
 		}
 		$news = $files = preg_split( '@\n@', file_get_contents( 'files.php' ) );
 		foreach ( $files as $k => $f ) {
