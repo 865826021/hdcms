@@ -31,3 +31,8 @@
         <button type="submit" class="btn btn-primary">保存</button>
     </form>
 </block>
+<script>
+    require(['util'],function(util){
+        util.submit();
+    })
+</script>

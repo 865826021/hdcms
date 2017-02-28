@@ -65,6 +65,7 @@ class Entry {
 	 * @return mixed
 	 */
 	public function home() {
+		auth();
 		if ( ! $mark = Request::get( 'mark' ) ) {
 			//获取系统菜单
 			$menu = \Menu::all();

@@ -34,7 +34,7 @@ class MemberAddress extends Common {
 	}
 
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'uid', 'autoGetUid', 'method', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
 	];
 

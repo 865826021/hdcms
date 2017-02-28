@@ -38,6 +38,7 @@ class Site extends Common {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}
 		}
+		//
 	}
 
 	/**

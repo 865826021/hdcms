@@ -27,6 +27,7 @@ class Pay extends Common {
 	];
 
 	protected $auto = [
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'use_card', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'card_type', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

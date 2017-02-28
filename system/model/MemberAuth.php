@@ -12,7 +12,7 @@ class MemberAuth extends Common {
 		[ 'uid', 'required', '会员编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'qq', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'wechat', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'weibo', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],

@@ -18,6 +18,6 @@ class SiteTemplate extends Common {
 	protected $table    = 'site_template';
 	protected $validate = [ ];
 	protected $auto=[
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 	];
 }

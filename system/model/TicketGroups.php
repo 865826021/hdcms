@@ -18,7 +18,7 @@ namespace system\model;
 class TicketGroups extends Common {
 	protected $table = 'ticket_groups';
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'tid', 'required', '卡券编号tid不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'group_id', 'required', '会员级编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ]
 	];

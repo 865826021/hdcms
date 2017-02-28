@@ -28,7 +28,7 @@ class RuleKeyword extends Common {
 		[ 'status', 'regexp:/^[0-1]$/', '状态只能为1或0', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'rank', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'type', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

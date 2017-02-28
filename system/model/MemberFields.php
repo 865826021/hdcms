@@ -23,7 +23,7 @@ class MemberFields extends Common {
 		[ 'id', 'checkId', '当前站点不存在该字段', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'status', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'orderby', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 	];

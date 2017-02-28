@@ -41,7 +41,7 @@ class Ticket extends Common {
 	}
 
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'sn', 'autoSn', 'method', self::MUST_AUTO, self::MODEL_INSERT ],
 		[ 'starttime', 'autoStarttime', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'endtime', 'autoEndtime', 'method', self::MUST_AUTO, self::MODEL_BOTH ],

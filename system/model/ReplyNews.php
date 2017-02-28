@@ -24,7 +24,7 @@ class ReplyNews extends Common {
 		[ 'thumb', 'required', '图文消息图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'pid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'author', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'description', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

@@ -13,14 +13,6 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-sm-2 control-label star">附件空间大小</label>
-
-					<div class="col-sm-10">
-						<input type="number" name="allfilesize" class="form-control" value="{{$site['allfilesize']}}">
-						<span class="help-block">站点上传文件允许的总大小,单位MB</span>
-					</div>
-				</div>
-				<div class="form-group">
 					<label class="col-sm-2 control-label">网站站长</label>
 					<div class="col-sm-10">
 						<span class="label label-success" id="username">

@@ -23,7 +23,7 @@ class Member extends Common {
 		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'mobile', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'email', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'icon', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

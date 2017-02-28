@@ -63,7 +63,6 @@ class Group {
 			$group            = $group->toArray();
 			$group['package'] = json_decode( $group['package'], true ) ?: [ ];
 		}
-
 		return view()->with( [ 'packages' => $packages, 'group' => $group ] );
 	}
 }

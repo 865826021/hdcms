@@ -17,7 +17,7 @@ class Router extends Common {
 	protected $auto = [
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'status', 0, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'module', 'getModule', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'condition', 'getCondition', 'method', self::MUST_AUTO, self::MODEL_BOTH ],
 	];

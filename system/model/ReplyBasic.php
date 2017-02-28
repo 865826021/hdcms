@@ -23,7 +23,7 @@ class ReplyBasic extends Common {
 		[ 'content', 'required', '回复内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 	];
 
 }

@@ -12,7 +12,7 @@ class CreditsRecord extends Common {
 	protected $validate = [
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'operator', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'createtime', 'time', 'function', self::NOT_EXIST_AUTO, self::MODEL_BOTH ],

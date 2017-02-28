@@ -42,7 +42,7 @@
 					<label for="" class="col-sm-2 control-label">中间件数量</label>
 
 					<div class="col-sm-10">
-						<input type="number" class="form-control" name="maxsite" value="{{$group['middleware_num']?:100}}">
+						<input type="number" class="form-control" name="middleware_num" value="{{$group['middleware_num']?:100}}">
 						<span class="help-block">限制站点的数量，为0则不允许添加。</span>
 					</div>
 				</div>
@@ -50,7 +50,7 @@
 					<label for="" class="col-sm-2 control-label">路由数量</label>
 
 					<div class="col-sm-10">
-						<input type="number" class="form-control" name="maxsite" value="{{$group['router_num']?:100}}">
+						<input type="number" class="form-control" name="router_num" value="{{$group['router_num']?:100}}">
 						<span class="help-block">限制站点的数量，为0则不允许添加。</span>
 					</div>
 				</div>

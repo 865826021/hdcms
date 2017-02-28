@@ -1,6 +1,7 @@
 <?php namespace system\service\user;
 
 use houdunwang\request\Request;
+use system\model\SiteUser;
 use system\model\UserGroup;
 use system\model\UserPermission;
 use system\service\Common;
@@ -518,4 +519,7 @@ class User extends Common {
 
 		return $permission;
 	}
+
+
+
 }

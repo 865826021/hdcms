@@ -17,7 +17,7 @@ class Navigate extends Common {
 		[ 'entry', 'required', '导航类型不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'webid', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'css', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],

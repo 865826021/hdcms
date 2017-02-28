@@ -25,7 +25,7 @@ class ReplyCover extends Common {
 		[ 'thumb', 'required', '图片不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'web_id', 0, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'module', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'do', '', 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],

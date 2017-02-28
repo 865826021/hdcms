@@ -13,7 +13,7 @@ class ModuleSetting extends Common {
 		[ 'config', 'required', '配置数据不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ]
 	];
 	protected $auto = [
-		[ 'siteid', 'siteid', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'status', 1, 'string', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'config', 'json_encode', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'module', 'autoGetModule', 'method', self::MUST_AUTO, self::MODEL_BOTH ],

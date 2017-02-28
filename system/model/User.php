@@ -35,7 +35,7 @@ class User extends Common {
 
 	protected $auto = [
 		[ 'groupid', 'autoGroupId', 'method', self::EMPTY_AUTO, self::MODEL_INSERT ],
-		[ 'status', 1, 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'siteid', 'siteid', 'function', self::EMPTY_AUTO, self::MODEL_BOTH ],
 		[ 'regtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'regip', 'clientIp', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 		[ 'lasttime', 'time', 'function', self::MUST_AUTO, self::MODEL_INSERT ],

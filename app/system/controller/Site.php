@@ -26,32 +26,28 @@ class Site {
 	/**
 	 * 站点列表
 	 *
-	 * @param \system\model\Site $site
-	 * @param User $user
-	 *
 	 * @return mixed
 	 */
-	public function lists( \system\model\Site $site, User $user ) {
-		$user = $user->find( v( "user.info.uid" ) );
-		$site->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
-		     ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
-		     ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
-		     ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
-		     ->orderBy('siteid','DESC')
-		     ->groupBy( 'site.siteid' );
+	public function lists() {
+		$db = Db::table( "site" )->field( 'site.siteid,site.name,user.starttime,endtime,site_wechat.icon,site_wechat.is_connect' )
+		        ->leftJoin( 'site_user', 'site.siteid', '=', 'site_user.siteid' )
+		        ->leftJoin( 'user', 'site_user.uid', '=', 'user.uid' )
+		        ->leftJoin( 'site_wechat', 'site.siteid', '=', 'site_wechat.siteid' )
+		        ->orderBy( 'siteid', 'DESC' )
+		        ->groupBy( 'site.siteid' );
 		//按网站名称搜索
 		if ( $sitename = q( 'post.sitename' ) ) {
-			$site->where( 'site.name', 'like', "%{$sitename}%" );
+			$db->where( 'site.name', 'like', "%{$sitename}%" );
 		}
 		//按网站域名搜索
 		if ( $domain = q( 'post.domain' ) ) {
-			$site->where( 'site.domain', 'like', "%{$domain}%" );
+			$db->where( 'site.domain', 'like', "%{$domain}%" );
 		}
 		//普通站长获取站点列表
 		if ( ! $isSuperUser = \User::isSuperUser() ) {
-			$site->where( 'user.uid', v( 'user.info.uid' ) );
+			$db->where( 'user.uid', v( 'user.info.uid' ) );
 		}
-		if ( $sites = $site->get() ) {
+		if ( $sites = $db->get() ) {
 			//获取站点套餐与所有者数据
 			foreach ( $sites as $k => $v ) {
 				$v['package'] = \Package::getSiteAllPackageData( $v['siteid'] );
@@ -63,14 +59,13 @@ class Site {
 			}
 		}
 
-		return view()->with( [ 'sites' => $sites, 'user' => $user ] );
+		return view()->with( [ 'sites' => $sites ] );
 	}
 
 	//网站列表页面,获取站点包信息
 	public function package() {
 		//根据站长所在会员组获取套餐
-		$packageModel = new Package();
-		$pids         = $packageModel->getSiteAllPackageIds();
+		$pids         = \Package::getSiteAllPackageIds(siteid());
 		$package      = [ ];
 		if ( in_array( - 1, $pids ) ) {
 			$package[] = "所有服务";
@@ -78,8 +73,7 @@ class Site {
 			$package = Db::table( 'package' )->whereIn( 'id', $pids )->lists( 'name' );
 		}
 		//获取模块
-		$modulesModel = new Modules();
-		$modules      = $modulesModel->getSiteAllModules();
+		$modules      = \Module::getSiteAllModules();
 		ajax( [ 'package' => $package, 'modules' => $modules ] );
 	}
 
