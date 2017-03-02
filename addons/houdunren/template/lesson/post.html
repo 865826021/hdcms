@@ -1,0 +1,269 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="{{url('lesson.lists')}}">视频列表</a></li>
+        <li class="active"><a href="{{url('lesson.post')}}">添加视频</a></li>
+    </ul>
+    <form action="" method="post" class="form-horizontal ng-cloak" ng-controller="ctrl" ng-cloak>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                视频列表
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">课程标题</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">特殊属性</label>
+                    <div class="col-sm-9">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="ishot" value="1"> 头条
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="iscommend" value="1"> 推荐
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">课程简介</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" rows="5"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">详细介绍</label>
+                    <div class="col-sm-8">
+                        <textarea id="lesson_content" style="height:300px;width:100%;"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">视频截图</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="thumb" readonly="" value="">
+                            <div class="input-group-btn">
+                                <button ng-click="thumb(this)" class="btn btn-default" type="button">选择图片</button>
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-top:5px;">
+                            <img src="resource/images/nopic.jpg" class="img-responsive img-thumbnail" width="150">
+                            <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
+                                onclick="removeImg(this)">×</em>
+                            <span class="help-block">缩略图尺寸 390x240</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">授课讲师</label>
+                    <div class="col-sm-8">
+                        <select name="" class="form-control">
+                            <foreach from="$teacher" value="$t">
+                                <option value="{{$t['teacher_id']}}">{{$t['teacher_name']}}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">资源下载</h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">素材下载地址</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">软件下载地址</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">视频打包下载地址</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">视频管理</h3>
+            </div>
+            <div class="panel-body">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <video src="" poster="resource/images/nopic.jpg" width="100%"></video>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default">上传视频</button>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default">播放视频</button>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-default">删除视频</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">视频标题</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">播放时间</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">播放次数</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="well text-center" style="cursor: pointer;color:#999;">
+                        <i class="fa fa-plus-circle fa-4x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="file" id="file"/>
+        <script type="text/javascript">
+            require(['aliyunOss'], function (OSS) {
+                var client = new OSS.Wrapper({
+                    region: 'oss-cn-hangzhou',
+                    accessKeyId: 'VUFGPITAyRwwi296',
+                    accessKeySecret: 'DQDn3RSYzZ8OgZrUUfcRrnPYJgZ43r',
+                    bucket: 'houdunren'
+                });
+                document.getElementById('file').addEventListener('change', function (e) {
+                    var file = e.target.files[0];
+                    client.multipartUpload(file.name, file, {
+                        progress: function* (p) {
+                            console.log('Progress: ' + p);
+                        }
+                    }).then(function (result) {
+                        console.log(result);
+                    }).catch(function (err) {
+                        alert('上传失败');
+                    });;
+
+
+                });
+            })
+        </script>
+        <input type="submit" value="保存数据" class="btn btn-primary">
+    </form>
+    <div id="uploader" class="wu-example">
+        <!--用来存放文件信息-->
+        <div id="thelist" class="uploader-list"></div>
+        <div class="btns">
+            <div id="picker">选择文件</div>
+            <button id="ctlBtn" class="btn btn-default">开始上传</button>
+        </div>
+    </div>
+
+</block>
+<script>
+    require(['webuploader'], function (WebUploader) {
+        var uploader = WebUploader.create({
+            // 选完文件后，是否自动上传。
+            auto: true,
+            // swf文件路径
+            swf: hdjs.base + '/webuploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: hdjs.uploader,
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#picker',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            formData: {csrf_token: $('meta[name="csrf-token"]').attr('content'), user_type: window.system.user_type}
+        });
+        // 当有文件被添加进队列的时候
+        uploader.on('fileQueued', function (file) {
+            $("#thelist").append('<div id="' + file.id + '" class="item">' +
+                    '<h4 class="info">' + file.name + '</h4>' +
+                    '<p class="state">等待上传...</p>' +
+                    '</div>');
+        });
+
+        uploader.on('uploadProgress', function (file, percentage) {
+            console.log(file);
+            var $li = $('#' + file.id),
+                    $percent = $li.find('.progress .progress-bar');
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<div class="progress progress-striped active">' +
+                        '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+                        '</div>' +
+                        '</div>').appendTo($li).find('.progress-bar');
+            }
+
+            $li.find('p.state').text('上传中');
+
+            $percent.css('width', percentage * 100 + '%');
+        });
+        uploader.on('uploadSuccess', function (file) {
+            console.log(file);
+        });
+
+        uploader.on('uploadError', function (file) {
+            $('#' + file.id).find('p.state').text('上传出错');
+        });
+
+        uploader.on('uploadComplete', function (file) {
+            $('#' + file.id).find('.progress').fadeOut();
+        });
+
+
+    })
+    require(['angular', 'underscore', 'util', 'jquery', 'hdcms'], function (angular, _, util, $, hdcms) {
+        angular.module('app', []).controller('ctrl', ['$scope', function ($scope) {
+            $scope.name = 'abc';
+            $scope.tags = [
+                {text: 'Tag1', 'id': 33},
+                {text: 'Tag2'},
+                {text: 'Tag3'}
+            ];
+            $scope.thumb = function () {
+                util.image(function (images) {          //上传成功的图片，数组类型 
+                    $("[name='thumb']").val(images[0]);
+                    $(".img-thumbnail").attr('src', images[0]);
+                })
+            }
+        }]);
+        $(function () {
+            angular.bootstrap($("form")[0], ['app']);
+        });
+    });
+
+</script>

@@ -1,0 +1,126 @@
+{
+    "title": "后盾人在线教育视频系统",
+    "name": "houdunren",
+    "version": "1.0",
+    "industry": "business",
+    "resume": "在线视频播放系统",
+    "detail": "适用于在线教育公司的视频播放系统",
+    "author": "向军",
+    "url": "http:\/\/www.hdcms.com",
+    "setting": true,
+    "tag": true,
+    "crontab": true,
+    "router": true,
+    "domain": true,
+    "middleware": true,
+    "pay": true,
+    "rule": true,
+    "web": {
+        "entry": {
+            "title": "桌面入口",
+            "do": "entry",
+            "params": ""
+        },
+        "member": []
+    },
+    "mobile": {
+        "home": [],
+        "member": []
+    },
+    "subscribes": {
+        "text": false,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "processors": {
+        "text": true,
+        "image": false,
+        "voice": false,
+        "video": false,
+        "shortvideo": false,
+        "location": false,
+        "link": false,
+        "subscribe": false,
+        "unsubscribe": false,
+        "scan": false,
+        "track": false,
+        "click": false,
+        "view": false
+    },
+    "cover": [
+        {
+            "title": "微信入口",
+            "do": "entry",
+            "params": ""
+        }
+    ],
+    "business": [
+        {
+            "title": "课程管理",
+            "controller": "Lesson",
+            "action": [
+                {
+                    "title": "课程列表",
+                    "do": "lists",
+                    "params": ""
+                },
+                {
+                    "title": "发布课程",
+                    "do": "post",
+                    "directly": false
+                }
+            ]
+        },
+        {
+            "title": "标签管理",
+            "controller": "tag",
+            "action": [
+                {
+                    "title": "标签列表",
+                    "do": "lists",
+                    "directly": false
+                },
+                {
+                    "title": "新增标签",
+                    "do": "post",
+                    "directly": false
+                }
+            ]
+        },
+        {
+            "title": "讲师管理",
+            "controller": "teacher",
+            "action": [
+                {
+                    "title": "讲师列表",
+                    "do": "lists",
+                    "params": ""
+                },
+                {
+                    "title": "添加讲师",
+                    "do": "post",
+                    "directly": false
+                }
+            ]
+        }
+    ],
+    "permissions": "",
+    "compatible_version": {
+        "version2": true
+    },
+    "thumb": "thumb.jpg",
+    "preview": "cover.jpg",
+    "install": "",
+    "uninstall": "",
+    "upgrade": ""
+}

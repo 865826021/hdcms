@@ -1,0 +1,57 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#tab1" role="tab" data-toggle="tab">讲师列表</a></li>
+        <li><a href="{{url('teacher.post')}}">添加讲师</a></li>
+    </ul>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            视频列表
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th width="80">编号</th>
+                    <th width="120">名称</th>
+                    <th>介绍</th>
+                    <th width="180">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach from="$data" value="$d">
+                    <tr>
+                        <td>{{$d['teacher_id']}}</td>
+                        <td>{{$d['teacher_name']}}</td>
+                        <td>{{$d['teacher_desc']}}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a href="{{url('teacher.post',['teacher_id'=>$d['teacher_id']])}}"
+                                   class="btn btn-default btn-sm">修改资料</a>
+                                <a href="javascript:;" onclick="del({{$d['teacher_id']}},'{{$d['teacher_name']}}')"
+                                   class="btn btn-default btn-sm">删除讲师</a>
+                            </div>
+                        </td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</block>
+<script>
+    function del(teacher_id, teacher_name) {
+        require(['util', 'jquery'], function (util, $) {
+            util.confirm('确定删除老师 [' + teacher_name + '] 的资料吗?', function () {
+                $.get('{{url("teacher.del")}}', {teacher_id: teacher_id}, function (json) {
+                    if (json.valid == 1) {
+                        util.message(json.message, "refresh", 'success');
+                    } else {
+                        util.message(json.message, "", 'warning');
+                    }
+                }, 'json');
+            })
+        })
+    }
+</script>

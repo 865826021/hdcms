@@ -1,0 +1,55 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#tab1" role="tab" data-toggle="tab">标签列表</a></li>
+        <li><a href="{{url('tag.post')}}">添加标签</a></li>
+    </ul>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            视频列表
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th width="80">编号</th>
+                    <th>名称</th>
+                    <th width="180">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach from="$data" value="$d">
+                    <tr>
+                        <td>{{$d['tag_id']}}</td>
+                        <td>{{$d['tag_name']}}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="...">
+                                <a href="{{url('tag.post',['tag_id'=>$d['tag_id']])}}"
+                                   class="btn btn-default btn-sm">修改资料</a>
+                                <a href="javascript:;" onclick="del({{$d['tag_id']}},'{{$d['tag_name']}}')"
+                                   class="btn btn-default btn-sm">删除标签</a>
+                            </div>
+                        </td>
+                    </tr>
+                </foreach>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</block>
+<script>
+    function del(tag_id, tag_name) {
+        require(['util', 'jquery'], function (util, $) {
+            util.confirm('确定删除标签 [' + tag_name + '] 的资料吗?', function () {
+                $.get('{{url("tag.del")}}', {tag_id: tag_id}, function (json) {
+                    if (json.valid == 1) {
+                        util.message(json.message, "refresh", 'success');
+                    } else {
+                        util.message(json.message, "", 'warning');
+                    }
+                }, 'json');
+            })
+        })
+    }
+</script>

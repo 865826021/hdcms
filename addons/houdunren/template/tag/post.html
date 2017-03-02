@@ -1,0 +1,30 @@
+<extend file='resource/view/site.php'/>
+<block name="content">
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="{{url('tag.lists')}}">标签列表</a></li>
+        <li class="active"><a href="{{url('tag.post')}}">添加标签</a></li>
+    </ul>
+
+    <form action="" method="post" class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                视频列表
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">标签名称</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" required="required" name="tag_name" value="{{$field['tag_name']}}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="submit" value="保存数据" class="btn btn-primary">
+    </form>
+    <script>
+        require(['util'], function (util) {
+            util.submit({'successUrl': '{{url("tag.lists")}}'});
+        })
+    </script>
+</block>
