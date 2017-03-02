@@ -10,9 +10,9 @@
 		//HDJS组件需要的配置
 		hdjs = {
 			'base': 'node_modules/hdjs',
-			'uploader': '{{u("system/component/uploader")}}',
-			'filesLists': '{{u("system/component/filesLists")}}',
-			'removeImage': '{{u("system/component/removeImage")}}',
+			'uploader': '{{u("component/upload/uploader")}}',
+			'filesLists': '{{u("component/upload/filesLists")}}',
+			'removeImage': '{{u("component/upload/removeImage")}}',
 		};
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",

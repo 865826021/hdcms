@@ -14,9 +14,9 @@
 	<script>
 		hdjs = {
 			'base': 'node_modules/hdjs',
-			'uploader': '{{u("system/component/uploader")}}',
-			'filesLists': '{{u("system/component/filesLists")}}',
-			'removeImage': '{{u("system/component/removeImage")}}',
+			'uploader': '{{u("component/upload/uploader")}}',
+			'filesLists': '{{u("component/upload/filesLists")}}',
+			'removeImage': '{{u("component/upload/removeImage")}}',
 		};
 	</script>
 	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
