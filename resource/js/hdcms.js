@@ -20,7 +20,7 @@
                     footer: '<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>\
                 <button type="button" class="btn btn-primary confirm" >确定</button>',
                     id: 'usersModal',
-                    content: ["?s=system/component/users&single=0&siteid=" + siteId + "&filterUid=" + filterUid],
+                    content: ["?s=component/user/select&single=0&siteid=" + siteId + "&filterUid=" + filterUid],
                     events: {
                         'confirm': function () {
                             var bt = $("#getUsers").find("button[class*='primary']");
@@ -44,7 +44,7 @@
                 module: [],
                 template: []
             }, opt);
-            url = '?s=system/component/ajaxModulesTemplate&module=' + options.module.join('|') + '&template=' + options.template.join('|');
+            url = '?s=component/module/ajaxModulesTemplate&module=' + options.module.join('|') + '&template=' + options.template.join('|');
             var modalobj = util.modal({
                 id: 'modalList',
                 content: [url],
@@ -113,7 +113,7 @@
          */
         moduleBrowser: function (callback, mid) {
             var modalobj = util.modal({
-                content: ['?s=system/component/moduleBrowser&mid=' + mid],
+                content: ['?s=component/module/moduleBrowser&mid=' + mid],
                 title: '请选择模块',
                 width: 600,
                 show: true,//直接显示
@@ -151,7 +151,7 @@
          */
         siteTemplateBrowser: function (callback) {
             var modalobj = util.modal({
-                content: ["?s=system/component/siteTemplateBrowser"],
+                content: ["?s=component/module/siteTemplateBrowser"],
                 title: '选择模板风格',
                 width: 850,
                 show: true

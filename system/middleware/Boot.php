@@ -47,8 +47,17 @@ class Boot {
 		$config['register'] = json_decode( $config['register'], true );
 		v( 'config', $config );
 		//上传配置
-		c( 'upload', array_merge( c( 'upload' ), v( 'config.site.upload' ) ) );
-		c( 'app', array_merge( c( 'app' ), v( 'config.site.app' ) ) );
-		c( 'http', array_merge( c( 'http' ), v( 'config.site.http' ) ) );
+		if ( $upload = v( 'config.site.upload' ) ) {
+			c( 'upload', array_merge( c( 'upload' ), $upload ) );
+		}
+		if ( $app = v( 'config.site.app' ) ) {
+			c( 'app', array_merge( c( 'app' ), $app ) );
+		}
+		if ( $http = v( 'config.site.http' ) ) {
+			c( 'http', array_merge( c( 'http' ), $http ) );
+		}
+		if ( $oss = v( 'config.site.oss' ) ) {
+			c( 'oss', array_merge( c( 'oss' ), $oss ) );
+		}
 	}
 }

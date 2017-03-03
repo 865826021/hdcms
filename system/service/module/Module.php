@@ -1,5 +1,6 @@
 <?php namespace system\service\module;
 
+use system\model\Middleware;
 use system\model\Modules;
 use system\model\ModulesBindings;
 use system\model\ModuleSetting;
@@ -44,6 +45,22 @@ class Module {
 				message( '你访问的模块不存在或已经卸载,无法继续操作。', '', 'warning' );
 			}
 			v( 'module', $module );
+
+			/*
+		    * 加载扩展模块中间件
+		    */
+
+			$data = Middleware::where( 'module', v( 'module.name' ) )->get();
+			if ( $data ) {
+				foreach ( $data as $d ) {
+					\Middleware::add( $d['name'], $d['middleware'] );
+				}
+			}
+			//模块初始执行程序
+			$class = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) . v( 'module.name' ) . '\system\Init';
+			if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
+				call_user_func_array( [ new $class, 'run' ], [ ] );
+			}
 		}
 		/**
 		 * 扩展模块单独使用变量访问
@@ -53,6 +70,8 @@ class Module {
 		if ( Request::get( 'm' ) && Request::get( 'action' ) ) {
 			Request::set( 'get.s', 'site/entry/action' );
 		}
+
+
 	}
 
 	/**

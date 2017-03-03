@@ -71,6 +71,63 @@
 						<span class="help-block">请用英文半角逗号分隔文件类型</span>
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">上传类型</label>
+
+					<div class="col-sm-10">
+						<label class="radio-inline">
+							<input type="radio" value="local" ng-model="field.upload.mold"> 本地上传
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="oss" ng-model="field.upload.mold"> 阿里云OSS
+						</label>
+					</div>
+				</div>
+				<div class="well">
+					<div class="form-group" ng-if="field.upload.mold=='local'">
+						<label for="" class="col-sm-2 control-label">上传目录</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.upload.path">
+							<span class="help-block">上传到本地服务器的目录名称</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="field.upload.mold=='oss'">
+						<label for="" class="col-sm-2 control-label">accessKeyId</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.oss.accessKeyId">
+							<span class="help-block">登录阿里云访问控制查看 https://ram.console.aliyun.com/</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="field.upload.mold=='oss'">
+						<label for="" class="col-sm-2 control-label">accessKeySecret</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.oss.accessKeySecret">
+							<span class="help-block">登录阿里云访问控制查看 https://ram.console.aliyun.com</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="field.upload.mold=='oss'">
+						<label for="" class="col-sm-2 control-label">bucket 外网域名</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.oss.bucket_endpoint">
+							<span class="help-block">请登录阿里云后台查看 https://oss.console.aliyun.com/index?spm=5176.2020520101.1002.d10oss.8O7bNi# 主要用于js 结合 PHP生成sign发送使用</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="field.upload.mold=='oss'">
+						<label for="" class="col-sm-2 control-label">公共endpoint</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.oss.endpoint">
+							<span class="help-block">公共endpoint 请根据Region和Endpoint对照表: https://help.aliyun.com/document_detail/31837.html 选择, 主要用于PHP上传文件使用</span>
+						</div>
+					</div>
+					<div class="form-group" ng-if="field.upload.mold=='oss'">
+						<label for="" class="col-sm-2 control-label">bucket</label>
+						<div class="col-sm-5">
+							<input type="text" class="form-control" ng-model="field.oss.bucket">
+							<span class="help-block">Bucket块名称 https://oss.console.aliyun.com/index</span>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 		<div class="panel panel-default">
@@ -113,9 +170,15 @@
 	require(['angular', 'util'], function (angular, util) {
 		angular.module('myApp', []).controller('myController', ['$scope', function ($scope) {
 			$scope.field =<?php echo $field ? json_encode( $field ) : '{"is_open":0,"close_message":"网站维护中,请稍候访问","enable_code":1,"upload":{}}';?>;
-			$('form').submit(function () {
-				$('[name="site"]').val(angular.toJson($scope.field));
-			})
+			util.submit({
+				data:this.data,
+				//提交前执行的函数,函数返回true才会提交，可以提交前进行表单验证等处理
+				before:function(){
+					this.data = {site: angular.toJson($scope.field)};
+					return true;
+				},
+				successUrl:'refresh'
+			});
 		}]);
 
 		angular.bootstrap(document.getElementById('form'), ['myApp']);

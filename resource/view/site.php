@@ -10,9 +10,10 @@
 		//HDJS组件需要的配置
 		hdjs = {
 			'base': 'node_modules/hdjs',
-			'uploader': '{{u("component/upload/uploader")}}',
-			'filesLists': '{{u("component/upload/filesLists")}}',
-			'removeImage': '{{u("component/upload/removeImage")}}',
+			'uploader': '{{u("component/upload/uploader",["m"=>Request::get("m")])}}',
+			'filesLists': '{{u("component/upload/filesLists",["m"=>Request::get("m")])}}',
+			'removeImage': '{{u("component/upload/removeImage",["m"=>Request::get("m")])}}',
+			'ossSign': '{{u("component/oss/sign",["m"=>Request::get("m")])}}',
 		};
 		window.system = {
 			attachment: "{{__ROOT__}}/attachment",
@@ -207,16 +208,16 @@
 					</div>
 					<ul class="list-group menus collapse in hide module_action" aria-expanded="true" mark="package">
 						<foreach from="$t" value="$m">
-						<li class="list-group-item">
-							<a href="javascript:;"
-							   onclick="hdMenus.system(this)"
-							   url="{{$m['url']}}&siteid={{SITEID}}"
-							   menuid="{{$m['identifying']}}"
-							   module="{{$LINKS['module']['name']}}"
-							   mark="package">
-								<i class="{{$m['ico']}}"></i> {{$m['title']}}
-							</a>
-						</li>
+							<li class="list-group-item">
+								<a href="javascript:;"
+								   onclick="hdMenus.system(this)"
+								   url="{{$m['url']}}&siteid={{SITEID}}"
+								   menuid="{{$m['identifying']}}"
+								   module="{{$LINKS['module']['name']}}"
+								   mark="package">
+									<i class="{{$m['ico']}}"></i> {{$m['title']}}
+								</a>
+							</li>
 						</foreach>
 					</ul>
 				</foreach>
@@ -256,7 +257,7 @@
 						</a>
 					</li>
 					<li class="active">
-						<a href="?s=site/entry/module&mark=package&mark=package&m={{$LINKS['module']['name']}}">{{$LINKS['module']['title']}}</a>
+						<a href="?s=site/entry/module&mark=package&mark=package&m={{v('module.name')}}">{{v('module.title')}}</a>
 					</li>
 					<if value="$module_action_name">
 						<li class="active">

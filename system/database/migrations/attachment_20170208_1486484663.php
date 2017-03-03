@@ -23,6 +23,7 @@ CREATE TABLE `hd_attachment` (
   `user_type` char(10) NOT NULL DEFAULT '' COMMENT '用户类型',
   `data` varchar(100) NOT NULL DEFAULT '' COMMENT '辅助信息',
   `status` tinyint(1) unsigned NOT NULL COMMENT '状态',
+  `content` text NOT NULL COMMENT '扩展数据内容',
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `data` (`data`),

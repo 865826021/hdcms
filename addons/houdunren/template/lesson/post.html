@@ -151,33 +151,44 @@
                 </div>
             </div>
         </div>
-
-        <input type="file" id="file"/>
-        <script type="text/javascript">
-            require(['aliyunOss'], function (OSS) {
-                var client = new OSS.Wrapper({
-                    region: 'oss-cn-hangzhou',
-                    accessKeyId: 'VUFGPITAyRwwi296',
-                    accessKeySecret: 'DQDn3RSYzZ8OgZrUUfcRrnPYJgZ43r',
-                    bucket: 'houdunren'
-                });
-                document.getElementById('file').addEventListener('change', function (e) {
-                    var file = e.target.files[0];
-                    client.multipartUpload(file.name, file, {
-                        progress: function* (p) {
-                            console.log('Progress: ' + p);
-                        }
-                    }).then(function (result) {
-                        console.log(result);
-                    }).catch(function (err) {
-                        alert('上传失败');
-                    });;
-
-
+        <button id="selectfiles" type="button">上传</button>
+        <script>
+            require(['oss'], function (oss) {
+                oss.upload({
+                    el: 'selectfiles',
+                    dir: 'aaaccc/',
                 });
             })
         </script>
-        <input type="submit" value="保存数据" class="btn btn-primary">
+
+
+        <!--<input type="file" id="file"/>-->
+        <!--<script type="text/javascript">-->
+            <!--require(['aliyunOss'], function (OSS) {-->
+                <!--var client = new OSS.Wrapper({-->
+                    <!--region: 'oss-cn-hangzhou',-->
+                    <!--accessKeyId: 'VUFGPITAyRwwi296',-->
+                    <!--accessKeySecret: 'DQDn3RSYzZ8OgZrUUfcRrnPYJgZ43r',-->
+                    <!--bucket: 'houdunren'-->
+                <!--});-->
+                <!--document.getElementById('file').addEventListener('change', function (e) {-->
+                    <!--var file = e.target.files[0];-->
+                    <!--client.multipartUpload(file.name, file, {-->
+                        <!--progress: function*(p) {-->
+                            <!--console.log('Progress: ' + p);-->
+                        <!--}-->
+                    <!--}).then(function (result) {-->
+                        <!--console.log(result);-->
+                    <!--}).catch(function (err) {-->
+                        <!--alert('上传失败');-->
+                    <!--});-->
+                    <!--;-->
+
+
+                <!--});-->
+            <!--})-->
+        <!--</script>-->
+        <!--<input type="submit" value="保存数据" class="btn btn-primary">-->
     </form>
     <div id="uploader" class="wu-example">
         <!--用来存放文件信息-->

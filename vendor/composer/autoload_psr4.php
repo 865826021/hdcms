@@ -22,6 +22,7 @@ return array(
     'houdunwang\\rbac\\' => array($vendorDir . '/houdunwang/rbac/src'),
     'houdunwang\\qq\\' => array($vendorDir . '/houdunwang/qq/src'),
     'houdunwang\\page\\' => array($vendorDir . '/houdunwang/page/src'),
+    'houdunwang\\oss\\' => array($vendorDir . '/houdunwang/oss/src'),
     'houdunwang\\model\\' => array($vendorDir . '/houdunwang/model/src'),
     'houdunwang\\middleware\\' => array($vendorDir . '/houdunwang/middleware/src'),
     'houdunwang\\mail\\' => array($vendorDir . '/houdunwang/mail/src'),
@@ -52,4 +53,5 @@ return array(
     'houdunwang\\alipay\\' => array($vendorDir . '/houdunwang/alipay/src'),
     'app\\' => array($baseDir . '/app'),
     'addons\\' => array($baseDir . '/addons'),
+    'OSS\\' => array($vendorDir . '/aliyuncs/oss-sdk-php/src/OSS'),
 );

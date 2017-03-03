@@ -49,6 +49,7 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
             'houdunwang\\rbac\\' => 16,
             'houdunwang\\qq\\' => 14,
             'houdunwang\\page\\' => 16,
+            'houdunwang\\oss\\' => 15,
             'houdunwang\\model\\' => 17,
             'houdunwang\\middleware\\' => 22,
             'houdunwang\\mail\\' => 16,
@@ -82,6 +83,10 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         array (
             'app\\' => 4,
             'addons\\' => 7,
+        ),
+        'O' => 
+        array (
+            'OSS\\' => 4,
         ),
     );
 
@@ -149,6 +154,10 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         'houdunwang\\page\\' => 
         array (
             0 => __DIR__ . '/..' . '/houdunwang/page/src',
+        ),
+        'houdunwang\\oss\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/houdunwang/oss/src',
         ),
         'houdunwang\\model\\' => 
         array (
@@ -269,6 +278,10 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         'addons\\' => 
         array (
             0 => __DIR__ . '/../..' . '/addons',
+        ),
+        'OSS\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aliyuncs/oss-sdk-php/src/OSS',
         ),
     );
 

@@ -57,7 +57,7 @@
 							<input type="text" class="form-control input-lg" name="code" placeholder="请输入验证码"
 							       aria-describedby="basic-addon2">
 							<span class="input-group-addon">
-                            <img src="{{u('code')}}" onclick="this.src='{{u('code')}}&_Math.random()'"
+                            <img src="{{u('system/entry/code')}}" onclick="this.src='{{u('system/entry/code')}}&_Math.random()'"
                                  style="cursor: pointer">
                         </span>
 						</div>

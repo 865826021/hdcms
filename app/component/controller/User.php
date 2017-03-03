@@ -10,7 +10,7 @@ class User {
 	 * 选择用户
 	 * @return mixed
 	 */
-	public function users() {
+	public function select() {
 		\User::loginAuth();
 		if ( IS_POST ) {
 			//过滤不显示的用户
