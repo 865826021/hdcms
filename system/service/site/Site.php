@@ -38,7 +38,6 @@ class Site extends Common {
 				message( '你访问的站点不存在', 'back', 'error' );
 			}
 		}
-		//
 	}
 
 	/**
@@ -249,7 +248,7 @@ class Site extends Common {
 		//站点模块
 		$data['modules'] = \Module::getSiteAllModules( $siteId, false );
 		foreach ( $data as $key => $value ) {
-			d( "{$key}:{$siteId}", $value,0, [ 'siteid' => $siteId ] );
+			d( "{$key}:{$siteId}", $value, 0, [ 'siteid' => $siteId ] );
 		}
 
 		return true;

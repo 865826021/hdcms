@@ -3,6 +3,9 @@ return [
 	//服务提供者
 	'providers' => [
 		'houdunwang\error\ErrorProvider',
+		'houdunwang\cli\CliProvider',
+		'houdunwang\middleware\MiddlewareProvider',
+		'houdunwang\route\RouteProvider',
 		'houdunwang\session\SessionProvider',
 		'houdunwang\config\ConfigProvider',
 		'houdunwang\loader\LoaderProvider',
@@ -11,8 +14,6 @@ return [
 		'houdunwang\validate\ValidateProvider',
 		'houdunwang\log\LogProvider',
 		'houdunwang\view\ViewProvider',
-		'houdunwang\route\RouteProvider',
-		'houdunwang\cli\CliProvider',
 		'houdunwang\alipay\AliPayProvider',
 		'houdunwang\collection\CollectionProvider',
 		'houdunwang\db\DbProvider',
@@ -22,7 +23,6 @@ return [
 		'houdunwang\cookie\CookieProvider',
 		'houdunwang\xml\XmlProvider',
 		'houdunwang\qq\QqProvider',
-		'houdunwang\middleware\MiddlewareProvider',
 		'houdunwang\wechat\WeChatProvider',
 		'houdunwang\curl\CurlProvider',
 		'houdunwang\dir\DirProvider',

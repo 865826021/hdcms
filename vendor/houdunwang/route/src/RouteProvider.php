@@ -16,7 +16,11 @@ class RouteProvider extends Provider {
 	public $defer = false;
 
 	public function boot() {
-
+		Config::set( 'route.cache', Config::get( 'http.route_cache' ) );
+		Config::set( 'route.mode', Config::get( 'http.route_mode' ) );
+		//解析路由
+		require ROOT_PATH . '/system/routes.php';
+		\Route::dispatch();
 	}
 
 	public function register() {

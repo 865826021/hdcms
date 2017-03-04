@@ -14,6 +14,14 @@ class Boot {
 		$this->install();
 		//加载配置项
 		$this->config();
+		//设置路由
+		$this->router();
+		//分析模块域名
+		$this->parseDomain();
+		//初始站点数据
+		\Site::siteInitialize();
+		//初始模块数据
+		\Module::moduleInitialize();
 	}
 
 	/**
@@ -61,6 +69,47 @@ class Boot {
 		}
 		if ( $oss = v( 'config.site.oss' ) ) {
 			c( 'oss', array_merge( c( 'oss' ), $oss ) );
+		}
+	}
+
+	/**
+	 * 设置模块路由规则
+	 * 根据站点编号读取该站点规则
+	 * 并设置到系统路由队列中
+	 */
+	protected function router() {
+		$url = preg_replace( '@/index.php/@', '', $_SERVER['REQUEST_URI'] );
+		$url = trim( $url, '/' );
+		if ( preg_match( '@^([a-z]+)(\d+)@', $url, $match ) ) {
+			if ( count( $match ) == 3 ) {
+				//设置站点与模块变量
+				Request::set( 'get.siteid', $match[2] );
+				Request::set( 'get.m', $match[1] );
+			}
+			if ( $siteid = Request::get( 'siteid' ) ) {
+				$routes = Db::table( 'router' )->where( 'siteid', $siteid )->get();
+				foreach ( $routes as $r ) {
+					Route::alias( $r['router'], $r['url'] )->where( json_decode( $r['condition'], true ) );
+				}
+			}
+		}
+	}
+
+	/**
+	 * 地址中不存在动作标识
+	 * s m action 时检测域名是否已经绑定到模块
+	 * 如果存在绑定的模块时设置当请求的的模块
+	 */
+	protected function parseDomain() {
+		$domain       = trim( $_SERVER['HTTP_HOST'] . dirname( $_SERVER['SCRIPT_NAME'] ), '/\\' );
+		$moduleDomain = Db::table( 'module_domain' )->where( 'domain', $domain )->first();
+		if ( $moduleDomain ) {
+			if ( ! Request::get( 'siteid' ) ) {
+				Request::set( 'get.siteid', $moduleDomain['siteid'] );
+			}
+			if ( ! Request::get( 'm' ) && ! Request::get( 's' ) && ! Request::get( 'action' ) ) {
+				Request::set( 'get.m', $moduleDomain['module'] );
+			}
 		}
 	}
 }

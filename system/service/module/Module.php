@@ -49,7 +49,6 @@ class Module {
 			/*
 		    * 加载扩展模块中间件
 		    */
-
 			$data = Middleware::where( 'module', v( 'module.name' ) )->get();
 			if ( $data ) {
 				foreach ( $data as $d ) {
@@ -70,8 +69,6 @@ class Module {
 		if ( Request::get( 'm' ) && Request::get( 'action' ) ) {
 			Request::set( 'get.s', 'site/entry/action' );
 		}
-
-
 	}
 
 	/**

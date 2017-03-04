@@ -8,7 +8,7 @@ return [
 	| 全局中间件系统会自动执行不需要人为调用
 	| 会在路由解析前执行
 	*/
-	'global'     => [ ],
+	'global'     => ['system\middleware\Boot' ],
 	/*
 	|--------------------------------------------------------------------------
 	| 系统中间件
@@ -17,14 +17,7 @@ return [
 	| 不需要人为调用系统自动执行
 	| 以下中间件排前面的先执行
 	*/
-	'system'     => [
-		//系统启动时执行
-		'boot'             => [ 'system\middleware\Boot' ],
-		//应用开启前执行的中间件
-		'app_begin'        => [ 'system\middleware\AppBegin'],
-		//控制器开始前执行
-		'controller_start' => [ 'system\middleware\ControllerStart']
-	],
+	'system'     => [ ],
 	/*
 	|--------------------------------------------------------------------------
 	| 控制器中间件

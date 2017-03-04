@@ -17,6 +17,7 @@ class ViewProvider extends Provider {
 	public $defer = true;
 
 	public function boot() {
+		Config::set( 'view.compile_open', Config::get( 'app.debug' ) );
 	}
 
 	public function register() {

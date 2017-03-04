@@ -191,6 +191,8 @@ class User extends Common {
 	 */
 	public function loginAuth( $deal = 'show' ) {
 		if ( Session::get( 'admin_uid' ) ) {
+			//载入后台用户信息到全局变量
+			$this->initUserInfo();
 			return true;
 		}
 		switch ( $deal ) {

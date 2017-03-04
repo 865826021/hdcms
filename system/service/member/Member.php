@@ -10,11 +10,10 @@ class Member extends Common {
 
 	//用户登录检测
 	public function isLogin() {
-		if ( ! Session::get( "member_uid" ) ) {
-			message( '请登录后操作', url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' ), 'error' );
+		if ( Session::get( "member_uid" ) ) {
+			$this->initMemberInfo();
 		}
-
-		return true;
+		message( '请登录后操作', url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' ), 'error' );
 	}
 
 	//初始用户信息
@@ -70,6 +69,7 @@ class Member extends Common {
 					$model->save();
 				}
 				Session::set( 'member_uid', $auth['uid'] );
+
 				return true;
 			}
 		}
