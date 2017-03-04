@@ -7,8 +7,6 @@
  * @author 向军
  * @url http://open.hdcms.com
  */
-use addons\houdunren\model\Tag;
-use addons\houdunren\model\Teacher;
 use addons\houdunren\model\Lesson as LessonModel;
 use houdunwang\request\Request;
 use module\HdController;
