@@ -16,6 +16,7 @@ class RouteProvider extends Provider {
 	public $defer = false;
 
 	public function boot() {
+		Config::set( 'controller.app', Config::get( 'app.path' ) );
 		Config::set( 'route.cache', Config::get( 'http.route_cache' ) );
 		Config::set( 'route.mode', Config::get( 'http.route_mode' ) );
 		//解析路由

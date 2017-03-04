@@ -1,4 +1,4 @@
-<?php namespace houdunwang\framework\middleware;
+<?php namespace houdunwang\middleware\middleware;
 
 use houdunwang\config\Config;
 use houdunwang\request\Request;
@@ -6,7 +6,7 @@ use houdunwang\request\Request;
 /**
  * 表单令牌验证
  * Class Csrf
- * @package hdphp\middleware
+ * @package houdunwang\middleware\middleware
  */
 class Csrf {
 	//验证令牌

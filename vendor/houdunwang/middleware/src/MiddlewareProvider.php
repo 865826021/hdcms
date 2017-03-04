@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\middleware;
 
+use houdunwang\config\Config;
 use houdunwang\framework\build\Provider;
 
 class MiddlewareProvider extends Provider {
@@ -17,14 +18,14 @@ class MiddlewareProvider extends Provider {
 
 	public function boot() {
 		//控制器访问时控制器或方法不存在时执行的中间件
-		c( 'middleware.system.controller_not_found', [ 'houdunwang\framework\middleware\ControllerNotFound' ] );
-		c( 'middleware.system.action_not_found', [ 'houdunwang\framework\middleware\ActionNotFound' ] );
+		Config::set( 'middleware.system.controller_not_found', [ 'houdunwang\middleware\middleware\ControllerNotFound' ] );
+		Config::set( 'middleware.system.action_not_found', [ 'houdunwang\middleware\middleware\ActionNotFound' ] );
 		//路由规则没有匹配时执行
-		c( 'middleware.system.router_not_found', [ 'houdunwang\framework\middleware\RouterNotFound' ] );
+		Config::set( 'middleware.system.router_not_found', [ 'houdunwang\middleware\middleware\RouterNotFound' ] );
 		//csrf表单令牌验证
-		c( 'middleware.system.csrf_validate', [ 'houdunwang\framework\middleware\Csrf' ] );
+		Config::set( 'middleware.system.csrf_validate', [ 'houdunwang\middleware\middleware\Csrf' ] );
 		//分配表单验证失败信息
-		c( 'middleware.system.form_validate', [ 'houdunwang\framework\middleware\Validate' ] );
+		Config::set( 'middleware.system.form_validate', [ 'houdunwang\middleware\middleware\Validate' ] );
 		//执行全局中间件
 		\Middleware::globals();
 		\Middleware::system( 'csrf_validate' );

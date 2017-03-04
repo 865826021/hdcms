@@ -93,12 +93,12 @@ class Base {
 		if ( is_array( $class ) ) {
 			//数组配置时
 			foreach ( $class as $c ) {
-				if ( class_exists( $c ) ) {
+				if ( class_exists( $c ) && method_exists( $c, 'run' ) ) {
 					return Container::callMethod( $c, 'run' );
 				}
 			}
 		} else {
-			if ( class_exists( $class ) ) {
+			if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
 				return Container::callMethod( $class, 'run' );
 			}
 		}
@@ -113,12 +113,12 @@ class Base {
 	 * @return Base
 	 */
 	public function add( $name, $class ) {
-		$class = is_array( $class ) ? $class : [ $class ];
+		$class      = is_array( $class ) ? $class : [ $class ];
 		$middleware = $this->config( 'web.' . $name ) ?: [ ];
 		foreach ( $class as $c ) {
 			array_push( $middleware, $c );
 		}
-		$this->config( 'web.' . $name, array_unique($middleware ));
+		$this->config( 'web.' . $name, array_unique( $middleware ) );
 	}
 
 	/**
@@ -133,12 +133,12 @@ class Base {
 		if ( is_array( $class ) ) {
 			//数组配置时
 			foreach ( $class as $c ) {
-				if ( class_exists( $c ) ) {
+				if ( class_exists( $c ) && method_exists( $c, 'run' ) ) {
 					return Container::callMethod( $c, 'run' );
 				}
 			}
 		} else {
-			if ( class_exists( $class ) ) {
+			if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
 				return Container::callMethod( $class, 'run' );
 			}
 		}

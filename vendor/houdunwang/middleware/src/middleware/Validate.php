@@ -1,8 +1,8 @@
-<?php namespace houdunwang\framework\middleware;
+<?php namespace houdunwang\middleware\middleware;
 /**
- * 全局中间件
- * Class App
- * @package hdphp\middleware\build
+ * 表单验证中间件
+ * Class Validate
+ * @package houdunwang\middleware\middleware
  */
 class Validate {
 	//执行中间件

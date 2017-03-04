@@ -20,7 +20,7 @@ class ControllerProvider extends Provider {
 	public $defer = true;
 
 	public function boot() {
-		Config::set( 'controller.app', Config::get( 'app.path' ) );
+
 	}
 
 	public function register() {
