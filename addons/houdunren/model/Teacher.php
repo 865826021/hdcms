@@ -14,7 +14,7 @@ class Teacher extends Model {
 		[ 'teacher_name', 'required', '讲师名称不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
-		//发布时间
+		[ 'siteid', 'siteid', 'function', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
 		[ 'createtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 }

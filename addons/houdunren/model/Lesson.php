@@ -3,17 +3,18 @@
 use houdunwang\model\Model;
 
 /**
- * 标签管理
- * Class Tag
+ * 课程管理
+ * Class Lesson
  * @package addons\houdunren\model
  */
-class Tag extends Model {
-	protected $table = 'houdunren_tag';
+class Lesson extends Model {
+	protected $table = 'houdunren_lesson';
 	protected $allowFill = [ '*' ];
 	protected $validate = [
-		[ 'tag_name', 'required', '标签名称不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
+		[ 'lesson_title', 'required', '标题不能为空', self::EMPTY_VALIDATE, self::MODEL_INSERT ],
 	];
 	protected $auto = [
 		[ 'siteid', 'siteid', 'function', self::NOT_EXIST_AUTO, self::MODEL_INSERT ],
+		[ 'createtime', 'time', 'function', self::EMPTY_AUTO, self::MODEL_INSERT ],
 	];
 }

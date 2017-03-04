@@ -16,7 +16,6 @@
                         <th width="80">编号</th>
                         <th>课程名称</th>
                         <th>讲师</th>
-                        <th>标签</th>
                         <th>推荐</th>
                         <th>热门</th>
                         <th width="180">操作</th>
@@ -25,12 +24,23 @@
                     <tbody>
                     <foreach from="$data" value="$d">
                         <tr>
-                            <td>{{$d['id']}}</td>
+                            <td>{{$d['lesson_id']}}</td>
                             <td>{{$d['lesson_title']}}</td>
                             <td>{{$d['teacher_name']}}</td>
-                            <td>{{$d['tag']}}</td>
-                            <td>{{$d['lesson_iscommend']}}</td>
-                            <td>{{$d['lesson_ishot']}}</td>
+                            <td>
+                                <if value="$d['lesson_iscommend']==1">
+                                    是
+                                    <else/>
+                                    否
+                                </if>
+                            </td>
+                            <td>
+                                <if value="$d['lesson_ishot']==1">
+                                    是
+                                    <else/>
+                                    否
+                                </if>
+                            </td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="{{url('lesson.post',['id'=>$d['id']])}}"
