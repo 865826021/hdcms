@@ -25,12 +25,9 @@
 </nav>
 <!--导航end-->
 <div class="container-fluid">
-
 	<h1>&nbsp;</h1>
-
 	<div style="background: url('resource/images/logo.png') no-repeat;background-size: contain;height:60px;"></div>
 	<br/>
-
 	<div class="alert alert-info clearfix jumbotron">
 		<h4>&nbsp;</h4>
 

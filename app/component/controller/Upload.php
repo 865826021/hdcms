@@ -12,11 +12,11 @@ class Upload {
 			message( '请登录后操作', 'back', 'error' );
 		}
 		if ( ! Request::post( 'user_type' ) ) {
-			message( '请设置user_type' );
+			message( '请在前台页面设置user_type变量值', '', 'error' );
 		}
 		//中间件
-		\Middleware::exe('upload_begin');
-		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->path(Request::post('uploadDir','attachment'))->upload();
+		\Middleware::exe( 'upload_begin' );
+		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->path( Request::post( 'uploadDir', 'attachment' ) )->upload();
 		if ( $file ) {
 			$data = [
 				'uid'        => v( Request::post( 'user_type' ) . '.info.uid' ),

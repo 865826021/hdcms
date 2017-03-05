@@ -3,49 +3,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>HDCMS - 免费开源多站点管理系统</title>
-	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-	<link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-	<script src="{{__ROOT__}}/node_modules/hdjs/js/jquery.min.js"></script>
-	<script src="{{__ROOT__}}/node_modules/hdjs/app/util.js"></script>
-	<script src="{{__ROOT__}}/node_modules/hdjs/require.js"></script>
-	<script>
-		hdjs = {
-			'base': 'node_modules/hdjs',
-			'uploader': '{{u("system/component/uploader")}}',
-			'filesLists': '{{u("system/component/filesLists")}}',
-			'removeImage': '{{u("system/component/removeImage")}}',
-		};
-	</script>
-	<script src="{{__ROOT__}}/node_modules/hdjs/config.js"></script>
-	<script src="{{__ROOT__}}/resource/js/hdcms.js"></script>
-	<link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
-	<script>
-		window.system = {
-			attachment: "{{__ROOT__}}/attachment",
-			root: "{{__ROOT__}}",
-			url: "{{__URL__}}",
-			//用于上传等组件使用标识当前是后台用户
-			user_type: 'user'
-		}
-	</script>
-	<script>
-		require(['jquery'], function ($) {
-			//为异步请求设置CSRF令牌
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
-		})
-		if (navigator.appName == 'Microsoft Internet Explorer') {
-			if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
-				alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
-			}
-		}
-	</script>
+	<include file="resource/view/common.php"/>
 </head>
 <body class="system">
 <div class="container-fluid admin-top ">
@@ -67,7 +25,8 @@
 						</li>
 					</if>
 					<li>
-						<a href="http://www.kancloud.cn/houdunwang/hdcms/169716" target="_blank"><i class="fa fa-w fa-file-code-o"></i> 在线文档</a>
+						<a href="http://www.kancloud.cn/houdunwang/hdcms/169716" target="_blank"><i
+								class="fa fa-w fa-file-code-o"></i> 在线文档</a>
 					</li>
 					<li>
 						<a href="http://bbs.houdunwang.com" target="_blank"><i class="fa fa-w fa-forumbee"></i> 论坛讨论</a>
@@ -119,10 +78,12 @@
 		<div class="col-md-6">
 			<ul class="nav nav-pills pull-right">
 				<if value="q('session.system.login')=='hdcms'">
-				<li>
-					<a href="?s=system/site/lists" class="tile <if value='ACTION==" lists"'>active</if>">
-					<i class="fa fa-sitemap fa-2x"></i>网站管理
-					</a>
+					<li>
+						<a href="?s=system/site/lists" class="tile <if value='ACTION==" lists"'>active
+				</if>
+				">
+				<i class="fa fa-sitemap fa-2x"></i>网站管理
+				</a>
 				</li>
 				<li>
 					<a href="?s=system/manage/menu" class="tile <if value='ACTION==" menu"'>active</if>">
@@ -146,7 +107,8 @@
 		<a href="http://www.hdphp.com">开源框架</a>
 		<a href="http://bbs.houdunwang.com">后盾论坛</a>
 		<br/>
-		Powered by hdcms <?php $cloud = Db::table('cloud')->first()?> {{$cloud['version']}} Build: {{date('Y-m-d H:i:s',$cloud['build'])}} © 2014-2019 www.hdcms.com
+		Powered by hdcms <?php $cloud = Db::table( 'cloud' )->first() ?> {{$cloud['version']}} Build: {{date('Y-m-d
+		H:i:s',$cloud['build'])}} © 2014-2019 www.hdcms.com
 	</div>
 	<div class="hdcms-upgrade">
 		<a href="{{u('system/cloud/upgrade')}}"><span class="label label-danger">亲:) 有新版本了,快更新吧</span></a>

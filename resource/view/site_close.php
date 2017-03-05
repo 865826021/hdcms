@@ -17,6 +17,5 @@
           {{v('config.site.close_message')}}
 	  </div>
 </div>
-
 </body>
 </html>

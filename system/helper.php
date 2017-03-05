@@ -95,6 +95,7 @@ function url( $action, $args = [ ], $module = '' ) {
 		array_unshift( $info, 'controller' );
 	}
 
+
 	return __ROOT__ . "/?m=" . $module . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
 }
