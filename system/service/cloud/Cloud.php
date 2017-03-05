@@ -57,29 +57,29 @@ class Cloud {
 	}
 
 	/**
-	 * 检测HDCMS有没有新版本可用来更新
+	 * 检测系统有没有新版本可用来更新
 	 * @return array
 	 */
 	public function getUpgradeVersion() {
 		$data = CloudModel::find( 1 )->toArray();
-		$res = Curl::post( $this->url . '/cloud/getUpgradeVersion', $data );
+		$res  = Curl::post( $this->url . '/cloud/getUpgradeVersion', $data );
 
 		return json_decode( $res, true );
 	}
 
 	/**
-	 * 更新HDCMS安装数量
+	 * 更新云上的系统安装数量
 	 * @return mixed
 	 */
 	public function updateHDownloadNum() {
 		$res = Curl::get( $this->url . '/cloud/updateHDownloadNum&build='
-		                   . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
+		                  . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
 
 		return json_decode( $res, true );
 	}
 
 	/**
-	 * 下载HDCMS更新包
+	 * 下载系统更新包
 	 * @return array
 	 */
 	public function downloadUpgradeVersion() {
@@ -222,8 +222,8 @@ class Cloud {
 	/**
 	 * 下载应用
 	 *
-	 * @param $type
-	 * @param $id
+	 * @param string $type 应用类型模块或模板
+	 * @param int $id 应用在云编号
 	 */
 	public function downloadApp( $type, $id ) {
 		$this->checkAccount();

@@ -215,7 +215,6 @@ class Module {
 		//获取模块xml数据
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
-			//整合添加到模块表中的数据
 			//权限标识处理
 			$permissions = [ ];
 			foreach ( (array) preg_split( '/\n/', $config['permissions'] ) as $v ) {
@@ -224,6 +223,7 @@ class Module {
 					$permissions[] = [ 'title' => trim( $d[0] ), 'do' => trim( $d[1] ) ];
 				}
 			}
+			//添加到模块系统中
 			$model                = new Modules();
 			$model['name']        = $config['name'];
 			$model['version']     = $config['version'];
@@ -250,7 +250,9 @@ class Module {
 			$model->save();
 			//执行模块安装程序
 			$class = 'addons\\' . $config['name'] . '\system\Setup';
-			call_user_func_array( [ new $class, 'install' ], [ ] );
+			if ( class_exists( $class ) && method_exists( $class, 'install' ) ) {
+				call_user_func_array( [ new $class, 'install' ], [ ] );
+			}
 			//添加模块动作表数据
 			if ( ! empty( $config['web']['entry'] ) ) {
 				$d           = $config['web']['entry'];
@@ -334,5 +336,4 @@ class Module {
 		}
 		message( '模块卸载成功', u( 'installed' ) );
 	}
-
 }

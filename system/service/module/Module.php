@@ -445,7 +445,9 @@ class Module {
 		}
 		//执行模块本身的卸载程序
 		$class = 'addons\\' . $name . '\system\Setup';
-		call_user_func_array( [ new $class, 'uninstall' ], [ ] );
+		if ( class_exists( $class ) && method_exists( $class, 'uninstall' ) ) {
+			call_user_func_array( [ new $class, 'uninstall' ], [ ] );
+		}
 
 		//更新套餐数据
 		\Package::removeModule( $name );

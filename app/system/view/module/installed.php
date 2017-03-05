@@ -64,7 +64,7 @@
 				</div>
 				<div class="media-left">
 					<a href="#">
-						<img class="media-object" src="{{nopic($m['thumb'])}}" style="width: 50px;height: 50px;"/>
+						<img class="media-object" src="{{pic($m['thumb'])}}" style="width: 50px;height: 50px;"/>
 					</a>
 				</div>
 				<div class="media-body">

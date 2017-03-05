@@ -30,7 +30,6 @@
 	<br/>
 	<div class="alert alert-info clearfix jumbotron">
 		<h4>&nbsp;</h4>
-
 		<div class="col-xs-3">
 			<i class="fa fa-5x fa-w fa-warning"></i>
 		</div>
