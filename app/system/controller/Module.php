@@ -197,6 +197,7 @@ class Module {
 			Service::make( $data );
 			Init::make( $data );
 			Pay::make( $data );
+			Helper::make( $data );
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块创建成功', 'prepared' );
 		}
