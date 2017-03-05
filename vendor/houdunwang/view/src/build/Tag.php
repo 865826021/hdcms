@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\view\build;
 
+use houdunwang\config\Config;
 use houdunwang\view\View;
 
 class Tag extends TagBase {
@@ -145,7 +146,7 @@ php;
 	//块布局时引入布局页的bladeshow块
 	public function _extend( $attr ) {
 		//开启blade模板功能
-		if ( $this->view->config( 'blade' ) ) {
+		if ( Config::get( 'view.blade' ) ) {
 			return ( new View() )->make( $this->replaceConst( $attr['file'] ) );
 		}
 	}
@@ -157,7 +158,7 @@ php;
 
 	//视图模板定义的内容(子级)
 	public function _block( $attr, $content ) {
-		if ( $this->view->config( 'blade' ) ) {
+		if ( Config::get( 'view.blade' ) ) {
 			$this->content = str_replace( "<!--blade_{$attr['name']}-->", $content, $this->content );
 		} else {
 			return $content;
@@ -166,14 +167,14 @@ php;
 
 	//布局模板定义用于显示在视图模板的内容(父模板)
 	public function _widget( $attr, $content ) {
-		if ( $this->view->config( 'blade' ) ) {
+		if (Config::get( 'view.blade' ) ) {
 			self::$widget[ $attr['name'] ] = $content;
 		}
 	}
 
 	//视图模板引用布局模板(子模板)
 	public function _parent( $attr ) {
-		if ( $this->view->config( 'blade' ) ) {
+		if ( Config::get( 'view.blade' )) {
 			$content = self::$widget[ $attr['name'] ];
 			foreach ( $attr as $k => $v ) {
 				$content = str_replace( '{{' . $k . '}}', $v, $content );

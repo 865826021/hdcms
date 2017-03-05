@@ -39,8 +39,8 @@ abstract class TagBase {
 	 * @return 模板内容
 	 */
 	public function parse() {
-		$this->left  = $this->view->config( 'tag_left' );
-		$this->right = $this->view->config( 'tag_right' );
+		$this->left  = Config::get( 'view.tag_left' );
+		$this->right = Config::get( 'view.tag_right' );
 		//解析标签
 		foreach ( $this->tags as $tag => $param ) {
 			if ( $param['block'] ) {

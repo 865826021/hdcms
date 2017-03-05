@@ -346,7 +346,7 @@ class Model implements ArrayAccess, Iterator {
 					$data = Arr::filterKeys( $data, $this->denyFill, 1 );
 				}
 			}
-			$this->original = array_merge($this->original,$data);
+			$this->original = array_merge( $this->original, $data );
 		}
 		//不允许设置主键字段
 		if ( isset( $this->original[ $this->pk ] ) ) {
@@ -490,13 +490,7 @@ class Model implements ArrayAccess, Iterator {
 	 * @return mixed
 	 */
 	public static function __callStatic( $method, $params ) {
-		static $links = [ ];
-		$model = get_called_class();
-		if ( ! isset( $links[ $model ] ) ) {
-			$links[ $model ] = ( new static() );
-		}
-
-		return call_user_func_array( [ $links[ $model ], $method ], $params );
+		return call_user_func_array( [ new static(), $method ], $params );
 	}
 
 	protected function returnParse( $method, $result, $model ) {
@@ -529,6 +523,7 @@ class Model implements ArrayAccess, Iterator {
 					return $result;
 			}
 		}
+
 		return $result;
 	}
 }

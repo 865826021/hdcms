@@ -69,6 +69,12 @@ class Module {
 		if ( Request::get( 'm' ) && Request::get( 'action' ) ) {
 			Request::set( 'get.s', 'site/entry/action' );
 		}
+
+		//如果存在helpr模块函数库时加载
+		$funFile = "addons/{$module['name']}/system/helper.php";
+		if ( is_file( $funFile ) ) {
+			require $funFile;
+		}
 	}
 
 	/**

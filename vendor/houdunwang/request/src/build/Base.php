@@ -19,7 +19,7 @@ class Base {
 	protected $items = [ ];
 
 	//启动组件
-	public function bootstrap() {
+	public function __construct() {
 		defined( 'IS_CLI' ) or define( 'IS_CLI', PHP_SAPI == 'cli' );
 		if ( ! IS_CLI ) {
 			//post数据解析

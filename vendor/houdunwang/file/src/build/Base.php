@@ -1,5 +1,6 @@
 <?php namespace houdunwang\file\build;
 
+use houdunwang\config\Config;
 use houdunwang\oss\Oss;
 
 /** .-------------------------------------------------------------------
@@ -20,55 +21,15 @@ class Base {
 	//错误信息
 	protected $error;
 
-	/**
-	 * 上传初始化
-	 *
-	 * @param array $config
-	 * [
-	 *  'path'=>'上传目录',
-	 *  'type'=>'上传类型',
-	 *  'size'=>'上传大小,单位KB'
-	 * ]
-	 *
-	 * @return $this
-	 */
-	public function config( array $config ) {
-		//上传路径
-		if ( isset( $config['path'] ) ) {
-			$this->path = $config['path'];
+	public function __construct() {
+		foreach ( Config::get( 'upload' ) as $k => $v ) {
+			$this->$k = $v;
 		}
-		//上传类型
-		if ( isset( $config['type'] ) ) {
-			$this->type = $config['type'];
-		}
-
-		//允许大小
-		if ( isset( $config['size'] ) ) {
-			$this->size = $config['size'] * 1024;
-		}
-
-		return $this;
 	}
 
-	//设置上传类型
-	public function type( $type ) {
-		$this->type = $type;
-
-		return $this;
-	}
-
-	//设置上传大小
-	public function size( $size ) {
-		$this->size = $size * 1024;
-
-		return $this;
-	}
-
-	//设置上传目录
-	public function path( $path ) {
-		$this->path = $path;
-
-		return $this;
+	//设置属性
+	public function __call( $name, $arguments ) {
+		$this->$name = current( $arguments );
 	}
 
 	/**
@@ -256,7 +217,8 @@ class Base {
 	/**
 	 * 下载文件
 	 *
-	 * @param $filepath
+	 * @param $filepath 文件地址
+	 * @param string $name 下载后的新文件名
 	 */
 	public function download( $filepath, $name = '' ) {
 		if ( is_file( $filepath ) ) {
