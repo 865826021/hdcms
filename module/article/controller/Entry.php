@@ -48,15 +48,9 @@ class Entry extends HdController {
 		//设置模型编号
 		Request::set( 'get.mid', $category['mid'] );
 		View::with( 'hdcms', $category->toArray() );
-		if ( IS_MOBILE ) {
-			//移动端模板
-			return view( $this->template . '/article_list.html' );
-		} else {
-			//PC模板
-			$tpl = $category['ishomepage'] ? $category['index_tpl'] : $category['category_tpl'];
+		$tpl = $category['ishomepage'] ? $category['index_tpl'] : $category['category_tpl'];
 
-			return view( $this->template . "/{$tpl}" );
-		}
+		return view( $this->template . "/{$tpl}" );
 	}
 
 	/**
@@ -75,13 +69,8 @@ class Entry extends HdController {
 
 		$hdcms['category'] = $category;
 		View::with( [ 'hdcms' => $hdcms ] );
-		if ( IS_MOBILE ) {
-			return view( $this->template . '/article.html' );
-		} else {
-			//PC模板
-			$tpl = $hdcms['template'] ?: $category['content_tpl'];
+		$tpl = $hdcms['template'] ?: $category['content_tpl'];
 
-			return view( $this->template . '/' . $tpl );
-		}
+		return view( $this->template . '/' . $tpl );
 	}
 }
