@@ -5,8 +5,7 @@
 		<li role="presentation" class="active"><a href="#">扩展模块列表</a></li>
 	</ul>
 	<div class="row apps">
-		<?php $data = Db::table( 'modules' )->where( 'is_system', 0 )->get(); ?>
-		<foreach from="$data" value="$d">
+		<foreach from="Module::getBySiteUser(0,0,1212)" value="$d">
 			<div class="col-sm-6 col-md-2">
 				<div class="thumbnail">
 					<div class="img">

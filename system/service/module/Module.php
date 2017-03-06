@@ -308,17 +308,18 @@ class Module {
 	}
 
 	/**
-	 * 用户在站点可以使用的扩展模块数据
+	 * 用户在站点可以使用的模块数据
 	 * 只显示可用的没有权限的模块不包含
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号
+	 * @param int $onlyExt 只获取扩展模块
 	 *
 	 * @return mixed
 	 */
-	public function getBySiteUser( $siteId = 0, $uid = 0 ) {
+	public function getBySiteUser( $siteId = 0, $uid = 0, $onlyExt = 1 ) {
 		static $cache = [ ];
-		$name = "cache_{$siteId}_{$uid}";
+		$name = "cache_{$siteId}{$uid}" . intval( false );
 		if ( ! isset( $cache[ $name ] ) ) {
 			$siteId = $siteId ?: SITEID;
 			$uid    = $uid ?: v( 'user.info.uid' );
@@ -327,9 +328,15 @@ class Module {
 			 */
 			$permission = UserPermission::where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' );
 			$modules    = v( 'site.modules' );
-			if ( isset( $permission['system'] ) ) {
-				unset( $permission['system'] );
+			if ( ! empty( $permission ) ) {
 				$modules = array_intersect_key( $modules, $permission );
+			}
+			if ( $onlyExt ) {
+				foreach ( $modules as $k => $v ) {
+					if ( $v['is_system'] == 1 ) {
+						unset( $modules[ $k ] );
+					}
+				}
 			}
 			$cache[ $name ] = $modules;
 		}
