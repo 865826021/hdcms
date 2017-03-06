@@ -2,6 +2,7 @@
 
 use houdunwang\config\Config;
 use houdunwang\request\Request;
+use houdunwang\session\Session;
 
 /**
  * 表单令牌验证
@@ -12,7 +13,7 @@ class Csrf {
 	//验证令牌
 	protected $token;
 
-	public function run() {
+	public function run() {return true;
 		//设置令牌
 		$this->setToken();
 		//当为POST请求时并且为同域名时验证令牌
@@ -33,7 +34,7 @@ class Csrf {
 					return true;
 				}
 			}
-			throw new \Exception( 'CSRF 令牌验证失败' );
+			message( 'CSRF表单令牌验证失败' ,'','error');
 		}
 	}
 

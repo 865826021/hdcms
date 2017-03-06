@@ -6,9 +6,12 @@
  * @package app\component\controller
  */
 class Module {
+	public function __construct() {
+		auth();
+	}
+
 	//模块列表
 	public function moduleBrowser() {
-		\User::loginAuth();
 		View::with( 'modules', v( 'site.modules' ) );
 		View::with( 'useModules', explode( ',', q( 'get.mid', '', [ ] ) ) );
 
@@ -17,7 +20,6 @@ class Module {
 
 	//模块列表
 	public function moduleList() {
-		\User::loginAuth();
 		$modules = Db::table( 'modules' )->get();
 
 		return view()->with( 'modules', $modules );
@@ -29,7 +31,6 @@ class Module {
 	 * @return mixed
 	 */
 	public function ajaxModulesTemplate() {
-		\User::loginAuth();
 		$modules   = Db::table( 'modules' )->where( 'is_system', 0 )->get();
 		$templates = Db::table( 'template' )->where( 'is_system', 0 )->get();
 
@@ -41,7 +42,6 @@ class Module {
 
 	//选择站点模板模板
 	public function siteTemplateBrowser() {
-		\User::loginAuth();
 		$data = \Template::getSiteAllTemplate();
 
 		return view()->with( 'data', $data );

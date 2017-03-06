@@ -5,10 +5,11 @@
  * Class Font
  * @package app\component\controller
  */
-class Font {
+class Font extends Common {
 	//字体列表
 	public function font() {
-		auth();
+		$this->auth();
+
 		return View::make();
 	}
 }

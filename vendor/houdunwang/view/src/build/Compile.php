@@ -16,8 +16,8 @@ trait Compile {
 	final protected function compile() {
 		$compileFile = Config::get( 'view.compile_dir' ) . '/' . preg_replace( '/[^\w]/', '_', $this->file )
 		               . '_' . substr( md5( $this->file ), 0, 5 ) . '.php';
-		$status      = Config::get( 'view.compile_open' )
-		               || ! is_file( $compileFile )
+		//能否生成编译文件
+		$status      = Config::get( 'view.compile_open' ) || ! is_file( $compileFile )
 		               || ( filemtime( $this->file ) > filemtime( $compileFile ) );
 		if ( $status ) {
 			is_dir( dirname( $compileFile ) ) or mkdir( dirname( $compileFile ), 0755, true );

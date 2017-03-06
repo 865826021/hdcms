@@ -1,19 +1,19 @@
 <?php namespace app\component\controller;
 
+use houdunwang\request\Request;
+
 /**
  * 上传处理
  * Class Upload
  * @package app\component\controller
  */
-class Upload {
+class Upload extends Common {
+	public function __construct() {
+		$this->auth();
+	}
+
 	//上传图片webuploader
 	public function uploader() {
-		if ( ! v( 'user' ) && ! v( 'member' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
-		if ( ! Request::post( 'user_type' ) ) {
-			message( '请在前台页面设置user_type变量值', '', 'error' );
-		}
 		//中间件
 		\Middleware::exe( 'upload_begin' );
 		$file = \File::path( c( 'upload.path' ) . '/' . date( 'Y/m/d' ) )->path( Request::post( 'uploadDir', 'attachment' ) )->upload();
@@ -39,9 +39,6 @@ class Upload {
 
 	//获取文件列表webuploader
 	public function filesLists() {
-		if ( ! v( 'user' ) && ! v( 'member' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
 		$db = Db::table( 'attachment' )
 		        ->where( 'uid', v( Request::post( 'user_type' ) . '.info.uid' ) )
 		        ->whereIn( 'extension', explode( ',', strtolower( Request::post( 'extensions' ) ) ) )
@@ -67,9 +64,6 @@ class Upload {
 
 	//删除图片delWebuploader
 	public function removeImage() {
-		if ( ! v( 'user' ) ) {
-			message( '请登录后操作', 'back', 'error' );
-		}
 		$db   = Db::table( 'attachment' );
 		$file = $db->where( 'id', $_POST['id'] )->where( 'uid', v( 'user.info.uid' ) )->first();
 		if ( is_file( $file['path'] ) ) {

@@ -8,8 +8,6 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace houdunwang\db;
-
-use houdunwang\arr\Arr;
 use houdunwang\config\Config;
 
 /**

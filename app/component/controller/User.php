@@ -11,7 +11,7 @@ class User {
 	 * @return mixed
 	 */
 	public function select() {
-		\User::loginAuth();
+		auth();
 		if ( IS_POST ) {
 			//过滤不显示的用户
 			$filterUid = explode( ',', q( 'get.filterUid', '' ) );

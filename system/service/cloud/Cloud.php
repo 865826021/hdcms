@@ -232,6 +232,7 @@ class Cloud {
 		}
 		//获取模块信息
 		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
+
 		$app = json_decode( $app, true );
 
 		if ( $app['valid'] == 0 ) {
@@ -262,7 +263,14 @@ class Cloud {
 				$file    = "addons/{$app['name']}.zip";
 				file_put_contents( $file, $content );
 				Zip::PclZip( $file );//设置压缩文件名
-				Zip::extract( 'addons' );
+				$status = Zip::extract( 'addons' );
+				if(empty($status)){
+					\Dir::delFile($file);
+					ajax( [
+						'message' => '模块下载失败,请稍后再试',
+						'valid'   => 0
+					] );
+				}
 				file_put_contents( "addons/{$app['name']}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
 				//删除下载压缩包
 				\Dir::delFile( $file );

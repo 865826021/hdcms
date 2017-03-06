@@ -1,7 +1,7 @@
 {
-    "title": "全部选中的测试模块",
+    "title": "测试模块",
     "name": "test",
-    "version": "2",
+    "version": "1.0",
     "industry": "business",
     "resume": "模块简述",
     "detail": "模块介绍",
@@ -24,13 +24,13 @@
         "member": [
             {
                 "title": "会员中心1",
-                "do": "zuomianhuiyuzhongxin1",
-                "params": "b=1"
+                "do": "huiyuanzhongxin1",
+                "params": "a=1"
             },
             {
                 "title": "会员中心2",
-                "do": "zuomianhuiyuzhongxin2",
-                "params": "c=2"
+                "do": "huiyuanzhongxin2",
+                "params": "b=2"
             }
         ]
     },
@@ -39,13 +39,13 @@
         "member": [
             {
                 "title": "会员中心1",
-                "do": "yidonghuiyuan1",
+                "do": "mobile_huiyuanzhongxin1",
                 "params": "a=1"
             },
             {
                 "title": "会员中心2",
-                "do": "yidonghuiyuan2",
-                "params": "b=3"
+                "do": "mobile_huiyuanzhongxin2",
+                "params": "b=2"
             }
         ]
     },
@@ -82,40 +82,40 @@
     "cover": [
         {
             "title": "功能封面1",
-            "do": "gongneng1",
-            "params": "g=1"
+            "do": "gongnengfengmian1",
+            "params": "a=1"
         },
         {
-            "title": "功能封面",
-            "do": "gongneng2",
-            "params": "g=2"
+            "title": "功能封面2",
+            "do": "gongnengfengmian2",
+            "params": "b=2"
         }
     ],
     "business": [
         {
-            "title": "业务功能",
-            "controller": "yewu",
+            "title": "\b文章管理",
+            "controller": "article",
             "action": [
                 {
-                    "title": "动作方法1",
-                    "do": "action1",
+                    "title": "列表",
+                    "do": "lists",
                     "params": "a=1"
                 },
                 {
-                    "title": "动作方法2",
-                    "do": "action2",
+                    "title": "添加",
+                    "do": "add",
                     "directly": false,
-                    "params": "b=3"
+                    "params": "b=2"
                 }
             ]
         }
     ],
-    "permissions": "添加商品:shop_add\n删除商品:shop_del",
+    "permissions": "添加文章:article_add",
     "compatible_version": {
         "version2": true
     },
-    "thumb": "thumb.jpg",
-    "preview": "cover.jpg",
+    "thumb": "thumb.png",
+    "preview": "cover.png",
     "install": "",
     "uninstall": "",
     "upgrade": ""

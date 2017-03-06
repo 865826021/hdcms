@@ -167,14 +167,14 @@ php;
 
 	//布局模板定义用于显示在视图模板的内容(父模板)
 	public function _widget( $attr, $content ) {
-		if (Config::get( 'view.blade' ) ) {
+		if ( Config::get( 'view.blade' ) ) {
 			self::$widget[ $attr['name'] ] = $content;
 		}
 	}
 
 	//视图模板引用布局模板(子模板)
 	public function _parent( $attr ) {
-		if ( Config::get( 'view.blade' )) {
+		if ( Config::get( 'view.blade' ) ) {
 			$content = self::$widget[ $attr['name'] ];
 			foreach ( $attr as $k => $v ) {
 				$content = str_replace( '{{' . $k . '}}', $v, $content );

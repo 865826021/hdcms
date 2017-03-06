@@ -5,7 +5,9 @@ return [
 		'houdunwang\error\ErrorProvider',
 		'houdunwang\cli\CliProvider',
 		'houdunwang\middleware\MiddlewareProvider',
+		'houdunwang\view\ViewProvider',
 		'houdunwang\route\RouteProvider',
+
 		'houdunwang\session\SessionProvider',
 		'houdunwang\config\ConfigProvider',
 		'houdunwang\loader\LoaderProvider',
@@ -13,7 +15,6 @@ return [
 		'houdunwang\cache\CacheProvider',
 		'houdunwang\validate\ValidateProvider',
 		'houdunwang\log\LogProvider',
-		'houdunwang\view\ViewProvider',
 		'houdunwang\alipay\AliPayProvider',
 		'houdunwang\collection\CollectionProvider',
 		'houdunwang\db\DbProvider',

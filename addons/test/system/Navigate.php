@@ -22,14 +22,14 @@ class Navigate extends HdNavigate {
 	 * 会员中心1 [桌面会员中心菜单]
 	 * 使用PC端访问时在会员中心显示的菜单
 	 */
-    public function zuomianhuiyuzhongxin1() {
+    public function huiyuanzhongxin1() {
     }
 
 	/**
 	 * 会员中心2 [桌面会员中心菜单]
 	 * 使用PC端访问时在会员中心显示的菜单
 	 */
-    public function zuomianhuiyuzhongxin2() {
+    public function huiyuanzhongxin2() {
     }
 
 	/**
@@ -37,7 +37,7 @@ class Navigate extends HdNavigate {
 	 * 使用移动端设备如手机访问时
 	 * 在会员中心显示的菜单
 	 */
-    public function yidonghuiyuan1() {
+    public function mobile_huiyuanzhongxin1() {
     }
 
 	/**
@@ -45,7 +45,7 @@ class Navigate extends HdNavigate {
 	 * 使用移动端设备如手机访问时
 	 * 在会员中心显示的菜单
 	 */
-    public function yidonghuiyuan2() {
+    public function mobile_huiyuanzhongxin2() {
     }
 
 

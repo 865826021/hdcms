@@ -30,7 +30,6 @@ class Base extends \houdunwang\container\build\Base {
 		$this->constant();
 		//加载配置文件
 		Dispose::bootstrap();
-
 		//设置自动加载
 		Loader::register( [ $this, 'autoload' ] );
 		//自动加载系统服务

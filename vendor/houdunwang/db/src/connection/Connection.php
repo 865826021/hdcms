@@ -10,6 +10,7 @@
 
 namespace houdunwang\db\connection;
 
+use houdunwang\config\Config;
 use PDO;
 use Closure;
 use Exception;

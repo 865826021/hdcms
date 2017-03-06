@@ -1,4 +1,5 @@
 <?php namespace system\middleware;
+use houdunwang\db\Db;
 
 /**
  * 应用启动时执行的中间件

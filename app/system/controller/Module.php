@@ -13,6 +13,7 @@ use app\system\controller\part\Business;
 use app\system\controller\part\Config;
 use app\system\controller\part\Cover;
 use app\system\controller\part\Domain;
+use app\system\controller\part\Helper;
 use app\system\controller\part\Init;
 use app\system\controller\part\Navigate;
 use app\system\controller\part\Pay;

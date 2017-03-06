@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\view;
 
+use houdunwang\config\Config;
 use houdunwang\framework\build\Provider;
 
 class ViewProvider extends Provider {
@@ -17,11 +18,11 @@ class ViewProvider extends Provider {
 	public $defer = true;
 
 	public function boot() {
-		Config::set( 'view.compile_open', Config::get( 'app.debug' ) );
 	}
 
 	public function register() {
-		$this->app->single( 'View', function (  ) {
+		Config::set( 'view.compile_open', Config::get( 'app.debug' ) );
+		$this->app->single( 'View', function () {
 			return View::single();
 		} );
 	}

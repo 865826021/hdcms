@@ -10,8 +10,8 @@
  * '-------------------------------------------------------------------*/
 
 use Exception;
-use houdunwang\arr\Arr;
 use houdunwang\ArrayAccess;
+use houdunwang\config\Config;
 use houdunwang\dir\Dir;
 use houdunwang\page\Page;
 

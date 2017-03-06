@@ -12,12 +12,12 @@ use module\HdCover;
 
 class Cover extends HdCover {
 	//功能封面1
-	public function gongneng1() {
+	public function gongnengfengmian1() {
 		echo '这是点击封面回复(微信图文消息)后执行';
 	}
 
-	//功能封面
-	public function gongneng2() {
+	//功能封面2
+	public function gongnengfengmian2() {
 		echo '这是点击封面回复(微信图文消息)后执行';
 	}
 

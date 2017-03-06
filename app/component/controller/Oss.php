@@ -5,9 +5,9 @@
  * Class Oss
  * @package app\component\controller
  */
-class Oss {
-	public function a() {
-		\houdunwang\oss\Oss::uploadFile('1.jpg', 'resource/images/bg.jpg');
+class Oss extends Common {
+	public function __construct() {
+		$this->auth();
 	}
 
 	/**

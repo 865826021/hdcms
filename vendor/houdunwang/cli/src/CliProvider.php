@@ -17,7 +17,7 @@ class CliProvider extends Provider {
 
 	public function boot() {
 		//执行命令行指令
-		\Cli::bootstrap();
+		Cli::bootstrap();
 	}
 
 	public function register() {
