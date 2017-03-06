@@ -1,21 +1,29 @@
-<?php namespace houdunwang\wechat\build;
-
-	/** .-------------------------------------------------------------------
- * |  Software: [HDCMS framework]
- * |      Site: www.hdcms.com
+<?php
+/** .-------------------------------------------------------------------
+ * |  Software: [HDPHP framework]
+ * |      Site: www.hdphp.com
  * |-------------------------------------------------------------------
  * |    Author: 向军 <2300071698@qq.com>
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-//网页授权获取用户基本信息
+namespace houdunwang\wechat\build;
+
+use houdunwang\request\Request;
+
+/**
+ * 网页授权获取用户基本信息
+ * Class oauth
+ * @package houdunwang\wechat\build
+ */
 class oauth extends Base {
 	//公共请求方法
 	private function request( $type ) {
-		if ( q( 'get.code' ) && q( 'get.state' ) == 'STATE' ) {
+
+		if ( Request::get( 'get.code' ) && Request::get( 'get.state' ) == 'STATE' ) {
 			$url  = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" . $this->appid . "&secret=" . $this->appsecret . "&code=" . q( 'get.code' ) . "&grant_type=authorization_code";
 			$d    = $this->curl( $url );
-			$data = $this->get(  $d);
+			$data = $this->get( $d );
 
 			return isset( $data['errcode'] ) ? false : $data;
 		} else {

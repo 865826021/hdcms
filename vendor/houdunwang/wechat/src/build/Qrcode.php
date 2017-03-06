@@ -1,11 +1,18 @@
-<?php namespace houdunwang\wechat\build;
+<?php
+/** .-------------------------------------------------------------------
+ * |  Software: [HDPHP framework]
+ * |      Site: www.hdphp.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
+namespace houdunwang\wechat\build;
 
 /**
- * 二维码生成
+ * 二维码
  * Class Qrcode
  * @package houdunwang\wechat\build
- * @author 向军 <2300071698@qq.com>
- * @site www.houdunwang.com
  */
 class Qrcode extends Base {
 	/**
@@ -18,9 +25,10 @@ class Qrcode extends Base {
 
 		if ( $expire ) {
 			//临时二维码
-			$data = [ 'action_name'    => 'QR_SCENE',
-			          'expire_seconds' => 604800,
-			          'action_info'    => [ 'scene' => [ 'scene_id' => $scene_id ] ]
+			$data = [
+				'action_name'    => 'QR_SCENE',
+				'expire_seconds' => 604800,
+				'action_info'    => [ 'scene' => [ 'scene_id' => $scene_id ] ]
 			];
 		} else {
 			//永久二维码
