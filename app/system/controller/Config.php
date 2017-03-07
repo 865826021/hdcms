@@ -24,7 +24,6 @@ class Config {
 	//注册配置管理
 	public function register() {
 		if ( IS_POST ) {
-
 			$model             = ConfigModel::first();
 			$model['register'] = Request::post( 'register' );
 			$model->save();

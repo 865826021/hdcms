@@ -41,7 +41,6 @@ class Entry {
 				}
 			}
 		}
-		header('location:'.__WEB__.'/hdcms');
 		return view();
 	}
 

@@ -25,11 +25,12 @@ class Template extends HdController {
 
 	/**
 	 * 当前风格中的模板文件
+	 * 用于为栏目或文章设置个性模板
 	 */
 	public function files() {
 		$template = \Template::getTemplateData();
-		$dir      = "theme/{$template['name']}/web";
-		View::with( 'data', glob( $dir . '/*.html' ) );
+		$dir      = "theme/{$template['name']}";
+		View::with( [ 'web' => glob( $dir . '/web/*.html' ), 'mobile' => glob( $dir . '/mobile/*.html' ) ] );
 
 		return view( $this->template . '/template/template_files.html' );
 	}

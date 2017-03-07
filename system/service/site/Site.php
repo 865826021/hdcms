@@ -1,6 +1,5 @@
 <?php namespace system\service\site;
 
-use module\article\model\WebModel;
 use system\model\MemberFields;
 use system\model\MemberGroup;
 use system\model\SiteSetting;

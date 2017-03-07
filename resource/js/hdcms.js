@@ -76,7 +76,7 @@
         link: {
             system: function (callback) {
                 var modalobj = util.modal({
-                    content: ['?m=link&action=controller/link/system'],
+                    content: ['?m=link&action=controller/link/system&siteid='+system.siteid],
                     title: '请选择链接',
                     width: 600,
                     show: true,//直接显示
@@ -93,7 +93,7 @@
         //文章模块中选择模板
         template: function (callback) {
             var modalobj = util.modal({
-                content: ['?m=article&action=controller/template/files'],
+                content: ['?m=article&action=controller/template/files&siteid='+system.siteid],
                 title: '选择模板文件',
                 width: 600,
                 show: true,//直接显示

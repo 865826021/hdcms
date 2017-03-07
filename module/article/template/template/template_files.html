@@ -1,22 +1,49 @@
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>文件名</th>
-        <th width="50">操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <foreach from="$data" value="$v">
-        <tr>
-            <td>{{$v}}</td>
-            <td>
-                <button class="btn btn-default btn-sm" onclick="select('{{basename($v)}}')">选择</button>
-            </td>
-        </tr>
-    </foreach>
-    </tbody>
-</table>
-
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#template1" role="tab" data-toggle="tab">桌面站</a></li>
+    <li><a href="#template2" role="tab" data-toggle="tab">移动端</a></li>
+</ul>
+<div class="tab-content">
+    <div class="active tab-pane fade in" id="template1">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th width="50">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach from="$web" value="$v">
+                <tr>
+                    <td>{{$v}}</td>
+                    <td>
+                        <button class="btn btn-default btn-sm" onclick="select('{{basename($v)}}')">选择</button>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane fade" id="template2">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th width="50">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach from="$mobile" value="$v">
+                <tr>
+                    <td>{{$v}}</td>
+                    <td>
+                        <button class="btn btn-default btn-sm" onclick="select('{{basename($v)}}')">选择</button>
+                    </td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+    </div>
+</div>
 <script>
     //选择模板文件
     function select(file) {

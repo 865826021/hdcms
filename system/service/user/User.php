@@ -193,6 +193,7 @@ class User extends Common {
 		if ( Session::get( 'admin_uid' ) ) {
 			//载入后台用户信息到全局变量
 			$this->initUserInfo();
+
 			return true;
 		}
 		switch ( $deal ) {
@@ -233,12 +234,8 @@ class User extends Common {
 	 */
 	public function auth( $permission = '', $show = true ) {
 		//登录检测
-		$this->loginAuth();
+		$status = $this->loginAuth();
 		$uid    = v( 'user.info.uid' );
-		$status = false;
-		/**
-		 * 扩展模块权限验证
-		 */
 		//验证模块访问标识
 		$userPermission = Db::table( 'user_permission' )->where( 'siteid', SITEID )
 		                    ->where( 'uid', $uid )->lists( 'type,permission' );
@@ -274,6 +271,8 @@ class User extends Common {
 				$menuPermission = Db::table( 'menu' )->where( 'id', $menuId )->pluck( 'permission' );
 				if ( isset( $userPermission['system'] ) && in_array( $menuPermission, explode( '|', $userPermission['system'] ) ) ) {
 					$status = true;
+				} else {
+					$status = false;
 				}
 			}
 		} elseif ( $this->isOperate() ) {
@@ -521,7 +520,6 @@ class User extends Common {
 
 		return $permission;
 	}
-
 
 
 }

@@ -41,7 +41,9 @@ class Entry {
 			}
 			message( '注册成功,请登录系统', u( 'login', [ 'from' => q( 'get.form' ) ] ) );
 		}
-
+		if ( Session::get( 'admin_uid' ) ) {
+			go( 'system/site/lists' );
+		}
 		return view();
 	}
 
@@ -82,7 +84,8 @@ class Entry {
 			}
 			go($url);
 		}
-		if ( Session::get( 'user.uid' ) ) {
+
+		if ( Session::get( 'admin_uid' ) ) {
 			go( 'system/site/lists' );
 		}
 		//清除站点缓存
