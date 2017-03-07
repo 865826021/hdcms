@@ -15,7 +15,7 @@ class Base {
 	//上传类型
 	protected $type = 'jpg,jpeg,gif,png,zip,rar,doc,txt,pem';
 	//上传文件大小
-	protected $size = 10000;
+	protected $size = 100000000;
 	//上传路径
 	protected $path = 'attachment';
 	//错误信息
@@ -30,6 +30,7 @@ class Base {
 	//设置属性
 	public function __call( $name, $arguments ) {
 		$this->$name = current( $arguments );
+		return $this;
 	}
 
 	/**

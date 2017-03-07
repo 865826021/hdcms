@@ -1,5 +1,6 @@
 <?php namespace system\middleware;
 use houdunwang\db\Db;
+use houdunwang\route\Route;
 
 /**
  * 应用启动时执行的中间件
@@ -15,14 +16,10 @@ class Boot {
 		$this->install();
 		//加载配置项
 		$this->config();
-		//设置路由
-		$this->router();
 		//分析模块域名
 		$this->parseDomain();
-		//初始站点数据
-		\Site::siteInitialize();
-		//初始模块数据
-		\Module::moduleInitialize();
+		//设置路由
+		$this->router();
 	}
 
 	/**
@@ -61,6 +58,7 @@ class Boot {
 		//上传配置
 		if ( $upload = v( 'config.site.upload' ) ) {
 			c( 'upload', array_merge( c( 'upload' ), $upload ) );
+			c('upload.size',c('upload.size')*1024);
 		}
 		if ( $app = v( 'config.site.app' ) ) {
 			c( 'app', array_merge( c( 'app' ), $app ) );
@@ -81,6 +79,7 @@ class Boot {
 	protected function router() {
 		$url = preg_replace( '@/index.php/@', '', $_SERVER['REQUEST_URI'] );
 		$url = trim( $url, '/' );
+
 		if ( preg_match( '@^([a-z]+)(\d+)@', $url, $match ) ) {
 			if ( count( $match ) == 3 ) {
 				//设置站点与模块变量
@@ -88,7 +87,7 @@ class Boot {
 				Request::set( 'get.m', $match[1] );
 			}
 			if ( $siteid = Request::get( 'siteid' ) ) {
-				$routes = Db::table( 'router' )->where( 'siteid', $siteid )->get();
+				$routes = Db::table( 'router' )->where( 'siteid', $siteid )->where('status',1)->get();
 				foreach ( $routes as $r ) {
 					Route::alias( $r['router'], $r['url'] )->where( json_decode( $r['condition'], true ) );
 				}

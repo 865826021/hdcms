@@ -8,7 +8,6 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace houdunwang\view\build;
-
 use houdunwang\config\Config;
 use houdunwang\view\View;
 

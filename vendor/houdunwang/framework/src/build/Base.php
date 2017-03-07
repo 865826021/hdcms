@@ -9,7 +9,6 @@
 // '-------------------------------------------------------------------
 
 use houdunwang\config\Config;
-use houdunwang\error\Error;
 use houdunwang\loader\Loader;
 use ReflectionClass;
 

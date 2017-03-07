@@ -111,7 +111,7 @@ class Base {
 	 * @return mixed
 	 */
 	public function exe( $name ) {
-		$class = Config::set( 'middleware.web.' . $name );
+		$class = Config::get( 'middleware.web.' . $name );
 		if ( is_array( $class ) ) {
 			//数组配置时
 			foreach ( $class as $c ) {
