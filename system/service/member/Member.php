@@ -8,10 +8,21 @@ use system\model\Member as MemberModel;
 //服务功能类
 class Member extends Common {
 
-	//用户登录检测
-	public function isLogin() {
+	/**
+	 * 用户登录检测
+	 *
+	 * @param bool $return 发生错误时的处理方式 true:返回验证结果 false:直接处理
+	 *
+	 * @return bool
+	 */
+	public function isLogin( $return = false ) {
 		if ( Session::get( "member_uid" ) ) {
 			$this->initMemberInfo();
+
+			return true;
+		}
+		if ( $return ) {
+			return false;
 		}
 		message( '请登录后操作', url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' ), 'error' );
 	}
@@ -131,6 +142,9 @@ class Member extends Common {
 		$info = $this->getPasswordAndSecurity( $data['password'] );
 		if ( empty( $info['password'] ) ) {
 			message( '密码不能为空', 'back', 'error' );
+		}
+		if ( isset( $data['cpassword'] ) && $data['password'] !== $data['cpassword'] ) {
+			message( '两次密码输入不一致', '', 'error' );
 		}
 		$model['password'] = $info['password'];
 		$model['security'] = $info['security'];

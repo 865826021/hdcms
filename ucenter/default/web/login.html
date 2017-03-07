@@ -4,29 +4,13 @@
     <meta charset="utf-8"/>
     <title>会员登录 - HDCMS开源免费-微信/桌面/移动三网通CMS系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
-    <link href="{{__ROOT__}}/resource/css/hdcms.css" rel="stylesheet">
-    <script>
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            if (navigator.userAgent.indexOf("MSIE 5.0") > 0 || navigator.userAgent.indexOf("MSIE 6.0") > 0 || navigator.userAgent.indexOf("MSIE 7.0") > 0) {
-                alert('您使用的 IE 浏览器版本过低, 推荐使用 Chrome 浏览器或 IE8 及以上版本浏览器.');
-            }
-        }
-    </script>
+    <include file="resource/view/common.php"/>
 </head>
 <body class="login">
 <div class="container logo">
     <div style="background: url('{{__ROOT__}}/resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
 </div>
 <div class="container well">
-    <if value="$errors">
-        <div class="alert alert-warning">
-            <foreach from="$errors" value="$v">
-                <p>{{$v}}</p>
-            </foreach>
-        </div>
-    </if>
     <div class="row ">
         <div class="col-md-6">
             <h3>会员登录</h3>
@@ -67,5 +51,18 @@
         &nbsp;&nbsp;&nbsp;&nbsp;Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
     </div>
 </div>
+<script>
+    require(['util'], function (util) {
+        util.submit({
+            callback: function (json) {
+                if (json.valid == 1) {
+                    location.href = json.url;
+                } else {
+                    util.message(json.message, '');
+                }
+            }
+        });
+    })
+</script>
 </body>
 </html>

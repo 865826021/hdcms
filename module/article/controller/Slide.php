@@ -33,7 +33,7 @@ class Slide extends HdController {
 		$data = WebSlide::where( 'siteid', SITEID )->get();
 		View::with( 'data', $data );
 
-		return View::make( $this->template . '/slide_lists.html' );
+		return View::make( $this->template . '/slide/slide_lists.html' );
 	}
 
 	//添加&修改
@@ -47,7 +47,7 @@ class Slide extends HdController {
 		//官网列表
 		View::with( [ 'field' => $model ] );
 
-		return View::make( $this->template . '/slide_post.html' );
+		return View::make( $this->template . '/slide/slide_post.html' );
 	}
 
 	//删除幻灯图片

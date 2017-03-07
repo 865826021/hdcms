@@ -32,7 +32,7 @@ class Entry extends HdController {
 	public function register() {
 		if ( IS_POST ) {
 			\Member::register( Request::post() );
-			$this->login();
+			message( '注册成功,系统将跳转到登录页' );
 		}
 		$placeholder = [
 			1 => '手机号',
@@ -50,7 +50,7 @@ class Entry extends HdController {
 			\Member::login( Request::post() );
 			$url = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
 			Session::del( 'from' );
-			go( $url );
+			ajax( [ 'valid' => 1, 'url' => $url ] );
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {

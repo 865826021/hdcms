@@ -348,10 +348,6 @@ class Model implements ArrayAccess, Iterator {
 			}
 			$this->original = array_merge( $this->original, $data );
 		}
-		//不允许设置主键字段
-		if ( isset( $this->original[ $this->pk ] ) ) {
-			unset( $this->original[ $this->pk ] );
-		}
 		//更新时设置主键
 		if ( $this->actionType() == self::MODEL_UPDATE ) {
 			$this->original[ $this->pk ] = $this->data[ $this->pk ];

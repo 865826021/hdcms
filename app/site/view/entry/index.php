@@ -20,9 +20,8 @@
 			<h3 class="panel-title">如何解决</h3>
 		</div>
 		<ul class="list-group">
-			<li class="list-group-item">需要设置网站的域名</li>
-			<li class="list-group-item">需要设置网站的默认访问模块</li>
-			<li class="list-group-item">模块设置了 "入口导航" 功能 </li>
+			<li class="list-group-item">需要设置在站点的某个模块中设置域名</li>
+			<li class="list-group-item">模块具有 "入口导航" 功能 </li>
 			<li class="list-group-item">
 				<span class="text-danger"><i class="fa fa-info-circle"></i> 以上几点必须都要满足</span>
 			</li>

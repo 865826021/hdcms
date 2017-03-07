@@ -44,13 +44,14 @@ str;
 <?php
 	if ( IS_MOBILE ) {
 		//读取移动端菜单
-		\$_db = Db::table( 'navigate' )->where( 'entry', 'profile' )->where( 'siteid', SITEID );
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'profile' )->where( 'siteid', siteid() );
 	} else {
 		//读取桌面个人中心菜单
-		\$_db = Db::table( 'navigate' )->where( 'entry', 'member' )->where( 'siteid', SITEID );
+		\$_db = Db::table( 'navigate' )->where( 'entry', 'member' )->where( 'siteid', siteid() );
 	}
 	\$_modules_name = \$_db->where('status',1)->lists('module');
-	\$_modules = Db::table('modules')->whereIn('name',\$_modules_name)->get();
+	
+	\$_modules = \$_modules_name?Db::table('modules')->whereIn('name',\$_modules_name)->get():[];
 	foreach(\$_modules as \$field){?>
 str;
 		$php .= $content;

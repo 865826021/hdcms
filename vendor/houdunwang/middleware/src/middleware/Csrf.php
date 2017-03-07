@@ -13,11 +13,11 @@ class Csrf {
 	//验证令牌
 	protected $token;
 
-	public function run() {return true;
+	public function run() {
 		//设置令牌
 		$this->setToken();
 		//当为POST请求时并且为同域名时验证令牌
-		if ( Config::get( 'csrf.open' ) && Request::isDomain() && Request::post() ) {
+		if ( Request::isDomain() && Config::get( 'csrf.open' ) && Request::post() ) {
 			//比较POST中提交的CSRF
 			if ( Request::post( 'csrf_token' ) == $this->token ) {
 				return true;
@@ -34,7 +34,7 @@ class Csrf {
 					return true;
 				}
 			}
-			message( 'CSRF表单令牌验证失败' ,'','error');
+			message( 'CSRF表单令牌验证失败', '', 'error' );
 		}
 	}
 

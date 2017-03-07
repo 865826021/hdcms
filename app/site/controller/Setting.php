@@ -16,7 +16,7 @@ class Setting {
 	public function __construct() {
 		auth();
 		$this->id = SiteSetting::where( 'siteid', SITEID )->pluck( 'id' );
-		$this->db = SiteSetting::find( $this->id );
+		$this->db = $this->id ? SiteSetting::find( $this->id ) : new SiteSetting();
 	}
 
 	//积分设置

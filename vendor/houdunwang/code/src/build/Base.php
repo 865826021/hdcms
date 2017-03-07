@@ -44,6 +44,7 @@ class Base {
 	//设置属性值
 	public function __call( $name, $arguments ) {
 		$this->$name = current($arguments);
+		return $this;
 	}
 
 	//创建验证码
