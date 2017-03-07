@@ -75,6 +75,11 @@ class Entry {
 			$current = current( $menu );
 			$mark    = $current['mark'];
 		}
+		switch ( $mark ) {
+			case 'article':
+
+				break;
+		}
 
 		return view( VIEW_PATH . '/entry/home/' . $mark . '.php' );
 	}

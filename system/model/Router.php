@@ -48,8 +48,9 @@ class Router extends Common {
 	 * @return bool
 	 */
 	public static function addRouter( $data ) {
-		Db::table( 'router' )->where( 'module', v( 'module.name' ) )->delete();
+		Db::table( 'router' )->where( 'module', v( 'module.name' ) )->where( 'siteid', siteid() )->delete();
 		foreach ( $data as $d ) {
+			$d['siteid'] = siteid();
 			( new self() )->save( $d );
 		}
 

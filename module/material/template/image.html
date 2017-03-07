@@ -15,9 +15,9 @@
             <ul class="image">
                 <foreach from="$data" value="$v">
                     <li>
-                        <img src="{{nopic($v['file'])}}"><br/>
+                        <img src="{{pic($v['file'])}}"><br/>
                         <div class="footer-btn">
-                            <a href="{{nopic($v['file'])}}" title="预览" target="_blank">
+                            <a href="{{pic($v['file'])}}" title="预览" target="_blank">
                                 <i class="fa fa-video-camera"></i>
                             </a>
                             <a href="javascript:del({{$v['id']}})" title="删除">
