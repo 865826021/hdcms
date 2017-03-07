@@ -37,6 +37,7 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function connect( $data ) {
+
 		$res   = Curl::post( $this->url . '/cloud/connect', $data );
 		$res   = json_decode( $res, true );
 		$model = CloudModel::find( 1 );
@@ -54,6 +55,33 @@ class Cloud {
 		}
 
 		return $res;
+	}
+
+	/**
+	 * 获取系统公告
+	 *
+	 * @param int $row 条数
+	 *
+	 * @return mixed
+	 */
+	public function getSystemNotice( $row ) {
+		$data = CloudModel::find( 1 )->toArray();
+		$res  = Curl::post( $this->url . '/cloud/getSystemNotice&row=' . $row, $data );
+		return json_decode( $res, true );
+	}
+
+	/**
+	 * 获取更新列表
+	 *
+	 * @param int $row 条数
+	 *
+	 * @return mixed
+	 */
+	public function getUpgradeList( $row ) {
+		$data = CloudModel::find( 1 )->toArray();
+		$res  = Curl::post( $this->url . '/cloud/getUpgradeList&row=' . $row, $data );
+
+		return json_decode( $res, true );
 	}
 
 	/**

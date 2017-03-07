@@ -13,9 +13,13 @@
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
 					<h5 style="margin-top: 0px;"><i class="fa fa-refresh"></i> <strong>更新日志</strong></h5>
-					<p>
-						<?php echo nl2br( $upgrade['hdcms']['logs'] ); ?>
-					</p>
+					<?php $hdcmsLists =  \Cloud::getUpgradeList(5);?>
+					<foreach from="$hdcmsLists['hdcms']" value="$v">
+						<p>
+							<span>{{$v['version']}} {{$v['logs']}}</span>
+							<span class="pull-right">{{date('Y-m-d',$v['build'])}}</span>
+						</p>
+					</foreach>
 				</div>
 			</div>
 		</div>
@@ -23,10 +27,13 @@
 			<div class="panel panel-info">
 				<div class="panel-body alert-info">
 					<h5 style="margin-top: 0px;"><i class="fa fa-bullhorn"></i> <strong>系统公告</strong></h5>
-					<p>
-						<a href="">HDCMS 开发视频正在筹划中</a>
-						<span class="pull-right">2016-08-2</span>
-					</p>
+					<?php $news =  \Cloud::getSystemNotice(5);?>
+					<foreach from="$news['news']" value="$v">
+						<p>
+							<a href="{{$v['url']}}" target="_blank">{{$v['title']}}</a>
+							<span class="pull-right">{{date('Y-m-d',$v['createtime'])}}</span>
+						</p>
+					</foreach>
 				</div>
 			</div>
 		</div>

@@ -44,7 +44,7 @@ class Cloud {
 
 	//检测有没有新版本
 	public function getUpgradeVersion() {
-		ajax(\Cloud::getUpgradeVersion());
+		ajax( \Cloud::getUpgradeVersion() );
 	}
 
 	//更新HDCMS
@@ -56,27 +56,30 @@ class Cloud {
 			case 'downloadFile':
 				//下载更新包
 				$files = \Cloud::downloadUpgradeVersion();
-				ajax($files);
+				ajax( $files );
 				break;
 			case 'sql':
 				//更新SQL
 				if ( IS_POST ) {
 					cli( 'hd migrate:make' );
 					cli( 'hd seed:make' );
-					ajax(['valid'=>1,'message'=>'数据表更新成功']);
+					ajax( [ 'valid' => 1, 'message' => '数据表更新成功' ] );
 				}
+
 				return view( 'updateSql' );
 				break;
 			case 'finish':
 				$hdcms = \Cloud::getUpgradeVersion();
-				Db::table('cloud')->where('id',1)->update(['build'=>$hdcms['hdcms']['build'],'version'=>$hdcms['hdcms']['version']]);
+				Db::table( 'cloud' )->where( 'id', 1 )->update( [ 'build'   => $hdcms['hdcms']['build'],
+				                                                  'version' => $hdcms['hdcms']['version']
+				] );
 				\Cloud::updateHDownloadNum();
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
 				//获取更新版本
 				$upgrade = \Cloud::getUpgradeVersion();
-				return view()->with( [ 'upgrade' => $upgrade,'current'=>\system\model\Cloud::find(1) ] );
+				return view()->with( [ 'upgrade' => $upgrade, 'current' => \system\model\Cloud::find( 1 ) ] );
 		}
 	}
 }
