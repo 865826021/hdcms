@@ -16,13 +16,12 @@ class Cli extends Base {
 	/**
 	 * 生成HDCMS更新压缩包
 	 *
-	 * @param $old 上版本号
-	 * @param $new 新版本号
+	 * @param string $oldVersion 上版本号
 	 */
-	public function upgrade( $old, $new ) {
+	public function upgrade( $oldVersion ) {
 		exec( "git tag -l", $tags );
 		$newVersion = array_pop( $tags );
-		$oldVersion = array_pop( $tags );
+		$oldVersion = $oldVersion ?: array_pop( $tags );
 		exec( "git diff $oldVersion $newVersion --name-status ", $files );
 		$files = $this->format( $files );
 		if ( ! empty( $files ) ) {

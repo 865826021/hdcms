@@ -103,16 +103,16 @@ class Cloud {
 					//删除文件
 					if ( \Dir::delFile( $f['file'] ) === false ) {
 						$valid                       = 0;
-						$files[ $k ]['update_state'] = false;
+						$files[ $k ]['update_state'] = 0;
 					} else {
-						$files[ $k ]['update_state'] = true;
+						$files[ $k ]['update_state'] = 1;
 					}
 					break;
 				default:
 					if ( \Dir::copyFile( "upgrade/hdcms/" . $f['file'], $f['file'] ) === false ) {
-						$files[ $k ]['update_state'] = false;
+						$files[ $k ]['update_state'] = 0;
 					} else {
-						$files[ $k ]['update_state'] = true;
+						$files[ $k ]['update_state'] = 1;
 					}
 			}
 		}

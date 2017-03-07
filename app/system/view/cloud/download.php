@@ -37,8 +37,8 @@
 				<p style="margin: 0px;">
 						<span class="text-info" ng-repeat="v in data.files" style="display: block;">
 							@{{v.file}}
-							<i class="fa fa-check-circle-o alert-success" ng-if="v.status==1"></i>
-							<i class="fa fa-times-circle-o alert-danger" ng-if="v.status==0"></i>
+							<i class="fa fa-check-circle-o alert-success" ng-if="v.update_state==1"></i>
+							<i class="fa fa-times-circle-o alert-danger" ng-if="v.update_state==0"></i>
 						</span>
 				</p>
 				<span class="text-info" ng-repeat="(k,v) in files" style="display: block;">
