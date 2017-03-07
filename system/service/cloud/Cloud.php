@@ -93,42 +93,31 @@ class Cloud {
 		chdir( '..' );
 
 		//将旧版本文件进行备份
-		$files   = file_get_contents( 'upgrade/hdcms/upgrade_files.php' );
-		$files   = preg_split( '/\n/', $files );
+		$files   = include 'upgrade/hdcms/upgrade_files.php';
 		$current = Db::table( 'cloud' )->find( 1 );
-		foreach ( $files as $f ) {
-			$info = preg_split( '/\s+/', $f );
-			\Dir::copyFile( $info[1], "upgrade/{$current['version']}/{$info[1]}" );
-		}
-		//直接文件替换操作
-		$formats = [ ];
-		foreach ( $files as $f ) {
-			$info      = preg_split( '/\s+/', $f );
-			$formats[] = [ 'type' => $info[0], 'file' => $info[1] ];
-		}
-		//验证结果
-		$valid = 1;
-		foreach ( $formats as $k => $info ) {
-			switch ( $info['type'] ) {
+		$valid   = 1;
+		foreach ( $files as $k => $f ) {
+			\Dir::copyFile( $f['file'], "upgrade/{$current['version']}/{$f['file']}" );
+			switch ( $f['state'] ) {
 				case 'D':
 					//删除文件
-					if ( \Dir::delFile( $info[1] ) === false ) {
-						$valid                   = 0;
-						$formats[ $k ]['status'] = false;
+					if ( \Dir::delFile( $f['file'] ) === false ) {
+						$valid                       = 0;
+						$files[ $k ]['update_state'] = false;
 					} else {
-						$formats[ $k ]['status'] = true;
+						$files[ $k ]['update_state'] = true;
 					}
 					break;
 				default:
-					if ( \Dir::copyFile( "upgrade/hdcms/" . $info['file'], $info['file'] ) === false ) {
-						$formats[ $k ]['status'] = false;
+					if ( \Dir::copyFile( "upgrade/hdcms/" . $f['file'], $f['file'] ) === false ) {
+						$files[ $k ]['update_state'] = false;
 					} else {
-						$formats[ $k ]['status'] = true;
+						$files[ $k ]['update_state'] = true;
 					}
 			}
 		}
 
-		return [ 'files' => $formats, 'valid' => $valid ];
+		return [ 'files' => $files, 'valid' => $valid ];
 	}
 
 	/**
@@ -264,8 +253,8 @@ class Cloud {
 				file_put_contents( $file, $content );
 				Zip::PclZip( $file );//设置压缩文件名
 				$status = Zip::extract( 'addons' );
-				if(empty($status)){
-					\Dir::delFile($file);
+				if ( empty( $status ) ) {
+					\Dir::delFile( $file );
 					ajax( [
 						'message' => '模块下载失败,请稍后再试',
 						'valid'   => 0

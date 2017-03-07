@@ -20,64 +20,50 @@ class Cli extends Base {
 	 * @param $new 新版本号
 	 */
 	public function upgrade( $old, $new ) {
-		exec( "git diff $old $new --name-status > files.php" );
-		$files = $this->format();
+		exec( "git tag -l", $tags );
+		$newVersion = array_pop( $tags );
+		$oldVersion = array_pop( $tags );
+		exec( "git diff $oldVersion $newVersion --name-status ", $files );
+		$files = $this->format( $files );
 		if ( ! empty( $files ) ) {
+			//复制文件
 			foreach ( $files as $f ) {
-				if ( in_array( $f[0], [ 'A', 'M' ] ) ) {
-					$info = preg_split( '@\s+@', trim( $f ) );
-					\Dir::copyFile( $info[1], 'build/hdcms/' . $info[1] );
-				}
+				\Dir::copyFile( $f['file'], '/Users/xj/Desktop/build/hdcms/' . $f['file'] );
 			}
-			file_put_contents( 'build/hdcms/upgrade_files.php', implode( "\n", $files ) );
-			chdir( 'build' );
+			file_put_contents( '/Users/xj/Desktop/build/hdcms/upgrade_files.php', "<?php return " . var_export( $files, true ) . ';?>' );
+			chdir( '/Users/xj/Desktop/build' );
 			Zip::PclZip( 'hdcms.zip' );
 			Zip::create( 'hdcms' );
-			copy( 'hdcms.zip', '../hdcms.zip' );
+			copy( 'hdcms.zip', '/Users/xj/Desktop/hdcms.zip' );
 			chdir( '..' );
 		}
-		\Dir::del( 'build' );
-		@unlink( 'files.php' );
+		\Dir::del( '/Users/xj/Desktop/build' );
 	}
 
 	/**
 	 * 格式化文件数据
-	 * 将R替换类型进行处理
+	 * 移除不存在的文件
+	 *
+	 * @param $files 版本差异中受影响的文件
+	 *
 	 * @return array
 	 */
-	protected function format() {
-		if ( ! is_file( 'files.php' ) ) {
-			self::error( '请选择创建版本差异文件 files.php' );
-		}
-		$news = $files = preg_split( '@\n@', file_get_contents( 'files.php' ) );
+	protected function format( $files ) {
+		//组合后的文件
+		$format = [ ];
 		foreach ( $files as $k => $f ) {
-			//把替换的文件更改成删除与添加
-			if ( empty( $f ) ) {
-				unset( $news[ $k ] );
-			} elseif ( $f[0] == 'R' ) {
-				$info = preg_split( '@\s+@', trim( $f ) );
-				unset( $news[ $k ] );
-				$news[] = "D\t{$info[1]}";
-				$news[] = "A\t{$info[2]}";
+			preg_match( '/\w+\s+([^\s]+)/', $f, $file );
+			if ( is_file( $file[1] ) ) {
+				if ( in_array( $file[0], [ 'A', 'M' ] ) ) {
+					$format[] = [ 'file' => $file[1], 'state' => $file[0] ];
+				} else {
+					$format[] = [ 'file' => $file[1], 'state' => 'M' ];
+				}
+			} else {
+				$format[] = [ 'file' => $file[1], 'state' => 'D' ];
 			}
 		}
 
-		/**
-		 * 移除不需要生成到压缩包中的文件
-		 * 插件目录文件也要移除
-		 */
-		$data = [ ];
-		foreach ( $news as $f ) {
-			$info = preg_split( '@\s+@', trim( $f ) );
-			if ( in_array( $info[1], $this->filterFiles ) ||
-			     substr( $info[1], 0, 6 ) == 'addons' ||
-			     substr( $info[1], 0, 5 ) == 'theme'
-			) {
-				continue;
-			}
-			$data[] = "{$info[0]}\t{$info[1]}";
-		}
-
-		return $data;
+		return $format;
 	}
 }

@@ -113,9 +113,7 @@
 	require(['angular'], function (angular) {
 		angular.module('hd', []).controller('ctrl', ['$scope', function ($scope) {
 			$scope.send = function () {
-				if (confirm('更新将直接覆盖本地文件, 请注意备份文件和数据. \n\n**另注意** 更新过程中不要关闭此浏览器窗口.')) {
-					location.href = "{{u('upgrade',['action'=>'download'])}}";
-				}
+				location.href = "{{u('upgrade',['action'=>'download'])}}";
 			}
 		}]);
 		angular.bootstrap(document.getElementById('form'), ['hd']);
