@@ -1,4 +1,6 @@
 <?php namespace houdunwang\view\build;
+use houdunwang\config\Config;
+
 /**
  * 模板编译
  * Class Compile

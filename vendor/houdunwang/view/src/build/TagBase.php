@@ -9,6 +9,8 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\view\build;
 
+use houdunwang\config\Config;
+
 abstract class TagBase {
 	protected $content;
 	protected $view;

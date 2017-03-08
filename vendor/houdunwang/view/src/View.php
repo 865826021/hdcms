@@ -9,8 +9,6 @@
  * '-------------------------------------------------------------------*/
 namespace houdunwang\view;
 
-use houdunwang\arr\Arr;
-use houdunwang\config\Config;
 use houdunwang\view\build\Base;
 
 class View {

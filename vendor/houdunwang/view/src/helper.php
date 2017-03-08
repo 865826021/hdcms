@@ -4,7 +4,7 @@
  */
 if ( ! function_exists( 'view' ) ) {
 	function view( $tpl = '', $expire = 0 ) {
-		return \View::make( $tpl, $expire );
+		return \houdunwang\view\View::make( $tpl, $expire );
 	}
 }
 if ( ! function_exists( 'widget' ) ) {
