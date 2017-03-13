@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>HDCMS - 免费开源多站点管理系统</title>
-	<include file="resource/view/common.php"/>
+	<?php include 'resource/view/common.php';?>
 </head>
 <body class="system">
 <div class="container-fluid admin-top ">

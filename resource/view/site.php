@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>{{v('site.info.name')}} - HDCMS开源免费内容管理系统</title>
-	<include file="resource/view/common.php"/>
+	<?php include 'resource/view/common.php';?>
 </head>
 <body class="site">
 <?php $LINKS = \Menu::get(); ?>
