@@ -13,7 +13,7 @@
 					</div>
 					<div class="caption">
 						<h4>
-							<a href="?s=site/entry/module&m={{$d['name']}}&mark=package&siteid={{siteid()}}">{{$d['title']}}</a>
+							<a href="?s=site/entry/module&m={{$d['name']}}&mark=package">{{$d['title']}}</a>
 						</h4>
 					</div>
 				</div>

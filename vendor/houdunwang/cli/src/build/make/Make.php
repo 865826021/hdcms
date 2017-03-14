@@ -55,6 +55,18 @@ class Make extends Base {
 	//创建数据迁移
 	public function migration( $name, $arg ) {
 		$info = explode( '=', $arg );
+//		//检测文件是否存在,也检测类名
+//		foreach ( glob( ROOT_PATH . '/system/database/migrations/*.php' ) as $f ) {
+//			if ( substr( basename( $f ), 0, strlen($name) ) == $name ) {
+//				$this->error( "File already exists" );
+//			}
+//		}
+		//创建migration表用于记录动作
+		// if ( ! Schema::tableExists( 'migrations' ) ) {
+		// 	$sql = "CREATE TABLE " . c( 'database.prefix' ) . 'migrations(migration varchar(255) not null,batch int)CHARSET UTF8';
+		// 	Db::execute( $sql );
+		// }
+
 		$file = ROOT_PATH . '/system/database/migrations/' . $name . '_' . date( 'Ymd' ) . '_' . time() . '.php';
 		if ( $info[0] == '--create' ) {
 			//创建模型文件
@@ -72,6 +84,12 @@ class Make extends Base {
 
 	//创建数据迁移
 	public function seed( $name ) {
+//		//检测文件是否存在,也检测类名
+//		foreach ( glob( ROOT_PATH . '/system/database/seeds/*.php' ) as $f ) {
+//			if ( substr( basename( $f ), 18, - 4 ) == $name ) {
+//				$this->error( "File already exists" );
+//			}
+//		}
 		$file = ROOT_PATH . '/system/database/seeds/' . $name . '_' . date( 'Ymd' ) . '_' . time() . '.php';
 		//创建文件
 		$data = file_get_contents( __DIR__ . '/view/seeder.tpl' );
@@ -113,6 +131,7 @@ class Make extends Base {
 
 	//创建中间件
 	public function service( $name ) {
+		echo $name;
 		$name  = ucfirst( $name );
 		$files = [
 			__DIR__ . '/view/service/HdForm.tpl',
