@@ -53,7 +53,10 @@ class Setting {
 	//注册设置
 	public function register() {
 		if ( IS_POST ) {
-			$this->db['register'] = Request::post( 'register' );
+			$this->db['register']       = Request::post( 'register' );
+			$this->db['username_login'] = Request::post( 'username_login' );
+			$this->db['oauth_login']    = json_encode( Request::post( 'oauth_login' ) );
+			$this->db['wechat_login']   = Request::post( 'wechat_login' );
 			$this->db->save();
 			\Site::updateCache();
 			message( '修改会员注册设置成功', '', 'success' );

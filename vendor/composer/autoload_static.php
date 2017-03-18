@@ -10,16 +10,16 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         '0f066c7cf996f26fedf8f5e90a916a95' => __DIR__ . '/..' . '/houdunwang/config/src/helper.php',
         '14807c96bb6306ffcbe58d1273d94bca' => __DIR__ . '/..' . '/houdunwang/db/src/helper.php',
         'a1b9718204ff2589da0807dfa6153c7a' => __DIR__ . '/..' . '/houdunwang/crypt/src/helper.php',
-        'd95a0091433ea5217a6e232a02c48d3c' => __DIR__ . '/..' . '/houdunwang/cache/src/helper.php',
         '5943d84bf0db79d84f3eb0f51461e736' => __DIR__ . '/..' . '/houdunwang/request/src/helper.php',
+        'd95a0091433ea5217a6e232a02c48d3c' => __DIR__ . '/..' . '/houdunwang/cache/src/helper.php',
         '3299168317b10de7cb7942003bd52a29' => __DIR__ . '/..' . '/houdunwang/response/src/helper.php',
-        'c54daba5473de13d796733fe0422e2c2' => __DIR__ . '/..' . '/houdunwang/collection/src/helper.php',
         'faaf22bd2d61568b16e9dac83f4a95a0' => __DIR__ . '/..' . '/houdunwang/controller/src/helper.php',
+        'c54daba5473de13d796733fe0422e2c2' => __DIR__ . '/..' . '/houdunwang/collection/src/helper.php',
         'b200b64f4d1415a1ec31d557162a91e1' => __DIR__ . '/..' . '/houdunwang/loader/src/helper.php',
+        '50d0a9eb2eaa09019de1d3a8d2c45e4e' => __DIR__ . '/..' . '/houdunwang/view/src/helper.php',
+        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
         '0fdb93813e3129bfd50d293224a2095e' => __DIR__ . '/..' . '/houdunwang/error/src/helper.php',
         'b11d97b9b970a5b38ef908a59daee669' => __DIR__ . '/..' . '/houdunwang/cli/src/helper.php',
-        '5d0c93371c27353f9ed08b6acca42f49' => __DIR__ . '/..' . '/houdunwang/model/src/helper.php',
-        '50d0a9eb2eaa09019de1d3a8d2c45e4e' => __DIR__ . '/..' . '/houdunwang/view/src/helper.php',
         '252420c3cb244c300529dbbdc1b6f21a' => __DIR__ . '/..' . '/houdunwang/framework/src/helper.php',
         '5be7e55f4e1232b42dcf75258888ab3c' => __DIR__ . '/../..' . '/system/helper.php',
     );
@@ -47,6 +47,7 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
             'houdunwang\\response\\' => 20,
             'houdunwang\\request\\' => 19,
             'houdunwang\\rbac\\' => 16,
+            'houdunwang\\qrcode\\' => 18,
             'houdunwang\\qq\\' => 14,
             'houdunwang\\page\\' => 16,
             'houdunwang\\oss\\' => 15,
@@ -146,6 +147,10 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         'houdunwang\\rbac\\' => 
         array (
             0 => __DIR__ . '/..' . '/houdunwang/rbac/src',
+        ),
+        'houdunwang\\qrcode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/houdunwang/qrcode/src',
         ),
         'houdunwang\\qq\\' => 
         array (
@@ -285,11 +290,22 @@ class ComposerStaticInit8783fc00f87e76b047a824325692a202
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'B' => 
+        array (
+            'BaconQrCode' => 
+            array (
+                0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit8783fc00f87e76b047a824325692a202::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit8783fc00f87e76b047a824325692a202::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8783fc00f87e76b047a824325692a202::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

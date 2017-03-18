@@ -1,0 +1,226 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+a {
+  text-decoration: none;
+}
+ul,
+ol li {
+  list-style: none;
+}
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  background-image: url(../img/bg-login1.png);
+  background-color: #FFFFFF;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  height: 100%;
+  width: 100%;
+}
+.HeaderMenu {
+  width: 100%;
+  height: 70px;
+  background: #FFF;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+.HeaderMenu .HeaderCenter {
+  width: 1200px;
+  height: 70px;
+  margin: 0px auto;
+}
+.HeaderMenu .HeaderCenter .HCLeft {
+  float: left;
+  line-height: 70px;
+}
+.HeaderMenu .HeaderCenter .HCLeft .logo {
+  float: left;
+  height: 70px;
+  background: red;
+  padding: 0px 10px;
+}
+.HeaderMenu .HeaderCenter .HCLeft .logo img {
+  margin-top: 11px;
+}
+.HeaderMenu .HeaderCenter .MenuRight {
+  float: right;
+  height: 70px;
+}
+.HeaderMenu .HeaderCenter .MenuRight .login {
+  float: left;
+  height: 70px;
+  line-height: 70px;
+  margin-left: 70px;
+}
+.HeaderMenu .HeaderCenter .MenuRight .login ul {
+  overflow: hidden;
+}
+.HeaderMenu .HeaderCenter .MenuRight .login ul li {
+  float: left;
+}
+.HeaderMenu .HeaderCenter .MenuRight .login ul li a {
+  display: block;
+  padding: 0px 20px;
+  color: #575e65;
+}
+.HeaderMenu .HeaderCenter .MenuRight .login ul li a:hover {
+  color: #009aff;
+}
+.Login {
+  width: 100%;
+  padding-top: 120px;
+  box-sizing: border-box;
+}
+.Login .LoginBodyZ {
+  width: 1200px;
+  margin: 0px auto;
+  text-align: center;
+  overflow: hidden;
+}
+.Login .LoginBodyZ .LTitle {
+  text-align: left;
+  margin-bottom: 50px;
+}
+.Login .LoginBodyZ .LoginBodyZC {
+  display: inline-block;
+}
+.Login .LoginBodyZ .accountbody {
+  float: left;
+}
+.Login .LoginBodyZ .accountbody .login {
+  position: relative;
+  font-size: 18px;
+}
+.Login .LoginBodyZ .accountbody .login .icon-zhanghao {
+  position: absolute;
+  color: #D9E1E5;
+  left: 9px;
+  top: 16px;
+  font-size: 18px;
+}
+.Login .LoginBodyZ .accountbody .login #Id {
+  padding: 9px 9px 9px 34px;
+  width: 315px;
+  height: 32px;
+  border: 1px solid #d9e1e5;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+}
+.Login .LoginBodyZ .accountbody .pass {
+  position: relative;
+  font-size: 18px;
+  margin-top: 28px;
+}
+.Login .LoginBodyZ .accountbody .pass .icon-mima {
+  position: absolute;
+  color: #D9E1E5;
+  left: 9px;
+  top: 16px;
+  font-size: 18px;
+}
+.Login .LoginBodyZ .accountbody .pass #Pass {
+  padding: 9px 9px 9px 34px;
+  width: 315px;
+  height: 32px;
+  border: 1px solid #d9e1e5;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+}
+.Login .LoginBodyZ .accountbody #btn {
+  margin-top: 28px ;
+  padding: 9px 21.5px;
+  width: 315px;
+  height: 32px;
+  background-color: #009AFF;
+  border-radius: 4px;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-sizing: content-box;
+  font-size: 18px;
+  border: none;
+}
+.Login .LoginBodyZ .accountbodyRight {
+  float: left;
+  height: 210px;
+  width: 224px;
+  font-size: 14px;
+  padding-left: 80px;
+  margin-left: 80px;
+  border-left: 1px solid #D9E1E5;
+}
+.Login .LoginBodyZ .accountbodyRight .title {
+  text-align: center;
+}
+.Login .LoginBodyZ .accountbodyRight .title a {
+  color: #009aff;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent {
+  padding-top: 62px;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent .ABRtitle {
+  height: 10px;
+  text-align: center;
+  border-bottom: 1px solid #D9E1E5;
+  margin-bottom: 25px;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent .ABRtitle span {
+  padding: 0px 15px;
+  background: #FFFFFF;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul {
+  overflow: hidden;
+  width: 300px;
+  margin-left: -40px;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li {
+  float: left;
+  background: #FFFFFF;
+  margin-left: 40px;
+  border-radius: 50%;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li a {
+  font-size: 48px;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-qq {
+  color: #5BA2E1;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-qq:hover {
+  color: #71B7F5;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-weixin {
+  color: #47C90E;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-weixin:hover {
+  color: #5CE024;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-weibo {
+  color: #FF7777;
+}
+.Login .LoginBodyZ .accountbodyRight .ABRcontent ul li .icon-weibo:hover {
+  color: #FF9191;
+}
+.Login .LoginBodyE {
+  width: 1200px;
+  margin: 0px auto;
+}
+.Login .LoginBodyE .LTitle {
+  text-align: center;
+  margin-bottom: 50px;
+}
+.Login .LoginBodyE .erweima {
+  text-align: center;
+}
+.Login .LoginBodyE .lianjie {
+  margin-top: 50px;
+  text-align: center;
+}
+.Login .LoginBodyE .lianjie a {
+  color: #07111B;
+  margin-left: 10px;
+}
+.Login .LoginBodyE .lianjie a:hover {
+  color: #009aff;
+}

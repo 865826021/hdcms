@@ -1,68 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8"/>
-    <title>会员登录 - HDCMS开源免费-微信/桌面/移动三网通CMS系统</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <include file="resource/view/common.php"/>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/iconfont.css"/>
 </head>
-<body class="login">
-<div class="container logo">
-    <div style="background: url('{{__ROOT__}}/resource/images/logo.png') no-repeat; background-size: contain;height: 60px;"></div>
-</div>
-<div class="container well">
-    <div class="row ">
-        <div class="col-md-6">
-            <h3>会员登录</h3>
-            <form method="post" action="">
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">帐号</div>
-                        <input type="text" name="username" class="form-control" placeholder="请输入帐号">
-                    </div>
+<body>
+<div class="loginContent">
+    <!--头部菜单开始-->
+    <div class="HeaderMenu">
+        <!--头部中间的大框开始-->
+        <div class="HeaderCenter">
+            <!--头部左侧开始-->
+            <div class="HCLeft">
+                <!--logo开始-->
+                <div class="logo">
+                    <a href="">
+                        {{v('site.info.name')}}
+                    </a>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">密码</div>
-                        <input type="password" name="password" class="form-control" placeholder="请输入密码">
-                    </div>
+                <!--logo结束-->
+            </div>
+            <!--头部左侧结束-->
+            <!--头部右侧开始-->
+            <div class="MenuRight">
+                <!--搜索区域结束-->
+                <!--登录注册开始-->
+                <div class="login">
+                    <if value="v('site.setting.login.username')">
+                        <ul>
+                            <li><a href="">注册</a></li>
+                            <li><a href="">登录</a></li>
+                        </ul>
+                    </if>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-addon">验证码</div>
-                        <input type="text" class="form-control" name="code" placeholder="请输入验证码"
-                               aria-describedby="basic-addon2">
-                        <span class="input-group-addon" style="padding: 0px;">
-                            <img src="{{url('entry.code')}}" onclick="this.src=this.src+='&_'+Math.random()"
-                                 style="cursor: pointer">
-                        </span>
-                    </div>
-                </div>
-                <button type="submit" class="btn btn-primary">登录网站</button>
-                <a href="{{url('entry/register')}}">注册</a>
-            </form>
+                <!--的路注册结束-->
+            </div>
+            <!--头部右侧结束-->
         </div>
-        <div class="col-md-6">
-            <div style="background: url('{{__ROOT__}}/resource/images/houdunwang.jpg');background-size:100% ;height:230px;"></div>
-        </div>
+        <!--头部中间的大框结束-->
     </div>
-    <br/>
-    <div class="copyright">
-        &nbsp;&nbsp;&nbsp;&nbsp;Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
+    <!--头部菜单结束-->
+
+
+    <div class="Login">
+        <!--title-->
+        <!--账号密码登录开始-->
+        <if value="count(v('site.setting.oauth_login'))==1 &&v('site.setting.oauth_login.wechat')==1 ">
+            <div class="LoginBodyE">
+                <div class="LTitle">
+                    <h2>扫描下方二维码完成登录</h2>
+                </div>
+                <div class="erweima">
+                    <img src="{{url('entry.qrLogin')}}"/>
+                </div>
+                <!--<div class="lianjie">-->
+                <!--<span class="New">-->
+                <!--推荐课程：-->
+                <!--</span>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--<a href="">后盾网</a>-->
+                <!--</div>-->
+            </div>
+            <else/>
+            <div class="LoginBodyZ">
+                <div class="LoginBodyZC">
+                    <if value="v('site.setting.username_login')">
+                        <div class="LTitle">
+                            <h2>欢迎登录</h2>
+                        </div>
+                        <div class="accountbody">
+                            <form action="" method="post">
+                                <div class="login">
+                                    <span class="iconfont icon-zhanghao"></span>
+                                    <input type="text" name="username" id="Id" value="" placeholder="请输入您的账号"/>
+                                </div>
+                                <div class="pass">
+                                    <span class="iconfont icon-mima"></span>
+                                    <input type="text" name="password" id="Pass" value="" placeholder="请输入您的密码"/>
+                                </div>
+                                <input type="submit" id="btn" value="登录"/>
+                            </form>
+                        </div>
+                    </if>
+                    <div class="accountbodyRight">
+                        <if value="v('site.setting.login.username')">
+                            <p class="title">还没账号？<a href="">立即注册</a></p>
+                        </if>
+                        <if value="count(v('site.setting.oauth_login'))==1 &&v('site.setting.oauth_login.wechat')==1 ">
+                            <else/>
+                            <div class="ABRcontent">
+                                <p class="ABRtitle">
+                                    <span>快速登录</span>
+                                </p>
+                                <ul>
+                                    <!--<li><a href="" class="iconfont icon-qq"></a></li>-->
+                                    <li><a href="" class="iconfont icon-weixin"></a></li>
+                                    <!--<li><a href="" class="iconfont icon-weibo"></a></li>-->
+                                </ul>
+                            </div>
+                        </if>
+                    </div>
+                </div>
+            </div>
+        </if>
     </div>
 </div>
-<script>
-    require(['util'], function (util) {
-        util.submit({
-            callback: function (json) {
-                if (json.valid == 1) {
-                    location.href = json.url;
-                } else {
-                    util.message(json.message, '');
-                }
-            }
-        });
-    })
-</script>
 </body>
 </html>

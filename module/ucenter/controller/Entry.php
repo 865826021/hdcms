@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace module\ucenter\controller;
 
+use houdunwang\wechat\WeChat;
 use module\HdController;
 
 /**
@@ -17,6 +18,7 @@ use module\HdController;
  * @package module\ucenter\controller
  */
 class Entry extends HdController {
+
 	public function __construct() {
 		parent::__construct();
 		$this->template = "ucenter/" . v( 'site.info.ucenter_template' ) . '/' . ( IS_MOBILE ? 'mobile' : 'web' );
@@ -54,10 +56,7 @@ class Entry extends HdController {
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {
-			if ( service( 'member' )->weixinLogin() ) {
-				$url = q( 'get.backurl', url( 'member.index', '', 'ucenter' ) );
-				go( $url );
-			}
+			\Member::weChatLogin();
 		}
 
 		return view( $this->template . '/login.html' );
@@ -68,14 +67,13 @@ class Entry extends HdController {
 		Code::fontSize( 15 )->height( 30 )->make();
 	}
 
-	//使用微信openid登录
+	/**
+	 * 微信客户端登录
+	 * 使用微信openid登录
+	 */
 	public function weChatLogin() {
 		//微信自动登录
-		if ( \Member::weChatLogin() ) {
-			$url = q( 'get.backurl', url( 'member/index' ) );
-			go( $url );
-		}
-		message( '微信登录失败,请检查微信公众号是否验证', 'back', 'error' );
+		\Member::weChatLogin();
 	}
 
 	//退出
@@ -84,5 +82,10 @@ class Entry extends HdController {
 		Session::del( 'from' );
 		\Session::flush();
 		go( $url );
+	}
+
+	//微信扫码登录
+	public function qrLogin() {
+		\Member::qrLogin();
 	}
 }

@@ -8,6 +8,8 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
+use houdunwang\config\Config;
+use houdunwang\wechat\WeChat;
 
 /**
  * 微信请求接口
@@ -19,10 +21,11 @@ class Api {
 	protected $instance;
 
 	public function __construct() {
+		$url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" .  Config::get('wechat.appid') . "&redirect_uri=" . urlencode( __URL__ ) . "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+		echo $url;exit;
 		//与微信官网通信绑定验证
-		\WeChat::valid();
-
-		$this->instance = \WeChat::instance( 'message' );
+		WeChat::valid();
+		$this->instance = WeChat::instance( 'message' );
 	}
 
 	/**
@@ -141,7 +144,7 @@ class Api {
 				if ( class_exists( $class ) ) {
 					$instance = new $class;
 					if ( method_exists( $instance, 'handle' ) ) {
-						return call_user_func_array( [ $instance, 'handle' ], [ ] );
+						return call_user_func_array( [ $instance, 'handle' ], [] );
 					}
 				}
 			}
@@ -176,7 +179,10 @@ class Api {
 			 * 不能的话直接回复
 			 */
 			$this->text( v( 'site.setting.default_message' ) );
-			$this->instance->text( v( 'site.setting.default_message' ) );
+			$defaultMessage = v( 'site.setting.default_message' );
+			if ( v( 'site.setting.default_message' ) ) {
+				$this->instance->text( $defaultMessage );
+			}
 		}
 	}
 }

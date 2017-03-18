@@ -30,7 +30,7 @@ class Member extends Common {
 	//初始用户信息
 	public function initMemberInfo() {
 		if ( $member_uid = Session::get( "member_uid" ) ) {
-			$user          = [ ];
+			$user          = [];
 			$user['info']  = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
 			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
 			v( 'member', $user );
@@ -61,8 +61,12 @@ class Member extends Common {
 		return true;
 	}
 
-	//微信自动登录
-	public function weChatLogin() {
+	/**
+	 * 微信自动登录
+	 *
+	 * @param string $url 登录成功后的跳转地址
+	 */
+	public function weChatLogin( $url = '' ) {
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 ) {
 			//认证订阅号或服务号,并且开启自动登录时获取微信帐户openid自动登录
 			if ( $info = \WeChat::instance( 'oauth' )->snsapiUserinfo() ) {
@@ -80,10 +84,41 @@ class Member extends Common {
 					$model->save();
 				}
 				Session::set( 'member_uid', $auth['uid'] );
-
-				return true;
+				$url = $url ?: Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
+				Session::del( 'from' );
+				$url = $url ?: Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
+				Session::del( 'from' );
+				go( $url );
 			}
 		}
+		message( '微信登录失败,请检查微信公众号是否验证', 'back', 'error' );
+	}
+
+	/**
+	 * 微信扫码登录
+	 *
+	 * @param string $url 登录成功后的跳转地址
+	 */
+	public function qrLogin( $url = '' ) {
+		WeChat::instance( 'Oauth' )->qrLogin( function ( $info ) use ( $url ) {
+			$auth = MemberAuth::where( 'wechat', $info['openid'] )->first();
+			if ( ! $auth ) {
+				//帐号不存在时使用openid添加帐号
+				$user             = new MemberModel();
+				$user['nickname'] = $info['nickname'];
+				$user['icon']     = $info['headimgurl'];
+				$user['group_id'] = $this->getDefaultGroup();
+				$user->save();
+				$model           = new MemberAuth();
+				$model['uid']    = $user['uid'];
+				$model['wechat'] = $info['openid'];
+				$model->save();
+			}
+			Session::set( 'member_uid', $auth['uid'] );
+			$url = $url ?: Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
+			Session::del( 'from' );
+			go( $url );
+		} );
 	}
 
 	//根据access_token获取用户信息
@@ -219,12 +254,23 @@ class Member extends Common {
 		if ( empty( $password ) ) {
 			return $data;
 		}
-		$data             = [ ];
+		$data             = [];
 		$data['security'] = substr( md5( time() ), 0, 10 );
 		$data['password'] = md5( $password . $data['security'] );
 
 		return $data;
 	}
 
+	/**
+	 * 获取站点的所有用户组
+	 *
+	 * @param int $siteid 站点编号
+	 *
+	 * @return mixed
+	 */
+	public function getSiteAllMemberGroup( $siteid = 0 ) {
+		$siteid = $siteid ?: siteid();
 
+		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get();
+	}
 }

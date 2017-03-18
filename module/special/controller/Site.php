@@ -14,10 +14,10 @@ class Site extends HdController {
 	//系统消息回复设置
 	public function post() {
 		if ( IS_POST ) {
-			Validate::make( [
-				[ 'welcome', 'required', '欢迎信息关键字 不能为空' ],
-				[ 'default', 'required', '默认信息关键字 不能为空' ],
-			] );
+//			Validate::make( [
+//				[ 'welcome', 'required', '欢迎信息关键字 不能为空' ],
+//				[ 'default', 'required', '默认信息关键字 不能为空' ],
+//			] );
 			$setting                  = SiteSetting::where( 'siteid', SITEID )->first();
 			$model                    = $setting ? SiteSetting::find( $setting['id'] ) : new SiteSetting();
 			$model['welcome']         = Request::post( 'welcome' );

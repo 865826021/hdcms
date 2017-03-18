@@ -47,8 +47,13 @@ class site extends HdController {
 			$model->save();
 			message( '编辑用户资料成功', 'back', 'success' );
 		}
+		$group = \Member::getSiteAllMemberGroup();
+		View::with( 'group', $group );
 
-		return view( $this->template . '/member_edit.html' )->with( 'user', $model );
+		return view( $this->template . '/member_edit.html', [
+			'user'  => $model,
+			'group' => $group
+		] );
 	}
 
 	//添加会员
@@ -90,7 +95,7 @@ class site extends HdController {
 
 	//删除用户
 	public function doSiteDelete() {
-		$uids   = Request::post( 'uid', [ ] );
+		$uids   = Request::post( 'uid', [] );
 		$member = new Member();
 		foreach ( $uids as $uid ) {
 			$user = $member->where( 'siteid', SITEID )->find( $uid );
@@ -202,7 +207,7 @@ class site extends HdController {
 		if ( $model['credit'] != 0 ) {
 			message( '默认会员组初始积分必须为0', '', 'error' );
 		}
-		Db::table('member_group')->update( [ 'isdefault' => 0 ] );
+		Db::table( 'member_group' )->update( [ 'isdefault' => 0 ] );
 		$model['isdefault'] = 1;
 		$model->save();
 		message( '默认会员组设置成功', '', 'success' );
@@ -221,7 +226,7 @@ class site extends HdController {
 				[ 'remark', 'num', '更改数量必须为数字' ],
 			] );
 			//更改数量
-			$data               = [ ];
+			$data               = [];
 			$data['uid']        = $uid;
 			$data['credittype'] = $type;
 			$data['num']        = Request::post( 'num' );

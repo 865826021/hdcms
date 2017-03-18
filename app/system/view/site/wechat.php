@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="{{nopic($field['qrcode'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
+                            <img src="{{pic($field['qrcode'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>
@@ -112,7 +112,7 @@
                             </div>
                         </div>
                         <div class="input-group" style="margin-top:5px;">
-                            <img src="{{nopic($field['icon'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
+                            <img src="{{pic($field['icon'])}}" class="img-responsive img-thumbnail" width="150" id="thumb">
                             <em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片">×</em>
                         </div>
                         <span class="help-block">只支持JPG图片</span>

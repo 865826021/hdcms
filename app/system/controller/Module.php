@@ -146,7 +146,7 @@ class Module {
 				[ 'url', 'required', '请输入发布url' ],
 				[ 'compatible_version', 'required', '请选择兼容版本' ],
 				[ 'thumb', 'required', '模块缩略图不能为空' ],
-				[ 'cover', 'required', '模块封面图不能为空' ],
+				[ 'preview', 'required', '模块封面图不能为空' ],
 			], $data );
 
 			//模块标识转小写
@@ -182,9 +182,9 @@ class Module {
 			copy( $data['thumb'], $thumb );
 			$data['thumb'] = 'thumb.' . $info['extension'];
 			$info          = pathinfo( $data['preview'] );
-			$preview       = $dir . '/cover.' . $info['extension'];
+			$preview       = $dir . '/preview.' . $info['extension'];
 			copy( $data['preview'], $preview );
-			$data['preview'] = 'cover.' . $info['extension'];
+			$data['preview'] = 'preview.' . $info['extension'];
 			//初始创建模块需要的脚本文件
 			Config::make( $data );
 			Rule::make( $data );

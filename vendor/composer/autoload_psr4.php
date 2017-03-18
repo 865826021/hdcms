@@ -20,6 +20,7 @@ return array(
     'houdunwang\\response\\' => array($vendorDir . '/houdunwang/response/src'),
     'houdunwang\\request\\' => array($vendorDir . '/houdunwang/request/src'),
     'houdunwang\\rbac\\' => array($vendorDir . '/houdunwang/rbac/src'),
+    'houdunwang\\qrcode\\' => array($vendorDir . '/houdunwang/qrcode/src'),
     'houdunwang\\qq\\' => array($vendorDir . '/houdunwang/qq/src'),
     'houdunwang\\page\\' => array($vendorDir . '/houdunwang/page/src'),
     'houdunwang\\oss\\' => array($vendorDir . '/houdunwang/oss/src'),

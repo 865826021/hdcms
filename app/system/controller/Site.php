@@ -1,6 +1,7 @@
 <?php namespace app\system\controller;
 
 use houdunwang\request\Request;
+use houdunwang\wechat\WeChat;
 use system\model\SiteModules;
 use system\model\SitePackage;
 use system\model\SiteTemplate;
@@ -17,7 +18,7 @@ use system\model\Site as SiteModel;
 class Site {
 	public function __construct() {
 		//登录检测
-		\User::loginAuth();
+//		\User::loginAuth();
 	}
 
 	/**

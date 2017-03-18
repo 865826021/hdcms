@@ -18,6 +18,8 @@ CREATE TABLE `hd_site_setting` (
   `welcome` varchar(60) NOT NULL COMMENT '用户添加公众帐号时发送的欢迎信息',
   `default_message` varchar(60) NOT NULL COMMENT '系统不知道该如何回复粉丝的消息时默认发送的内容',
   `register` varchar(2000) NOT NULL DEFAULT '' COMMENT '注册设置',
+  `wechat_login` varchar(2000) DEFAULT NULL COMMENT '微信登录设置',
+  `login` varchar(2000) DEFAULT NULL COMMENT '登录设置',
   `smtp` varchar(2000) NOT NULL DEFAULT '' COMMENT '邮件通知',
   `pay` varchar(2000) NOT NULL DEFAULT '' COMMENT '支付设置',
   PRIMARY KEY (`id`),

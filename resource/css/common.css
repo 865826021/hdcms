@@ -68,6 +68,9 @@ h3 {
 .ng-cloak {
   display: none;
 }
+.v-cloak {
+  display: none;
+}
 .row {
   margin-left: auto;
   margin-right: auto;

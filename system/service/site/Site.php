@@ -223,16 +223,17 @@ class Site extends Common {
 		$siteId = $siteId ?: SITEID;
 		//站点微信信息缓存
 		$wechat         = Db::table( 'site_wechat' )->where( 'siteid', $siteId )->first();
-		$data['wechat'] = $wechat ?: [ ];
+		$data['wechat'] = $wechat ?: [];
 		//站点信息缓存
 		$site         = Db::table( 'site' )->where( 'siteid', $siteId )->first();
-		$data['site'] = $site ?: [ ];
+		$data['site'] = $site ?: [];
 		//站点设置缓存
 		$setting                     = Db::table( 'site_setting' )->where( 'siteid', $siteId )->first();
-		$setting                     = $setting ?: [ ];
+		$setting                     = $setting ?: [];
 		$setting ['creditnames']     = json_decode( $setting['creditnames'], true );
 		$setting ['creditbehaviors'] = json_decode( $setting['creditbehaviors'], true );
 		$setting ['register']        = json_decode( $setting['register'], true );
+		$setting ['oauth_login']     = json_decode( $setting['oauth_login'], true );
 		$setting ['smtp']            = json_decode( $setting['smtp'], true );
 		$setting ['pay']             = json_decode( $setting['pay'], true );
 		$setting ['quickmenu']       = $setting['quickmenu'];
@@ -276,7 +277,7 @@ class Site extends Common {
 	public function getSiteGroups( $siteid = null ) {
 		$siteid = $siteid ?: SITEID;
 
-		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get() ?: [ ];
+		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get() ?: [];
 	}
 
 	/**

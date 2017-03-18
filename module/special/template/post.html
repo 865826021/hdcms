@@ -80,7 +80,10 @@
             });
         });
         //发送表单
-        util.submit({successUrl:'refresh'});
+        $('form').submit(function(){
+            util.submit({successUrl:'refresh'});
+            return false;
+        })
         //添加表情
         $('.emotionLink').each(function (i) {
             var input = $(this).parent().prev().find('input');
