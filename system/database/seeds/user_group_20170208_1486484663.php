@@ -8,7 +8,7 @@ class user_group extends Seeder {
 		$sql = <<<str
 INSERT INTO `hd_user_group` (`id`, `name`, `maxsite`, `allfilesize`, `daylimit`, `package`, `system_group`, `router_num`, `middleware_num`)
 VALUES
-	(1,'体验组',100,0,30,'\"\"',1,100,100);
+	(1,'体验组',1,0,30,'\"\"',1,1,2);
 str;
 		Db::execute( $sql );
 	}

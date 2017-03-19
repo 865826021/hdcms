@@ -6,7 +6,7 @@ class user extends Seeder {
 		$sql = <<<str
 INSERT INTO `hd_user` (`uid`, `groupid`, `username`, `password`, `security`, `status`, `regtime`, `regip`, `lasttime`, `lastip`, `starttime`, `endtime`, `qq`, `mobile`, `email`, `mobile_valid`, `email_valid`, `remark`)
 VALUES
-	(1,0,'admin','','7b46c62725',1,1465771582,'123.119.83.235',1487554341,'121.69.37.186',0,0,'232323','','',0,0,'');
+	(1,0,'admin','','',1,1465771582,'123.119.83.235',1489933994,'123.119.89.185',0,0,'232323','','',0,0,'');
 str;
 		Db::execute( $sql );
     }
