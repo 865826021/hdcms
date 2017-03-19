@@ -67,6 +67,7 @@ class Cloud {
 	public function getSystemNotice( $row ) {
 		$data = CloudModel::find( 1 )->toArray();
 		$res  = Curl::post( $this->url . '/cloud/getSystemNotice&row=' . $row, $data );
+
 		return json_decode( $res, true );
 	}
 
@@ -122,6 +123,7 @@ class Cloud {
 
 		//将旧版本文件进行备份
 		$files   = include 'upgrade/hdcms/upgrade_files.php';
+		$message = '';
 		$current = Db::table( 'cloud' )->find( 1 );
 		$valid   = 1;
 		foreach ( $files as $k => $f ) {
@@ -131,6 +133,7 @@ class Cloud {
 					//删除文件
 					if ( \Dir::delFile( $f['file'] ) === false ) {
 						$valid                       = 0;
+						$message                     = '删除旧版文件 [' . $f['file'] . '] 失败';
 						$files[ $k ]['update_state'] = 0;
 					} else {
 						$files[ $k ]['update_state'] = 1;
@@ -138,6 +141,8 @@ class Cloud {
 					break;
 				default:
 					if ( \Dir::copyFile( "upgrade/hdcms/" . $f['file'], $f['file'] ) === false ) {
+						$valid                       = 0;
+						$message                     = '备份旧版本失败，请检测网站根目录是否可写';
 						$files[ $k ]['update_state'] = 0;
 					} else {
 						$files[ $k ]['update_state'] = 1;
@@ -145,7 +150,7 @@ class Cloud {
 			}
 		}
 
-		return [ 'files' => $files, 'valid' => $valid ];
+		return [ 'files' => $files, 'valid' => $valid, 'message' => $message ];
 	}
 
 	/**
@@ -186,7 +191,7 @@ class Cloud {
 		$this->checkAccount();
 		$post = Modules::where( 'locality', 0 )->lists( 'name,build' );
 		if ( empty( $post ) ) {
-			ajax( [ 'valid' => 1, 'message' => '系统没有安装任何模块, 去应用商店转转吧。', 'apps' => [ ] ] );
+			ajax( [ 'valid' => 1, 'message' => '系统没有安装任何模块, 去应用商店转转吧。', 'apps' => [] ] );
 		}
 		$content = \Curl::post( $this->url . "/cloud/getModuleUpgradeLists", $post );
 		$apps    = json_decode( $content, true );
@@ -220,7 +225,7 @@ class Cloud {
 			\Dir::delFile( $file );
 			//执行模块更新表语句
 			$class = 'addons\\' . $app['name'] . '\system\Setup';
-			call_user_func_array( [ new $class, 'upgrade' ], [ ] );
+			call_user_func_array( [ new $class, 'upgrade' ], [] );
 			//更新数据表模块编译版本
 			$data = [ 'version' => $app['zip']['version'], 'build' => $app['zip']['build'] ];
 			Modules::where( 'name', $name )->update( $data );
