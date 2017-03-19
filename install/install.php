@@ -140,7 +140,7 @@ if ( $action == 'table' ) {
 	$version = include 'data/upgrade.php';
 	$build   = $_SESSION['hdcms']['build'];
 	$sql     = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,build,status)
-		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$build,1)";
+		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$build,0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
