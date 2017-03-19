@@ -171,6 +171,10 @@ if ( $action == 'finish' ) {
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
+	//更改htaccess文件
+	if ( ! is_file( '.htaccess' ) && is_file( 'htaccess.txt' ) ) {
+		rename( 'htaccess.txt', '.htaccess' );
+	}
 	//显示界面
 	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
 	echo $content;
