@@ -78,10 +78,10 @@
     function upImage() {
         require(['util', 'jquery'], function (util, $) {
             util.image(function (images) {
-                util.loading();
+                util.message('正在上传中...');
                 $.ajax({
                     type: 'POST',
-                    url: '{{url("site/upload_material")}}',
+                    url: '{{url("site.upload_material")}}',
                     data: {type: 'image', file: images[0]},
                     dataType: 'JSON',
                     success: function (res) {
@@ -95,14 +95,13 @@
             })
         });
     }
-
     //删除
     function del(id) {
         require(['util'], function (util) {
             util.confirm('删除图片可能影响图文消息的图片显示,确定删除吗?', function () {
                 $.post('{{url("site/delMaterial")}}', {id: id}, function (res) {
                     if (res.valid == 1) {
-                        util.message('删除成功', 'refresh', 'success');
+                        util.message(res.message, 'refresh', 'success');
                     } else {
                         util.message(res.message, '', 'error');
                     }

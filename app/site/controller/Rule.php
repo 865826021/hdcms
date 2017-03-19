@@ -26,11 +26,11 @@ class Rule {
 		if ( $status = Request::get( 'status' ) ) {
 			$db->where( 'status', $status == 'close' ? 0 : 1 );
 		}
-		$rules = $db->get() ?: [ ];
-		$data  = [ ];
+		$rules = $db->get() ?: [];
+		$data  = [];
 		//回复关键词
 		foreach ( $rules as $k => $v ) {
-			$v['keywords'] = Db::table( 'rule_keyword' )->where( 'rid', $v['rid'] )->lists( 'content' ) ?: [ ];
+			$v['keywords'] = Db::table( 'rule_keyword' )->where( 'rid', $v['rid'] )->lists( 'content' ) ?: [];
 			//按关键词搜索
 			if ( $con = Request::post( 'content' ) ) {
 				if ( ! in_array( $con, $v['keywords'] ) ) {
@@ -57,20 +57,19 @@ class Rule {
 		            v( 'module.name' ) . '\system\Rule';
 		$instance = new $class();
 		if ( IS_POST ) {
+			//添加规则数据
 			$data             = json_decode( Request::post( 'keyword' ), true );
-			$data['rid']      = isset( $data['rid'] ) ? $data['rid'] : 0;
-			$data['rank']     = $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
-			$data['module']   = v( 'module.name' );
-			$data['keywords'] = $data['keyword'];
-			$rid              = \Wx::rule( $data );
 			//调用模块的执行方法进行数据验证
-			$msg = $instance->fieldsValidate( $rid );
+			$data['rid'] = isset( $data['rid'] ) ? $data['rid'] : 0;
+			$msg         = $instance->fieldsValidate( $data['rid'] );
 			if ( $msg !== true ) {
 				message( $msg, 'back', 'error' );
 			}
+			$data['keywords'] = $data['keyword'];
+			$rid              = \Wx::rule( $data );
 			//使模块保存回复内容
 			$instance->fieldsSubmit( $rid );
-			message( '规则保存成功', u( 'post', [ 'rid' => $rid, 'm' => v( 'module.name' ) ] ) );
+			message( '规则保存成功', site_url( 'post', [ 'rid' => $rid ] ) );
 		}
 		//获取关键词回复
 		if ( $rid = Request::get( 'rid' ) ) {

@@ -8,6 +8,7 @@
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
+
 use houdunwang\config\Config;
 use houdunwang\wechat\WeChat;
 
@@ -21,8 +22,6 @@ class Api {
 	protected $instance;
 
 	public function __construct() {
-		$url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" .  Config::get('wechat.appid') . "&redirect_uri=" . urlencode( __URL__ ) . "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
-		echo $url;exit;
 		//与微信官网通信绑定验证
 		WeChat::valid();
 		$this->instance = WeChat::instance( 'message' );
@@ -43,7 +42,7 @@ class Api {
 		if ( $this->instance->isClickEvent() ) {
 			$this->text( $message->EventKey );
 		}
-		//消息处理
+		//处理非文本类信息
 		$this->processing();
 		//默认消息回复
 		$this->defaultMessage();
@@ -80,13 +79,9 @@ class Api {
 					break;
 				case 3:
 					//正则匹配
-					if ( preg_match( '/' . $rule['content'] . '/i', $content ) ) {
+					if ( preg_match( '/^' . $rule['content'] . '$/i', $content ) ) {
 						$isFind = true;
 					}
-					break;
-				case 4:
-					//直接托管
-					$isFind = true;
 					break;
 			}
 			//根据找到的模块执行处理消息动作
@@ -97,7 +92,7 @@ class Api {
 	}
 
 	/**
-	 * 处理信息
+	 * 处理非文本类信息
 	 *
 	 * @return array
 	 */
@@ -120,13 +115,8 @@ class Api {
 	 */
 	protected function moduleProcessing( $module, $rid = 0 ) {
 		$class = ( $module['is_system'] == 1 ? '\module\\' : '\addons\\' ) . $module['name'] . '\system\Processor';
-
 		if ( class_exists( $class ) ) {
-			$obj = new $class();
-			if ( $obj->handle( $rid ) === true ) {
-				//处理完成
-				exit;
-			}
+			( new $class() )->handle( $rid );
 		}
 	}
 

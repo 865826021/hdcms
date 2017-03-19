@@ -58,7 +58,7 @@ class Module {
 			//模块初始执行程序
 			$class = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) . v( 'module.name' ) . '\system\Init';
 			if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
-				call_user_func_array( [ new $class, 'run' ], [ ] );
+				call_user_func_array( [ new $class, 'run' ], [] );
 			}
 		}
 		/**
@@ -97,7 +97,7 @@ class Module {
 	 * @return mixed
 	 */
 	function api( $module, $params ) {
-		static $instance = [ ];
+		static $instance = [];
 		$info = explode( '.', $module );
 		if ( ! isset( $instance[ $module ] ) ) {
 			$data                = Modules::where( 'name', $info[0] )->first();
@@ -148,7 +148,7 @@ class Module {
 		if ( empty( $siteId ) ) {
 			message( '获取站点模块数据时, 站点编号不能为空', '', 'error', 5 );
 		}
-		static $cache = [ ];
+		static $cache = [];
 		if ( isset( $cache[ $siteId ] ) ) {
 			return $cache[ $siteId ];
 		}
@@ -160,29 +160,29 @@ class Module {
 		}
 		//获取站点可使用的所有套餐
 		$package = \Package::getSiteAllPackageData( $siteId );
-		$modules = [ ];
+		$modules = [];
 		if ( ! empty( $package ) && $package[0]['id'] == - 1 ) {
 			//拥有[所有服务]套餐
-			$modules = Modules::get() ? Modules::get()->toArray() : [ ];
+			$modules = Modules::get() ? Modules::get()->toArray() : [];
 		} else {
-			$moduleNames = [ ];
+			$moduleNames = [];
 			foreach ( $package as $p ) {
 				$moduleNames = array_merge( $moduleNames, $p['modules'] );
 			}
 			$moduleNames = array_merge( $moduleNames, $this->getSiteExtModulesName( $siteId ) );
 			if ( ! empty( $moduleNames ) ) {
 				$res     = Db::table( 'modules' )->whereIn( 'name', $moduleNames )->get();
-				$modules = $res ?: [ ];
+				$modules = $res ?: [];
 			}
 		}
 		//加入系统模块
 		$modules   = array_merge( $modules, Modules::where( 'is_system', 1 )->get()->toArray() );
-		$cacheData = [ ];
+		$cacheData = [];
 		foreach ( $modules as $k => $m ) {
-			$m['subscribes']  = json_decode( $m['subscribes'], true ) ?: [ ];
-			$m['processors']  = json_decode( $m['processors'], true ) ?: [ ];
-			$m['permissions'] = array_filter( json_decode( $m['permissions'], true ) ?: [ ] );
-			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get() ?: [ ];
+			$m['subscribes']  = json_decode( $m['subscribes'], true ) ?: [];
+			$m['processors']  = json_decode( $m['processors'], true ) ?: [];
+			$m['permissions'] = array_filter( json_decode( $m['permissions'], true ) ?: [] );
+			$binds            = Db::table( 'modules_bindings' )->where( 'module', $m['name'] )->get() ?: [];
 			foreach ( $binds as $b ) {
 				//业务动作有多个储存时使用JSON格式的
 				if ( $b['entry'] == 'business' ) {
@@ -208,7 +208,7 @@ class Module {
 			}
 		}
 
-		return [ ];
+		return [];
 	}
 
 	/**
@@ -222,17 +222,19 @@ class Module {
 	 * @param string $title 菜单标题
 	 * @param array $permission 原权限数据
 	 * @param string $url 链接地址
+	 * @param string $ico 图标
 	 *
 	 * @return mixed
 	 */
 	protected function formatModuleAccessData( &$modules, $name, $identifying, $cat_name, $title, $permission, $url, $ico ) {
+		url_del(['mark']);
 		$data['name']        = "$name";
 		$data['title']       = $title;
 		$data['url']         = $url;
 		$data['identifying'] = $identifying;
 		$data['status']      = 0;
 		$data['ico']         = $ico;
-		$data['_hash']         = md5($url);
+		$data['_hash']       = substr( md5( $url ), 0, 6 );
 		if ( empty( $permission ) ) {
 			$data['status'] = 1;
 		} elseif ( isset( $permission[ $name ] ) && in_array( $identifying, $permission[ $name ] ) ) {
@@ -262,7 +264,7 @@ class Module {
 	public function getExtModuleByUserPermission( $uid = '' ) {
 		$uid        = $uid ?: v( 'user.info.uid' );
 		$permission = \User::getUserAtSiteAccess( SITEID, $uid );
-		$modules    = [ ];
+		$modules    = [];
 		foreach ( v( 'site.modules' ) as $name => $m ) {
 			//对扩展模块进行处理
 			if ( $m['setting'] ) {
@@ -319,7 +321,7 @@ class Module {
 	 * @return mixed
 	 */
 	public function getBySiteUser( $siteId = 0, $uid = 0, $onlyExt = 1 ) {
-		static $cache = [ ];
+		static $cache = [];
 		$name = "cache_{$siteId}{$uid}" . intval( false );
 		if ( ! isset( $cache[ $name ] ) ) {
 			$siteId = $siteId ?: SITEID;
@@ -354,8 +356,8 @@ class Module {
 	 *
 	 * @return array
 	 */
-	public function getModulesByIndustry( $modules = [ ] ) {
-		$data = [ ];
+	public function getModulesByIndustry( $modules = [] ) {
+		$data = [];
 		foreach ( (array) v( 'site.modules' ) as $m ) {
 			if ( in_array( $m['name'], $modules ) && $m['is_system'] == 0 ) {
 				$data[ $this->industry[ $m['industry'] ] ][] = [
@@ -396,7 +398,7 @@ class Module {
 		$module = $module ?: v( 'module.name' );
 		$config = ModuleSetting::where( 'siteid', SITEID )->where( 'module', $module )->pluck( 'config' );
 
-		return $config ? json_decode( $config, true ) : [ ];
+		return $config ? json_decode( $config, true ) : [];
 	}
 
 	/**
@@ -409,7 +411,7 @@ class Module {
 	public function getSiteExtModules( $siteId ) {
 		$module = SiteModules::where( 'siteid', $siteId )->lists( 'module' );
 
-		return $module ? Modules::whereIn( 'name', $module )->get() : [ ];
+		return $module ? Modules::whereIn( 'name', $module )->get() : [];
 	}
 
 	/**
@@ -420,7 +422,7 @@ class Module {
 	 * @return array
 	 */
 	public function getSiteExtModulesName( $siteId ) {
-		return SiteModules::where( 'siteid', $siteId )->lists( 'module' ) ?: [ ];
+		return SiteModules::where( 'siteid', $siteId )->lists( 'module' ) ?: [];
 	}
 
 	/**
@@ -454,7 +456,7 @@ class Module {
 		//执行模块本身的卸载程序
 		$class = 'addons\\' . $name . '\system\Setup';
 		if ( class_exists( $class ) && method_exists( $class, 'uninstall' ) ) {
-			call_user_func_array( [ new $class, 'uninstall' ], [ ] );
+			call_user_func_array( [ new $class, 'uninstall' ], [] );
 		}
 
 		//更新套餐数据

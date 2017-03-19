@@ -6,12 +6,12 @@
  * @author 后盾网
  * @url http://open.hdcms.com
  */
-use module\hdProcessor;
+use module\HdProcessor;
 
-class processor extends hdProcessor {
+class Processor extends HdProcessor {
 	//规则编号
 	public function handle( $rid ) {
-		$sql = "SELECT * FROM hd_reply_basic WHERE rid={$rid} ORDER BY rand()";
+		$sql = "SELECT * FROM " . tablename( 'reply_basic' ) . " WHERE rid={$rid} ORDER BY rand()";
 		if ( $res = Db::query( $sql ) ) {
 			$this->text( $res[0]['content'] );
 		}

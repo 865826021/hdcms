@@ -36,7 +36,7 @@ if ( ! function_exists( 'u' ) ) {
 	 *
 	 * @return mixed|string
 	 */
-	function u( $path, $args = [ ] ) {
+	function u( $path, $args = [] ) {
 		if ( empty( $path ) || preg_match( '@^http@i', $path ) ) {
 			return $path;
 		}
@@ -66,6 +66,33 @@ if ( ! function_exists( 'u' ) ) {
 		}
 
 		return $url;
+	}
+}
+if ( ! function_exists( 'url_del' ) ) {
+	/**
+	 * 从__URL__地址中删除指令的$_GET参数
+	 *
+	 * @param string|array $args
+	 *
+	 * @return string
+	 */
+	function url_del( $args ) {
+		if ( ! is_array( $args ) ) {
+			$args = [ $args ];
+		}
+		$url = parse_url( __URL__ );
+		parse_str( $url['query'], $output );
+		foreach ( $args as $v ) {
+			if ( isset( $output[ $v ] ) ) {
+				unset( $output[ $v ] );
+			}
+		}
+		$url = $url['scheme'] . '://' . $url['host'] . $url['path'] . '?';
+		foreach ( $output as $k => $v ) {
+			$url .= $k . '=' . $v . '&';
+		}
+
+		return trim( $url, '&' );
 	}
 }
 
@@ -150,7 +177,7 @@ if ( ! function_exists( 'v' ) ) {
 	 * @return array|mixed|null|string
 	 */
 	function v( $name = null, $value = '[null]' ) {
-		static $vars = [ ];
+		static $vars = [];
 		if ( is_null( $name ) ) {
 			return $vars;
 		} else if ( $value == '[null]' ) {
@@ -170,7 +197,7 @@ if ( ! function_exists( 'v' ) ) {
 			$tmp = &$vars;
 			foreach ( explode( '.', $name ) as $d ) {
 				if ( ! isset( $tmp[ $d ] ) ) {
-					$tmp[ $d ] = [ ];
+					$tmp[ $d ] = [];
 				}
 				$tmp = &$tmp[ $d ];
 			}

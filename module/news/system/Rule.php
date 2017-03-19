@@ -18,10 +18,12 @@ class Rule extends HdRule {
 
 	public function fieldsDisplay( $rid = 0 ) {
 		//要嵌入规则编辑页的自定义内容，这里 $rid 为对应的规则编号，新增时为 0
-		$contents = [ ];
+		$contents = [];
 		if ( $rid ) {
 			//顶级菜单
-			$contents = Db::table( 'reply_news' )->where( 'rid', $rid )->where( 'pid', 0 )->orderBy( 'rank', 'desc' )->orderBy( 'id', 'ASC' )->get();
+			$contents = Db::table( 'reply_news' )->where( 'rid', $rid )
+			              ->where( 'pid', 0 )->orderBy( 'rank', 'desc' )
+			              ->orderBy( 'id', 'ASC' )->get();
 			//子级菜单
 			foreach ( $contents as $k => $t ) {
 				$news                       = Db::table( 'reply_news' )
@@ -29,10 +31,10 @@ class Rule extends HdRule {
 				                                ->where( 'pid', $t['id'] )
 				                                ->orderBy( 'id', 'ASC' )
 				                                ->get();
-				$contents[ $k ]['son_news'] = $news ?: [ ];
+				$contents[ $k ]['son_news'] = $news ?: [];
 			}
 		}
-		View::with( 'contents', json_encode( $contents ?: [ ], true ) );
+		View::with( 'contents', json_encode( $contents ?: [], true ) );
 
 		return View::fetch( $this->template . '/fieldsDisplay.html' );
 	}
@@ -48,6 +50,7 @@ class Rule extends HdRule {
 	public function fieldsSubmit( $rid ) {
 		ReplyNews::where( 'rid', $rid )->delete();
 		$content = json_decode( $_POST['content'], true );
+//		p($content);exit;
 		foreach ( $content as $c ) {
 			//添加一级图文
 			$model    = new ReplyNews();

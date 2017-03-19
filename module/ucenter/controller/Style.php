@@ -1,10 +1,5 @@
 <?php namespace module\ucenter\controller;
 
-use module\HdController;
-use system\model\Navigate;
-use system\model\Page;
-use system\model\ReplyCover;
-
 /** .-------------------------------------------------------------------
  * |  Software: [HDPHP framework]
  * |      Site: www.hdphp.com  www.hdcms.com
@@ -13,6 +8,12 @@ use system\model\ReplyCover;
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
+use houdunwang\request\Request;
+use module\HdController;
+use system\model\Navigate;
+use system\model\Page;
+use system\model\ReplyCover;
 
 /**
  * 后台移动端界面管理
@@ -24,10 +25,10 @@ class Style extends HdController {
 	 * 移动端界面设置
 	 */
 	public function post() {
-		auth();
+		authIdentity( 'feature_ucenter_post' );
 		if ( IS_POST ) {
 			//模块数据
-			$modules = json_decode( $_POST['modules'], true );
+			$modules = json_decode( Request::post( 'modules' ), true );
 			//查找旧的文章数据如果有时为编辑动作
 			$res                  = Page::where( 'siteid', SITEID )->where( 'type', 'profile' )->first();
 			$model                = $res['id'] ? Page::find( $res['id'] ) : new Page();
@@ -56,26 +57,16 @@ class Style extends HdController {
 				}
 			}
 			//************************************回复关键词处理************************************
-			$rid = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', '##移动端会员中心##' )->pluck( 'rid' );
 			//会员中心顶部资料,回复关键词,描述,缩略图
 			$ucenter = $modules[0]['params'];
-			//添加回复规则
-			$rule['rid']    = $rid;
-			$rule['name']   = '##移动端会员中心##';
-			$rule['module'] = 'cover';
-			//回复关键词
-			$rule['keywords'] = [ [ 'content' => $ucenter['keyword'] ] ];
-			\Wx::rule( $rule );
-			//回复封面
-			$res                            = ReplyCover::where( 'siteid', SITEID )->where( 'module', 'ucenter' )->first();
-			$replyCoverModel                = empty( $res['id'] ) ? new ReplyCover() : ReplyCover::find( $res['id'] );
-			$replyCoverModel['rid']         = $rid;
-			$replyCoverModel['title']       = $ucenter['title'];
-			$replyCoverModel['description'] = $ucenter['description'];
-			$replyCoverModel['thumb']       = $ucenter['thumb'];
-			$replyCoverModel['module']      = 'ucenter';
-			$replyCoverModel['url']         = "?m=ucenter&action=controller/member/index&siteid=" . SITEID;
-			$replyCoverModel->save();
+			//添加图文回复
+			\Wx::cover( [
+				'keyword'     => $ucenter['keyword'],
+				'title'       => $ucenter['title'],
+				'description' => $ucenter['description'],
+				'thumb'       => $ucenter['thumb'],
+				'url'         => url( 'member.index' )
+			] );
 			message( '会员中心视图保存成功', 'refresh', 'success' );
 		}
 		//模块

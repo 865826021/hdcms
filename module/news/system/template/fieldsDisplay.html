@@ -104,7 +104,7 @@
                                     <div class="col-sm-10">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" ng-model="activeItem.showContent" value="1">
+                                                <input type="checkbox" ng-model="activeItem.type" value="1">
                                                 是否编辑图文消息
                                             </label>
                                         </div>
@@ -113,13 +113,13 @@
                                       </span>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-show="activeItem.showContent||activeItem.content">
+                                <div class="form-group" ng-show="activeItem.type==1">
                                     <label class="col-sm-2 control-label">详情</label>
                                     <div class="col-sm-10">
                                         <textarea id="container" style="height:300px;width:100%;" ng-model="activeItem.content"></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-if="!activeItem.showContent">
+                                <div class="form-group" ng-if="activeItem.type==0">
                                     <label class="col-sm-2 control-label">链接</label>
                                     <div class="col-sm-10">
                                         <div class="input-group">
@@ -160,7 +160,7 @@
     function moduleController($scope, _, util) {
         $scope.contents={{$contents}};
         if ($scope.contents.length == 0) {
-            $scope.contents = [{content:'',son_news: []}];
+            $scope.contents = [{content:'',type:0,url:'',son_news: []}];
         }
         //当前操作的子新闻
         $scope.activeItem = $scope.contents[0];
@@ -213,7 +213,6 @@
             //更改编辑区域位置
             $scope.changeLeftDivPositon(pPos, cPos);
         }
-
         //删除元素
         $scope.removeItem = function (pPos, cPos) {
             if (cPos === false) {
@@ -298,8 +297,11 @@
             if ($.trim(v.description) == '') {
                 msg += "第"+pos+"个图文没有设置描述<br/>";
             }
-            if(v.showContent && $.trim(v.content)=='' ){
-                msg += "第"+pos+"个图文详情不能为空<br/>";
+            if(v.type==1 && $.trim(v.content)=='' ){
+                msg += "第"+pos+"个图文没有设置内容<br/>";
+            }
+            if(v.type==0 && $.trim(v.url)==''){
+                msg += "第"+pos+"个图文没有设置链接<br/>";
             }
             angular.forEach(v.son_news, function (b) {
                 pos++;
@@ -312,8 +314,11 @@
                 if ($.trim(b.description) == '') {
                     msg += "第"+pos+"个图文没有设置描述<br/>";
                 }
-                if(b.showContent && $.trim(b.content)=='' ){
-                    msg += "第"+pos+"个图文详情不能为空<br/>";
+                if(b.type==1 && $.trim(b.content)=='' ){
+                    msg += "第"+pos+"个图文没有设置内容<br/>";
+                }
+                if(b.type==0 && $.trim(b.url)==''){
+                    msg += "第"+pos+"个图文没有设置链接<br/>";
                 }
             })
         }, val);

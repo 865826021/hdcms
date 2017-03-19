@@ -39,7 +39,7 @@
 	<div class="col-sm-7 col-md-8" ng-repeat="key in rule.keyword" ng-if="key.type==1">
 		<input type="text" class="form-control" id="keywordInput" ng-model="key.content"
 		       ng-blur="checkWxKeyword($event)">
-		<span class="help-block has_keyword"></span>
+        <span class="help-block has_keyword label label-danger"></span>
 		<span class="help-block">
             当用户的对话内容符合以上的关键字定义时，会触发这个回复定义。多个关键字请使用逗号隔开。
             <a href="javascript:;" id="keywordEmotion">
@@ -72,11 +72,11 @@
 							正则表达式模式匹配
 						</a>
 					</li>
-					<li role="presentation">
-						<a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">
-							直接托管
-						</a>
-					</li>
+<!--					<li role="presentation">-->
+<!--						<a href="#depot" aria-controls="depot" role="tab" data-toggle="tab">-->
+<!--							直接托管-->
+<!--						</a>-->
+<!--					</li>-->
 				</ul>
 			</div>
 			<ul role="tabpanel" class="list-group tab-pane active" id="contain">
@@ -92,7 +92,7 @@
 							<button type="button" class="btn btn-default" ng-click="saveItem(item)">
 								@@{{item.edited?'编辑':'保存'}}
 							</button>
-							<button type="button" class="btn btn-default" ng-click="removeItem(item)">删除</button>
+							<button type="button" class="btn btn-default" ng-click="removeKeywordItem(item)">删除</button>
 						</div>
 					</div>
 				</li>
@@ -110,22 +110,22 @@
 							<button type="button" class="btn btn-default" ng-click="saveItem(item)">
 								@@{{item.edited?'编辑':'保存'}}
 							</button>
-							<button type="button" class="btn btn-default" ng-click="removeItem(item)">删除</button>
+							<button type="button" class="btn btn-default" ng-click="removeKeywordItem(item)">删除</button>
 						</div>
 					</div>
 				</li>
 			</ul>
-			<ul role="tabpanel" class="list-group tab-pane " id="depot">
-				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==4">
-					<div class="col-xs-12 col-sm-12">
-						<span>符合优先级条件时, 这条回复将直接生效</span>
-						<button class="btn btn-default" type="button" ng-click="removeItem(item)">取消托管</button>
-					</div>
-				</li>
-			</ul>
+<!--			<ul role="tabpanel" class="list-group tab-pane " id="depot">-->
+<!--				<li class="list-group-item row" ng-repeat="item in rule.keyword" ng-if="item.type==4">-->
+<!--					<div class="col-xs-12 col-sm-12">-->
+<!--						<span>符合优先级条件时, 这条回复将直接生效</span>-->
+<!--						<button class="btn btn-default" type="button" ng-click="removeKeywordItem(item)">取消托管</button>-->
+<!--					</div>-->
+<!--				</li>-->
+<!--			</ul>-->
 
 			<div class="panel-footer advFooter">
-				<button type="button" class="btn btn-default" ng-click="addItem()">添加包含关键字</button>
+				<button type="button" class="btn btn-default" ng-click="addKeywordItem()">添加包含关键字</button>
 				<div ng-bind-html="footer.help"></div>
 			</div>
 		</div>
@@ -140,7 +140,7 @@
 			$scope.footer = {
 				contain: '<span class="help-block"> 用户进行交谈时，对话中包含上述关键字就执行这条规则。</span>',
 				regexp: '<span class="help-block">用户进行交谈时，对话内容符合述关键字中定义的模式才会执行这条规则。<br><strong>注意：如果你不明白正则表达式的工作方式，请不要使用正则匹配</strong> <br><strong>注意：正则匹配使用MySQL的匹配引擎，请使用MySQL的正则语法</strong> <br><strong>示例: </strong><br><em>^微信</em>匹配以“微信”开头的语句<br><em>微信$</em>匹配以“微信”结尾的语句<br><em>^微信$</em>匹配等同“微信”的语句<br><em>微信</em>匹配包含“微信”的语句<br><em>[0-9.-]</em>匹配所有的数字，句号和减号<br><em>^[a-zA-Z_]$</em>所有的字母和下划线<br><em>^[[:alpha:]]{3}$</em>所有的3个字母的单词<br><em>^a{4}$</em>aaaa<br><em>^a{2,4}$</em>aa，aaa或aaaa<br><em>^a{2,}$</em>匹配多于两个a的字符串</span>',
-				depot: '<span class="help-block">如果没有比这条回复优先级更高的回复被触发，那么直接使用这条回复。<br/><strong>注意：如果你不明白这个机制的工作方式，请不要使用直接接管。</strong></span>'
+//				depot: '<span class="help-block">如果没有比这条回复优先级更高的回复被触发，那么直接使用这条回复。<br/><strong>注意：如果你不明白这个机制的工作方式，请不要使用直接接管。</strong></span>'
 			};
 			$scope.footer.help = $sce.trustAsHtml($scope.footer.contain);
 			$scope.rule =<?php echo json_encode( $rule );?>;
@@ -179,7 +179,7 @@
 				item.edited = !item.edited;
 			}
 			//删除关键词
-			$scope.removeItem = function (item) {
+			$scope.removeKeywordItem = function (item) {
 				$scope.rule.keyword = _.without($scope.rule.keyword, item);
 			}
 			//切换面板
@@ -190,7 +190,7 @@
 				$scope.$digest();
 			});
 			//添加关键词
-			$scope.addItem = function () {
+			$scope.addKeywordItem = function () {
 				//edited为显示文本输入框
 				var item = '';
 				switch ($scope.currentKeyType) {
@@ -200,18 +200,18 @@
 					case 'regexp':
 						item = {content: '', type: 3, edited: true};
 						break;
-					case 'depot':
-						//直接托管
-						var status = false;
-						for (var i in $scope.rule.keyword) {
-							if ($scope.rule.keyword[i].type == 4) {
-								status = true;
-							}
-						}
-						if (status == false) {
-							item = {content: '直接托管', type: 4, edited: true};
-						}
-						break;
+//					case 'depot':
+//						//直接托管
+//						var status = false;
+//						for (var i in $scope.rule.keyword) {
+//							if ($scope.rule.keyword[i].type == 4) {
+//								status = true;
+//							}
+//						}
+//						if (status == false) {
+//							item = {content: '直接托管', type: 4, edited: true};
+//						}
+//						break;
 				}
 				if (item) {
 					$scope.rule.keyword.push(item);
@@ -232,7 +232,6 @@
 					}
 				})
 			}
-
 			//提交表单
 			$("#replyForm").submit(function () {
 				//验证关键词是否已经存在

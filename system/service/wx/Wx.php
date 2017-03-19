@@ -1,5 +1,6 @@
 <?php namespace system\service\wx;
 
+use system\model\ReplyCover;
 use system\model\Rule;
 use system\model\RuleKeyword;
 
@@ -73,7 +74,11 @@ class Wx {
 	 * @return bool
 	 */
 	public function rule( $data ) {
-		$Rule = ! empty( $data['rid'] ) ? Rule::find( $data['rid'] ) : new Rule();
+		$Rule           = ! empty( $data['rid'] ) ? Rule::find( $data['rid'] ) : new Rule();
+		$data['rid']    = isset( $data['rid'] ) ? $data['rid'] : 0;
+		$data['rank']   = isset( $data['rank'] ) ? $data['rank'] : 0;
+		$data['rank']   = isset( $data['istop'] ) && $data['istop'] == 1 ? 255 : min( 255, intval( $data['rank'] ) );
+		$data['module'] = isset( $data['module'] ) ? $data['module'] : v( 'module.name' );
 		foreach ( $data as $field => $v ) {
 			$Rule[ $field ] = $v;
 		}
@@ -123,6 +128,56 @@ class Wx {
 		}
 
 		return true;
+	}
+
+	/**
+	 * 添加图文回复
+	 *
+	 * @param $data
+	 *
+	 * @return bool
+	 */
+	public function cover( $data ) {
+		if ( empty( $data['keyword'] ) || empty( $data['title'] ) || empty( $data['description'] ) || empty( $data['thumb'] ) || empty( $data['url'] ) ) {
+			message( '不能添加图文消息，参数错误', '', 'error' );
+		}
+		//添加回复规则
+		//回复规则唯一标识，用于确定唯一个图文回复
+		$hash           = v( 'module.name' ) . '#' . md5( $data['url'] );
+		$rid            = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', $hash )->pluck( 'rid' );
+		$rule['rid']    = $rid;
+		$rule['name']   = $hash;
+		$rule['module'] = 'cover';
+		//回复关键词
+		$rule['keywords'] = [ [ 'content' => $data['keyword'] ] ];
+		$rid              = $this->rule( $rule );
+
+		//封面回复
+		$cover                = Db::table( 'reply_cover' )->where( 'siteid', SITEID )->where( 'hash', $hash )->first();
+		$model                = empty( $cover['id'] ) ? new ReplyCover() : ReplyCover::find( $cover['id'] );
+		$model['hash']        = $hash;
+		$model['rid']         = $rid;
+		$model['title']       = $data['title'];
+		$model['description'] = $data['description'];
+		$model['thumb']       = $data['thumb'];
+		$model['url']         = $data['url'];
+		$model['module']      = v( 'module.name' );
+
+		return $model->save();
+	}
+
+	/**
+	 * 删除图文消息
+	 *
+	 * @param string $url 图文消息链接地址
+	 *
+	 * @return bool
+	 */
+	public function removeCover( $url ) {
+		$hash = v( 'module.name' ) . '#' . md5( $url );
+		$rid  = Db::table( 'rule' )->where( 'siteid', SITEID )->where( 'name', $hash )->pluck( 'rid' );
+
+		return $this->removeRule( $rid );
 	}
 
 	/**

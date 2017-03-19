@@ -1,5 +1,5 @@
 <extend file="resource/view/site"/>
-<link rel="stylesheet" href="{{__TEMPLATE__}}/css.css">
+<link rel="stylesheet" href="{{template_url()}}/css.css">
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
         <li><a href="{{url('site/image')}}">图片素材列表</a></li>
@@ -58,7 +58,7 @@
             //发送预览
             $scope.preview = function (id) {
                 var modalobj = util.modal({
-                    content: ['{{url("site/users")}}'],//加载的远程地址
+                    content: ['{{url("site.users")}}'],//加载的远程地址
                     title: '选择发送图文消息的粉丝',
                     width: 800,
                     show: true,

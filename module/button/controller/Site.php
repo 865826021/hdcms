@@ -83,7 +83,7 @@ class Site extends HdController {
 		if ( $res['errcode'] == 0 ) {
 			Button::whereNotIn( 'id', [ $id ] )->update( [ 'status' => 0 ] );
 			Button::where( 'id', $id )->update( [ 'status' => 1 ] );
-			message( '推送微信菜单成功', 'back', 'success' );
+			message( '推送微信菜单成功', url('site.lists'), 'success' );
 		}
 		message( $res['errmsg'], 'back', 'error', 5 );
 	}

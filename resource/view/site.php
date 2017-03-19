@@ -79,27 +79,29 @@
         <div class="col-xs-12 col-sm-3 col-lg-2 left-menu">
             <div class="search-menu">
                 <input class="form-control input-lg" type="text" placeholder="输入菜单名称可快速查找"
-                       onkeyup="hdMenus.search(this)">
+                       onkeyup="search(this)">
             </div>
             <!--扩展模块动作 start-->
             <if value="'package'==Request::get('mark')">
                 <div class="btn-group module_action_type">
-                    <a class="btn btn-default default" href="{{__URL__}}&menuType=default">
+                    <a class="btn {{Request::get('mt')=='default'?'btn-primary':'btn-default'}} default"
+                       href="{{url_del('mt')}}&mt=default">
                         默认
                     </a>
-                    <a class="btn btn-default system" href="{{__URL__}}&menuType=system aAAAAAAAAAAC ">
+                    <a class="btn {{Request::get('mt')=='system'?'btn-primary':'btn-default'}} system"
+                       href="{{url_del('mt')}}&mt=system">
                         系统
                     </a>
-                    <a class="btn btn-default group">
+                    <a class="btn {{Request::get('mt')=='group'?'btn-primary':'btn-default'}} group"
+                       href="{{url_del('mt')}}&mt=group">
                         组合
                     </a>
                 </div>
             </if>
             <div class="panel panel-default">
-
-                    <!--系统菜单-->
-                    <foreach from="$LINKS['menus']" value="$m">
-                        <if value="$m['mark']==Request::get('mark')">
+                <!--系统菜单-->
+                <foreach from="$LINKS['menus']" value="$m">
+                    <if value="$m['mark']==Request::get('mark')">
                         <foreach from="$m['_data']" value="$d">
                             <div class="panel-heading">
                                 <h4 class="panel-title">{{$d['title']}}</h4>
@@ -111,19 +113,19 @@
                                 <foreach from="$d['_data']" value="$g">
                                     <li class="list-group-item" id="{{$g['id']}}">
                                         <if value="$g['append_url']">
-                                            <a class="pull-right append_url" href='"{{$g['append_url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}"'>
-                                                <i class="fa fa-plus"></i>
+                                            <a class="pull-right append_url" href="{{$g['append_url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}">
+                                            <i class="fa fa-plus"></i>
                                             </a>
                                         </if>
                                         <a href="{{$g['url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}">
-                                        {{$g['title']}}
+                                            {{$g['title']}}
                                         </a>
                                     </li>
                                 </foreach>
                             </ul>
                         </foreach>
-                        </if>
-                    </foreach>
+                    </if>
+                </foreach>
                 <!----------返回模块列表 start------------>
                 <if value="$LINKS['module']">
                     <div class="panel-heading">
@@ -155,7 +157,7 @@
                     <ul class="list-group " aria-expanded="true">
                         <foreach from="$t" value="$m">
                             <li class="list-group-item" id="{{$m['_hash']}}">
-                                <a href="{{$m['url']}}&siteid={{SITEID}}&mark=package&mi={{$m['_hash']}}">
+                                <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}">
                                     <i class="{{$m['ico']}}"></i> {{$m['title']}}
                                 </a>
                             </li>

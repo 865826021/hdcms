@@ -95,8 +95,21 @@ function url( $action, $args = [], $module = '' ) {
 	if ( count( $info ) == 2 ) {
 		array_unshift( $info, 'controller' );
 	}
+	$args['siteid'] = siteid();
+	if ( $mark = \houdunwang\request\Request::get( 'mark' ) ) {
+		$args['mark'] = $mark;
+	}
+	//菜单编号
+	if ( $mi = \houdunwang\request\Request::get( 'mi' ) ) {
+		$args['mi'] = $mi;
+	}
+	//模块菜单的 默认/系统/组合的类型
+	if ( $mt = \houdunwang\request\Request::get( 'mt' ) ) {
+		$args['mt'] = $mt;
+	}
+
 	return __ROOT__ . "/?m=" . $module . "&action=" .
-	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
+	       implode( '/', $info ) . '&' . http_build_query( $args );
 }
 
 /**
@@ -110,6 +123,16 @@ function url( $action, $args = [], $module = '' ) {
 function site_url( $action, $args = [] ) {
 	$args['mark']   = \houdunwang\request\Request::get( 'mark' );
 	$args['siteid'] = siteid();
+	if ( $mi = \houdunwang\request\Request::get( 'mi' ) ) {
+		$args['mi'] = $mi;
+	}
+	//模块菜单的 默认/系统/组合的类型
+	if ( $mt = \houdunwang\request\Request::get( 'mt' ) ) {
+		$args['mt'] = $mt;
+	}
+	if ( $model = v( 'module.name' ) ) {
+		$args['m'] = $model;
+	}
 
 	return u( $action, $args );
 }

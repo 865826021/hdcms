@@ -170,7 +170,7 @@
          */
         checkWxKeyword: function (content, rid, callback) {
             if(content=='')return;
-            $.post('?s=site/keyword/checkWxKeyword', {content: content, rid: rid ? rid : 0}, function (res) {
+            $.post('?s=site/keyword/checkWxKeyword&siteid='+system.siteid, {content: content, rid: rid ? rid : 0}, function (res) {
                 if ($.isFunction(callback)) {
                     callback(res);
                 }

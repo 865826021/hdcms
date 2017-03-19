@@ -3,10 +3,10 @@
 	<ul class="nav nav-tabs">
 		<if value="!empty($_GET['rid'])">
 			<li role="presentation">
-				<a href="{{site_url('site.rule.lists')}}&m={{v('module.name')}}">管理{{v('module.title')}}</a>
+				<a href="{{site_url('site.rule.lists')}}">管理{{v('module.title')}}</a>
 			</li>
 			<li role="presentation">
-				<a href="{{site_url('site.rule.post')}}&m={{v('module.name')}}">
+				<a href="{{site_url('site.rule.post')}}">
 					<i class="fa fa-plus"></i> 添加{{v('module.title')}}
 				</a>
 			</li>
@@ -15,7 +15,7 @@
 			</li>
 			<else/>
 			<li role="presentation">
-				<a href="{{site_url('site.rule.lists')}}&m={{v('module.name')}}">管理{{v('module.title')}}</a>
+				<a href="{{site_url('site.rule.lists')}}">管理{{v('module.title')}}</a>
 			</li>
 			<li role="presentation" class="active">
 				<a href="#"><i class="fa fa-plus"></i> 添加{{v('module.title')}}</a>
@@ -23,7 +23,6 @@
 		</if>
 	</ul>
 	<form action="" method="post" class="form-horizontal ng-cloak" role="form" id="replyForm" ng-controller="ctrl">
-		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				添加回复规则

@@ -12,6 +12,11 @@ use system\model\Member;
  * @author 向军
  */
 class Site extends HdController {
+	public function __construct() {
+		parent::__construct();
+		authIdentity( 'platform_material' );
+	}
+
 	/**
 	 * 上传素材
 	 */
@@ -39,13 +44,10 @@ class Site extends HdController {
 	//删除素材
 	public function delMaterial() {
 		$model = Material::find( Request::post( 'id' ) );
-		$data  = \WeChat::instance( 'material' )->delete( $model['media_id'] );
-		if ( $data['errcode']==0) {
-			$model->destory();
-			message( '素材删除成功', '', 'success' );
-		} else {
-			message( '删除失败,请检查以下原因<br/>1. 与微信服务器通信失败,请检查站点连接配置 <br/>2. 微信服务器忙碌, 请稍后再试', '', 'error' );
-		}
+		\WeChat::instance( 'material' )->delete( $model['media_id'] );
+		$model->destory();
+		message( '素材删除成功', '', 'success' );
+
 	}
 
 	//图片
@@ -67,7 +69,7 @@ class Site extends HdController {
 
 	//图文
 	public function news() {
-		$data = Material::where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
+		$data = Db::table( 'material' )->where( 'siteid', SITEID )->where( 'type', 'news' )->orderBy( 'id', 'DESC' )->get();
 		foreach ( (array) $data as $k => $v ) {
 			$data[ $k ]['data'] = json_decode( $v['data'], true );
 		}
@@ -142,8 +144,8 @@ class Site extends HdController {
 
 	//添加图文
 	public function postNews() {
-		$id = Request::get( 'id' );
-		$model = $id?Material::find($id):new Material();
+		$id    = Request::get( 'id' );
+		$model = $id ? Material::find( $id ) : new Material();
 		if ( IS_POST ) {
 			$articles = json_decode( Request::post( 'data' ), true );
 			if ( $id ) {
@@ -218,7 +220,8 @@ str;
 
 	//群发图文消息
 	public function users() {
-		$user = Member::where( 'openid', '<>', '' )->where( 'siteid', SITEID )->get();
+		$user = Db::table( 'member' )->join( 'member_auth', 'member.uid', '=', 'member_auth.uid' )
+		          ->where( 'member_auth.wechat', '<>', '' )->where( 'member.siteid', SITEID )->get();
 		View::with( 'user', $user );
 
 		return view( $this->template . '/users.html' );
@@ -228,7 +231,7 @@ str;
 	public function sendNews() {
 		$id                          = q( 'post.id' );
 		$media_id                    = Material::where( 'id', $id )->pluck( 'media_id' );
-		$data                        = [ ];
+		$data                        = [];
 		$data['filter']['is_to_all'] = true;
 		$data['filter']['group_id']  = 2;
 		$data['mpnews']['media_id']  = $media_id;
@@ -242,11 +245,11 @@ str;
 
 	//预览图文消息
 	public function preview() {
-		$uid                        = q( 'post.uid' );
-		$id                         = q( 'post.id' );
-		$user                       = Db::table( 'member' )->find( $uid );
+		$uid                        = Request::post( 'uid' );
+		$id                         = Request::post( 'id' );
+		$user                       = Db::table( 'member_auth' )->find( $uid );
 		$material                   = Material::find( $id );
-		$data['touser']             = $user['openid'];
+		$data['touser']             = $user['wechat'];
 		$data['mpnews']['media_id'] = $material['media_id'];
 		$data['msgtype']            = 'mpnews';
 		$res                        = WeChat::instance( 'message' )->preview( $data );
