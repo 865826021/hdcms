@@ -232,6 +232,7 @@ class Module {
 		$data['identifying'] = $identifying;
 		$data['status']      = 0;
 		$data['ico']         = $ico;
+		$data['_hash']         = md5($url);
 		if ( empty( $permission ) ) {
 			$data['status'] = 1;
 		} elseif ( isset( $permission[ $name ] ) && in_array( $identifying, $permission[ $name ] ) ) {

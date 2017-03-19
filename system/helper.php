@@ -59,8 +59,8 @@ function record( $message ) {
  *
  * @return bool
  */
-function auth($permission = '', $show = true) {
-	\User::auth($permission,$show);
+function auth( $permission = '', $show = true ) {
+	\User::auth( $permission, $show );
 }
 
 /**
@@ -80,6 +80,7 @@ function memberIsLogin() {
 }
 
 /**
+ * 模块链接
  * 生成模块控制器链接地址
  *
  * @param string $action 动作标识
@@ -88,16 +89,29 @@ function memberIsLogin() {
  *
  * @return string
  */
-function url( $action, $args = [ ], $module = '' ) {
+function url( $action, $args = [], $module = '' ) {
 	$info   = preg_split( '#\.|/#', $action );
 	$module = $module ? $module : v( 'module.name' );
 	if ( count( $info ) == 2 ) {
 		array_unshift( $info, 'controller' );
 	}
-
-
 	return __ROOT__ . "/?m=" . $module . "&action=" .
 	       implode( '/', $info ) . ( $args ? '&' . http_build_query( $args ) : '' ) . '&siteid=' . siteid();
+}
+
+/**
+ * 站点系统链接
+ *
+ * @param $action
+ * @param array $args
+ *
+ * @return string
+ */
+function site_url( $action, $args = [] ) {
+	$args['mark']   = \houdunwang\request\Request::get( 'mark' );
+	$args['siteid'] = siteid();
+
+	return u( $action, $args );
 }
 
 /**

@@ -185,6 +185,12 @@ h3 {
 .site .admin_menu .left-menu .panel ul li a.append_url {
   color: #337ab7;
 }
+.site .admin_menu .left-menu .panel ul li.active a {
+  color: #fff !important;
+}
+.site .admin_menu .left-menu .panel ul li.active a.append_url {
+  color: #fff;
+}
 .site .master-footer {
   text-align: center;
   border-top: solid 1px #dddddd;

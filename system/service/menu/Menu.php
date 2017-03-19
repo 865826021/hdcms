@@ -17,9 +17,9 @@ class Menu {
 	 * @return mixed
 	 */
 	public function getLevelMenuLists() {
-		$menu = Db::table( 'menu' )->get() ?: [ ];
+		$menu = Db::table( 'menu' )->get() ?: [];
 
-		return \Arr::channelLevel( $menu ?: [ ], 0, '', 'id', 'pid' );
+		return \Arr::channelLevel( $menu ?: [], 0, '', 'id', 'pid' );
 	}
 
 	/**
@@ -77,8 +77,9 @@ class Menu {
 			//当前访问的模块数据
 			if ( $m = Request::get( 'm' ) ) {
 				$allModules = Module::getExtModuleByUserPermission();
-				$module     = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [ ];
+				$module     = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [];
 			}
+//			p($module);
 			$moduleLists = Module::getModulesByIndustry( array_keys( Module::getBySiteUser() ) );
 			//当前模块的菜单数据
 			$menus = [
@@ -101,9 +102,17 @@ class Menu {
 	public function getQuickMenu() {
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 
-		return $data ? json_decode( $data, true ) : [ ];
+		return $data ? json_decode( $data, true ) : [];
 	}
 
+	/**
+	 * 根据权限获取菜单
+	 *
+	 * @param string $siteId 站点编号
+	 * @param string $uid 用户编号
+	 *
+	 * @return mixed
+	 */
 	public function getUserMenuAccess( $siteId = '', $uid = '' ) {
 		$siteId     = $siteId ?: SITEID;
 		$uid        = $uid ?: v( 'user.info.uid' );

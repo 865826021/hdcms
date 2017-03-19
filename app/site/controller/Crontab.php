@@ -17,6 +17,7 @@ namespace app\site\controller;
 class Crontab {
 	public function lists() {
 		auth( 'system_crontab' );
+		View::with( 'module_action_name', '定时任务设置' );
 		return view();
 	}
 }

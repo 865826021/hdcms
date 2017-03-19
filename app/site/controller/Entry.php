@@ -73,11 +73,7 @@ class Entry {
 			}
 			$current = current( $menu );
 			$mark    = $current['mark'];
-		}
-		switch ( $mark ) {
-			case 'article':
-
-				break;
+			Request::set( 'get.mark',$mark );
 		}
 
 		return view( VIEW_PATH . '/entry/home/' . $mark . '.php' );

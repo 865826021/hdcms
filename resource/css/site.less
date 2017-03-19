@@ -61,13 +61,21 @@
           li {
             cursor: pointer;
             padding: 0px;
-            a{
+            a {
               padding: 10px 15px;
-              color:#333;
+              color: #333;
               display: block;
             }
-            a.append_url{
+            a.append_url {
               color: #337ab7;
+            }
+            &.active {
+              a {
+                color: #fff !important;
+              }
+              a.append_url {
+                color: #fff;
+              }
             }
           }
         }
