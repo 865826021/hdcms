@@ -52,6 +52,6 @@ class Site extends HdController {
 		}
 		View::with( 'field', $model ? json_encode( $field, JSON_UNESCAPED_UNICODE ) : '' );
 
-		return View::make( $this->template . '/site_post.html' );
+		return View::make( $this->template . '/site/post.html' );
 	}
 }

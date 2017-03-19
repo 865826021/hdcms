@@ -4,7 +4,7 @@
 		<li class="active"><a href="javascript:;">路由规则 </a></li>
 	</ul>
 
-	<form action="" class="form-horizontal form ng-cloak" ng-controller="ctrl" method="post">
+	<form action="" class="form-horizontal form ng-cloak" ng-controller="ctrl" method="post" ng-submit="submit($event)">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">路由规则</h3>
@@ -79,9 +79,13 @@
 				$scope.del = function (item) {
 					$scope.data = _.without($scope.data, item);
 				}
+				$scope.submit=function(event){
+				    event.preventDefault();
+                    util.submit({successUrl: 'refresh'});
+                }
 			}])
 			angular.bootstrap($('form')[0], ['app']);
-			util.submit({successUrl: 'refresh'});
+
 		})
 
 	})

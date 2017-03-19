@@ -4,7 +4,7 @@
 		<li class="active"><a href="javascript:;">中间件设置</a></li>
 	</ul>
 
-	<form action="" method="post" class="form-horizontal ng-cloak" ng-controller="ctrl" ng-cloak>
+	<form action="" method="post" class="form-horizontal ng-cloak" ng-controller="ctrl" ng-cloak ng-submit="submit($event)">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				视频列表
@@ -73,10 +73,10 @@
 			$scope.del=function(item){
 				$scope.data = _.without($scope.data,item);
 			}
-			util.submit({data:this.data,successUrl:'refresh',before:function(){
-				this.data = {data:angular.toJson($scope.data)};
-				return true;
-			}})
+            $scope.submit=function(event){
+                event.preventDefault();
+                util.submit({data:{data:angular.toJson($scope.data)}});
+            }
 		}]);
 		$(function () {
 			angular.bootstrap($("form")[0], ['app']);

@@ -5,7 +5,7 @@
 		<li role="presentation" class="active"><a href="#">扩展模块列表</a></li>
 	</ul>
 	<div class="row apps">
-		<foreach from="Module::getBySiteUser(0,0,1212)" value="$d">
+		<foreach from="Module::getBySiteUser()" value="$d">
 			<div class="col-sm-6 col-md-2">
 				<div class="thumbnail">
 					<div class="img">
@@ -13,7 +13,7 @@
 					</div>
 					<div class="caption">
 						<h4>
-							<a href="?s=site/entry/module&m={{$d['name']}}&mark=package&siteid={{siteid()}}">{{$d['title']}}</a>
+							<a href="{{site_url('site.entry.module',['m'=>$d['name'],'mt'=>'default'])}}">{{$d['title']}}</a>
 						</h4>
 					</div>
 				</div>

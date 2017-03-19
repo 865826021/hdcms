@@ -82,7 +82,7 @@
                        onkeyup="search(this)">
             </div>
             <!--扩展模块动作 start-->
-            <if value="'package'==Request::get('mark')">
+            <if value="'package'==Request::get('mark') && Request::get('m')">
                 <div class="btn-group module_action_type">
                     <a class="btn {{Request::get('mt')=='default'?'btn-primary':'btn-default'}} default"
                        href="{{url_del('mt')}}&mt=default">
@@ -100,34 +100,37 @@
             </if>
             <div class="panel panel-default">
                 <!--系统菜单-->
-                <foreach from="$LINKS['menus']" value="$m">
-                    <if value="$m['mark']==Request::get('mark')">
-                        <foreach from="$m['_data']" value="$d">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">{{$d['title']}}</h4>
-                                <a class="panel-collapse" data-toggle="collapse" href="javascript:;">
-                                    <i class="fa fa-chevron-circle-down"></i>
-                                </a>
-                            </div>
-                            <ul class="list-group menus">
-                                <foreach from="$d['_data']" value="$g">
-                                    <li class="list-group-item" id="{{$g['id']}}">
-                                        <if value="$g['append_url']">
-                                            <a class="pull-right append_url" href="{{$g['append_url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}">
-                                            <i class="fa fa-plus"></i>
+                <if value="!in_array(Request::get('mt'),['default'])">
+                    <foreach from="$LINKS['menus']" value="$m">
+                        <if value="$m['mark']==Request::get('mark')">
+                            <foreach from="$m['_data']" value="$d">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">{{$d['title']}}</h4>
+                                    <a class="panel-collapse" data-toggle="collapse" href="javascript:;">
+                                        <i class="fa fa-chevron-circle-down"></i>
+                                    </a>
+                                </div>
+                                <ul class="list-group menus">
+                                    <foreach from="$d['_data']" value="$g">
+                                        <li class="list-group-item" id="{{$g['id']}}">
+                                            <if value="$g['append_url']">
+                                                <a class="pull-right append_url"
+                                                   href="{{$g['append_url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}">
+                                                    <i class="fa fa-plus"></i>
+                                                </a>
+                                            </if>
+                                            <a href="{{$g['url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}&mt={{Request::get('mt')}}">
+                                                {{$g['title']}}
                                             </a>
-                                        </if>
-                                        <a href="{{$g['url']}}&siteid={{SITEID}}&mark={{$g['mark']}}&mi={{$g['id']}}">
-                                            {{$g['title']}}
-                                        </a>
-                                    </li>
-                                </foreach>
-                            </ul>
-                        </foreach>
-                    </if>
-                </foreach>
+                                        </li>
+                                    </foreach>
+                                </ul>
+                            </foreach>
+                        </if>
+                    </foreach>
+                </if>
                 <!----------返回模块列表 start------------>
-                <if value="$LINKS['module']">
+                <if value="$LINKS['module'] && Request::get('mark')=='package' && in_array(Request::get('mt'),['default'])">
                     <div class="panel-heading">
                         <h4 class="panel-title">系统功能</h4>
                         <a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
@@ -147,25 +150,27 @@
                         </li>
                     </ul>
                 </if>
-                <foreach from="$LINKS['module']['access']" key="$title" value="$t">
-                    <div class="panel-heading module_back module_action">
-                        <h4 class="panel-title">{{$title}}</h4>
-                        <a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
-                            <i class="fa fa-chevron-circle-down"></i>
-                        </a>
-                    </div>
-                    <ul class="list-group " aria-expanded="true">
-                        <foreach from="$t" value="$m">
-                            <li class="list-group-item" id="{{$m['_hash']}}">
-                                <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}">
-                                    <i class="{{$m['ico']}}"></i> {{$m['title']}}
-                                </a>
-                            </li>
-                        </foreach>
-                    </ul>
-                </foreach>
+                <if value="Request::get('mark')=='package' && in_array(Request::get('mt'),['group','default'])">
+                    <foreach from="$LINKS['module']['access']" key="$title" value="$t">
+                        <div class="panel-heading module_back module_action">
+                            <h4 class="panel-title">{{$title}}</h4>
+                            <a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
+                                <i class="fa fa-chevron-circle-down"></i>
+                            </a>
+                        </div>
+                        <ul class="list-group " aria-expanded="true">
+                            <foreach from="$t" value="$m">
+                                <li class="list-group-item" id="{{$m['_hash']}}">
+                                    <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}">
+                                        <i class="{{$m['ico']}}"></i> {{$m['title']}}
+                                    </a>
+                                </li>
+                            </foreach>
+                        </ul>
+                    </foreach>
+                </if>
                 <!--模块列表-->
-                <if value="Request::get('mark')=='package'">
+                <if value="Request::get('mark')=='package' && in_array(Request::get('mt'),['group','system',''])">
                     <foreach from="$LINKS['moduleLists']" key="$t" value="$d">
                         <div class="panel-heading">
                             <h4 class="panel-title">{{$t}}</h4>
@@ -176,7 +181,7 @@
                         <ul class="list-group menus">
                             <foreach from="$d" value="$g">
                                 <li class="list-group-item">
-                                    <a href="{{site_url('site.entry.module')}}&m={{$g['name']}}">
+                                    <a href="{{site_url('site.entry.module')}}&m={{$g['name']}}&mt=default">
                                         {{$g['title']}}
                                     </a>
                                 </li>
