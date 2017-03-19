@@ -8,8 +8,8 @@ if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
 }
 $action = isset( $_GET['a'] ) ? $_GET['a'] : 'copyright';
 //软件包地址
-$cloudHost         = 'http://store.hdcms.com';
-$cloudUrl          = $cloudHost."?m=store&action=controller/cloud";
+$cloudHost = 'http://www.hdcms.com';
+$cloudUrl  = $cloudHost . "?m=store&action=controller/cloud";
 //版权信息
 if ( $action == 'copyright' ) {
 	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
@@ -46,20 +46,15 @@ if ( $action == 'database' ) {
 	if ( ! empty( $_POST ) ) {
 		//测试数据库连接
 		$_SESSION['config'] = $_POST;
-		$host               = $_SESSION['config']['host'];
-		$username           = $_SESSION['config']['user'];
-		$password           = $_SESSION['config']['password'];
-		$dbname             = $_SESSION['config']['database'];
-		if ( ! mysql_connect( $host, $username, $password ) ) {
-			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,请检查帐号与密码' ] );
+		try {
+			$host     = $_SESSION['config']['host'];
+			$username = $_SESSION['config']['user'];
+			$password = $_SESSION['config']['password'];
+			$dsn      = "mysql:host={$host};dbname={$_SESSION['config']['database']}";
+			$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
+		} catch ( Exception $e ) {
+			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,数据库不存在或帐号与密码错误' ] );
 			exit;
-		}
-		//数据库
-		if ( ! mysql_select_db( $dbname ) ) {
-			if ( ! mysql_query( "CREATE DATABASE $dbname CHARSET UTF8" ) ) {
-				echo json_encode( [ 'valid' => 0, 'message' => '创建数据库失败' ] );
-				exit;
-			}
 		}
 		echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
 		exit;
@@ -86,7 +81,7 @@ if ( $action == 'downloadFile' ) {
 		$_SESSION['hdcms'] = json_decode( $hdcms, true );
 		//更新下载数量
 		curl_get( $cloudUrl . '/updateHDownloadNum&build=' . $_SESSION['hdcms']['build'] );
-		$d = curl_get( $cloudHost . '/' . $_SESSION['hdcms']['file'] );
+		$d = curl_get( $_SESSION['hdcms']['file'] );
 		if ( strlen( $d ) < 2787715 ) {
 			//下载失败
 			exit;

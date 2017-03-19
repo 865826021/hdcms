@@ -92,6 +92,7 @@
     })
     function error() {
         alert('当前下载量太大,暂时无法提供下载,你可以尝试刷新页面,或直接去官网下载离线安装包');
+        clearInterval(tid);
 //        window.history.back();
     }
 </script>

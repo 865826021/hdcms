@@ -33,12 +33,12 @@ class Boot {
 		 * 安装检测
 		 * 安装结束后会删除install.php文件
 		 */
-		if ( is_file( 'install.php' ) ) {
+		if ( is_file( 'install.php' ) && ( ! isset( $_GET['s'] ) || $_GET['s'] != 'install' ) ) {
 			go( __ROOT__ . '/install.php' );
 		}
 
 		//安装系统时创建表与初始数据
-		if ( isset( $_GET['s'] ) && $_GET['s'] == 'install' && is_dir( 'install' ) ) {
+		if ( isset( $_GET['s'] ) && $_GET['s'] == 'install') {
 			cli( 'hd migrate:make' );
 			cli( 'hd seed:make' );
 			message( '数据表创建成功', '', 'success' );
