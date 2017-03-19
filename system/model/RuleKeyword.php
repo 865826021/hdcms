@@ -22,7 +22,6 @@ class RuleKeyword extends Common {
 	protected $validate = [
 		[ 'rid', 'required', '规则编号不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'content', 'required', '关键词内容不能为空', self::MUST_VALIDATE, self::MODEL_BOTH ],
-		[ 'content', 'unique', '关键词已经被使用', self::MUST_VALIDATE, self::MODEL_BOTH ],
 		[ 'type', 'regexp:/^[1-4]$/', '关键词类型只能为1~4的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'rank', 'regexp:/^[0-255]$/', '排序只能为0~255的数字', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'status', 'regexp:/^[0-1]$/', '状态只能为1或0', self::EXIST_VALIDATE, self::MODEL_BOTH ],

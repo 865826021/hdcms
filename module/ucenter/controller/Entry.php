@@ -30,18 +30,23 @@ class Entry extends HdController {
 		}
 	}
 
-	//注册页面
-	public function register() {
-		if ( IS_POST ) {
-			\Member::register( Request::post() );
-			message( '注册成功,系统将跳转到登录页' );
-		}
+	//分配帐号密码登录表单提示
+	protected function assignUsernamePlaceHolder() {
 		$placeholder = [
 			1 => '手机号',
 			2 => '邮箱',
 			3 => '手机号或邮箱',
 		];
-		View::with( 'placeholder', $placeholder[ v( 'site.setting.register.item' ) ] );
+		View::with( 'placeholder', $placeholder[ v( 'site.setting.register' ) ] );
+	}
+
+	//注册页面
+	public function register() {
+		if ( IS_POST ) {
+			\Member::register( Request::post() );
+			ajax( [ 'valid' => 1, 'url' => $url, 'message' => '注册成功,系统将跳转到登录页' ] );
+		}
+		$this->assignUsernamePlaceHolder();
 
 		return View::make( $this->template . '/register.html' );
 	}
@@ -52,12 +57,14 @@ class Entry extends HdController {
 			\Member::login( Request::post() );
 			$url = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
 			Session::del( 'from' );
-			ajax( [ 'valid' => 1, 'url' => $url ] );
+			go($url);
+//			ajax( [ 'valid' => 1, 'url' => $url ] );
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {
 			\Member::weChatLogin();
 		}
+		$this->assignUsernamePlaceHolder();
 
 		return view( $this->template . '/login.html' );
 	}

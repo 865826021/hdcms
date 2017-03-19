@@ -39,9 +39,16 @@ body {
 .HeaderMenu .HeaderCenter .HCLeft .logo {
   float: left;
   height: 70px;
-  background: red;
+
   padding: 0px 10px;
 }
+.HeaderMenu .HeaderCenter .HCLeft .logo a{
+	text-decoration: none;
+	color: #333;
+	line-height: 70px;
+	font-size: 28px;
+	
+	}
 .HeaderMenu .HeaderCenter .HCLeft .logo img {
   margin-top: 11px;
 }

@@ -28,6 +28,6 @@ class SiteSetting extends Common {
 		[ 'pay', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'creditnames', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 		[ 'creditbehaviors', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
-		[ 'register', 'json_encode', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
+		[ 'register', 'intval', 'function', self::EXIST_AUTO, self::MODEL_BOTH ],
 	];
 }

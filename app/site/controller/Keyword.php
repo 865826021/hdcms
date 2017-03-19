@@ -9,6 +9,7 @@
  * '-------------------------------------------------------------------*/
 namespace app\site\controller;
 
+use houdunwang\request\Request;
 use system\model\Modules;
 
 /**
@@ -28,8 +29,8 @@ class Keyword {
 		$db = Db::table( 'rule_keyword' )
 		        ->join( 'rule', 'rule.rid', '=', 'rule_keyword.rid' )
 		        ->where( 'rule_keyword.siteid', SITEID )
-		        ->where( 'rule_keyword.content', q( 'post.content' ) );
-		if ( $rid = q( 'post.rid' ) ) {
+		        ->where( 'rule_keyword.content', Request::post( 'content' ) );
+		if ( $rid = Request::post( 'rid' ) ) {
 			//编辑时当前规则拥有的词不检测
 			$db->where( 'rule.rid', '<>', $rid );
 		}

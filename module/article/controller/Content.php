@@ -63,9 +63,14 @@ class Content extends HdController {
 			$data['mid'] = Request::get( 'mid' );
 			$model->save( $data );
 			$aid = $aid ?: $model['aid'];
+			$url = url( 'entry.content', [
+				'aid' => $aid,
+				'mid' => $_GET['mid'],
+				'cid' => $data['category_cid']
+			] );
 			//添加回复规则
 			if ( empty( $data['wechat_keyword'] ) ) {
-				\Wx::removeRule( Request::post( 'wechat_rid' ) );
+				\Wx::removeCover( $url );
 			} else {
 				if ( ! empty( $data['wechat_keyword'] ) ) {
 					\Wx::cover( [
@@ -73,11 +78,7 @@ class Content extends HdController {
 						'title'       => $data['title'],
 						'description' => $data['description'],
 						'thumb'       => $data['thumb'],
-						'url'         => url( 'entry.content', [
-							'aid' => $aid,
-							'mid' => $_GET['mid'],
-							'cid' => $data['category_cid']
-						] )
+						'url'         => $url
 					] );
 				}
 			}
@@ -89,15 +90,15 @@ class Content extends HdController {
 		$wechat = [];
 		$field  = [];
 		if ( $aid ) {
-			$field = WebContent::find( $aid )->toArray();
-			$url = url( 'entry.content', [
+			$field                    = WebContent::find( $aid )->toArray();
+			$url                      = url( 'entry.content', [
 				'aid' => $field['aid'],
 				'mid' => $_GET['mid'],
 				'cid' => $field['category_cid']
-			]);
-			echo $url;
-			$wechat['rid']            = Db::table( 'rule' )->where( 'name', 'article:content:' . $aid )->pluck( 'rid' );
-			$wechat['wechat_keyword'] = Db::table( 'rule_keyword' )->where( 'rid', $wechat['rid'] )->pluck( 'content' );
+			] );
+			$cover                    = \Wx::getCoverByUrl( $url );
+			$wechat['rid']            = $cover['rid'];
+			$wechat['wechat_keyword'] = $cover['keyword'];
 		}
 		//栏目列表
 		$category = WebCategory::getLevelCategory( $aid ? $field['category_cid'] : '' );

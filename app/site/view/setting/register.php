@@ -12,13 +12,17 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">注册方式</label>
                     <div class="col-sm-10">
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="register[mobile]" value="1" {{v('site.setting.register.mobile')==1?'checked="checked"':""}}>
+                        <label class="radio-inline">
+                            <input type="radio" name="register" value="1" {{v('site.setting.register')==1?'checked="checked"':""}}>
                             手机注册
                         </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="register[email]" value="1" {{v('site.setting.register.email')==1?'checked="checked"':""}}>
+                        <label class="radio-inline">
+                            <input type="radio" name="register" value="2" {{v('site.setting.register')==2?'checked="checked"':""}}>
                             邮箱注册
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="register" value="3" {{v('site.setting.register')==3?'checked="checked"':""}}>
+                            手机或邮箱注册
                         </label>
                         <span class="help-block">
                               该项设置用户注册时用户名的格式,如果设置为:"邮箱注册",系统会判断用户的注册名是否是邮箱格式,不选时没有注册表单项
@@ -38,7 +42,7 @@
                     <div class="col-sm-10">
                         <label class="checkbox-inline">
                             <input type="checkbox" name="username_login" value="1" {{v('site.setting.username_login')==1?'checked="checked"':""}}>
-                            开启登录
+                            开启
                         </label>
                     </div>
                 </div>

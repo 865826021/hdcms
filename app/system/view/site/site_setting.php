@@ -6,8 +6,7 @@
         <li class="active">设置站点基本信息</li>
     </ol>
 
-    <form action="" method="post" role="form" class="form-horizontal">
-        {{csrf_field()}}
+    <form action="" method="post" role="form" class="form-horizontal" onsubmit="post(event)">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">设置站点基本信息</h4>
@@ -32,7 +31,10 @@
     </form>
 </block>
 <script>
-    require(['util'],function(util){
-        util.submit();
-    })
+    function post(event){
+        event.preventDefault();
+        require(['util'],function(util){
+            util.submit();
+        })
+    }
 </script>

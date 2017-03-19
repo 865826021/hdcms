@@ -64,7 +64,7 @@ class Wx {
 	 *  keywords=>[
 	 *      [
 	 *          content=>'关键词内容'
-	 *          type=>'关键词类型 1: 完全匹配  2:包含  3:正则 4:直接托管',
+	 *          type=>'关键词类型 1: 完全匹配  2:包含  3:正则',
 	 *          rank=>'排序',
 	 *          status=>'是否开启'
 	 *      ]
@@ -91,13 +91,16 @@ class Wx {
 		RuleKeyword::where( 'rid', $rid )->delete();
 		if ( isset( $data['keywords'] ) ) {
 			foreach ( $data['keywords'] as $keyword ) {
-				if ( ! empty( $keyword['content'] ) ) {
-					$keywordModel = new RuleKeyword();
-					foreach ( $keyword as $field => $value ) {
-						$keywordModel[ $field ] = $value;
+				//如果关键词已经被使用不允许添加
+				if ( ! RuleKeyword::where( 'siteid', SITEID )->where( 'content', $keyword['content'] )->get() ) {
+					if ( ! empty( $keyword['content'] ) ) {
+						$keywordModel = new RuleKeyword();
+						foreach ( $keyword as $field => $value ) {
+							$keywordModel[ $field ] = $value;
+						}
+						$keywordModel['rid'] = $rid;
+						$keywordModel->save();
 					}
-					$keywordModel['rid'] = $rid;
-					$keywordModel->save();
 				}
 			}
 		}
@@ -191,7 +194,7 @@ class Wx {
 		$hash = v( 'module.name' ) . '#' . md5( $url );
 
 		return Db::table( 'rule' )->join( 'rule_keyword', 'rule.rid', '=', 'rule_keyword.rid' )
-		         ->where( 'rule.hash', $hash )
+		         ->where( 'rule.name', $hash )
 		         ->field( 'rule.rid,rule_keyword.content as keyword,rule.siteid,rule.module,rule.status' )
 		         ->first();
 	}

@@ -9,7 +9,7 @@
 		<li role="presentation" class="active"><a href="javascript:;">站点选项</a></li>
 	</ul>
 
-	<form action="" class="form-horizontal ng-cloak" ng-cloak method="post" id="form" ng-controller="myController">
+	<form action="" class="form-horizontal ng-cloak" ng-submit="submit($event)" ng-cloak method="post" id="form" ng-controller="myController">
 		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">
@@ -170,15 +170,14 @@
 	require(['angular', 'util'], function (angular, util) {
 		angular.module('myApp', []).controller('myController', ['$scope', function ($scope) {
 			$scope.field =<?php echo $field ? json_encode( $field ) : '{"is_open":0,"close_message":"网站维护中,请稍候访问","enable_code":1,"upload":{}}';?>;
-			util.submit({
-				data:this.data,
-				//提交前执行的函数,函数返回true才会提交，可以提交前进行表单验证等处理
-				before:function(){
-					this.data = {site: angular.toJson($scope.field)};
-					return true;
-				},
-				successUrl:'refresh'
-			});
+			$scope.submit=function(event){
+			    event.preventDefault();
+                util.submit({
+                    data:{site: angular.toJson($scope.field)},
+                    successUrl:'refresh'
+                });
+            }
+
 		}]);
 
 		angular.bootstrap(document.getElementById('form'), ['myApp']);

@@ -183,7 +183,7 @@ class Member extends Common {
 		}
 		$model['password'] = $info['password'];
 		$model['security'] = $info['security'];
-		switch ( v( 'site.setting.register.item' ) ) {
+		switch ( v( 'site.setting.register' ) ) {
 			case 1:
 				//手机号注册
 				if ( empty( $data['username'] ) || ! preg_match( '/^\d{11}$/', $data['username'] ) ) {

@@ -18,7 +18,7 @@ use system\model\Site as SiteModel;
 class Site {
 	public function __construct() {
 		//登录检测
-//		\User::loginAuth();
+		auth();
 	}
 
 	/**
@@ -63,15 +63,15 @@ class Site {
 	//网站列表页面,获取站点包信息
 	public function package() {
 		//根据站长所在会员组获取套餐
-		$pids         = \Package::getSiteAllPackageIds(siteid());
-		$package      = [ ];
+		$pids    = \Package::getSiteAllPackageIds( siteid() );
+		$package = [];
 		if ( in_array( - 1, $pids ) ) {
 			$package[] = "所有服务";
 		} else if ( ! empty( $pids ) ) {
 			$package = Db::table( 'package' )->whereIn( 'id', $pids )->lists( 'name' );
 		}
 		//获取模块
-		$modules      = \Module::getSiteAllModules();
+		$modules = \Module::getSiteAllModules();
 		ajax( [ 'package' => $package, 'modules' => $modules ] );
 	}
 
@@ -91,21 +91,21 @@ class Site {
 			$model->save();
 			//删除站点旧的套餐
 			SitePackage::where( 'siteid', SITEID )->delete();
-			if ( $packageIds = Request::post( 'package_id', [ ] ) ) {
+			if ( $packageIds = Request::post( 'package_id', [] ) ) {
 				foreach ( $packageIds as $id ) {
 					SitePackage::insert( [ 'siteid' => SITEID, 'package_id' => $id, ] );
 				}
 			}
 			//添加扩展模块
 			SiteModules::where( 'siteid', SITEID )->delete();
-			if ( $modules = Request::post( 'modules', [ ] ) ) {
+			if ( $modules = Request::post( 'modules', [] ) ) {
 				foreach ( $modules as $name ) {
 					SiteModules::insert( [ 'siteid' => SITEID, 'module' => $name, ] );
 				}
 			}
 			//添加扩展模板
 			SiteTemplate::where( 'siteid', SITEID )->delete();
-			if ( $templates = Request::post( 'templates', [ ] ) ) {
+			if ( $templates = Request::post( 'templates', [] ) ) {
 				foreach ( $templates as $name ) {
 					SiteTemplate::insert( [ 'siteid' => SITEID, 'template' => $name, ] );
 				}
@@ -247,7 +247,7 @@ class Site {
 	public function connect() {
 		//与微信官网通信绑定验证
 		$wechat = SiteWechat::where( 'siteid', SITEID )->first();
-		c( "wechat", $wechat ? $wechat->toArray() : [ ] );
+		c( "wechat", $wechat ? $wechat->toArray() : [] );
 		$status = \WeChat::getAccessToken();
 		SiteWechat::where( 'siteid', SITEID )->update( [ 'is_connect' => $status ? 1 : 0 ] );
 		if ( $status ) {

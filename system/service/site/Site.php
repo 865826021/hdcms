@@ -150,7 +150,6 @@ class Site extends Common {
 			'currency' => 'credit2'
 		];
 		$SiteSetting->save();
-
 		/*
 		|--------------------------------------------------------------------------
 		| 站点会员组设置
@@ -162,7 +161,6 @@ class Site extends Common {
 		$MemberGroup['isdefault'] = 1;
 		$MemberGroup['is_system'] = 1;
 		$MemberGroup->save();
-
 		/*
 		|--------------------------------------------------------------------------
 		| 创建用户字段表数据
@@ -179,7 +177,6 @@ class Site extends Common {
 			$d['status']  = $f['status'];
 			$memberField->insert( $d );
 		}
-
 		/*
 		|--------------------------------------------------------------------------
 		| 初始快捷菜单
@@ -189,14 +186,12 @@ class Site extends Common {
 		$data['data']   = '{"status":1,"system":[],"module":[]}';
 		$data['uid']    = v( 'user.info.uid' );
 		Db::table( 'site_quickmenu' )->insert( $data );
-
 		/*
 		|--------------------------------------------------------------------------
 		| 初始文章系统表
 		|--------------------------------------------------------------------------
 		*/
 		service( 'article.init.make', $siteId );
-
 		return true;
 	}
 

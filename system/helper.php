@@ -75,8 +75,8 @@ function authIdentity( $tag ) {
 }
 
 //验证会员是否登录
-function memberIsLogin() {
-	return \Member::isLogin();
+function memberIsLogin( $return ) {
+	return \Member::isLogin( $return );
 }
 
 /**

@@ -80,10 +80,6 @@
 				<i class="fa fa-tachometer"></i>
 				<span>站点设置</span>
 			</a>
-			<a href="?s=system/article/lists" class="tile img-rounded">
-				<i class="fa fa-comments"></i>
-				<span>文章管理</span>
-			</a>
 		<?php endif; ?>
 	</div>
 
