@@ -188,7 +188,7 @@ if ( $action == 'compile' ) {
 	foreach ( $tpl as $t ) {
 		$content = '$' . $t . "=<<<str\n" . file_get_contents( $t . '.html' ) . "\nstr;\n" . $content;
 	}
-	file_put_contents( '../install.php', "<?php \n" . $content );
+	file_put_contents( '/www/install.php', "<?php \n" . $content );
 	echo "<h1>编译成功</h1>";
 }
 
