@@ -181,6 +181,22 @@ class Wx {
 	}
 
 	/**
+	 * 根据链接获取微信关键词信息
+	 *
+	 * @param string $url 图文消息链接
+	 *
+	 * @return mixed
+	 */
+	public function getCoverByUrl( $url ) {
+		$hash = v( 'module.name' ) . '#' . md5( $url );
+
+		return Db::table( 'rule' )->join( 'rule_keyword', 'rule.rid', '=', 'rule_keyword.rid' )
+		         ->where( 'rule.hash', $hash )
+		         ->field( 'rule.rid,rule_keyword.content as keyword,rule.siteid,rule.module,rule.status' )
+		         ->first();
+	}
+
+	/**
 	 * 根据模块名称删除模块相关数据
 	 *
 	 * @param $module

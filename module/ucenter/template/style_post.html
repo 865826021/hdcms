@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="{{template_url()}}/css/edit.css">
 <link rel="stylesheet" href="{{__ROOT__}}/ucenter/default/mobile/css/ucenter.css">
 <block name="content">
-	<form action="" method="post" id="formApp" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit()" ng-controller="commonCtrl">
+	<form action="" method="post" id="formApp" class="ng-cloak form-horizontal" ng-cloak ng-submit="submit($event)" ng-controller="commonCtrl">
 		{{csrf_field()}}
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="javascript:;">微站会员中心</a></li>

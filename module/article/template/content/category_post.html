@@ -4,7 +4,7 @@
 		<li><a href="{{url('category.lists')}}">栏目管理</a></li>
 		<li class="active" ng-if="field.cid>0"><a href="javascript:;">编辑栏目</a></li>
 	</ul>
-	<form action="" method="post" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="MyController">
+	<form action="" method="post" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="MyController" ng-submit="submit($event)">
 		<input type="hidden" name="cid" ng-model="field.cid">
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#tab1" role="tab" data-toggle="tab">基本信息</a></li>
@@ -193,18 +193,20 @@
 					$scope.$apply();
 				})
             };
-			//提交表单
-			$('form').submit(function () {
-				var msg = '';
-				if ($scope.field.catname == '') {
-					msg += '栏目标题不能为空';
-				}
-				if (msg) {
-					util.message(msg, '', 'error');
-					return false;
-				}
-				$('[name="data"]').val(angular.toJson($scope.field));
-			})
+			$scope.submit=function(event) {
+				event.preventDefault();
+                var msg = '';
+                if ($scope.field.catname == '') {
+                    msg += '栏目标题不能为空';
+                }
+                if (msg) {
+                    util.message(msg, '', 'error');
+                }
+                $('[name="data"]').val(angular.toJson($scope.field));
+                 require(['util'], function (util) {
+                        util.submit();
+                 });
+            }
 		}]);
 		$(function () {
 			angular.bootstrap(document.getElementById('form'), ['myApp'])

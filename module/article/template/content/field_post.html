@@ -1,6 +1,6 @@
 <extend file="resource/view/site"/>
 <block name="content">
-    <form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-cloak ng-controller="MyController">
+    <form action="" method="post" ng-submit="submit($event)" class="form-horizontal ng-cloak" id="form" ng-cloak ng-controller="MyController">
         <ul class="nav nav-tabs" role="tablist">
             <li><a href="{{url('field.lists',['mid'=>$_GET['mid']])}}">字段列表</a></li>
             <li class="active"><a href="javascript:;">修改字段</a></li>
@@ -184,8 +184,8 @@
                 $scope.active.orderby = old.orderby;
                 $scope.active.required = old.required;
             });
-            //提交表单
-            $('form').submit(function () {
+            $scope.submit=function(event){
+                event.preventDefault();
                 var msg = '';
                 if ($scope.active.title == '') {
                     msg += '中文名称不能为空<br/>';
@@ -201,7 +201,10 @@
                     return false;
                 }
                 $('[name="options"]').val(angular.toJson($scope.active));
-            })
+                require(['util'], function (util) {
+                    util.submit();
+                });
+            }
         }]);
         $(function () {
             angular.bootstrap(document.getElementById('form'), ['app'])

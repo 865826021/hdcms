@@ -10,6 +10,8 @@
 namespace houdunwang\mail\build;
 
 //错误处理
+use houdunwang\config\Config;
+
 class Base {
 	//邮件对象
 	protected $mail;
@@ -64,7 +66,7 @@ class Base {
 		//发送邮件邮箱用户名
 		$this->mail->Password = Config::set( 'mail.password' );
 		//发送邮件邮箱密码
-		$this->mail->SetFrom( Config::set( 'mail.username' ), onfig::set( 'mail.fromname' ) );
+		$this->mail->SetFrom( Config::set( 'mail.username' ), Config::set( 'mail.fromname' ) );
 		//发件人
 		$this->mail->AddReplyTo( Config::set( 'mail.frommail' ), Config::set( 'mail.fromname' ) );
 		//回复时显示的用户名

@@ -115,7 +115,8 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'angular.drag','j
             $scope.menus = _.without($scope.menus, item);
         };
         //提交表单
-        $('form').submit(function(){
+        $scope.submit= function(event){
+            event.preventDefault();
             widgets = [];
             for (var i = 0; i < $scope.modules.all.length; i++) {
                 if ($scope.modules.all[i].id == 'UCheader') {
@@ -159,8 +160,8 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms', 'angular.drag','j
             //菜单
             var menus = "<textarea name='menus' hidden='hidden'>" + angular.toJson($scope.menus) + "</textarea>";
             $('form').append(menus);
-
-        });
+            util.submit({successUrl:'refresh'});
+        };
         //选择系统菜单
         $scope.link = {
             system: function () {

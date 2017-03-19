@@ -34,17 +34,17 @@ class Content extends HdController {
 
 	//文章列表
 	public function lists() {
-		if(IS_POST){
-			foreach($_POST['orderby'] as $aid=>$order){
-				$model = WebContent::find($aid);
-				$model['orderby']=$order;
+		if ( IS_POST ) {
+			foreach ( $_POST['orderby'] as $aid => $order ) {
+				$model            = WebContent::find( $aid );
+				$model['orderby'] = $order;
 				$model->save();
 			}
 		}
 		$model = new WebContent();
 		$table = $model->getTableName();
-		$db    = $model->field("*,{$table}.orderby")->orderBy("{$table}.orderby","desc")->orderBy( 'aid', 'DESC' )
-			->join( 'web_category', "{$table}.cid", '=', 'web_category.cid' );
+		$db    = $model->field( "*,{$table}.orderby" )->orderBy( "{$table}.orderby", "desc" )->orderBy( 'aid', 'DESC' )
+		               ->join( 'web_category', "{$table}.cid", '=', 'web_category.cid' );
 		if ( $cid = Request::get( 'cid' ) ) {
 			$db->where( 'web_category.cid', $cid );
 		}
@@ -67,37 +67,35 @@ class Content extends HdController {
 			if ( empty( $data['wechat_keyword'] ) ) {
 				\Wx::removeRule( Request::post( 'wechat_rid' ) );
 			} else {
-				$rule             = [ ];
-				$rule['rid']      = Request::post( 'wechat_rid' );
-				$rule['module']   = 'cover';
-				$rule['name']     = 'article:content:' . $aid;
-				$rule['keywords'] = [ [ 'content' => $data['wechat_keyword'] ] ];
-				$rid              = \Wx::rule( $rule );
-				//添加封面回复
-				$replyCover = new ReplyCover();
-				$replyCover->where( 'rid', $rid )->delete();
-				$replyCover['rid']         = $rid;
-				$replyCover['title']       = $data['title'];
-				$replyCover['description'] = $data['description'];
-				$replyCover['thumb']       = $data['thumb'];
-				$replyCover['module']      = 'article';
-				$replyCover['url']         = url( 'entry.content', [
-					'aid' => $aid,
-					'mid' => $_GET['mid'],
-					'cid' => $data['category_cid']
-				] );
-				$replyCover->save();
+				if ( ! empty( $data['wechat_keyword'] ) ) {
+					\Wx::cover( [
+						'keyword'     => $data['wechat_keyword'],
+						'title'       => $data['title'],
+						'description' => $data['description'],
+						'thumb'       => $data['thumb'],
+						'url'         => url( 'entry.content', [
+							'aid' => $aid,
+							'mid' => $_GET['mid'],
+							'cid' => $data['category_cid']
+						] )
+					] );
+				}
 			}
 			message( '文章保存成功', url( 'content.lists' ) );
 
 		}
 		//编辑时获取原数据
 		//微信关键词信息
-		$wechat = [ ];
-		$field  = [ ];
+		$wechat = [];
+		$field  = [];
 		if ( $aid ) {
 			$field = WebContent::find( $aid )->toArray();
-
+			$url = url( 'entry.content', [
+				'aid' => $field['aid'],
+				'mid' => $_GET['mid'],
+				'cid' => $field['category_cid']
+			]);
+			echo $url;
 			$wechat['rid']            = Db::table( 'rule' )->where( 'name', 'article:content:' . $aid )->pluck( 'rid' );
 			$wechat['wechat_keyword'] = Db::table( 'rule_keyword' )->where( 'rid', $wechat['rid'] )->pluck( 'content' );
 		}

@@ -1,6 +1,6 @@
 <extend file="resource/view/site"/>
 <block name="content">
-    <form action="" method="post" class="form-horizontal">
+    <form action="" method="post" class="form-horizontal" onsubmit="return post()">
         <ul class="nav nav-tabs" role="tablist">
             <li><a href="{{url('model.lists')}}">模型管理</a></li>
             <li class="active"><a href="javascript:;">添加模型</a></li>
@@ -32,3 +32,12 @@
         <button class="btn btn-primary" type="submit">保存模型</button>
     </form>
 </block>
+<script>
+    //提交表单
+    function post() {
+        require(['util'], function (util) {
+            util.submit();
+        });
+        return false;
+    }
+</script>

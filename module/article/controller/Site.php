@@ -28,22 +28,15 @@ class Site extends HdController {
 			$model['site_info']     = Request::post( 'data' );
 			$model->save();
 			//添加回复规则
-			$rule             = [ ];
-			$rule['rid']      = $data['rid'];
-			$rule['module']   = 'cover';
-			$rule['name']     = 'article:site:' . SITEID;
-			$rule['keywords'] = [ [ 'content' => $data['keyword'] ] ];
-			$rid              = \Wx::rule( $rule );
-			//添加封面回复
-			$replyCover = new ReplyCover();
-			$replyCover->where( 'rid', $rid )->delete();
-			$replyCover['rid']         = $rid;
-			$replyCover['title']       = $data['title'];
-			$replyCover['description'] = $data['description'];
-			$replyCover['thumb']       = $data['thumb'];
-			$replyCover['module']      = 'article';
-			$replyCover['url']         = '?m=article&action=controller/entry/index&siteid=' . SITEID;
-			$replyCover->save();
+			if ( ! empty( $data['keyword'] ) ) {
+				\Wx::cover( [
+					'keyword'     => $data['keyword'],
+					'title'       => $data['title'],
+					'description' => $data['description'],
+					'thumb'       => $data['thumb'],
+					'url'         => url( 'entry.index' )
+				] );
+			}
 			message( '保存站点数据成功', __URL__, 'success' );
 		}
 		$model = Web::where( 'siteid', SITEID )->first();

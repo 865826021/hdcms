@@ -2,10 +2,9 @@
 <block name="content">
     <ul class="nav nav-tabs" role="tablist">
         <li><a href="{{url('slide.lists',array('webid'=>$_GET['webid']))}}">轮换图片管理</a></li>
-            <li class="active"><a href="javascript:;">编辑图片</a></li>
+        <li class="active"><a href="javascript:;">编辑图片</a></li>
     </ul>
-    <form action="" method="post" class="form-horizontal">
-        {{csrf_field()}}
+    <form action="" method="post" class="form-horizontal" onsubmit="return post()">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">幻灯片管理</h3>
@@ -67,6 +66,13 @@
 </block>
 
 <script>
+    //提交表单
+    function post() {
+        require(['util'], function (util) {
+            util.submit();
+        });
+        return false;
+    }
     //上传图片
     function upImage(obj) {
         require(['util'], function (util) {

@@ -12,9 +12,17 @@
 				<h3 class="panel-title">更新站点缓存</h3>
 		  </div>
 		  <div class="panel-body">
-			  <form action="" method="post">
+			  <form action="" method="post" onsubmit="post(event)">
 				  <button class="btn btn-primary">开始执行更新</button>
 			  </form>
 		  </div>
 	</div>
 </block>
+<script>
+    function post(event){
+        event.preventDefault();
+        require(['util'],function(util){
+            util.submit({successUrl:'refresh'});
+        })
+    }
+</script>

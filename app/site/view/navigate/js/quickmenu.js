@@ -41,7 +41,8 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms','jquery-ui'], func
             }, mid.join(','));
         };
         //提交表单
-        $scope.submit = function () {
+        $scope.submit = function (event) {
+            event.preventDefault();
             var f = $(".menu_html").html();
             f = f.replace(/<\!\-\-([^-]*?)\-\->/g, "");
             f = f.replace(/ng\-[a-zA-Z-]+=\"[^\"]*\"/g, "");
@@ -50,6 +51,7 @@ define(['angular', 'bootstrap', 'underscore', 'util', 'hdcms','jquery-ui'], func
             f = f.replace(/>\s+</g, "><")
             $scope.menu.html = f;
             $("[name='data']").val(angular.toJson($scope.menu));
+            util.submit({successUrl:'refresh'});
         }
     }]);
     //默认菜单管理控制器

@@ -6,7 +6,7 @@
 				<a href="javascript:;"><?= \Navigate::title(); ?></a>
 			</li>
 			<li>
-				<a href="{{u('site.navigate.post')}}&m=article&entry=home">添加菜单</a>
+				<a href="{{site_url('navigate.post')}}&entry=home">添加菜单</a>
 			</li>
 			<else/>
 			<li class="active">
@@ -14,8 +14,7 @@
 			</li>
 		</if>
 	</ul>
-	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak>
-		{{csrf_field()}}
+	<form action="" method="post" id="form" ng-controller="ctrl" class="form-horizontal ng-cloak" ng-cloak ng-submit="submit($event)">
 		<if value="Request::get('entry')=='home'">
 			<div class="alert alert-info">
 				<div ng-show="template.position">
@@ -90,7 +89,7 @@
 						</td>
 						<td ng-if="field.id">
 							<div class="btn-group">
-								<a href="?s=site/navigate/post&m={{Request::get('m')}}&entry=@{{field.entry}}&id=@{{field.id}}"
+								<a href="{{site_url('navigate.post')}}&entry=@{{field.entry}}&id=@{{field.id}}"
 								   class="btn btn-default">
 									编辑
 								</a>
@@ -125,9 +124,11 @@
 				}
 				$scope.template.template_position = position;
 			}
-			$('form').submit(function () {
-				$("[name='data']").val(angular.toJson($scope.nav));
-			})
+			$scope.submit=function(event){
+			    event.preventDefault();
+                $("[name='data']").val(angular.toJson($scope.nav));
+                util.submit({successUrl:'refresh'});
+            }
 			//选择链接
 			$scope.url = {
 				//获取系统链接
@@ -141,7 +142,7 @@
 			//删除菜单
 			$scope.del = function (id) {
 				util.confirm('确定删除菜单吗?', function () {
-					$.get("?s=site/navigate/del", {id: id}, function (res) {
+					$.get("{{site_url('navigate.del')}}", {id: id}, function (res) {
 						if (res.valid) {
 							util.message(res.message, 'refresh', 'success')
 						} else {

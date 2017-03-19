@@ -7,7 +7,7 @@
 		<i class="fa fa-info-circle"></i> 快捷菜用于将常用菜单放在页面底部,但不建议放置太多。<br>
 		<i class="fa fa-info-circle"></i> 每个管理员都有自己独立的菜单配置。<br>
 	</div>
-	<form action="" method="post" role="form" class="form-horizontal">
+	<form action="" method="post" role="form" class="form-horizontal" onsubmit="post(event)">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">更改快捷菜单状态</h3>
@@ -31,3 +31,11 @@
 		</div>
 	</form>
 </block>
+<script>
+    function post(event){
+        event.preventDefault();
+        require(['util'],function(util){
+            util.submit({successUrl:'refresh'});
+        })
+    }
+</script>

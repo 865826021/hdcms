@@ -9,7 +9,7 @@
         <i class="fa fa-adn"></i> 如果在<a href="?s=system/site/edit&siteid={{SITEID}}"
                                         target="_blank"><strong>站点设置</strong></a> 中定义了域名,可以直接使用域名进行访问。<br/>
     </div>
-    <form action="" method="post" id="form" role="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
+    <form action="" method="post" id="form" ng-submit="submit($event)" role="form" class="form-horizontal ng-cloak" ng-cloak ng-controller="ctrl">
         {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -180,28 +180,28 @@
                     }
                 });
             }
-            //提交表单
-            util.submit({
-                before: function () {
-                    var msg = '';
-                    if (!$scope.field.thumb) {
-                        msg += "请选择封面图片<br/>";
-                    }
-                    if ($(".keyword_error").text()) {
-                        msg += "关键词已经存在<br/>";
-                    }
-                    if (!$scope.field.template_tid) {
-                        msg += "请选择站点风格<br/>";
-                    }
-                    if (msg) {
-                        util.message(msg, '', 'error');
-                        return false;
-                    }
-                    this.data = {data: angular.toJson($scope.field)}
-                    return true;
-                },
-                successUrl: 'refresh'
-            })
+            $scope.submit = function ($event) {
+                $event.preventDefault();
+                var msg = '';
+                if (!$scope.field.thumb) {
+                    msg += "请选择封面图片<br/>";
+                }
+                if ($(".keyword_error").text()) {
+                    msg += "关键词已经存在<br/>";
+                }
+                if (!$scope.field.template_tid) {
+                    msg += "请选择站点风格<br/>";
+                }
+                if (msg) {
+                    util.message(msg, '', 'error');
+                    return false;
+                }
+                //提交表单
+                util.submit({
+                    data : {data: angular.toJson($scope.field)},
+                    successUrl: 'refresh'
+                })
+            }
             //加载模板
             $scope.loadTpl = function () {
                 hdcms.siteTemplateBrowser(function (data) {

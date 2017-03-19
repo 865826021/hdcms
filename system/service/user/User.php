@@ -32,8 +32,8 @@ class User extends Common {
 	/**
 	 * 超级管理员检测
 	 *
-	 * @param int $uid
-	 * @param string $deal 处理方式 show显示 return返回bool
+	 * @param int $uid 会员编号
+	 * @param string $deal 处理方式 show失败时显示错误信息 return返回bool
 	 *
 	 * @return bool
 	 */
@@ -47,7 +47,7 @@ class User extends Common {
 
 	/**
 	 * 是否为站长
-	 * 当前帐号是否拥有站长权限(网站所有者,系统管理员)
+	 * 当前帐号是否拥有站长权限
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号 默认使用当前登录的帐号
@@ -67,7 +67,7 @@ class User extends Common {
 	}
 
 	/**
-	 * 是否拥有管理员权限
+	 * 站点管理员检测
 	 * 是否拥有管理员及以上权限(网站所有者,系统管理员)
 	 *
 	 * @param int $siteId 站点编号
@@ -75,7 +75,7 @@ class User extends Common {
 	 *
 	 * @return bool|string
 	 */
-	public function isManage( $siteId = null, $uid = null ) {
+	public function isManage( $siteId = 0, $uid = 0 ) {
 		$this->loginAuth();
 		$siteId = $siteId ?: SITEID;
 		$uid    = $uid ?: v( "user.info.uid" );
@@ -92,8 +92,8 @@ class User extends Common {
 
 
 	/**
-	 * 是否拥有操作员权限
-	 * 是否拥有操作员及以上权限(网站所有者,系统管理员,操作员)
+	 * 站点操作员权限检测
+	 * 是否拥有操作员及以上权限
 	 *
 	 * @param int $siteId 站点编号
 	 * @param int $uid 用户编号 默认使用当前登录的帐号
@@ -145,7 +145,7 @@ class User extends Common {
 			}
 		}
 		//更新登录状态
-		$data             = [ ];
+		$data             = [];
 		$data['lastip']   = Request::ip();
 		$data['lasttime'] = time();
 		Db::table( 'user' )->where( 'uid', $user['uid'] )->update( $data );
@@ -159,7 +159,7 @@ class User extends Common {
 	public function initUserInfo() {
 		//前台访问
 		if ( Session::get( "admin_uid" ) ) {
-			$user                         = [ ];
+			$user                         = [];
 			$user['info']                 = Db::table( 'user' )->find( \Session::get( 'admin_uid' ) );
 			$user['group']                = Db::table( 'user_group' )->where( 'id', $user['info']['groupid'] )->first();
 			$user['system']['super_user'] = $user['group']['id'] == 0;
@@ -185,7 +185,7 @@ class User extends Common {
 	 * 登录验证
 	 * 没有登录异步请求会返回json数据否则直接跳转到登录页
 	 *
-	 * @param string $deal 处理方式 show直接显示 return返回布尔
+	 * @param string $deal 处理方式 show登录失败时直接显示错误信息 return返回布尔
 	 *
 	 * @return bool
 	 */
@@ -227,8 +227,8 @@ class User extends Common {
 	 * 验证后台管理员帐号在当前站点的权限
 	 * 如果当前有模块动作时同时会验证帐号访问该模块的权限
 	 *
-	 * @param string $permission
-	 * @param bool $show
+	 * @param string $permission 模块权限标识
+	 * @param bool $show true: 直接显示错误信息 false:返回bool值
 	 *
 	 * @return bool
 	 */
@@ -251,7 +251,6 @@ class User extends Common {
 			if ( empty( $permission ) && $action = Request::get( 'action' ) ) {
 				$permission = strtolower( $action );
 			}
-
 			//验证权限标识
 			if ( $status && $permission ) {
 				if ( empty( $userPermission ) ) {
@@ -286,8 +285,8 @@ class User extends Common {
 	}
 
 	/**
-	 * 验证模块使用权限但不验证权限标识
-	 * 缓存不存在时执行验证流程
+	 * 验证帐号是否可以使用模块
+	 * 但不验证权限标识
 	 *
 	 * @param string $module 模块名称
 	 * @param string $deal 处理方式 show直接显示错误 return(bool) 返回验证状态
@@ -295,7 +294,7 @@ class User extends Common {
 	 * @return bool
 	 */
 	public function authModule( $module = '', $deal = 'show' ) {
-		static $cache = [ ];
+		static $cache = [];
 		$module = $module ?: v( 'module.name' );
 		//存在缓存时使用缓存处理
 		if ( ! isset( $cache[ $module ] ) ) {
@@ -366,7 +365,7 @@ class User extends Common {
 		$users  = UserModel::join( 'site_user', 'user.uid', '=', 'site_user.uid' )
 		                   ->whereIn( 'role', $role )->where( 'siteid', $siteId )->lists( $field );
 
-		return $users ?: [ ];
+		return $users ?: [];
 
 	}
 
@@ -513,7 +512,7 @@ class User extends Common {
 	public function getUserAtSiteAccess( $siteId = 0, $uid = 0 ) {
 		$siteId     = $siteId ?: SITEID;
 		$uid        = $uid ?: v( 'user.info.uid' );
-		$permission = Db::table( 'user_permission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [ ];
+		$permission = Db::table( 'user_permission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [];
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}

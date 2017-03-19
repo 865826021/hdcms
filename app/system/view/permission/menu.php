@@ -12,7 +12,7 @@
 		<span class="fa fa-info-circle"></span>
 		默认未勾选任何菜单时，用户拥有全部权限。
 	</div>
-	<form action="" method="post" ng-controller="ctrl" class="ng-cloak" ng-cloak>
+	<form action="" method="post" ng-controller="ctrl" class="ng-cloak" ng-cloak ng-submit=" submit($event)">
 		<input type="hidden" name="uid" value="{{$_GET['fromuid']}}">
 		<div class="panel panel-default" ng-repeat="v in menusAccess">
 			<div class="panel-heading">
@@ -58,10 +58,14 @@
 				var status = elem.is(":checked");
 				elem.parent().parent().next().find('input').prop('checked', status);
 			}
+			$scope.submit=function($event){
+			    $event.preventDefault();
+                util.submit({successUrl:'refresh'});
+                return false;
+            }
 		}]);
 		$(function () {
 			angular.bootstrap($("form")[0], ['app']);
-			util.submit({successUrl:'refresh'});
 		});
 	});
 

@@ -5,8 +5,7 @@
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="active"><a href="javascript:;">微站快捷导航</a></li>
 	</ul>
-	<form action="" method="post" id="form" class="ng-cloak form-horizontal ng-cloak" ng-cloak ng-controller="commonCtrl" ng-submit="submit()">
-		{{csrf_field()}}
+	<form action="" method="post" id="form" class="ng-cloak form-horizontal ng-cloak" ng-cloak ng-controller="commonCtrl" ng-submit="submit($event)">
 		<div class="well clearfix">
 			<div class="col-sm-8">
 				<h4><strong>快捷导航</strong></h4>

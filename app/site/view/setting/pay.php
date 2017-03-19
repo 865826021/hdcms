@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#">支付参数</a></li>
     </ul>
-    <form action="" method="post" class="form-horizontal ng-cloak" enctype="multipart/form-data" id="form" ng-controller="ctrl">
+    <form action="" method="post" class="form-horizontal ng-cloak" enctype="multipart/form-data" id="form" ng-controller="ctrl" ng-submit="submit($event)">
         {{csrf_field()}}
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -161,6 +161,10 @@
             $scope.pay = <?php echo json_encode(v('site.setting.pay'));?>;
             $scope.createWeichatApi = function () {
                 $scope.pay.wechat.key = md5(Math.random());
+            }
+            $scope.submit=function(event){
+                event.preventDefault();
+                util.submit();
             }
         }]);
         angular.bootstrap($("#form")[0], ['app']);

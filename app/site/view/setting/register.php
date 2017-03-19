@@ -3,8 +3,7 @@
     <ul class="nav nav-tabs">
         <li role="presentation" class="active"><a href="#">会员中心参数</a></li>
     </ul>
-    <form action="" method="post" class="form-horizontal">
-        {{csrf_field()}}
+    <form action="" method="post" class="form-horizontal" onsubmit="post(event)">
         <div class="panel panel-default">
             <div class="panel-heading">
                 会员注册选项
@@ -38,7 +37,7 @@
                     <label class="col-sm-2 control-label">帐号密码登录</label>
                     <div class="col-sm-10">
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="username_login" value="1" {{v('site.setting.login.username')==1?'checked="checked"':""}}>
+                            <input type="checkbox" name="username_login" value="1" {{v('site.setting.username_login')==1?'checked="checked"':""}}>
                             开启登录
                         </label>
                     </div>
@@ -47,7 +46,7 @@
                     <label class="col-sm-2 control-label">第三方登录</label>
                     <div class="col-sm-10">
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="oauth_login[wechat]" value="1" {{v('site.setting.login.wechat')==1?'checked="checked"':""}}">
+                            <input type="checkbox" name="oauth_login[wechat]" value="1" {{v('site.setting.oauth_login.wechat')==1?'checked="checked"':""}}">
                             微信登录
                         </label>
                         <span class="help-block">
@@ -78,3 +77,11 @@
         <button class="btn btn-primary col-lg-1">保存设置</button>
     </form>
 </block>
+<script>
+    function post(event) {
+        event.preventDefault();
+        require(['util'], function (util) {
+            util.submit({successUrl: 'refresh'});
+        })
+    }
+</script>

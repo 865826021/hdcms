@@ -6,7 +6,7 @@
 	<div class="alert alert-info">
 		如果域名在其他模块或站点使用系统将忽略添加
 	</div>
-	<form action="" class="form-horizontal form ng-cloak" ng-controller="ctrl" method="post">
+	<form action="" class="form-horizontal form ng-cloak" ng-controller="ctrl" method="post" ng-submit="submit($evnet)">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<h3 class="panel-title">域名设置</h3>
@@ -56,9 +56,13 @@
 				$scope.del = function (item) {
 					$scope.data = _.without($scope.data,item);
 				}
+				$scope.submit=function(event){
+				    event.preventDefault();
+                    util.submit({successUrl:'refresh'});
+                }
 			}])
 			angular.bootstrap(document.body, ['app']);
-			util.submit({successUrl:'refresh'});
+
 		})
 
 	})

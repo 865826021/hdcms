@@ -4,8 +4,7 @@
         <li class="active"><a href="{{url('site/credit')}}">积分列表</a></li>
         <li><a href="{{url('site/tactics')}}">积分策略</a></li>
     </ul>
-    <form action="" method="post">
-        {{csrf_field()}}
+    <form action="" method="post" onsubmit="post(event)">
         <div class="panel panel-default">
             <div class="panel-body">
                 <table class="table table-hover">
@@ -19,20 +18,24 @@
                     <tbody>
                     <tr>
                         <td>
-                            <input type="checkbox" name="creditnames[credit1][status]" value="1" checked="checked" disabled="disabled">
+                            <input type="checkbox" name="creditnames[credit1][status]" value="1" checked="checked"
+                                   disabled="disabled">
                         </td>
                         <td>credit1</td>
                         <td>
-                            <input type="text" name="creditnames[credit1][title]" value="{{$creditnames['credit1']['title']}}" class="form-control">
+                            <input type="text" name="creditnames[credit1][title]"
+                                   value="{{$creditnames['credit1']['title']}}" class="form-control">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="creditnames[credit2][status]" value="1" checked="checked" disabled="disabled">
+                            <input type="checkbox" name="creditnames[credit2][status]" value="1" checked="checked"
+                                   disabled="disabled">
                         </td>
                         <td>credit2</td>
                         <td>
-                            <input type="text" name="creditnames[credit2][title]" value="{{$creditnames['credit2']['title']}}" class="form-control">
+                            <input type="text" name="creditnames[credit2][title]"
+                                   value="{{$creditnames['credit2']['title']}}" class="form-control">
                         </td>
                     </tr>
                     <tr>
@@ -41,7 +44,8 @@
                         </td>
                         <td>credit3</td>
                         <td>
-                            <input type="text" name="creditnames[credit3][title]" value="{{$creditnames['credit3']['title']}}" class="form-control">
+                            <input type="text" name="creditnames[credit3][title]"
+                                   value="{{$creditnames['credit3']['title']}}" class="form-control">
                         </td>
                     </tr>
                     <tr>
@@ -50,7 +54,8 @@
                         </td>
                         <td>credit4</td>
                         <td>
-                            <input type="text" name="creditnames[credit4][title]" value="{{$creditnames['credit4']['title']}}" class="form-control">
+                            <input type="text" name="creditnames[credit4][title]"
+                                   value="{{$creditnames['credit4']['title']}}" class="form-control">
                         </td>
                     </tr>
                     <tr>
@@ -59,7 +64,8 @@
                         </td>
                         <td>credit5</td>
                         <td>
-                            <input type="text" name="creditnames[credit5][title]" value="{{$creditnames['credit5']['title']}}" class="form-control">
+                            <input type="text" name="creditnames[credit5][title]"
+                                   value="{{$creditnames['credit5']['title']}}" class="form-control">
                         </td>
                     </tr>
                     </tbody>
@@ -69,3 +75,11 @@
         <button type="submit" class="col-lg-1 btn btn-primary">保存</button>
     </form>
 </block>
+<script>
+    function post(event) {
+        event.preventDefault();
+        require(['util'], function (util) {
+            util.submit({successUrl: 'refresh'});
+        })
+    }
+</script>

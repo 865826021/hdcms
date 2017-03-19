@@ -1,10 +1,10 @@
 <extend file="resource/view/site"/>
 <block name="content">
 	<ul class="nav nav-tabs" role="tablist">
-		<li><a href="?s=site/navigate/lists&entry=home&m=article">导航菜单列表</a></li>
+		<li><a href="{{site_url('navigate.lists')}}&entry=home">导航菜单列表</a></li>
 		<li class="active"><a href="javascript:;">添加导航菜单</a></li>
 	</ul>
-	<form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-controller="MyController" ng-cloak>
+	<form action="" method="post" class="form-horizontal ng-cloak" id="form" ng-controller="MyController" ng-cloak ng-submit="submit($event)">
 		{{csrf_field()}}
 		<div class="panel panel-default">
 			<div class="panel-heading">微站导航菜单</div>
@@ -203,23 +203,24 @@
 				}
 			});
 			//提交表单
-			$('form').submit(function () {
-				var msg = '';
-				if (!$scope.field.name) {
-					msg += '导航名称不能为空<br/>';
-				}
-				if (!$scope.field.url) {
-					msg += '跳转链接不能为空<br/>';
-				}
-				if ($scope.field.icontype == 2 && !$scope.field.css.image) {
-					msg += '请选择上传图标';
-				}
-				if (msg) {
-					util.message(msg, '', 'error');
-					return false;
-				}
-				$('[name="data"]').val(angular.toJson($scope.field));
-			})
+            $scope.submit=function(event){
+                event.preventDefault();
+                var msg = '';
+                if (!$scope.field.name) {
+                    msg += '导航名称不能为空<br/>';
+                }
+                if (!$scope.field.url) {
+                    msg += '跳转链接不能为空<br/>';
+                }
+                if ($scope.field.icontype == 2 && !$scope.field.css.image) {
+                    msg += '请选择上传图标';
+                }
+                if (msg) {
+                    util.message(msg, '', 'error');
+                }
+                $('[name="data"]').val(angular.toJson($scope.field));
+                util.submit();
+            }
 		}]);
 		angular.bootstrap(document.getElementById('form'), ['myApp'])
 	});

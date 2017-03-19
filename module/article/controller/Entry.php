@@ -70,7 +70,6 @@ class Entry extends HdController {
 		$hdcms['category'] = $category;
 		View::with( [ 'hdcms' => $hdcms ] );
 		$tpl = $hdcms['template'] ?: $category['content_tpl'];
-
 		return view( $this->template . '/' . $tpl );
 	}
 }
