@@ -1,11 +1,12 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class material extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('material')){
+		if ( Schema::tableExists( 'material' ) ) {
 			return;
 		}
 		$sql = <<<sql
@@ -23,10 +24,10 @@ CREATE TABLE `hd_material` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信素材';
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-        Schema::drop( 'material' );
-    }
+	//回滚
+	public function down() {
+		Schema::drop( 'material' );
+	}
 }

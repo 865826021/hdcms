@@ -1,11 +1,12 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class credits_record extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('credits_record')){
+		if ( Schema::tableExists( 'credits_record' ) ) {
 			return;
 		}
 		$sql = <<<sql
@@ -26,9 +27,9 @@ CREATE TABLE `hd_credits_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='积分变动记录';
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

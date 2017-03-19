@@ -6,7 +6,7 @@ use houdunwang\database\build\Blueprint;
 class balance extends Migration {
 	//执行
 	public function up() {
-		if(Schema::tableExists('balance')){
+		if ( Schema::tableExists( 'balance' ) ) {
 			return;
 		}
 		$sql = <<<sql

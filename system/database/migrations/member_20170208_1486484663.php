@@ -1,11 +1,12 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class member extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('member')){
+		if ( Schema::tableExists( 'member' ) ) {
 			return;
 		}
 		$sql = <<<sql
@@ -55,9 +56,9 @@ CREATE TABLE `hd_member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='会员表';
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

@@ -6,10 +6,10 @@ use houdunwang\database\build\Blueprint;
 class attachment extends Migration {
 	//执行
 	public function up() {
-		if(Schema::tableExists('attachment')){
+		if ( Schema::tableExists( 'attachment' ) ) {
 			return;
 		}
-		$sql=<<<sql
+		$sql = <<<sql
 CREATE TABLE `hd_attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT '会员id',
@@ -31,7 +31,7 @@ CREATE TABLE `hd_attachment` (
   KEY `hash` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='附件';
 sql;
-	Db::execute($sql);
+		Db::execute( $sql );
 	}
 
 	//回滚

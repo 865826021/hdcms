@@ -10,18 +10,19 @@ class site_setting extends Migration {
 		$sql = <<<sql
 CREATE TABLE `hd_site_setting` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `siteid` int(10) unsigned NOT NULL,
+  `siteid` int(10) unsigned NOT NULL COMMENT '站点编号',
   `grouplevel` tinyint(1) unsigned NOT NULL COMMENT '会员组变更设置 1 不自动变更   2根据总积分多少自动升降   3 根据总积分多少只升不降',
   `default_template` tinyint(1) unsigned NOT NULL COMMENT '默认网站模板',
   `creditnames` varchar(1000) NOT NULL COMMENT '积分名称',
   `creditbehaviors` varchar(1000) NOT NULL COMMENT '积分策略',
   `welcome` varchar(60) NOT NULL COMMENT '用户添加公众帐号时发送的欢迎信息',
   `default_message` varchar(60) NOT NULL COMMENT '系统不知道该如何回复粉丝的消息时默认发送的内容',
-  `register` varchar(2000) NOT NULL DEFAULT '' COMMENT '注册设置',
-  `wechat_login` varchar(2000) DEFAULT NULL COMMENT '微信登录设置',
-  `login` varchar(2000) DEFAULT NULL COMMENT '登录设置',
+  `register` tinyint(1) NOT NULL COMMENT '注册设置',
+  `wechat_login` varchar(2000) NOT NULL DEFAULT '' COMMENT '微信登录设置',
+  `username_login` tinyint(1) NOT NULL COMMENT '开启用户名密码登录',
   `smtp` varchar(2000) NOT NULL DEFAULT '' COMMENT '邮件通知',
   `pay` varchar(2000) NOT NULL DEFAULT '' COMMENT '支付设置',
+  `oauth_login` varchar(2000) NOT NULL DEFAULT '' COMMENT '第三方登录',
   PRIMARY KEY (`id`),
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点设置';

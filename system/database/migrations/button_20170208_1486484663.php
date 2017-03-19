@@ -1,14 +1,15 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class button extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('button')){
+		if ( Schema::tableExists( 'button' ) ) {
 			return;
 		}
-		$sql=<<<sql
+		$sql = <<<sql
 CREATE TABLE `hd_button` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL COMMENT '标题',
@@ -19,10 +20,10 @@ CREATE TABLE `hd_button` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='微信菜单';
 sql;
-		Db::execute($sql);
-    }
+		Db::execute( $sql );
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

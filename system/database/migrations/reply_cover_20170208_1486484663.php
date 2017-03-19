@@ -17,9 +17,11 @@ CREATE TABLE `hd_reply_cover` (
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT '描述',
   `thumb` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT '链接地址',
+  `hash` varchar(100) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `siteid` (`siteid`),
-  KEY `rid` (`rid`)
+  KEY `rid` (`rid`),
+  KEY `hash` (`hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='模块封面关键词回复内容';
 sql;
 		Db::execute( $sql );

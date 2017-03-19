@@ -1,11 +1,12 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class cache extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('cache')){
+		if ( Schema::tableExists( 'cache' ) ) {
 			return;
 		}
 		$sql = <<<sql
@@ -19,9 +20,9 @@ CREATE TABLE `hd_cache` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

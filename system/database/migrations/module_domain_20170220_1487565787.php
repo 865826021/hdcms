@@ -23,6 +23,5 @@ sql;
 
     //回滚
     public function down() {
-        Schema::drop( 'module_domain' );
     }
 }

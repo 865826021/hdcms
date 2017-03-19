@@ -1,11 +1,12 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class cloud extends Migration {
-    //执行
+	//执行
 	public function up() {
-		if(Schema::tableExists('cloud')){
+		if ( Schema::tableExists( 'cloud' ) ) {
 			return;
 		}
 		$sql = <<<sql
@@ -22,9 +23,9 @@ CREATE TABLE `hd_cloud` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='云平台数据';
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

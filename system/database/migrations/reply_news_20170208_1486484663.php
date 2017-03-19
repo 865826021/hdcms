@@ -17,6 +17,7 @@ CREATE TABLE `hd_reply_news` (
   `author` varchar(45) DEFAULT NULL COMMENT '作者',
   `description` varchar(255) NOT NULL COMMENT '描述',
   `thumb` varchar(255) NOT NULL COMMENT '缩略图',
+  `type` tinyint(1) unsigned NOT NULL COMMENT '1显示内容 0跳转链接',
   `content` mediumtext NOT NULL COMMENT '内容',
   `url` varchar(255) NOT NULL COMMENT '链接地址',
   `rank` tinyint(255) unsigned NOT NULL COMMENT '排序',
