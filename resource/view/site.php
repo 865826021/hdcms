@@ -161,7 +161,7 @@
                         <ul class="list-group " aria-expanded="true">
                             <foreach from="$t" value="$m">
                                 <li class="list-group-item" id="{{$m['_hash']}}">
-                                    <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}">
+                                    <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}&mt={{Request::get('mt')}}">
                                         <i class="{{$m['ico']}}"></i> {{$m['title']}}
                                     </a>
                                 </li>
