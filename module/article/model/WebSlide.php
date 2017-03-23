@@ -15,7 +15,6 @@ class WebSlide extends Model {
 	protected $validate = [
 		[ 'title', 'required', '标题不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'url', 'required', '链接不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
-		[ 'thumb', 'is_file', '图片文件错误', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'displayorder', 'num:0,255', '排序只能为0~255', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 	];
 	protected $auto = [

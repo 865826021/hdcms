@@ -19,6 +19,11 @@ use module\article\model\WebSlide;
  * @package module\article\controller
  */
 class Slide extends HdController {
+	public function __construct() {
+		auth();
+		parent::__construct();
+	}
+
 	//列表
 	public function lists() {
 		if ( IS_POST ) {

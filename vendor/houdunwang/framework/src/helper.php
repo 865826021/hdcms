@@ -19,7 +19,9 @@ if ( ! function_exists( 'pic' ) ) {
 	 * @return string
 	 */
 	function pic( $file, $pic = 'resource/images/thumb.jpg' ) {
-		if ( empty( $file ) || ! is_file( $file ) ) {
+		if ( preg_match( '@^http@i', $file ) ) {
+			return $file;
+		} elseif ( empty( $file ) || ! is_file( $file ) ) {
 			return __ROOT__ . '/' . $pic;
 		} else {
 			return __ROOT__ . '/' . $file;

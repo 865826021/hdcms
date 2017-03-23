@@ -55,20 +55,23 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">主机</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="host" value="127.0.0.1" required="required">
+                                    <input type="text" class="form-control" name="host" value="127.0.0.1"
+                                           required="required">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">数据库</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="database" required="required" value="hdcms">
+                                    <input type="text" class="form-control" name="database" required="required"
+                                           value="hdcms">
                                     <span class="help-block">数据库不存在时系统将尝试创建,但帐号没有权限时创建将失败</span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">用户名</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="user" required="required" value="root">
+                                    <input type="text" class="form-control" name="user" required="required"
+                                           value="root">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -78,12 +81,14 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">表前缀</label>
+                                <label class="col-sm-2 control-label"></label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="prefix" value="hd_" required="required" placeholder="表前缀只能为字母或下划线">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="replace_database" value="1"/> 重建数据库
+                                        <span class="help-block">如果数据库存在时清空数据库中的表，请慎重选择！</span>
+                                    </label>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="panel panel-default">
@@ -95,7 +100,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">帐号</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" name="username" value="admin" required="required">
+                                    <input type="text" class="form-control" name="username" value="admin"
+                                           required="required">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -126,9 +132,6 @@
 <script>
     function post() {
         var msg = '';
-        if (!/^[a-z_]+$/i.test($.trim($("[name='prefix']").val()))) {
-            msg = '表前缀只能为字母或下划线';
-        }
         if ($.trim($("[name='upassword']").val()) != $.trim($("[name='upassword2']").val())) {
             msg = '系统管理员的两次密码不一致';
         }

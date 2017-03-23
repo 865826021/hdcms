@@ -12,7 +12,7 @@ $cloudHost = 'http://www.hdcms.com';
 $cloudUrl  = $cloudHost . "?m=store&action=controller/cloud";
 //版权信息
 if ( $action == 'copyright' ) {
-	$content = isset( $copyright ) ? $copyright : file_get_contents( 'copyright.html' );
+	$content = isset( $copyrightTemplate ) ? $copyrightTemplate : file_get_contents( 'copyright.html' );
 	echo $content;
 	exit;
 }
@@ -27,14 +27,14 @@ if ( $action == 'environment' ) {
 	$data['memory_limit']        = get_cfg_var( "memory_limit" ) ? get_cfg_var( "memory_limit" ) : "0";
 	//运行环境
 	$data['h_PHP_VERSION'] = PHP_VERSION;
-	$data['h_mysql']       = extension_loaded( 'mysql' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
+	$data['h_mysql']       = extension_loaded( 'pdo_mysql' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
 	$data['h_Pdo']         = extension_loaded( 'Pdo' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
 	$data['h_Gd']          = extension_loaded( 'Gd' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
 	$data['h_curl']        = extension_loaded( 'curl' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
 	$data['h_openSSL']     = extension_loaded( 'openSSL' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
 	//目录状态
 	$data['d_root'] = is_writable( '.' ) ? '<i class="fa fa-check-circle fa-1x alert-success"></i>' : '<i class="fa fa-times-circle alert-danger"></i>';
-	$content        = isset( $environment ) ? $environment : file_get_contents( 'environment.html' );
+	$content        = isset( $environmentTemplate ) ? $environmentTemplate : file_get_contents( 'environment.html' );
 	foreach ( $data as $t => $v ) {
 		$content = str_replace( "{hd:{$t}}", $v, $content );
 	}
@@ -44,41 +44,58 @@ if ( $action == 'environment' ) {
 //执行安装
 if ( $action == 'database' ) {
 	if ( ! empty( $_POST ) ) {
-		//测试数据库连接
+		//测试数据库帐号密码
 		$_SESSION['config'] = $_POST;
-		try {
-			$host     = $_SESSION['config']['host'];
-			$username = $_SESSION['config']['user'];
-			$password = $_SESSION['config']['password'];
-			$dsn      = "mysql:host={$host};dbname={$_SESSION['config']['database']}";
-			$pdo      = new Pdo( $dsn, $username, $password, [ PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'" ] );
-		} catch ( Exception $e ) {
-			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,数据库不存在或帐号与密码错误' ] );
+		$host               = $_SESSION['config']['host'];
+		$username           = $_SESSION['config']['user'];
+		$password           = $_SESSION['config']['password'];
+		$db                 = new mysqli( $host, $username, $password );
+		if ( $db->connect_error ) {
+			echo json_encode( [ 'valid' => 0, 'message' => '连接失败,帐号或密码错误' ], JSON_UNESCAPED_UNICODE );
 			exit;
+		}
+		//数据库设置
+		$database = $_SESSION['config']['database'];
+		if ( ! $db->select_db( $database ) ) {
+			//不存在时创建数据库
+			if ( ! $db->query( "CREATE DATABASE $database CHARSET UTF8" ) ) {
+				echo json_encode( [ 'valid' => 0, 'message' => '数据库创建失败' ], JSON_UNESCAPED_UNICODE );
+				exit;
+			}
+		} else if ( $_SESSION['config']['replace_database'] ) {
+			//选择重建数据库时删除所有表
+			if ( $result = $db->query( "SHOW TABLE STATUS FROM $database" ) ) {
+				while ( $myrow = $result->fetch_array( MYSQLI_ASSOC ) ) {
+					if ( $db->query( 'DROP TABLE ' . $myrow['Name'] ) ) {
+						echo json_encode( [ 'valid' => 0, 'message' => '重建数据库时删除表失败' ], JSON_UNESCAPED_UNICODE );
+						exit;
+					}
+				}
+			}
 		}
 		echo json_encode( [ 'valid' => 1, 'message' => '连接成功' ] );
 		exit;
 	}
-	$content = isset( $database ) ? $database : file_get_contents( 'database.html' );
+	$content = isset( $databaseTemplate ) ? $databaseTemplate : file_get_contents( 'database.html' );
 	echo $content;
 	exit;
 }
 //环境检测
 if ( $action == 'download' ) {
-	$content = isset( $download ) ? $download : file_get_contents( 'download.html' );
+	$content = isset( $downloadTemplate ) ? $downloadTemplate : file_get_contents( 'download.html' );
 	echo $content;
 	exit;
 }
 
 //远程下载文件
 if ( $action == 'downloadFile' ) {
+	$hdcms             = curl_get( $cloudUrl . '/downloadFullHdcms' );
+	$_SESSION['hdcms'] = json_decode( $hdcms, true );
 	if ( is_dir( 'app' ) ) {
 		//完整版时
 		echo 1;
 		exit;
 	} else {
-		$hdcms             = curl_get( $cloudUrl . '/downloadFullHdcms' );
-		$_SESSION['hdcms'] = json_decode( $hdcms, true );
 		//更新下载数量
 		curl_get( $cloudUrl . '/updateHDownloadNum&build=' . $_SESSION['hdcms']['build'] );
 		$d = curl_get( $_SESSION['hdcms']['file'] );
@@ -137,10 +154,10 @@ if ( $action == 'table' ) {
 	$pdo->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
 	//更新系统版本号
-	$version = include 'data/upgrade.php';
+	$version = $_SESSION['hdcms']['version'];
 	$build   = $_SESSION['hdcms']['build'];
 	$sql     = "REPLACE INTO hd_cloud (id,uid,username,webname,secret,version,build,status)
-		VALUES(1,0,'','','','{$_SESSION['hdcms']['version']}',$build,0)";
+		VALUES(1,0,'','','','{$version}',{$build},0)";
 	try {
 		$pdo->exec( $sql );
 	} catch ( PDOException $e ) {
@@ -167,16 +184,19 @@ if ( $action == 'finish' ) {
 		@unlink( $f );
 	}
 	is_dir( 'install' ) and rmdir( 'install' );
-	is_dir( 'upgrade' ) and rmdir( 'upgrade' );
+
+	if ( is_dir( '__MACOSX' ) ) {
+		foreach ( glob( '__MACOSX/*' ) as $f ) {
+			@unlink( $f );
+		}
+		rmdir( '__MACOSX' );
+	}
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
-	//更改htaccess文件
-	if ( ! is_file( '.htaccess' ) && is_file( 'htaccess.txt' ) ) {
-		rename( 'htaccess.txt', '.htaccess' );
-	}
+
 	//显示界面
-	$content = isset( $finish ) ? $finish : file_get_contents( 'finish.html' );
+	$content = isset( $finishTemplate ) ? $finishTemplate : file_get_contents( 'finish.html' );
 	echo $content;
 	exit;
 }
@@ -185,7 +205,7 @@ if ( $action == 'compile' ) {
 	$tpl     = [ 'copyright', 'environment', 'database', 'download', 'finish' ];
 	$content = substr( file_get_contents( 'install.php' ), 5 );
 	foreach ( $tpl as $t ) {
-		$content = '$' . $t . "=<<<str\n" . file_get_contents( $t . '.html' ) . "\nstr;\n" . $content;
+		$content = '$' . $t . "Template=<<<str\n" . file_get_contents( $t . '.html' ) . "\nstr;\n" . $content;
 	}
 	file_put_contents( '/www/install.php', "<?php \n" . $content );
 	echo "<h1>编译成功</h1>";
