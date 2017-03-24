@@ -7,6 +7,31 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
+if ( ! function_exists( 'env' ) ) {
+	/**
+	 * 根据.env配置文件获取匹配项
+	 *
+	 * @param $name 配置名称
+	 * @param $value 为空时的返回值
+	 *
+	 * @return mixed
+	 */
+	function env( $name, $value ) {
+		$envConfig = [];
+		if ( is_file( '.env' ) && empty( $envConfig ) ) {
+			$parse = file_get_contents( '.env' );
+			$data  = array_filter( preg_split( '@' . PHP_EOL . '@', $parse ) );
+			foreach ( $data as $v ) {
+				$info                          = explode( '=', $v );
+				$envConfig[ trim( $info[0] ) ] = trim( $info[1] );
+			}
+		}
+
+		return empty( $envConfig[ $name ] ) ? $value : $envConfig[ $name ];
+	}
+}
+
 if ( ! function_exists( 'pic' ) ) {
 	/**
 	 * 显示图片
