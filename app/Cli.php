@@ -78,8 +78,7 @@ class Cli extends Base {
 			chdir( dirname( $this->path ) );
 			Zip::PclZip( 'hdcms.upgrade.' . $newVersion . '.zip' );
 			Zip::create( 'hdcms' );
-			$d = Dir::del( $this->path );
-			dd($d);
+			Dir::del( $this->path );
 		}
 	}
 
