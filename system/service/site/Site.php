@@ -191,7 +191,7 @@ class Site extends Common {
 		| 初始文章系统表
 		|--------------------------------------------------------------------------
 		*/
-		service( 'article.init.make', $siteId );
+		service( 'article.Init.make', $siteId );
 		return true;
 	}
 
