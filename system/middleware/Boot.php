@@ -13,6 +13,8 @@ use houdunwang\route\Route;
 class Boot {
 	//自动执行的方法
 	public function run() {
+		//数据库连接配置
+		Config::set( 'database', array_merge( c( 'database' ), include 'data/database.php' ) );
 		//安装检测
 		$this->install();
 		//加载配置项
@@ -29,18 +31,19 @@ class Boot {
 	 * 系统未进行安装执行安装脚本
 	 */
 	protected function install() {
+		//安装系统时创建表与初始数据
+		if ( isset( $_GET['a'] ) && $_GET['a'] == 'initialization' ) {
+			cli( 'hd migrate:make' );
+			cli( 'hd seed:make' );
+			message( '数据表创建成功', '', 'success' );
+		}
+
 		/**
 		 * 安装检测
 		 * 安装结束后会删除install.php文件
 		 */
-		if ( ! is_file( 'data/lock.php' ) && is_file( 'install.php' ) && ( ! isset( $_GET['s'] ) || $_GET['s'] != 'install' ) ) {
+		if ( ! is_file( 'data/lock.php' ) && is_file( 'install.php' ) ) {
 			go( __ROOT__ . '/install.php' );
-		}
-		//安装系统时创建表与初始数据
-		if ( isset( $_GET['s'] ) && $_GET['s'] == 'install' ) {
-			cli( 'hd migrate:make' );
-			cli( 'hd seed:make' );
-			message( '数据表创建成功', '', 'success' );
 		}
 	}
 
@@ -51,8 +54,6 @@ class Boot {
 	 * 因为那时已经有数据表存在了
 	 */
 	protected function config() {
-		//数据库连接配置
-		Config::set( 'database', array_merge( c( 'database' ), include 'data/database.php' ) );
 		$config             = Db::table( 'config' )->field( 'site,register' )->first();
 		$config['site']     = json_decode( $config['site'], true );
 		$config['register'] = json_decode( $config['register'], true );

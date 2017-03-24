@@ -1,7 +1,11 @@
-### 生成压缩包
 同时生成安装与更新包
 ```
-php hd cli:zip
+php hd cli:all
+```
+
+生成离线安装脚本 
+```
+php hd cli:install
 ```
 
 生成安装包

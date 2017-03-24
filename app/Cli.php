@@ -25,9 +25,18 @@ class Cli extends Base {
 		'data/database.php'
 	];
 
-	public function zip() {
+	/**
+	 * 同时生成完整与更新压缩包
+	 */
+	public function make() {
+		$this->install();
 		$this->full();
 		$this->upgrade();
+	}
+
+	//生成安装脚本
+	public function install() {
+		\Curl::get( 'http://localhost/hdcms/install/install.php?a=compile' );
 	}
 
 	//生成完整包
@@ -35,7 +44,7 @@ class Cli extends Base {
 		//复制目录
 		Dir::copy( '.', $this->path );
 		foreach ( $this->filterFullDirectory as $d ) {
-			\Dir::del( $this->path . DIRECTORY_SEPARATOR . $d );
+			\Dir::del( $this->path . DS . $d );
 		}
 		//创建压缩包
 		exec( "git tag -l", $tags );

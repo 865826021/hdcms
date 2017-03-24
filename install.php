@@ -665,7 +665,7 @@ if ( $action == 'database' ) {
 			//选择重建数据库时删除所有表
 			if ( $result = $db->query( "SHOW TABLE STATUS FROM $database" ) ) {
 				while ( $myrow = $result->fetch_array( MYSQLI_ASSOC ) ) {
-					if ( $db->query( 'DROP TABLE ' . $myrow['Name'] ) ) {
+					if ( !$db->query( 'DROP TABLE ' . $myrow['Name'] ) ) {
 						echo json_encode( [ 'valid' => 0, 'message' => '重建数据库时删除表失败' ], JSON_UNESCAPED_UNICODE );
 						exit;
 					}
@@ -692,8 +692,7 @@ if ( $action == 'downloadFile' ) {
 	$_SESSION['hdcms'] = json_decode( $hdcms, true );
 	if ( is_dir( 'app' ) ) {
 		//完整版时
-		echo 1;
-		exit;
+		die( '1' );
 	} else {
 		//更新下载数量
 		curl_get( $cloudUrl . '/updateHDownloadNum&build=' . $_SESSION['hdcms']['build'] );
@@ -706,34 +705,9 @@ if ( $action == 'downloadFile' ) {
 		file_put_contents( $zipFile, $d );
 		//解包
 		get_zip_originalsize( $zipFile, './' );
-		function dcopy( $old, $new ) {
-			is_dir( $new ) or mkdir( $new, 0755, true );
-			foreach ( glob( $old . '/*' ) as $v ) {
-				if ( $v != 'upload/install.php' ) {
-					$to = $new . '/' . basename( $v );
-					is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
-				}
-			}
-
-			return true;
-		}
-
-		dcopy( 'upload', '.' );
-		//删除目录
-		function del( $dir ) {
-			if ( ! is_dir( $dir ) ) {
-				return true;
-			}
-			foreach ( glob( $dir . "/*" ) as $v ) {
-				is_dir( $v ) ? del( $v ) : unlink( $v );
-			}
-
-			return rmdir( $dir );
-		}
-
-		del( 'upload' );
-		echo 1;
-		exit;
+		dcopy( 'hdcms', '.' );
+		del( 'hdcms' );
+		die( '1' );
 	}
 }
 
@@ -745,7 +719,11 @@ if ( $action == 'table' ) {
 	file_put_contents( 'data/database.php', '<?php return ' . var_export( $_SESSION['config'], true ) . ';?>' );
 
 	//创建表与初始数据
-	curl_get( $_SERVER['HTTP_HOST'] . '/' . dirname( $_SERVER['SCRIPT_NAME'] ) . '/index.php?s=install' );
+	$res =curl_get( $_SERVER['HTTP_HOST'] . '/' . dirname( $_SERVER['SCRIPT_NAME'] ) . '/index.php?a=initialization' );
+	$res = json_decode($res,true)?:[];
+	if(empty($res) || $res['valid']!=1){
+		die('数据表创建失败');
+	}
 
 	//添加数据表
 	$dsn      = "mysql:host={$_SESSION['config']['host']};dbname={$_SESSION['config']['database']}";
@@ -781,11 +759,8 @@ if ( $action == 'finish' ) {
 			@unlink( $f );
 		}
 	}
-	foreach ( glob( 'install/*' ) as $f ) {
-		@unlink( $f );
-	}
-	rmdir( 'install' );
-	//删除下载的压缩包
+	//删除目录
+	del( 'install' );
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
 	//添加安装锁文件
@@ -821,6 +796,42 @@ function curl_get( $url ) {
 	curl_close( $ch );
 
 	return $data;
+}
+
+/**
+ * 删除目录
+ *
+ * @param string $dir 目录
+ *
+ * @return bool
+ */
+function del( $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		return true;
+	}
+	foreach ( glob( $dir . "/*" ) as $v ) {
+		is_dir( $v ) ? del( $v ) : unlink( $v );
+	}
+
+	return rmdir( $dir );
+}
+
+/**
+ * 目录复制
+ *
+ * @param string $old 旧目录
+ * @param string $new 目标目录
+ *
+ * @return bool
+ */
+function dcopy( $old, $new ) {
+	is_dir( $new ) or mkdir( $new, 0755, true );
+	foreach ( glob( $old . '/*' ) as $v ) {
+		$to = $new . '/' . basename( $v );
+		is_file( $v ) ? copy( $v, $to ) : dcopy( $v, $to );
+	}
+
+	return true;
 }
 
 /**
