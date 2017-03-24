@@ -1,6 +1,7 @@
 <?php namespace app;
 
 use houdunwang\cli\build\Base;
+use houdunwang\dir\Dir;
 
 /**
  * 命令处理
@@ -77,7 +78,8 @@ class Cli extends Base {
 			chdir( dirname( $this->path ) );
 			Zip::PclZip( 'hdcms.upgrade.' . $newVersion . '.zip' );
 			Zip::create( 'hdcms' );
-			Dir::del( $this->path );
+			$d = Dir::del( $this->path );
+			dd($d);
 		}
 	}
 
