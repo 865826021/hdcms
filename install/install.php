@@ -184,13 +184,6 @@ if ( $action == 'finish' ) {
 		@unlink( $f );
 	}
 	is_dir( 'install' ) and rmdir( 'install' );
-
-	if ( is_dir( '__MACOSX' ) ) {
-		foreach ( glob( '__MACOSX/*' ) as $f ) {
-			@unlink( $f );
-		}
-		rmdir( '__MACOSX' );
-	}
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
