@@ -8,17 +8,51 @@ use houdunwang\cli\build\Base;
  * @package app
  */
 class Cli extends Base {
-	//不生成到压缩包的文件
-	protected $filterFiles = [
+	//编译工作目录
+	protected $path = '/Users/xj/Desktop/hdcms';
+	//软件目录
+	protected $hdcmsDir;
+	//完整版过滤的目录
+	protected $filterFullDirectory = [ 'addons', 'data', 'install', 'storage', 'attachment' ];
+
+	public function __construct() {
+		parent::__construct();
+		$this->hdcmsDir = realpath( '.' );
+	}
+
+	//不生成到更新压缩包的文件
+	protected $filterUpgradeFiles = [
 		'data/database.php'
 	];
+
+	public function zip() {
+		$this->full();
+		$this->upgrade();
+	}
+
+	//生成完整包
+	public function full() {
+		//复制目录
+		Dir::copy( '.', $this->path );
+		foreach ( $this->filterFullDirectory as $d ) {
+			\Dir::del( $this->path . DIRECTORY_SEPARATOR . $d );
+		}
+		//创建压缩包
+		exec( "git tag -l", $tags );
+		$newVersion = array_pop( $tags );
+		chdir( dirname( $this->path ) );
+		Zip::PclZip( 'hdcms.full.' . $newVersion . '.zip' );
+		Zip::create( 'hdcms' );
+		Dir::del( $this->path );
+	}
 
 	/**
 	 * 生成HDCMS更新压缩包
 	 *
 	 * @param string $oldVersion 上版本号
 	 */
-	public function upgrade( $oldVersion ) {
+	public function upgrade( $oldVersion = '' ) {
+		chdir( $this->hdcmsDir );
 		exec( "git tag -l", $tags );
 		$newVersion = array_pop( $tags );
 		$oldVersion = $oldVersion ?: array_pop( $tags );
@@ -27,16 +61,15 @@ class Cli extends Base {
 		if ( ! empty( $files ) ) {
 			//复制文件
 			foreach ( $files as $f ) {
-				\Dir::copyFile( $f['file'], '/Users/xj/Desktop/build/hdcms/' . $f['file'] );
+				\Dir::copyFile( $f['file'], $this->path . DS . $f['file'] );
 			}
-			file_put_contents( '/Users/xj/Desktop/build/hdcms/upgrade_files.php', "<?php return " . var_export( $files, true ) . ';?>' );
-			chdir( '/Users/xj/Desktop/build' );
-			Zip::PclZip( 'hdcms.zip' );
+			file_put_contents( $this->path . DS . 'upgrade_files.php',
+				"<?php return " . var_export( $files, true ) . ';?>' );
+			chdir( dirname( $this->path ) );
+			Zip::PclZip( 'hdcms.upgrade.' . $newVersion . '.zip' );
 			Zip::create( 'hdcms' );
-			copy( 'hdcms.zip', '/Users/xj/Desktop/hdcms.zip' );
-			chdir( '..' );
+			Dir::del( $this->path );
 		}
-		\Dir::del( '/Users/xj/Desktop/build' );
 	}
 
 	/**
@@ -49,17 +82,19 @@ class Cli extends Base {
 	 */
 	protected function format( $files ) {
 		//组合后的文件
-		$format = [ ];
+		$format = [];
 		foreach ( $files as $k => $f ) {
 			preg_match( '/\w+\s+([^\s]+)/', $f, $file );
-			if ( is_file( $file[1] ) ) {
-				if ( in_array( $file[0], [ 'A', 'M' ] ) ) {
-					$format[] = [ 'file' => $file[1], 'state' => $file[0] ];
+			if ( ! in_array( $file[1], $this->filterUpgradeFiles ) ) {
+				if ( is_file( $file[1] ) ) {
+					if ( in_array( $file[0], [ 'A', 'M' ] ) ) {
+						$format[] = [ 'file' => $file[1], 'state' => $file[0] ];
+					} else {
+						$format[] = [ 'file' => $file[1], 'state' => 'M' ];
+					}
 				} else {
-					$format[] = [ 'file' => $file[1], 'state' => 'M' ];
+					$format[] = [ 'file' => $file[1], 'state' => 'D' ];
 				}
-			} else {
-				$format[] = [ 'file' => $file[1], 'state' => 'D' ];
 			}
 		}
 

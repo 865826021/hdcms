@@ -1,6 +1,21 @@
-# 生成HDCMS更新包方法
+### 生成压缩包
+同时生成安装与更新包
+```
+php hd cli:zip
+```
 
+生成安装包
+```
+php hd cli:full
+```
+
+生成更新包
+```
 php hd cli:upgrade
+```
 
-#离线安装文件
-更新后上传到 addons/store目录
+生成指定旧版本的更新包
+```
+php hd cli:upgrade v2.0.40
+```
+
