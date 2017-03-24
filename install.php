@@ -739,6 +739,8 @@ if ( $action == 'downloadFile' ) {
 
 //安装完成,添加数据
 if ( $action == 'table' ) {
+	mkdir( 'data', 0755 );
+	file_put_contents( 'data/index.html', 'hdcms' );
 	//修改配置文件
 	file_put_contents( 'data/database.php', '<?php return ' . var_export( $_SESSION['config'], true ) . ';?>' );
 
@@ -782,10 +784,11 @@ if ( $action == 'finish' ) {
 	foreach ( glob( 'install/*' ) as $f ) {
 		@unlink( $f );
 	}
-	is_dir( 'install' ) and rmdir( 'install' );
+	rmdir( 'install' );
 	//删除下载的压缩包
 	@unlink( 'hdcms.zip' );
 	@unlink( 'install.php' );
+	//添加安装锁文件
 	file_put_contents( 'data/lock.php', 'installed' );
 	//显示界面
 	$content = isset( $finishTemplate ) ? $finishTemplate : file_get_contents( 'finish.html' );
