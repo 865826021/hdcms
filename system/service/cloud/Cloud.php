@@ -113,14 +113,13 @@ class Cloud {
 	 */
 	public function downloadUpgradeVersion() {
 		$soft    = $this->getUpgradeVersion();
-		$content = \Curl::get( $this->host . '/' . $soft['hdcms']['file'] );
+		$content = \Curl::get($soft['hdcms']['file'] );
 		\Dir::create( 'upgrade/hdcms' );
 		file_put_contents( 'upgrade/hdcms.zip', $content );
 		chdir( 'upgrade' );
 		Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
 		Zip::extract();//解压缩到当前目录
 		chdir( '..' );
-
 		//将旧版本文件进行备份
 		$files   = include 'upgrade/hdcms/upgrade_files.php';
 		$message = '';
