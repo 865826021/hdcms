@@ -4,6 +4,10 @@
         <li role="presentation" class="active"><a href="#">会员中心参数</a></li>
     </ul>
     <form action="" method="post" class="form-horizontal" onsubmit="post(event)">
+        <div class="alert alert-success">
+            系统会根据移动端或桌面端响应不同页面，会员中心登录模板在 ucenter 目录中,二次开发人员可参考系统默认登录风格，开发出符合自己网站风格的登录/注册界面。
+             <br/><a href="{{url('entry.login',[],'ucenter')}}" target="_blank">查看登录界面会员登录</a>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 会员注册选项
@@ -29,9 +33,25 @@
                           </span>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">验证</label>
+                    <div class="col-sm-10">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="register_option[mobile_validate]" value="1" {{v('site.setting.register_option.mobile_validate')==1?'checked="checked"':""}}>
+                            短信开启
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="register_option[mail_validate]" value="1" {{v('site.setting.register_option.mail_validate')==1?'checked="checked"':""}}>
+                            邮箱开启
+                        </label>
+                        <span class="help-block">开启验证后会向邮箱或手机号发送验证码，验证通过后才可以完成注册。
+                            <br/>需要先进行 <a href="{{site_url('site/setting/mail')}}">邮件通知设置</a> 或
+                            <a href="{{site_url('site/setting/mobile')}}">短信通知设置</a>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="panel panel-default">
             <div class="panel-heading">
                 会员登录选项
@@ -54,7 +74,7 @@
                             微信登录
                         </label>
                         <span class="help-block">
-                            当设置为"微信登录"时需要站点的微信号是认证服务号。
+                            当设置为"微信登录"时需要站点的微信号已经认证。
                         </span>
                     </div>
                 </div>
@@ -63,7 +83,7 @@
                     <div class="col-sm-10">
                         <label class="radio-inline">
                             <input type="radio" name="wechat_login" value="button" {{v('site.setting.wechat_login')=='button'?'checked="checked"':""}}>
-                            显示登录按钮
+                            登录按钮
                         </label>
                         <label class="radio-inline">
                             <input type="radio" name="wechat_login" value="auto" {{v('site.setting.wechat_login')=='auto'?'checked="checked"':""}}>

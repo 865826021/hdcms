@@ -1,5 +1,5 @@
 <?php
-return [
+$config = [
 	/*
 	|--------------------------------------------------------------------------
 	| 字段缓存目录
@@ -75,3 +75,4 @@ return [
 	'read'      => [],
 	'write'     => [],
 ];
+return array_merge( $config, include 'data/database.php' );

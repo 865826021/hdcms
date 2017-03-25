@@ -44,17 +44,6 @@ form .uname {
 form .uname:focus {
   border: 1px solid #A6A6A6;
 }
-form .pwd {
-  position: relative;
-}
-form .pwd > a {
-  line-height: 44px;
-  position: absolute;
-  right: 10px;
-  bottom: 0;
-  color: #A6A6A6;
-  text-decoration: none;
-}
 form .btn {
   display: block;
   width: 340px;
@@ -82,49 +71,6 @@ form .btn i {
   transition: all 0.3s;
   width: 0;
   display: inline-block;
-}
-form .line {
-  height: 1px;
-  background: #D9D9D9;
-  margin-top: 25px;
-}
-form .weixin {
-  color: #32C25A;
-  border: 1px solid #32C25A;
-  border-radius: 3px;
-  margin-top: 25px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  font-size: 16px;
-  position: relative;
-}
-form .weixin a {
-  text-align: center;
-  height: 40px;
-  display: block;
-  background: #32C25A;
-  color: white;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  transition: all 0.3s;
-  opacity: 0;
-}
-form .weixin a:hover {
-  text-decoration: none;
-  opacity: 1;
-}
-form .weixin a:hover i {
-  left: 0;
-}
-form .weixin a i {
-  font-size: 25px;
-  position: relative;
-  transition: left 0.3s;
-  top: 0;
-  left: 15px;
 }
 .remind {
   text-align: center;

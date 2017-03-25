@@ -2,103 +2,26 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>会员登录</title>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/fonts/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/login.css"/>
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/iconfont.css"/>
 </head>
 <body>
-<div class="loginContent">
-    <!--头部菜单开始-->
-    <div class="HeaderMenu">
-        <!--头部中间的大框开始-->
-        <div class="HeaderCenter">
-            <!--头部左侧开始-->
-            <div class="HCLeft">
-                <!--logo开始-->
-                <div class="logo">
-                    <a href="">
-                        {{v('site.info.name')}}
-                    </a>
-                </div>
-                <!--logo结束-->
-            </div>
-            <!--头部左侧结束-->
-            <!--头部右侧开始-->
-            <div class="MenuRight">
-                <!--搜索区域结束-->
-                <!--登录注册开始-->
-                <div class="login">
-                    <if value="v('site.setting.username_login')">
-                        <ul>
-                            <li><a href="{{url('entry.register')}}">注册</a></li>
-                            <li><a href="{{url('entry.login')}}">登录</a></li>
-                        </ul>
-                    </if>
-                </div>
-                <!--的路注册结束-->
-            </div>
-            <!--头部右侧结束-->
-        </div>
-        <!--头部中间的大框结束-->
+<h1>后盾人-登录</h1>
+<form action="">
+    <input type="text" class="uname" placeholder="邮箱/手机号"/>
+    <div class="pwd">
+        <input type="password" class="uname" placeholder="密码"/>
+        <a href="">忘记密码？</a>
     </div>
-    <!--头部菜单结束-->
-    <div class="Login">
-        <!--title-->
-        <!--账号密码登录开始-->
-        <if value="!v('site.setting.username_login')&&count(v('site.setting.oauth_login'))==1 &&v('site.setting.oauth_login.wechat')==1 ">
-            <div class="LoginBodyE">
-                <div class="LTitle">
-                    <h2>扫描下方二维码完成登录</h2>
-                </div>
-                <div class="erweima">
-                    <img src="{{url('entry.qrLogin')}}"/>
-                </div>
-            </div>
-            <else/>
-            <div class="LoginBodyZ">
-                <div class="LoginBodyZC">
-                    <if value="v('site.setting.username_login')">
-                        <div class="LTitle">
-                            <h2>欢迎登录</h2>
-                        </div>
-                        <div class="accountbody">
-                            <form action="" method="post" onsubmit="post(event)">
-                                <div class="login">
-                                    <span class="iconfont icon-zhanghao"></span>
-                                    <input type="text" name="username" id="Id" value="" placeholder="请输入{{$placeholder}}"/>
-                                </div>
-                                <div class="pass">
-                                    <span class="iconfont icon-mima"></span>
-                                    <input type="password" name="password" id="Pass" value="" placeholder="请输入您的密码"/>
-                                </div>
-                                <input type="submit" id="btn" value="登录"/>
-                            </form>
-                        </div>
-                    </if>
-                    <div class="accountbodyRight">
-                        <if value="v('site.setting.username_login')">
-                            <p class="title">还没账号？<a href="{{url('entry.register')}}">立即注册</a></p>
-                        </if>
-                        <if value="count(v('site.setting.oauth_login')) gte 1">
-                            <div class="ABRcontent">
-                                <p class="ABRtitle">
-                                    <span>快速登录</span>
-                                </p>
-                                <ul>
-                                    <!--<li><a href="" class="iconfont icon-qq"></a></li>-->
-                                    <if value="v('site.setting.oauth_login.wechat')">
-                                        <li><a href="" class="iconfont icon-weixin"></a></li>
-                                    </if>
-                                    <!--<li><a href="" class="iconfont icon-weibo"></a></li>-->
-                                </ul>
-                            </div>
-                        </if>
-                    </div>
-                </div>
-            </div>
-        </if>
+    <button class="btn">登录<i class="iconfont icon-you-copy"></i></button>
+    <div class="line"></div>
+    <div class="weixin">
+        使用 微信 登录
+        <a href=""><i class="iconfont icon-weixin"></i></a>
     </div>
-</div>
-
+</form>
+<p class="remind">还没有帐号？ <a href="">注册新帐号</a></p>
 </body>
 </html>

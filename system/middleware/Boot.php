@@ -13,8 +13,6 @@ use houdunwang\route\Route;
 class Boot {
 	//自动执行的方法
 	public function run() {
-		//数据库连接配置
-		Config::set( 'database', array_merge( c( 'database' ), include 'data/database.php' ) );
 		//安装检测
 		$this->install();
 		//加载配置项
