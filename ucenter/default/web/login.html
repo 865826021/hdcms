@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>会员登录</title>
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/fonts/iconfont.css"/>
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/css/login.css"/>
+    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/fonts/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/css/login.css"/>
 </head>
 <body>
-<h1>后盾人-登录</h1>
-<form action="">
-    <input type="text" class="uname" placeholder="邮箱/手机号"/>
-    <div class="pwd">
-        <input type="password" class="uname" placeholder="密码"/>
-        <a href="">忘记密码？</a>
-    </div>
-    <button class="btn">登录<i class="iconfont icon-you-copy"></i></button>
+<h1>{{v("site.info.name")}}</h1>
+<form action="" method="post">
+    <if value="v('site.setting.username_login')">
+        <input type="text" class="uname" name="username" placeholder="邮箱/手机号"/>
+        <div class="pwd">
+            <input type="password" class="uname" name="password" placeholder="密码"/>
+            <!--<a href="">忘记密码？</a>-->
+        </div>
+        <button class="btn">登录<i class="iconfont icon-you-copy"></i></button>
+    </if>
     <div class="line"></div>
-    <div class="weixin">
-        使用 微信 登录
-        <a href=""><i class="iconfont icon-weixin"></i></a>
-    </div>
+    <if value="v('site.setting.oauth_login.wechat')">
+        <div class="weixin">
+            使用 微信 登录
+            <a href=""><i class="iconfont icon-weixin"></i></a>
+        </div>
+    </if>
 </form>
-<p class="remind">还没有帐号？ <a href="">注册新帐号</a></p>
+<p class="remind">还没有帐号？ <a href="{{url('entry.register')}}">注册新帐号</a></p>
 </body>
 </html>

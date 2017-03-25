@@ -65,6 +65,8 @@ class Member extends Common {
 	 * 微信自动登录
 	 *
 	 * @param string $url 登录成功后的跳转地址
+	 *
+	 * @return bool
 	 */
 	public function weChatLogin( $url = '' ) {
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 ) {
@@ -84,11 +86,8 @@ class Member extends Common {
 					$model->save();
 				}
 				Session::set( 'member_uid', $auth['uid'] );
-				$url = $url ?: Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
-				Session::del( 'from' );
-				$url = $url ?: Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
-				Session::del( 'from' );
-				go( $url );
+
+				return true;
 			}
 		}
 		message( '微信登录失败,请检查微信公众号是否验证', 'back', 'error' );

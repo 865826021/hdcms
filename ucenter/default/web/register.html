@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/fonts/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/css/reg.css"/>
+</head>
+<body>
+<h1>{{v("site.info.name")}}</h1>
+<form action="" method="post">
+    <input type="text" class="uname" name="username" placeholder="{{$placeholder}}"/>
+    <input type="password" name="password" class="uname" placeholder="请输入不少于5位的密码" required="required"/>
+    <input type="password" name="cpassword" class="uname" placeholder="请再次输入密码" required="required"/>
+    <button class="btn">注册<i class="iconfont icon-you-copy"></i></button>
+</form>
+<p class="remind">已有账号？ <a href="">点此登录</a></p>
+</body>
+</html>

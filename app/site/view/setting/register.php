@@ -38,15 +38,16 @@
                     <div class="col-sm-10">
                         <label class="checkbox-inline">
                             <input type="checkbox" name="register_option[mobile_validate]" value="1" {{v('site.setting.register_option.mobile_validate')==1?'checked="checked"':""}}>
-                            短信开启
+                            短信验证
                         </label>
                         <label class="checkbox-inline">
                             <input type="checkbox" name="register_option[mail_validate]" value="1" {{v('site.setting.register_option.mail_validate')==1?'checked="checked"':""}}>
-                            邮箱开启
+                            邮箱验证
                         </label>
-                        <span class="help-block">开启验证后会向邮箱或手机号发送验证码，验证通过后才可以完成注册。
-                            <br/>需要先进行 <a href="{{site_url('site/setting/mail')}}">邮件通知设置</a> 或
-                            <a href="{{site_url('site/setting/mobile')}}">短信通知设置</a>
+                        <span class="help-block">
+                            使用短信验证请检测站点可用短信条数<br/>
+                            开启验证后会向邮箱或手机号发送验证码，验证通过后才可以完成注册。
+                            <br/>邮箱验证需要先进行 <a href="{{site_url('site/setting/mail')}}">邮件通知设置</a>
                         </span>
                     </div>
                 </div>

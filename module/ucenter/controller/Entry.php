@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
 namespace module\ucenter\controller;
 
 use houdunwang\wechat\WeChat;
@@ -18,6 +19,8 @@ use module\HdController;
  * @package module\ucenter\controller
  */
 class Entry extends HdController {
+	//回调地址
+	protected $fromUrl;
 
 	public function __construct() {
 		parent::__construct();
@@ -28,6 +31,7 @@ class Entry extends HdController {
 		if ( $from = Request::get( 'from' ) ) {
 			Session::set( 'from', $from );
 		}
+		$this->fromUrl = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
 	}
 
 	//分配帐号密码登录表单提示
@@ -40,11 +44,19 @@ class Entry extends HdController {
 		View::with( 'placeholder', $placeholder[ v( 'site.setting.register' ) ] );
 	}
 
+	/**
+	 * 使用历史记录跳转
+	 */
+	protected function redirect() {
+		Session::del( 'from' );
+		go( $this->fromUrl );
+	}
+
 	//注册页面
 	public function register() {
 		if ( IS_POST ) {
 			\Member::register( Request::post() );
-			ajax( [ 'valid' => 1, 'url' => $url, 'message' => '注册成功,系统将跳转到登录页' ] );
+			$this->redirect();
 		}
 		$this->assignUsernamePlaceHolder();
 
@@ -55,10 +67,7 @@ class Entry extends HdController {
 	public function login() {
 		if ( IS_POST ) {
 			\Member::login( Request::post() );
-			$url = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
-			Session::del( 'from' );
-			go($url);
-//			ajax( [ 'valid' => 1, 'url' => $url ] );
+			$this->redirect();
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {
@@ -81,14 +90,13 @@ class Entry extends HdController {
 	public function weChatLogin() {
 		//微信自动登录
 		\Member::weChatLogin();
+		$this->redirect();
 	}
 
 	//退出
 	public function out() {
-		$url = Session::get( 'from', url( 'entry.login', '', 'ucenter' ) );
-		Session::del( 'from' );
 		\Session::flush();
-		go( $url );
+		$this->redirect();
 	}
 
 	//微信扫码登录
