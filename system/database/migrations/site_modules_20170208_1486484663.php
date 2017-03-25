@@ -1,12 +1,14 @@
 <?php namespace system\database\migrations;
+
 use houdunwang\database\build\Migration;
 use houdunwang\database\build\Blueprint;
 
 class site_modules extends Migration {
-    //执行
-	public function up() {if(Schema::tableExists('site_modules')){
-      return;
-    }
+	//执行
+	public function up() {
+		if ( Schema::tableExists( 'site_modules' ) ) {
+			return;
+		}
 		$sql = <<<sql
 CREATE TABLE `hd_site_modules` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -17,9 +19,9 @@ CREATE TABLE `hd_site_modules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='站点扩展模块';
 sql;
 		Db::execute( $sql );
-    }
+	}
 
-    //回滚
-    public function down() {
-    }
+	//回滚
+	public function down() {
+	}
 }

@@ -51,6 +51,7 @@ return array(
     'houdunwang\\cache\\' => array($vendorDir . '/houdunwang/cache/src'),
     'houdunwang\\backup\\' => array($vendorDir . '/houdunwang/backup/src'),
     'houdunwang\\arr\\' => array($vendorDir . '/houdunwang/arr/src'),
+    'houdunwang\\aliyunsms\\' => array($vendorDir . '/houdunwang/aliyunsms/src'),
     'houdunwang\\alipay\\' => array($vendorDir . '/houdunwang/alipay/src'),
     'app\\' => array($baseDir . '/app'),
     'addons\\' => array($baseDir . '/addons'),

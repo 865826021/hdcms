@@ -53,11 +53,11 @@ class Setting {
 	//注册设置
 	public function register() {
 		if ( IS_POST ) {
-			$this->db['register']       = Request::post( 'register' );
-			$this->db['username_login'] = Request::post( 'username_login' );
-			$this->db['oauth_login']    = json_encode( Request::post( 'oauth_login' )?:[] );
-			$this->db['wechat_login']   = Request::post( 'wechat_login' );
-			$this->db['register_option']   = json_encode(Request::post( 'register_option' )?:[]);
+			$this->db['register']        = Request::post( 'register' );
+			$this->db['username_login']  = Request::post( 'username_login' );
+			$this->db['oauth_login']     = json_encode( Request::post( 'oauth_login' ) ?: [] );
+			$this->db['wechat_login']    = Request::post( 'wechat_login' );
+			$this->db['register_option'] = json_encode( Request::post( 'register_option' ) ?: [] );
 			$this->db->save();
 			\Site::updateCache();
 			message( '修改会员注册设置成功', '', 'success' );
@@ -90,22 +90,19 @@ class Setting {
 	//邮件通知设置
 	public function mobile() {
 		if ( IS_POST ) {
-			$this->db['smtp'] = Request::post( 'smtp' );
+			$this->db['sms'] = Request::post( 'sms' );
 			$this->db->save();
-			\Site::updateCache();
-			//发送测试邮件
-			if ( v( 'site.setting.smtp.testing' ) ) {
-				$d = Mail::send( v( 'site.setting.smtp.testusername' ), v( 'site.setting.smtp.testusername' ), "邮箱配置测试2", '恭喜!邮箱配置成功' );
-				if ( $d ) {
-					message( "测试邮件发送成功", 'refresh', 'success', 3 );
-				} else {
-					message( "测试邮件发送失败", 'refresh', 'error', 3 );
-				}
-			}
-			message( '邮箱配置保存成功', 'refresh', 'success' );
+			message( '配置保存成功', 'refresh', 'success' );
 		}
-
-		return view();
+		$sms = $this->db->where('siteid',siteid())->pluck('sms');
+		if(empty($sms)){
+			$sms ="{
+                    //服务商
+                    provider: 'aliyuncms',
+                    aliyuncms: {accessKey: '11', accessSecret: '', sign: ''}
+                }";
+		}
+		return view()->with('sms',$sms);
 	}
 
 	//支付设置
