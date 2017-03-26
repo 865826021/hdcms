@@ -44,7 +44,7 @@ class Cli extends Base {
 		file_put_contents( 'version.php', "<?php return " . var_export( $data, true ) . ';' );
 	}
 
-	//生成安装脚本
+	//生成安装脚本 
 	public function install() {
 		\Curl::get( 'http://localhost/hdcms/install/install.php?a=compile' );
 	}
