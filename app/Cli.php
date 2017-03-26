@@ -37,6 +37,9 @@ class Cli extends Base {
 
 	//生成版本编号
 	public function version() {
+		exec( "git log  --pretty=format:\" %s\" -1", $logs );
+		$logs = str_split( '\t', $logs[0] );
+		p( $logs );
 		chdir( dirname( __DIR__ ) );
 		exec( "git tag -l", $tags );
 		$data['version'] = array_pop( $tags );
@@ -44,7 +47,7 @@ class Cli extends Base {
 		file_put_contents( 'version.php', "<?php return " . var_export( $data, true ) . ';' );
 	}
 
-	//生成安装脚本 
+	//生成安装脚本
 	public function install() {
 		\Curl::get( 'http://localhost/hdcms/install/install.php?a=compile' );
 	}
