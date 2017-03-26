@@ -8,6 +8,8 @@
 |-------------------------------------------------------------------------*/
 //微信支付异步通知地址
 Route::any( 'wxnotifyurl', 'site/pay/weChatAsyncNotify' );
+//更新HDCMS
+Route::any( 'upgrade', 'system/cloud/localUpdate' );
 
 //后台管理员登录
 Route::any( 'hdcms', function () {

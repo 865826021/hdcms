@@ -35,6 +35,12 @@ class Cli extends Base {
 		$this->upgrade();
 	}
 
+	//生成版本编号
+	public function version() {
+		$data['build'] = time();
+		file_put_contents( 'version.php', "<?php return " . var_export( $data, true ) . ';' );
+	}
+
 	//生成安装脚本
 	public function install() {
 		\Curl::get( 'http://localhost/hdcms/install/install.php?a=compile' );
@@ -42,6 +48,7 @@ class Cli extends Base {
 
 	//生成完整包
 	public function full() {
+		$this->version();
 		//复制目录
 		Dir::copy( '.', $this->path );
 		foreach ( $this->filterFullDirectory as $d ) {
@@ -62,6 +69,7 @@ class Cli extends Base {
 	 * @param string $oldVersion 上版本号
 	 */
 	public function upgrade( $oldVersion = '' ) {
+		$this->version();
 		chdir( $this->hdcmsDir );
 		exec( "git tag -l", $tags );
 		$newVersion = array_pop( $tags );

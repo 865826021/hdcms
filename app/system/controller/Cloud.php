@@ -1,13 +1,13 @@
 <?php namespace app\system\controller;
 
-	/** .-------------------------------------------------------------------
-	 * |  Software: [HDCMS framework]
-	 * |      Site: www.hdcms.com
-	 * |-------------------------------------------------------------------
-	 * |    Author: 向军 <2300071698@qq.com>
-	 * |    WeChat: aihoudun
-	 * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
-	 * '-------------------------------------------------------------------*/
+/** .-------------------------------------------------------------------
+ * |  Software: [HDCMS framework]
+ * |      Site: www.hdcms.com
+ * |-------------------------------------------------------------------
+ * |    Author: 向军 <2300071698@qq.com>
+ * |    WeChat: aihoudun
+ * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
+ * '-------------------------------------------------------------------*/
 /**
  * 云帐号管理
  * Class Cloud
@@ -70,8 +70,9 @@ class Cloud {
 				break;
 			case 'finish':
 				$hdcms = \Cloud::getUpgradeVersion();
-				Db::table( 'cloud' )->where( 'id', 1 )->update( [ 'build'   => $hdcms['hdcms']['build'],
-				                                                  'version' => $hdcms['hdcms']['version']
+				Db::table( 'cloud' )->where( 'id', 1 )->update( [
+					'build'   => $hdcms['hdcms']['build'],
+					'version' => $hdcms['hdcms']['version']
 				] );
 				\Cloud::updateHDownloadNum();
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
@@ -79,7 +80,15 @@ class Cloud {
 			default:
 				//获取更新版本
 				$upgrade = \Cloud::getUpgradeVersion();
+
 				return view()->with( [ 'upgrade' => $upgrade, 'current' => \system\model\Cloud::find( 1 ) ] );
 		}
+	}
+
+	/**
+	 * 执行覆盖本地更新
+	 */
+	public function localUpdate() {
+
 	}
 }

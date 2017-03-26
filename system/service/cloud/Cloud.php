@@ -1,5 +1,6 @@
 <?php namespace system\service\cloud;
 
+use houdunwang\dir\Dir;
 use system\model\Cloud as CloudModel;
 use system\model\Modules;
 
@@ -141,14 +142,17 @@ class Cloud {
 	 * @return array
 	 */
 	public function downloadUpgradeVersion() {
+		$this->backup();
 		$res = $this->getLastUpgradeList();
 		if ( $res['valid'] == 1 ) {
 			foreach ( $res['hdcms'] as $d ) {
 				$content = \Curl::get( $d['file'] );
 				file_put_contents( 'hdcms.zip', $content );
 				Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
-				Zip::extract();//解压缩到当前目录
+				Zip::extract( '.' );//解压缩到当前目录
+				Dir::move( 'hdcms', '.' );
 			}
+			Dir::delFile( 'hdcms.zip' );
 
 			return [ 'valid' => 1, 'message' => '更新包下载完成' ];
 		}
