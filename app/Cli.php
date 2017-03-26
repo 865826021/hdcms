@@ -37,8 +37,9 @@ class Cli extends Base {
 
 	//生成版本编号
 	public function version() {
-		exec( "git log  --pretty=format:\" %s\" -1", $logs );
-		$logs = str_split( '\t', $logs[0] );
+		exec( "git log -1", $logs );
+		p($logs);exit;
+		$logs = preg_split( '@\s+@', $logs[0] );
 		p( $logs );
 		chdir( dirname( __DIR__ ) );
 		exec( "git tag -l", $tags );
