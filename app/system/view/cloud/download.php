@@ -17,7 +17,7 @@
     <form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl">
         <div class="panel panel-default" ng-show="!data.valid">
             <div class="panel-heading">
-                正在下载文件，请不要关闭浏览器窗口
+                正在下载文件，请不要关闭浏览器窗口...
             </div>
             <div class="panel-body">
                 <p style="margin: 0px;">
@@ -27,23 +27,12 @@
         </div>
         <div class="panel panel-default" ng-show="data.valid==1">
             <div class="panel-heading">
-                <span ng-show="data.valid==1">本次更新的文件列表</span>
                 <span ng-show="data.valid==0">更新失败</span>
             </div>
             <div class="panel-body">
                 <div class="alert alert-warning" ng-show="data.valid==0">
                     更新文件失败！本次更新有部分文件无法写入，请检查目录权限。
                 </div>
-                <p style="margin: 0px;">
-						<span class="text-info" ng-repeat="v in data.files" style="display: block;">
-							@{{v.file}}
-							<i class="fa fa-check-circle-o alert-success" ng-if="v.update_state==1"></i>
-							<i class="fa fa-times-circle-o alert-danger" ng-if="v.update_state==0"></i>
-						</span>
-                </p>
-                <span class="text-info" ng-repeat="(k,v) in files" style="display: block;">
-				<i class="fa fa-check-circle-o alert-success"></i> @{{v}}
-			</span>
             </div>
         </div>
     </form>

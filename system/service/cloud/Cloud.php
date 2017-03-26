@@ -72,15 +72,27 @@ class Cloud {
 	}
 
 	/**
-	 * 获取更新列表
+	 * 获取HDCMS的更新列表
+	 * 与当前版本无关
 	 *
 	 * @param int $row 条数
 	 *
 	 * @return mixed
 	 */
-	public function getUpgradeList( $row ) {
+	public function getUpgradeList( $row = 5 ) {
 		$data = CloudModel::find( 1 )->toArray();
 		$res  = Curl::post( $this->url . '/cloud/getUpgradeList&row=' . $row, $data );
+
+		return json_decode( $res, true );
+	}
+
+	/**
+	 * 获取当前版本后的更新列表
+	 * @return mixed
+	 */
+	public function getLastUpgradeList() {
+		$data = CloudModel::find( 1 )->toArray();
+		$res  = Curl::post( $this->url . '/cloud/getLastUpgradeList&', $data );
 
 		return json_decode( $res, true );
 	}
@@ -108,48 +120,40 @@ class Cloud {
 	}
 
 	/**
+	 * 备份当前版本的HDCMS
+	 */
+	public function backup() {
+		$current = Db::table( 'cloud' )->find( 1 );
+		//将旧版本文件进行备份
+		foreach ( glob( '*' ) as $f ) {
+			if ( $f != 'upgrade' ) {
+				if ( is_file( $f ) ) {
+					Dir::copyFile( $f, "upgrade/{$current['version']}/$f" );
+				} else {
+					Dir::copy( $f, "upgrade/{$current['version']}/$f" );
+				}
+			}
+		}
+	}
+
+	/**
 	 * 下载系统更新包
 	 * @return array
 	 */
 	public function downloadUpgradeVersion() {
-		$soft    = $this->getUpgradeVersion();
-		$content = \Curl::get($soft['hdcms']['file'] );
-		\Dir::create( 'upgrade/hdcms' );
-		file_put_contents( 'upgrade/hdcms.zip', $content );
-		chdir( 'upgrade' );
-		Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
-		Zip::extract();//解压缩到当前目录
-		chdir( '..' );
-		//将旧版本文件进行备份
-		$files   = include 'upgrade/hdcms/upgrade_files.php';
-		$message = '';
-		$current = Db::table( 'cloud' )->find( 1 );
-		$valid   = 1;
-		foreach ( $files as $k => $f ) {
-			\Dir::copyFile( $f['file'], "upgrade/{$current['version']}/{$f['file']}" );
-			switch ( $f['state'] ) {
-				case 'D':
-					//删除文件
-					if ( \Dir::delFile( $f['file'] ) === false ) {
-						$valid                       = 0;
-						$message                     = '删除旧版文件 [' . $f['file'] . '] 失败';
-						$files[ $k ]['update_state'] = 0;
-					} else {
-						$files[ $k ]['update_state'] = 1;
-					}
-					break;
-				default:
-					if ( \Dir::copyFile( "upgrade/hdcms/" . $f['file'], $f['file'] ) === false ) {
-						$valid                       = 0;
-						$message                     = '备份旧版本失败，请检测网站根目录是否可写';
-						$files[ $k ]['update_state'] = 0;
-					} else {
-						$files[ $k ]['update_state'] = 1;
-					}
+		$res = $this->getLastUpgradeList();
+		if ( $res['valid'] == 1 ) {
+			foreach ( $res['hdcms'] as $d ) {
+				$content = \Curl::get( $d['file'] );
+				file_put_contents( 'hdcms.zip', $content );
+				Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
+				Zip::extract();//解压缩到当前目录
 			}
+
+			return [ 'valid' => 1, 'message' => '更新包下载完成' ];
 		}
 
-		return [ 'files' => $files, 'valid' => $valid, 'message' => $message ];
+		return [ 'valid' => 1, 'message' => $res['message'] ?: '下载失败' ];
 	}
 
 	/**

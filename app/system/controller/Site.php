@@ -1,5 +1,6 @@
 <?php namespace app\system\controller;
 
+use houdunwang\dir\Dir;
 use houdunwang\request\Request;
 use houdunwang\wechat\WeChat;
 use system\model\SiteModules;
