@@ -37,7 +37,10 @@ class Cli extends Base {
 
 	//生成版本编号
 	public function version() {
-		$data['build'] = time();
+		chdir( dirname( __DIR__ ) );
+		exec( "git tag -l", $tags );
+		$data['version'] = array_pop( $tags );
+		$data['build']   = time();
 		file_put_contents( 'version.php', "<?php return " . var_export( $data, true ) . ';' );
 	}
 
