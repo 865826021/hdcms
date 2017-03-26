@@ -37,14 +37,19 @@ class Cli extends Base {
 
 	//生成版本编号
 	public function version() {
-		exec( "git log -1", $logs );
-		p($logs);exit;
-		$logs = preg_split( '@\s+@', $logs[0] );
-		p( $logs );
 		chdir( dirname( __DIR__ ) );
+		//最新的标签
 		exec( "git tag -l", $tags );
-		$data['version'] = array_pop( $tags );
+		$newTag          = array_pop( $tags );
+		$data['version'] = $newTag;
 		$data['build']   = time();
+		//更新日志
+		exec( "git log -1", $logs );
+		$logs = array_splice( $logs, 4 );
+		array_walk( $logs, function ( &$v ) {
+			$v = trim( $v );
+		} );
+		$data['logs'] = implode( '####', $logs );
 		file_put_contents( 'version.php', "<?php return " . var_export( $data, true ) . ';' );
 	}
 
