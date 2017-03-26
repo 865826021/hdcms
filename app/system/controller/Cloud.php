@@ -61,20 +61,14 @@ class Cloud {
 			case 'sql':
 				//更新SQL
 				if ( IS_POST ) {
-					cli( 'hd migrate:make' );
-					cli( 'hd seed:make' );
+					$this->updateDatabase();
 					ajax( [ 'valid' => 1, 'message' => '数据表更新成功' ] );
 				}
 
 				return view( 'updateSql' );
 				break;
 			case 'finish':
-				$hdcms = \Cloud::getUpgradeVersion();
-				Db::table( 'cloud' )->where( 'id', 1 )->update( [
-					'build'   => $hdcms['hdcms']['build'],
-					'version' => $hdcms['hdcms']['version']
-				] );
-				\Cloud::updateHDownloadNum();
+				$this->updateVersionInfo();
 				message( '恭喜! 系统更新完成', 'upgrade', 'success' );
 				break;
 			default:
@@ -89,6 +83,34 @@ class Cloud {
 	 * 执行覆盖本地更新
 	 */
 	public function localUpdate() {
+		$this->updateDatabase();
+		//更新数据表
+		$this->updateVersionInfo();
+		die( '更新成功' );
+	}
 
+	/**
+	 * 更新版本信息
+	 */
+	protected function updateVersionInfo() {
+		if ( is_file( 'version.php' ) ) {
+			/**
+			 * 修改更新版本信息
+			 */
+			$version = include 'version.php';
+			Db::table( 'cloud' )->where( 'id', 1 )->update( [
+				'build'   => $version['build'],
+				'version' => $version['version']
+			] );
+			\Cloud::updateHDownloadNum();
+		}
+	}
+
+	/**
+	 * 执行数据库与初始数据操作
+	 */
+	protected function updateDatabase() {
+		cli( 'hd migrate:make' );
+		cli( 'hd seed:make' );
 	}
 }
