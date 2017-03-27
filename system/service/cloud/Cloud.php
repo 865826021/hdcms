@@ -128,7 +128,11 @@ class Cloud {
 		//将旧版本文件进行备份
 		if ( is_file( 'hdcms/upgrade_files.php' ) ) {
 			foreach ( include 'hdcms/upgrade_files.php' as $f ) {
-				Dir::copyFile( $f['file'], "upgrade/{$current['version']}/$f" );
+				if ( $f['state'] == 'D' ) {
+					Dir::delFile( $f );
+				} else {
+					Dir::copyFile( $f['file'], "upgrade/{$current['version']}/$f" );
+				}
 			}
 		}
 	}

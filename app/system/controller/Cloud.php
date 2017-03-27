@@ -49,7 +49,6 @@ class Cloud {
 
 	//更新HDCMS
 	public function upgrade() {
-		set_time_limit( 0 );
 		switch ( q( 'get.action' ) ) {
 			case 'download':
 				return view( 'download' );
@@ -75,7 +74,6 @@ class Cloud {
 			default:
 				//获取更新版本
 				$upgrade = \Cloud::getUpgradeVersion();
-
 				return view()->with( [ 'upgrade' => $upgrade, 'current' => \system\model\Cloud::find( 1 ) ] );
 		}
 	}
@@ -99,6 +97,7 @@ class Cloud {
 			 * 修改更新版本信息
 			 */
 			$version = include 'version.php';
+
 			Db::table( 'cloud' )->where( 'id', 1 )->update( [
 				'build'   => $version['build'],
 				'version' => $version['version']
