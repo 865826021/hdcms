@@ -4,8 +4,9 @@
     <meta charset="utf-8"/>
     <title>会员中心</title>
     <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/index/css/index.css"/>
+    <link rel="stylesheet" type="text/css" href="{{__ROOT__}}/ucenter/default/web/index/css/index.css"/>
     <link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+    <include file="resource/view/common.php"/>
 </head>
 <body>
 <div class="NavBox">
@@ -36,7 +37,7 @@
     <!--次顶部菜单单开始-->
     <div class="ciTop">
         <div class="ciTopCenter">
-            <a href="" class="logo"><img src="{{template_url()}}/index/img/logo.png" style="width: 125px;"/></a>
+            <a href="" class="logo"><img src="{{__ROOT__}}/ucenter/default/web/index/img/logo.png" style="width: 125px;"/></a>
             <div class="TopMenu">
                 <a href="">网站首页</a>
                 <a href="">模块商店</a>
@@ -56,7 +57,7 @@
                     <div class="HeaerTop">
                         <!--左侧头像开始-->
                         <div class="portrait">
-                            <a href=""><img src="{{template_url()}}/index/img/touxiang.png"/></a>
+                            <a href=""><img src="{{__ROOT__}}/ucenter/default/web/index/img/touxiang.png"/></a>
                         </div>
                         <!--左侧头像结束-->
                         <!--右侧文字部分开始-->
@@ -69,9 +70,9 @@
                     <div class="HeaerBottom">
                         <a href="" class=""> <span class="glyphicon glyphicon-phone"></span></a>
                         <a href="" class=""><span class="glyphicon glyphicon-envelope"></span></a>
-                        <!--<a href="" class="active"><span class="glyphicon glyphicon-envelope"></span></a>-->
+                        <a href="" class="active"><span class="glyphicon glyphicon-envelope"></span></a>
                         <!--<a href="" class=""><span class="glyphicon glyphicon-list-alt"></span></a>-->
-                        <!--<a href="" class=""><span class="glyphicon glyphicon-lock"></span></a>-->
+                        <a href="" class=""><span class="glyphicon glyphicon-lock"></span></a>
                     </div>
                 </div>
                 <!--头像部分结束-->
@@ -83,9 +84,10 @@
                     </div>
                     <!--会员中心结束-->
                     <!--账号管理开始-->
-                    <foreach from="$data" value="$v">
-                        <div class="AccountManagementBox">
 
+                    <foreach from="\Menu::moduleMenus('member')" value="$v">
+
+                        <div class="AccountManagementBox">
                             <div class="AccountManagement">
                                 <a href="">{{$v['module']['title']}}</a>
                             </div>

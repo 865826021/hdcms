@@ -116,12 +116,13 @@ body {
 .CenterMain .CenterBody .BodyLeft {
   width: 175px;
   float: left;
-  background: #E9ECF1;
+  background: #fafafa;
   height: 565.8px;
   box-sizing: border-box;
+  border-right: solid 1px #ddd;
 }
 .CenterMain .CenterBody .BodyLeft .BodyHeader {
-  height: 140px;
+  height: 120px;
   padding: 0px 23px;
 }
 .CenterMain .CenterBody .BodyLeft .HeaerTop {
@@ -185,7 +186,7 @@ body {
 .CenterMain .CenterBody .BodyLeft .MemberCenter {
   height: 10px;
   line-height: 50px;
-  margin-left: 20px;
+  margin-left: 0px;
   border-bottom: 1px solid #D8DADF;
 }
 .CenterMain .CenterBody .BodyLeft .MemberCenter a {
@@ -204,10 +205,12 @@ body {
   border-bottom: 1px solid #D8DADF;
 }
 .CenterMain .CenterBody .BodyLeft .AccountManagementBox .AccountManagement {
-  height: 50px;
+  height: 45px;
   line-height: 50px;
   text-align: left;
   text-indent: 20px;
+  border-bottom: solid 1px #ddd;
+  margin-bottom: 10px;
 }
 .CenterMain .CenterBody .BodyLeft .AccountManagementBox .AccountManagement a {
   color: #3EA0EC;
@@ -219,6 +222,9 @@ body {
   padding: 3px;
   border-radius: 50%;
   font-size: 14px;
+}
+.CenterMain .CenterBody .BodyLeft .AccountManagementBox ul {
+  margin-bottom: 20px;
 }
 .CenterMain .CenterBody .BodyLeft .AccountManagementBox ul li {
   height: 30px;
@@ -261,9 +267,10 @@ body {
 }
 .CenterMain .CenterBody .BodyRight {
   float: left;
-  width: 1025px;
-  background: #FFFFFF;
+  width: 1000px;
+  background: #EDF0F6;
   position: relative;
+  margin: 10px 0px 0px 10px;
 }
 .CenterMain .CenterBody .BodyRight .RightTop {
   height: 230px;
@@ -339,7 +346,7 @@ body {
   color: #fff;
 }
 .CenterMain .CenterBody .BodyRight .RightTop .informationBox ul .line {
-  border-right: 1px solid #E5E5E5 ;
+  border-right: 1px solid #E5E5E5;
 }
 .CenterMain .CenterBody .BodyRight .noticeBox {
   border-top: 1px solid #E2E2E2;

@@ -13,8 +13,8 @@ h1 {
   /* Mozilla Firefox 19+ */
   color: #999;
 }
-input:focus {
-  outline: none;
+input:focus{
+	outline: none;
 }
 input:-ms-input-placeholder,
 textarea:-ms-input-placeholder {

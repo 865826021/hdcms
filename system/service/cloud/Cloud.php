@@ -131,7 +131,7 @@ class Cloud {
 			}
 		}
 	}
- 
+
 	/**
 	 * 下载系统更新包
 	 * @return array

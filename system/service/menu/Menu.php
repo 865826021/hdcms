@@ -129,4 +129,32 @@ class Menu {
 
 		return $menus;
 	}
+
+	/**
+	 * 获取模块菜单类型
+	 *
+	 * @param $entry 类型 member桌面会员中心
+	 *
+	 * @return array
+	 */
+	public function moduleMenus( $entry ) {
+		//读取菜单
+		$module = Db::table( 'navigate' )->where( 'entry', 'member' )->where( 'siteid', SITEID )->groupBy( 'module' )->lists( 'module' );
+		$data   = [];
+		foreach ( $module as $m ) {
+			if ( $moduleData = Db::table( 'modules' )->where( 'name', $m )->first() ) {
+				$data[] = [
+					'module' => $moduleData,
+					'menus'  => Db::table( 'navigate' )->where( 'entry', $entry )->where( 'module', $m )->where( 'siteid', SITEID )->get()
+				];
+			}
+		}
+		foreach ( $data as $k => $v ) {
+			foreach ( $v['menus'] as $n => $m ) {
+				$data[ $k ]['menus'][ $n ]['css'] = json_decode( $m['css'], true );
+			}
+		}
+
+		return $data;
+	}
 }
