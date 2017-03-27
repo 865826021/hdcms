@@ -6,10 +6,16 @@
 		<li class="active">应用商店</li>
 	</ol>
 	<ul class="nav nav-tabs">
-		<li role="presentation"><a href="?s=system/manage/menu">系统管理</a></li>
 		<if value="$_GET['type']=='module'">
+            <li role="presentation"><a href="{{u('module.installed')}}">已经安装模块</a></li>
+            <li role="presentation"><a href="{{u('module.prepared')}}">安装模块</a></li>
+            <li role="presentation"><a href="{{u('module.design')}}">设计新模块</a></li>
 			<li role="presentation" class="active"><a href="javascript:;">模块商城</a></li>
+            <li role="presentation"><a href="{{u('shop.upgradeLists')}}">模块更新</a></li>
 			<else/>
+            <li role="presentation"><a href="{{u('template.installed')}}">已经安装模板</a></li>
+            <li role="presentation"><a href="{{u('template.prepared')}}">安装模板</a></li>
+            <li role="presentation"><a href="{{u('template.design')}}">设计新模板</a></li>
 			<li role="presentation" class="active"><a href="javascript:;">模板商城</a></li>
 		</if>
 	</ul>
@@ -31,7 +37,7 @@
 		<div class="row" ng-show="field.valid==1">
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps">
 				<div class="thumbnail">
-					<img ng-src="@{{'http://dev.hdcms.com/'+v.app_preview}}"
+					<img ng-src="@{{v.app_preview}}"
 					     style="height: 200px; width: 100%; display: block;">
 					<div class="caption">
 						<h3>

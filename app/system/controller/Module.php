@@ -276,7 +276,6 @@ class Module {
 					ModulesBindings::insert( $d );
 				}
 			}
-
 			if ( ! empty( $config['mobile']['member'] ) ) {
 				foreach ( $config['mobile']['member'] as $d ) {
 					$d['entry']  = 'profile';
@@ -316,7 +315,6 @@ class Module {
 			}
 			//远程模块更新模块数据与删除package.json
 			if ( is_file( $dir . '/cloud.app' ) ) {
-				\Dir::delFile( $dir . '/package.json' );
 				//设置云信息包括云模块编译时间
 				$config = include $dir . '/cloud.app';
 				$data   = [ 'locality' => 0, 'build' => $config['zip']['build'] ];

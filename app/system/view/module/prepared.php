@@ -12,30 +12,30 @@
 		<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a></li>
 		<li role="presentation"><a href="{{u('shop.upgradeLists')}}">模块更新</a></li>
 	</ul>
-	<h5 class="page-header">已购买的模块</h5>
-	<div id="myApp" ng-controller="ctrl" class="ng-cloak">
-		<div class="media" ng-repeat="a in cloudApps">
-			<div class="pull-right">
-				<div style="margin-right: 10px;">
-					<a href="">安装模块</a>
-				</div>
-			</div>
-			<div class="media-left">
-				<a href="#">
-					<img class="media-object" ng-src="" style="width: 50px;height: 50px;">
-				</a>
-			</div>
-			<div class="media-body">
-				<h4 class="media-heading">{{$local['title']}}
-					<small>（标识：@{{a.manifest.application.name['@cdata']}} 版本：@{{a.manifest.application.version['@cdata']}}
-						作者：@{{a.manifest.application.author['@cdata']}}）
-					</small>
-				</h4>
-				<a href="javascript:;" class="detail">详细介绍</a>
-			</div>
-			<div class="alert alert-info" role="alert"><strong>功能介绍</strong>： @{{a.manifest.application.detail['@cdata']}}</div>
-		</div>
-	</div>
+<!--	<h5 class="page-header">已购买的模块</h5>-->
+<!--	<div id="myApp" ng-controller="ctrl" class="ng-cloak">-->
+<!--		<div class="media" ng-repeat="a in cloudApps">-->
+<!--			<div class="pull-right">-->
+<!--				<div style="margin-right: 10px;">-->
+<!--					<a href="">安装模块</a>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="media-left">-->
+<!--				<a href="#">-->
+<!--					<img class="media-object" ng-src="" style="width: 50px;height: 50px;">-->
+<!--				</a>-->
+<!--			</div>-->
+<!--			<div class="media-body">-->
+<!--				<h4 class="media-heading">{{$local['title']}}-->
+<!--					<small>（标识：@{{a.manifest.application.name['@cdata']}} 版本：@{{a.manifest.application.version['@cdata']}}-->
+<!--						作者：@{{a.manifest.application.author['@cdata']}}）-->
+<!--					</small>-->
+<!--				</h4>-->
+<!--				<a href="javascript:;" class="detail">详细介绍</a>-->
+<!--			</div>-->
+<!--			<div class="alert alert-info" role="alert"><strong>功能介绍</strong>： @{{a.manifest.application.detail['@cdata']}}</div>-->
+<!--		</div>-->
+<!--	</div>-->
 	<h5 class="page-header">未安装的本地模块</h5>
 	<foreach from="$locality" value="$local">
 			<div class="media">
@@ -89,20 +89,22 @@
 		}
 	</style>
 	<script>
-		$('body').delegate('.detail', 'click', function () {
-			//隐藏所有详细介绍内容
-			$('.detail').not(this).parent().next().hide();
-			//显示介绍
-			$(this).parent().next().toggle();
-		});
-		require(['util', 'angular'], function (util, angular) {
-			angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
-				$scope.cloudApps = [];
-				$http.get('{{u("getCloudModules")}}').success(function (res) {
-					$scope.cloudApps = res;
-				});
-			}]);
-			angular.bootstrap(document.getElementById('myApp'), ['myApp']);
-		});
+        require(['jquery'],function($){
+            $('body').delegate('.detail', 'click', function () {
+                //隐藏所有详细介绍内容
+                $('.detail').not(this).parent().next().hide();
+                //显示介绍
+                $(this).parent().next().toggle();
+            });
+        })
+//		require(['util', 'angular'], function (util, angular) {
+//			angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
+//				$scope.cloudApps = [];
+//				$http.get('{{u("getCloudModules")}}').success(function (res) {
+//					$scope.cloudApps = res;
+//				});
+//			}]);
+//			angular.bootstrap(document.getElementById('myApp'), ['myApp']);
+//		});
 	</script>
 </block>

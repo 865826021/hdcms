@@ -116,6 +116,7 @@ class Cloud {
 	public function updateHDownloadNum() {
 		$res = Curl::get( $this->url . '/cloud/updateHDownloadNum&build='
 		                  . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
+
 		return json_decode( $res, true );
 	}
 
@@ -138,7 +139,7 @@ class Cloud {
 	 */
 	public function downloadUpgradeVersion() {
 		$res = $this->getLastUpgradeList();
-		Dir::create('upgrade/hdcms');
+		Dir::create( 'upgrade/hdcms' );
 		if ( $res['valid'] == 1 ) {
 			foreach ( $res['hdcms'] as $d ) {
 				$content = \Curl::get( $d['file'] );
@@ -149,6 +150,7 @@ class Cloud {
 				Dir::move( 'upgrade/hdcms', '.' );
 			}
 			Dir::delFile( 'upgrade/hdcms.zip' );
+
 			return [ 'valid' => 1, 'message' => '更新包下载完成' ];
 		}
 
@@ -197,6 +199,7 @@ class Cloud {
 		}
 		$content = \Curl::post( $this->url . "/cloud/getModuleUpgradeLists", $post );
 		$apps    = json_decode( $content, true );
+
 		if ( $apps['valid'] == 1 ) {
 			ajax( $apps );
 		}
@@ -256,9 +259,7 @@ class Cloud {
 		}
 		//获取模块信息
 		$app = \Curl::get( $this->url . "/cloud/getLastAppById&type={$type}&id={$id}" );
-
 		$app = json_decode( $app, true );
-
 		if ( $app['valid'] == 0 ) {
 			ajax( $app );
 		}
@@ -283,21 +284,20 @@ class Cloud {
 		switch ( $type ) {
 			case 'module':
 				//下载文件
-				$content = \Curl::get( $this->host . "/{$app['zip']['file']}" );
+				$content = \Curl::get( $app['zip']['file'] );
 				$file    = "addons/{$app['name']}.zip";
 				file_put_contents( $file, $content );
 				Zip::PclZip( $file );//设置压缩文件名
 				$status = Zip::extract( 'addons' );
+				//删除下载压缩包
+				\Dir::delFile( $file );
 				if ( empty( $status ) ) {
-					\Dir::delFile( $file );
 					ajax( [
 						'message' => '模块下载失败,请稍后再试',
 						'valid'   => 0
 					] );
 				}
 				file_put_contents( "addons/{$app['name']}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
-				//删除下载压缩包
-				\Dir::delFile( $file );
 				ajax( [
 					'message' => '模块下载完成,准备开始安装',
 					'config'  => $app,
@@ -323,7 +323,5 @@ class Cloud {
 				] );
 				break;
 		}
-
-
 	}
 }

@@ -26,7 +26,7 @@
                     <!--<li class="er"><a href="">我的超综</a><span class="xia"></span></li>-->
                     <!--<li class="er"><a href="">购物车</a><span class="xb">99</span></li>-->
                     <!--<li><a href="">我的供货站</a></li>-->
-                    <li><a href="{{url('entry/out','','ucenter')}}">退出</a></li>
+                    <li><a href="{{url('entry/out',['from'=>__ROOT__],'ucenter')}}">退出</a></li>
                     <!--<li class="er"><a href="">帮助中心</a><span class="xia"></span></li>-->
                 </ul>
             </div>
@@ -37,7 +37,10 @@
     <!--次顶部菜单单开始-->
     <div class="ciTop">
         <div class="ciTopCenter">
-            <a href="" class="logo"><img src="{{__ROOT__}}/ucenter/default/web/index/img/logo.png" style="width: 125px;"/></a>
+            <a href="{{url('member.index',[],'ucenter')}}" class="logo">
+                <img src="{{__ROOT__}}/ucenter/default/web/index/img/logo.png"
+                                         style="width: 125px;"/>
+            </a>
             <div class="TopMenu">
                 <a href="">网站首页</a>
                 <a href="">模块商店</a>
@@ -84,9 +87,7 @@
                     </div>
                     <!--会员中心结束-->
                     <!--账号管理开始-->
-
                     <foreach from="\Menu::moduleMenus('member')" value="$v">
-
                         <div class="AccountManagementBox">
                             <div class="AccountManagement">
                                 <a href="">{{$v['module']['title']}}</a>
@@ -98,7 +99,6 @@
                                     </li>
                                 </foreach>
                             </ul>
-
                         </div>
                     </foreach>
                     <!--账号管理结束-->
