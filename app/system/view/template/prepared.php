@@ -12,18 +12,18 @@
 		<li role="presentation"><a href="?s=system/template/design">设计新模板</a></li>
 		<li role="presentation"><a href="{{u('shop.lists',['type'=>'template'])}}">模板商城</a>
 	</ul>
-	<h5 class="page-header">已购买的模板</h5>
-	<div id="myApp" ng-controller="ctrl" class="ng-cloak template clearfix" ng-cloak>
-		<div class="thumbnail" ng-repeat="a in cloudApps">
-			<h5>@{{a.manifest.application.title['@cdata']}}(@{{a.manifest.application.name['@cdata']}})</h5>
-			<img class="media-object"
-			     ng-src="{{dirname(c('api.cloud'))}}/packages/theme/@{{a.manifest.application.name['@cdata']}}/@{{a.manifest.application.thumb['@cdata']}}"/>
-			<div class="caption">
-				<a class="btn btn-default btn-xs btn-block"
-				   href="{{u('install')}}&name=@{{a.manifest.application.name['@cdata']}}">安装模板</a>
-			</div>
-		</div>
-	</div>
+<!--	<h5 class="page-header">已购买的模板</h5>-->
+<!--	<div id="myApp" ng-controller="ctrl" class="ng-cloak template clearfix" ng-cloak>-->
+<!--		<div class="thumbnail" ng-repeat="a in cloudApps">-->
+<!--			<h5>@{{a.manifest.application.title['@cdata']}}(@{{a.manifest.application.name['@cdata']}})</h5>-->
+<!--			<img class="media-object"-->
+<!--			     ng-src="{{dirname(c('api.cloud'))}}/packages/theme/@{{a.manifest.application.name['@cdata']}}/@{{a.manifest.application.thumb['@cdata']}}"/>-->
+<!--			<div class="caption">-->
+<!--				<a class="btn btn-default btn-xs btn-block"-->
+<!--				   href="{{u('install')}}&name=@{{a.manifest.application.name['@cdata']}}">安装模板</a>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</div>-->
 	<h5 class="page-header">未安装的本地模板</h5>
 	<div class="template">
 		<foreach from="$locality" value="$m">
@@ -40,15 +40,15 @@
 		</foreach>
 	</div>
 </block>
-<script>
-	require(['util', 'angular'], function (util, angular) {
-		angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
-			$scope.cloudApps = [];
-			$http.get('{{u("getCloudModules")}}').success(function (res) {
-				$scope.cloudApps = res;
-				console.log(res);
-			});
-		}]);
-		angular.bootstrap(document.getElementById('myApp'), ['myApp']);
-	});
-</script>
+<!--<script>-->
+<!--	require(['util', 'angular'], function (util, angular) {-->
+<!--		angular.module('myApp', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {-->
+<!--			$scope.cloudApps = [];-->
+<!--			$http.get('{{u("getCloudModules")}}').success(function (res) {-->
+<!--				$scope.cloudApps = res;-->
+<!--				console.log(res);-->
+<!--			});-->
+<!--		}]);-->
+<!--		angular.bootstrap(document.getElementById('myApp'), ['myApp']);-->
+<!--	});-->
+<!--</script>-->

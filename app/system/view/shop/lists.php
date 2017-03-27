@@ -35,6 +35,9 @@
 			</div>
 		</div>
 		<div class="row" ng-show="field.valid==1">
+            <div class="alert alert-info" style="margin-left: 20px;">
+                应用商店没有模板
+            </div>
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps">
 				<div class="thumbnail">
 					<img ng-src="@{{v.app_preview}}"
