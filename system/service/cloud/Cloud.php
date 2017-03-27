@@ -116,7 +116,6 @@ class Cloud {
 	public function updateHDownloadNum() {
 		$res = Curl::get( $this->url . '/cloud/updateHDownloadNum&build='
 		                  . Db::table( 'cloud' )->where( 'id', 1 )->pluck( 'build' ) );
-
 		return json_decode( $res, true );
 	}
 
@@ -128,30 +127,28 @@ class Cloud {
 		//将旧版本文件进行备份
 		if ( is_file( 'upgrade/hdcms/upgrade_files.php' ) ) {
 			foreach ( include 'upgrade/hdcms/upgrade_files.php' as $f ) {
-				Dir::copyFile( $f['file'], "upgrade/{$current['version']}/$f" );
+				Dir::copyFile( $f['file'], "upgrade/{$current['version']}/{$f['file']}" );
 			}
 		}
 	}
-
+ 
 	/**
 	 * 下载系统更新包
 	 * @return array
 	 */
 	public function downloadUpgradeVersion() {
 		$res = $this->getLastUpgradeList();
+		Dir::create('upgrade/hdcms');
 		if ( $res['valid'] == 1 ) {
 			foreach ( $res['hdcms'] as $d ) {
 				$content = \Curl::get( $d['file'] );
-				file_put_contents( 'hdcms.zip', $content );
-				Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
-				Zip::extract( 'upgrade/hdcms/' );//解压缩到当前目录
-				exit;
+				file_put_contents( 'upgrade/hdcms.zip', $content );
+				Zip::PclZip( 'upgrade/hdcms.zip' );//设置压缩文件名
+				Zip::extract( 'upgrade' );//解压缩到当前目录
 				$this->backup();
-				exit;
 				Dir::move( 'upgrade/hdcms', '.' );
 			}
-			Dir::delFile( 'hdcms.zip' );
-
+			Dir::delFile( 'upgrade/hdcms.zip' );
 			return [ 'valid' => 1, 'message' => '更新包下载完成' ];
 		}
 
