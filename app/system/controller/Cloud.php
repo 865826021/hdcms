@@ -49,6 +49,7 @@ class Cloud {
 
 	//更新HDCMS
 	public function upgrade() {
+		set_time_limit( 0 );
 		switch ( q( 'get.action' ) ) {
 			case 'download':
 				return view( 'download' );

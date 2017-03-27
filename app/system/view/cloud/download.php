@@ -12,7 +12,10 @@
         <i class="fa fa-info-circle"></i>
         新版本的文件已经下载完毕并进行了更新。<br/>
         <i class="fa fa-info-circle"></i>
-        旧版本的文件已经移动到了data/upgrade目录中,如果更新出现异常可以进行手动将文件复制回来恢复到旧版本。
+        旧版本的文件已经移动到了data/upgrade目录中,如果更新出现异常可以进行手动将文件复制回来恢复到旧版本。<br/>
+        <i class="fa fa-info-circle"></i>
+        如果长时间下载失败，可能是你的网速过慢，这时可以使用手动更新处理，
+        查看 <a href="http://www.kancloud.cn/houdunwang/hdcms/294125" target="_blank">手动更新文档</a>
     </div>
     <form action="" class="form-horizontal ng-cloak" ng-cloak id="form" ng-controller="ctrl">
         <div class="panel panel-default" ng-show="!data.valid">
@@ -42,14 +45,18 @@
         angular.module('app', []).controller('ctrl', ['$scope', '$http', function ($scope, $http) {
             $scope.data = {};
             $.get("{{u('upgrade',['action'=>'downloadFile'])}}", {}, function (data) {
-                $scope.data = data;
-                if ($scope.data.valid == 1) {
-                    //更新成功时继续更新数据表
-                    setTimeout(function () {
-                        location.href = "{{u('upgrade',['action'=>'sql'])}}";
-                    }, 500);
+                if (_.isObject(data)) {
+                    $scope.data = data;
+                    if ($scope.data.valid == 1) {
+                        //更新成功时继续更新数据表
+                        setTimeout(function () {
+                            location.href = "{{u('upgrade',['action'=>'sql'])}}";
+                        }, 500);
+                    } else {
+                        util.message(data.message, '', 'warning');
+                    }
                 } else {
-                    util.message(data.message, '', 'warning');
+                    util.message('下载文件失败，可能是网速太慢', '', 'warning');
                 }
                 $scope.$apply();
             }, 'json')
