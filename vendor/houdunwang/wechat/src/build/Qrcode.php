@@ -7,8 +7,8 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
-namespace houdunwang\wechat\build;
 
+namespace houdunwang\wechat\build;
 /**
  * 二维码
  * Class Qrcode
@@ -31,7 +31,6 @@ class Qrcode extends Base {
 				'action_info'    => [ 'scene' => [ 'scene_id' => $scene_id ] ]
 			];
 		} else {
-			//永久二维码
 			//永久二维码只能在1~100000
 			if ( $scene_id < 1 || $scene_id > 100000 ) {
 				$scene_id = 1;
@@ -41,7 +40,7 @@ class Qrcode extends Base {
 
 		$url     = $this->apiUrl . '/cgi-bin/qrcode/create?access_token=' . $this->getAccessToken();
 		$content = $this->curl( $url, json_encode( $data ) );
-		$result  = $this->get( json_decode( $content, true ) );
+		$result  = $this->get( $content, true );
 
 		return isset( $result['ticket'] ) ? $result['ticket'] : false;
 	}
@@ -50,7 +49,7 @@ class Qrcode extends Base {
 	public function getQrcode( $ticket ) {
 		$ticket = urlencode( $ticket );
 
-		return $this->apiUrl . "/cgi-bin/showqrcode?ticket=$ticket";
+		return "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=$ticket";
 	}
 
 }
