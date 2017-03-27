@@ -128,11 +128,7 @@ class Cloud {
 		//将旧版本文件进行备份
 		if ( is_file( 'upgrade/hdcms/upgrade_files.php' ) ) {
 			foreach ( include 'upgrade/hdcms/upgrade_files.php' as $f ) {
-				if ( $f['state'] == 'D' ) {
-					Dir::delFile( $f );
-				} else {
-					Dir::copyFile( $f['file'], "upgrade/{$current['version']}/$f" );
-				}
+				Dir::copyFile( $f['file'], "upgrade/{$current['version']}/$f" );
 			}
 		}
 	}
@@ -148,8 +144,10 @@ class Cloud {
 				$content = \Curl::get( $d['file'] );
 				file_put_contents( 'hdcms.zip', $content );
 				Zip::PclZip( 'hdcms.zip' );//设置压缩文件名
-				Zip::extract( 'upgrade/hdcms' );//解压缩到当前目录
+				Zip::extract( 'upgrade/hdcms/' );//解压缩到当前目录
+				exit;
 				$this->backup();
+				exit;
 				Dir::move( 'upgrade/hdcms', '.' );
 			}
 			Dir::delFile( 'hdcms.zip' );

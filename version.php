@@ -1,5 +1,5 @@
 <?php return array (
-  'version' => 'v2.0.73',
-  'build' => 1490586805,
+  'version' => 'v2.0.74',
+  'build' => 1490587598,
   'logs' => 'no message',
 );
