@@ -22,7 +22,8 @@ class Auth extends HdController {
 		//登录权限验证
 		memberIsLogin();
 		parent::__construct();
-		$this->template = "ucenter/" . v( 'site.info.ucenter_template' ) . '/' . ( IS_MOBILE ? 'mobile' : 'web' );
+		$this->template = "ucenter/" . v( 'site.info.ucenter_template' ) . DIRECTORY_SEPARATOR
+		                  . ( IS_MOBILE ? 'mobile' : 'web' );
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 		//来源页面

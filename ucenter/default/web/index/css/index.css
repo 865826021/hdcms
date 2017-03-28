@@ -218,11 +218,11 @@ body {
   font-size: 14px;
 }
 .CenterMain .CenterBody .BodyLeft .AccountManagementBox ul {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .CenterMain .CenterBody .BodyLeft .AccountManagementBox ul li {
-  height: 45px;
-  line-height: 30px;
+  height: 35px;
+  line-height: 25px;
   text-align: left;
   text-indent: 20px;
 }

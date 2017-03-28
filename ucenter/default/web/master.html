@@ -39,7 +39,7 @@
         <div class="ciTopCenter">
             <a href="{{url('member.index',[],'ucenter')}}" class="logo">
                 <img src="{{__ROOT__}}/ucenter/default/web/index/img/logo.png"
-                                         style="width: 125px;"/>
+                     style="width: 125px;"/>
             </a>
             <div class="TopMenu">
                 <a href="">网站首页</a>
@@ -95,12 +95,30 @@
                             <ul>
                                 <foreach from="$v['menus']" value="$d">
                                     <li>
-                                        <a href="{{$d['url']}}">{{$d['name']}}</a>
+                                        <a href="{{$d['url']}}">
+                                            {{$d['name']}}
+                                        </a>
                                     </li>
                                 </foreach>
                             </ul>
                         </div>
                     </foreach>
+                    <div class="AccountManagementBox">
+                        <div class="AccountManagement">
+                            <a href="">我的资料</a>
+                        </div>
+                        <ul>
+                            <li>
+                                <a href="{{url('info.setting',[],'ucenter')}}">基本资料</a>
+                            </li>
+                            <li>
+                                <a href="{{$d['url']}}">头像修改</a>
+                            </li>
+                            <li>
+                                <a href="{{$d['url']}}">绑定手机</a>
+                            </li>
+                        </ul>
+                    </div>
                     <!--账号管理结束-->
                     <!--我的超客开始-->
                     <!--<div class="MyCKBox">-->
