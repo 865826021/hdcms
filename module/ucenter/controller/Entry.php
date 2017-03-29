@@ -10,6 +10,7 @@
 
 namespace module\ucenter\controller;
 
+use houdunwang\request\Request;
 use houdunwang\wechat\WeChat;
 use module\HdController;
 
@@ -61,6 +62,16 @@ class Entry extends HdController {
 		$this->assignUsernamePlaceHolder();
 
 		return View::make( $this->template . '/entry/register.html' );
+	}
+
+	//注册时发送验证码
+	public function sendCode() {
+		$username = Request::input( 'username' );
+		//发送状态
+		$sendState = false;
+		if ( preg_match( '/^\d{11}$/', $username ) ) {
+			//手机注册时发送短信
+		}
 	}
 
 	//登录

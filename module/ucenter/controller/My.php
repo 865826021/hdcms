@@ -10,7 +10,6 @@
 
 namespace module\ucenter\controller;
 
-use houdunwang\aliyunsms\Sms;
 use houdunwang\request\Request;
 use houdunwang\session\Session;
 use system\model\Member;
@@ -56,15 +55,11 @@ class My extends Auth {
 
 	//发送验证邮件
 	public function sendMail() {
-		$siteName = v( 'site.info.name' );
-		$code     = Tool::rand( 4 );
-		Session::set( 'mailValid', $code );
-		$body   = "绑定邮箱使用的验证码是 " . $code . "<br/>感谢使用 {$siteName} 服务";
-		$status = Mail::send( Request::input( 'email' ), '', $siteName, $body );
+		$status = \Msg::sendMailCode( Request::input( 'email' ) );
 		if ( $status ) {
 			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mail' ) ];
 		} else {
-			$res = [ 'valid' => 0, 'message' => '验证码发送失败，请稍候再试 ' ];
+			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
 		}
 		ajax( $res );
 	}
@@ -75,7 +70,7 @@ class My extends Auth {
 			if ( Request::input( 'code' ) != Session::get( 'mobileValid' ) ) {
 				ajax( [ 'valid' => 0, 'message' => '验证码错误' ] );
 			}
-			$model    = Member::find( v( 'member.info.uid' ) );
+			$model     = Member::find( v( 'member.info.uid' ) );
 			$newMobile = Request::input( 'mobile' );
 			//如果更改了邮箱，检测邮箱是不是已经被别的用户使用
 			if ( $model['mobile'] != $newMobile ) {
@@ -84,7 +79,7 @@ class My extends Auth {
 				}
 			}
 			$model['email_valid'] = 1;
-			$model['mobile']       = $newMobile;
+			$model['mobile']      = $newMobile;
 			if ( $model->save() ) {
 				ajax( [ 'valid' => 1, 'message' => '手机号绑定成功' ] );
 			}
@@ -96,20 +91,11 @@ class My extends Auth {
 
 	//发送手机验证码
 	public function sendMobile() {
-		$code   = Tool::rand( 4 );
-		$mobile = trim( Request::input( 'mobile' ) );
-		if (! preg_match( '/^\d{11}$/', $mobile ) ) {
-			ajax( [ 'valid' => 1, 'message' => '手机号格式错误 ' ] );
-		}
-		Session::set( 'mobileValid', $code );
-		$data['mobile']          = $mobile;
-		$data['template_code']   = 'SMS_12840367';
-		$data['vars']['code']    = $code;
-		$data['vars']['product'] = v( 'site.info.name' );
-		if ( Sms::send( $data ) ) {
+		$status = \Msg::sendMobileCode( Request::input( 'mobile' ) );
+		if ( $status ) {
 			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mobile' ) ];
 		} else {
-			$res = [ 'valid' => 0, 'message' => '验证码发送失败，请稍候再试<br/>' . Sms::getError() ];
+			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
 		}
 		ajax( $res );
 	}

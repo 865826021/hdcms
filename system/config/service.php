@@ -22,7 +22,8 @@ return [
 		'system\service\web\WebProvider',
 		'system\service\navigate\NavigateProvider',
 		'system\service\link\LinkProvider',
-		'system\service\pay\PayProvider'
+		'system\service\pay\PayProvider',
+		'system\service\msg\MsgProvider'
 	],
 
 	/*
@@ -48,6 +49,7 @@ return [
 		'Web'      => 'system\service\web\WebFacade',
 		'Navigate' => 'system\service\navigate\NavigateFacade',
 		'Link'     => 'system\service\link\LinkFacade',
-		'Pay'      => 'system\service\pay\PayFacade'
+		'Pay'      => 'system\service\pay\PayFacade',
+		'Msg'      => 'system\service\msg\MsgFacade'
 	]
 ];

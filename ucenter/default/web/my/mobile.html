@@ -28,7 +28,7 @@
                             </span>
                         </div>
                         <div class="input-group" v-if="times<60">
-                            <input type="text" class="form-control" disabled="disabled">
+                            <input type="text" class="form-control">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button"
                                         disabled="disabled">@{{times}}秒后发送</button>
@@ -63,6 +63,10 @@
             },
             methods: {
                 submit: function () {
+                    if(this.code==''){
+                        util.message('请输入验证码','','warning');
+                        return ;
+                    }
                     axios.post('{{__URL__}}', {mobile: this.info.mobile, code: this.code}).then(function (response) {
                         if (response.data.valid == 1) {
                             util.message(response.data.message, 'refresh', 'success');
@@ -73,6 +77,10 @@
                 },
                 //发送验证码
                 sendMailValid: function () {
+                    if(this.info.mobile==''){
+                        util.message('手机号不能为空','','warning');
+                        return ;
+                    }
                     //发送邮件
                     axios.post('{{url("my.sendMobile")}}', {mobile: this.info.mobile}).then(function (response) {
                         util.message(response.data.message)

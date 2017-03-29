@@ -1,5 +1,5 @@
 <?php return array (
-  'version' => 'v2.0.79',
-  'build' => 1490786510,
-  'logs' => '改版会员中心界面',
+  'version' => 'v2.0.80',
+  'build' => 1490786723,
+  'logs' => 'no message',
 );

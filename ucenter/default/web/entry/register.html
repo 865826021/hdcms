@@ -3,18 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <title>会员注册</title>
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+    <include file="resource/view/common.php"/>
     <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/fonts/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/css/reg.css"/>
 </head>
 <body>
 <h1>{{v("site.info.name")}}</h1>
-<form action="" method="post">
-    <input type="text" class="uname" name="username" placeholder="{{$placeholder}}"/>
-    <input type="password" name="password" class="uname" placeholder="请输入不少于5位的密码" required="required"/>
-    <input type="password" name="cpassword" class="uname" placeholder="请再次输入密码" required="required"/>
-    <button class="btn">注册<i class="iconfont icon-you-copy"></i></button>
+<form action="" method="post" id="app" v-cloak>
+    <input type="text" class="uname" name="username" v-model="field.username" placeholder="{{$placeholder}}"/>
+    <input type="password" name="password" class="uname" v-model="field.password" placeholder="请输入不少于5位的密码"
+           required="required"/>
+    <input type="password" name="cpassword" class="uname" v-model="field.cpassword" placeholder="请再次输入密码"
+           required="required"/>
+
+    <div class="input-group" style="margin-top: 20px;" v-if="times==60">
+        <input type="text" class="form-control" placeholder="请输入验证码" v-model="code">
+        <span class="input-group-btn">
+        <button class="btn btn-default" type="button" @click="sendMailValid">发送验证码</button>
+      </span>
+    </div>
+    <div class="input-group" style="margin-top: 20px;" v-if="times<60">
+        <input type="text" class="form-control" disabled="disabled">
+        <span class="input-group-btn">
+        <button class="btn btn-default" type="button" @click="sendMailValid">@{{times}}秒后发送</button>
+      </span>
+    </div>
+    <button class="btn btns">注册<i class="iconfont icon-you-copy"></i></button>
 </form>
 <p class="remind">已有账号？ <a href="{{url('entry.login',[],'ucenter')}}">点此登录</a></p>
 </body>
 </html>
+<script>
+    require(['vue', 'axios', 'util'], function (Vue, axios, util) {
+        var vm = new Vue({
+            el: '#app',
+            mounted: function () {
+                var times = localStorage.getItem('mailTimes');
+                this.times = times * 1 <= 0 ? 60 : times;
+                if (this.times < 60) {
+                    this.changeTimes();
+                }
+            },
+            data: {
+                field: {username: '', password: '', cpassword: ''},
+                times: 60,
+                setting: JSON.parse('{{json_encode(v("site.setting.register_option"))}}'),
+                info: JSON.parse('{{json_encode(v("member.info"))}}'),
+                code: ''
+            },
+            methods: {
+                submit: function () {
+                    axios.post('{{__URL__}}', {email: this.info.email, code: this.code}).then(function (response) {
+                        if (response.data.valid == 1) {
+                            util.message(response.data.message, 'refresh', 'success');
+                        } else {
+                            util.message(response.data.message, '', 'warning');
+                        }
+                    });
+                },
+                //发送验证码
+                sendMailValid: function () {
+                    if (this.field.username == '') {
+                        util.message('帐号不能为空', '', 'warning');
+                        return;
+                    }
+                    //发送邮件
+                    axios.post('{{url("entry.sendCode")}}', {username: this.field.username}).then(function (response) {
+                        util.message(response.data.message)
+                    });
+                    this.changeTimes();
+                },
+                changeTimes: function () {
+                    var timeId = setInterval(function () {
+                        --vm.times
+                        if (vm.times == 0) {
+                            vm.times = 60;
+                            clearInterval(timeId);
+                        }
+                        localStorage.setItem('mailTimes', vm.times);
+                    }, 1000);
+                }
+            }
+        })
+    })
+</script>
