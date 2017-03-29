@@ -68,7 +68,7 @@ h3 {
 .ng-cloak {
   display: none;
 }
-.v-cloak {
+[v-cloak] {
   display: none;
 }
 .row {

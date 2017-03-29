@@ -78,14 +78,13 @@ class Blueprint {
 			$s = $sql . $n['sql'];
 			Db::execute( $s );
 		}
-
 	}
 
 	//添加字段
 	public function add() {
-		if ( ! Schema::fieldExists( $this->field, $this->noPreTable ) ) {
-			$sql = 'ALTER TABLE ' . $this->table . " ADD ";
-			foreach ( $this->instruction as $n ) {
+		$sql = 'ALTER TABLE ' . $this->table . " ADD ";
+		foreach ( $this->instruction as $n ) {
+			if ( ! Schema::fieldExists( $n['field'], $this->noPreTable ) ) {
 				if ( isset( $n['unsigned'] ) ) {
 					$n['sql'] .= " unsigned ";
 				}
@@ -105,20 +104,32 @@ class Blueprint {
 	}
 
 	public function increments( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " INT PRIMARY KEY AUTO_INCREMENT ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " INT PRIMARY KEY AUTO_INCREMENT "
+		];
 
 		return $this;
 	}
 
 	public function timestamps() {
-		$this->instruction[]['sql'] = "created_at INT(10) ";
-		$this->instruction[]['sql'] = "updated_at INT(10) ";
+		$this->instruction[] = [
+			'field' => 'created_at',
+			'sql'   => " created_at INT(10) "
+		];
+		$this->instruction[] = [
+			'field' => 'updated_at',
+			'sql'   => " updated_at INT(10) "
+		];
 	}
 
 	public function tinyInteger( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " tinyint ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " TINYINT "
+		];
 
 		return $this;
 	}
@@ -138,64 +149,91 @@ class Blueprint {
 	}
 
 	public function smallint( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " SMALLINT ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " SMALLINT "
+		];
 
 		return $this;
 	}
 
 	public function mediumint( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " MEDIUMINT ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " MEDIUMINT "
+		];
 
 		return $this;
 	}
 
 	public function decimal( $field, $len, $de ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " decimal($len,$de) ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " decimal($len,$de) "
+		];
 
 		return $this;
 	}
 
 	public function float( $field, $len, $de ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " float($len,$de) ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " float($len,$de) "
+		];
 
 		return $this;
 	}
 
 	public function double( $field, $len, $de ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " double($len,$de) ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " double($len,$de) "
+		];
 
 		return $this;
 	}
 
 	public function char( $field, $len = 255 ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " char($len) ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " char($len) "
+		];
 
 		return $this;
 	}
 
 	public function string( $field, $len = 255 ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " VARCHAR($len) ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " VARCHAR($len) "
+		];
 
 		return $this;
 	}
 
 	public function text( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " TEXT ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " TEXT "
+		];
 
 		return $this;
 	}
 
 	public function mediumtext( $field ) {
-		$this->field                = $field;
-		$this->instruction[]['sql'] = $field . " MEDIUMTEXT ";
+		$this->field         = $field;
+		$this->instruction[] = [
+			'field' => $field,
+			'sql'   => $field . " MEDIUMTEXT "
+		];
 
 		return $this;
 	}
@@ -230,7 +268,9 @@ class Blueprint {
 	 * @param $field
 	 */
 	public function dropField( $field ) {
-		$sql = "ALTER TABLE " . $this->table . " DROP " . $field;
-		Db::execute( $sql );
+		if ( Schema::fieldExists( $field, $this->noPreTable ) ) {
+			$sql = "ALTER TABLE " . $this->table . " DROP " . $field;
+			Db::execute( $sql );
+		}
 	}
 }
