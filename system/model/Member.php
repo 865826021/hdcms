@@ -9,7 +9,7 @@
  */
 class Member extends Common {
 	protected $table = 'member';
-	protected $allowFill=['*'];
+	protected $allowFill = [ '*' ];
 	protected $filter = [
 		[ 'password', self::EMPTY_FILTER, self::MODEL_BOTH ],
 	];
@@ -67,5 +67,9 @@ class Member extends Common {
 
 	public function checkUid( $field, $value, $params, $data ) {
 		return Db::table( $this->table )->where( 'uid', $value )->where( 'siteid', SITEID )->first() ? true : false;
+	}
+
+	public function group() {
+		return $this->hasOne( MemberAuth::class, 'uid', 'uid' );
 	}
 }

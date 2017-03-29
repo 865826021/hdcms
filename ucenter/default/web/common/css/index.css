@@ -137,8 +137,8 @@ body {
   box-sizing: border-box;
 }
 .CenterMain .CenterBody .BodyLeft .HeaerTop .portrait img {
-  height: 50px;
   width: 50px;
+  height: 50px;
 }
 .CenterMain .CenterBody .BodyLeft .HeaerTop .name {
   width: 50px;

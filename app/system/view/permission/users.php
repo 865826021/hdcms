@@ -84,23 +84,24 @@
 
 <script>
 	//更改角色
-	$(function () {
-		$(":radio").change(function () {
-			var role = $(this).val();
-			var uid = $(this).parents('td').eq(0).prev().prev().text();
-			$.post("?s=system/permission/changeRole&siteid={{$_GET['siteid']}}", {
-				role: role,
-				uid: uid
-			}, function (response) {
-				if (response.valid) {
-					util.message(response.message, '', 'success');
-				} else {
-					util.message(response.message, '', 'error');
-				}
-			}, 'json');
-		});
-	});
-
+    require(['jquery'], function ($) {
+        $(function () {
+            $(":radio").change(function () {
+                var role = $(this).val();
+                var uid = $(this).parents('td').eq(0).prev().prev().text();
+                $.post("?s=system/permission/changeRole&siteid={{$_GET['siteid']}}", {
+                    role: role,
+                    uid: uid
+                }, function (response) {
+                    if (response.valid) {
+                        util.message(response.message, '', 'success');
+                    } else {
+                        util.message(response.message, '', 'error');
+                    }
+                }, 'json');
+            });
+        });
+    });
 	//选择帐号操作员
 	function getUsers() {
 		require(['hdcms', 'jquery', 'util'], function (hdcms, $, util) {

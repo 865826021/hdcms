@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>会员登录</title>
     <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/fonts/iconfont.css"/>
-    <link rel="stylesheet" type="text/css" href="{{template_url()}}/login/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/fonts/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/css/login.css"/>
 </head>
 <body>
 <h1>{{v("site.info.name")}}</h1>
-<form action="" method="post">
+<form action="" method="post" id="app">
     <if value="v('site.setting.username_login')">
         <input type="text" class="uname" name="username" placeholder="邮箱/手机号"/>
         <div class="pwd">
@@ -29,3 +29,11 @@
 <p class="remind">还没有帐号？ <a href="{{url('entry.register')}}">注册新帐号</a></p>
 </body>
 </html>
+<script>
+    function post(event){
+        event.preventDefault();
+        require(['util'],function(util){
+
+        })
+    }
+</script>

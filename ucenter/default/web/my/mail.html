@@ -1,0 +1,82 @@
+<extend file='ucenter/__UCENTER_TEMPLATE__/web/master.html'/>
+<block name="content">
+    <div class="alert alert-info">
+        如果修改邮箱，登录将使用新邮箱登录。原有邮箱将废弃，请慎重设置。
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">绑定邮箱</h4>
+        </div>
+        <div class="panel-body">
+            <form action="" method="post" class="form-horizontal" id="app" @submit.prevent="submit">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">邮箱</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="mail">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">验证</label>
+                    <div class="col-sm-10">
+                        <div class="input-group" v-if="times==6">
+                            <input type="text" class="form-control" placeholder="请输入邮箱中的验证码">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success" type="button" @click="sendMailValid">发送验证码</button>
+                            </span>
+                        </div>
+                        <div class="input-group" v-if="times<6">
+                            <input type="text" class="form-control" disabled="disabled">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button"
+                                        disabled="disabled">@{{times}}秒后发送</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <button class="btn btn-primary">保存资料</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</block>
+<script>
+    require(['vue','axios'], function (Vue,axios) {
+        var vm = new Vue({
+            el: '#app',
+            mounted: function () {
+                var times = localStorage.getItem('mailTimes');
+                this.times = times * 1 <=0 ? 6 : times;
+                if (this.times < 6) {
+                    this.sendMailValid();
+                }
+            },
+            data: {
+                times: 6,
+                mail:"{{v('member.info.email')}}"
+            },
+            methods: {
+                submit: function () {
+
+                },
+                //发送验证码
+                sendMailValid: function () {
+                    var timeId = setInterval(function () {
+                        --vm.times
+                        if (vm.times == 0) {
+                            vm.times = 6;
+                            clearInterval(timeId);
+                        }
+                        localStorage.setItem('mailTimes', vm.times);
+                    }, 1000);
+                    //发送邮件
+                    axios.post('{{url("my.sendMail")}}',{a:33,mail:this.mail}).then(function(response){
+
+                    })
+                }
+            }
+        })
+    })
+</script>

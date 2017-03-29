@@ -27,7 +27,7 @@ class Member extends Auth {
 		}
 		View::with( [ 'data' => $data ] );
 
-		return view( $this->template . '/index.html' );
+		return view( $this->template . '/member/index.html' );
 
 	}
 }

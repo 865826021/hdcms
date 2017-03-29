@@ -9,6 +9,24 @@ function siteid() {
 }
 
 /**
+ * 头像
+ *
+ * @param $file
+ * @param string $pic 图片不存在
+ *
+ * @return string
+ */
+function icon( $file, $pic = 'resource/images/user.jpg' ) {
+	if ( preg_match( '@^http@i', $file ) ) {
+		return $file;
+	} elseif ( empty( $file ) || ! is_file( $file ) ) {
+		return __ROOT__ . '/' . $pic;
+	} else {
+		return __ROOT__ . '/' . $file;
+	}
+}
+
+/**
  * 站点缓存处理
  * 和站点有关的数据都要使用这个函数处理
  * 就是所有与站点相关的缓存数据必须使用这个函数
@@ -75,7 +93,7 @@ function authIdentity( $tag ) {
 }
 
 //验证会员是否登录
-function memberIsLogin( $return ) {
+function memberIsLogin( $return = false ) {
 	return \Member::isLogin( $return );
 }
 

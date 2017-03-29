@@ -3,9 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <title>会员中心</title>
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{__ROOT__}}/ucenter/default/web/index/css/index.css"/>
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{__ROOT__}}/ucenter/default/web/common/css/index.css"/>
     <include file="resource/view/common.php"/>
 </head>
 <body>
@@ -38,7 +36,7 @@
     <div class="ciTop">
         <div class="ciTopCenter">
             <a href="{{url('member.index',[],'ucenter')}}" class="logo">
-                <img src="{{__ROOT__}}/ucenter/default/web/index/img/logo.png"
+                <img src="{{__ROOT__}}/ucenter/default/web/common/img/logo.png"
                      style="width: 125px;"/>
             </a>
             <div class="TopMenu">
@@ -60,7 +58,7 @@
                     <div class="HeaerTop">
                         <!--左侧头像开始-->
                         <div class="portrait">
-                            <a href=""><img src="{{__ROOT__}}/ucenter/default/web/index/img/touxiang.png"/></a>
+                            <a href=""><img src="{{icon(v('member.info.icon'))}}"/></a>
                         </div>
                         <!--左侧头像结束-->
                         <!--右侧文字部分开始-->
@@ -73,9 +71,11 @@
                     <div class="HeaerBottom">
                         <a href="" class=""> <span class="glyphicon glyphicon-phone"></span></a>
                         <a href="" class=""><span class="glyphicon glyphicon-envelope"></span></a>
-                        <a href="" class="active"><span class="glyphicon glyphicon-envelope"></span></a>
-                        <!--<a href="" class=""><span class="glyphicon glyphicon-list-alt"></span></a>-->
-                        <a href="" class=""><span class="glyphicon glyphicon-lock"></span></a>
+                        <if value="v('member.info.icon')">
+                            <a href="#" class="active"><span class="glyphicon glyphicon-picture"></span></a>
+                            <else/>
+                            <a href="#" class=""><span class="glyphicon glyphicon-picture"></span></a>
+                        </if>
                     </div>
                 </div>
                 <!--头像部分结束-->
@@ -109,13 +109,13 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{{url('info.setting',[],'ucenter')}}">基本资料</a>
+                                <a href="{{url('my.info',[],'ucenter')}}">基本资料</a>
                             </li>
                             <li>
-                                <a href="{{$d['url']}}">头像修改</a>
+                                <a href="{{url('my.mobile',[],'ucenter')}}">手机验证</a>
                             </li>
                             <li>
-                                <a href="{{$d['url']}}">绑定手机</a>
+                                <a href="{{url('my.mail',[],'ucenter')}}">邮箱验证</a>
                             </li>
                         </ul>
                     </div>

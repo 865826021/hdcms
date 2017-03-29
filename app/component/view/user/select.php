@@ -29,7 +29,7 @@
 <script>
     //加载用户
     function loadUser(username) {
-        $.post('?s=system/component/users&siteid={{SITEID}}&filterUid={{Request::get("filterUid")}}&username=' + (username ? username : ''), function (data) {
+        $.post('?s=component/user/select&siteid={{SITEID}}&filterUid={{Request::get("filterUid")}}&username=' + (username ? username : ''), function (data) {
             var tr = '';
             $(data).each(function (i) {
                 tr += '<tr>\
@@ -47,14 +47,16 @@
     loadUser();
     //选择或取消用户
     function select(obj) {
-        if ($(obj).hasClass('btn-default')) {
-            $(obj).attr('class', 'btn btn-primary');
-            //选择单一用户时,关闭模态框
-            if (single*1) {
-                $("#getSingleUser").modal('hide');
+        require(['jquery'], function ($) {
+            if ($(obj).hasClass('btn-default')) {
+                $(obj).attr('class', 'btn btn-primary');
+                //选择单一用户时,关闭模态框
+                if (single * 1) {
+                    $("#getSingleUser").modal('hide');
+                }
+            } else {
+                $(obj).attr('class', 'btn btn-default');
             }
-        } else {
-            $(obj).attr('class', 'btn btn-default');
-        }
+        })
     }
 </script>

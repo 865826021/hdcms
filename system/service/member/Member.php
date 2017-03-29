@@ -33,6 +33,7 @@ class Member extends Common {
 			$user          = [];
 			$user['info']  = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
 			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
+			$user['auth'] = Db::table( 'member_auth' )->where( 'id', $user['info']['group_id'] )->first();
 			v( 'member', $user );
 		}
 	}

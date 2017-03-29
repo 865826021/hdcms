@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
 namespace houdunwang\request\build;
 
 //请求处理
@@ -16,7 +17,7 @@ use houdunwang\cookie\Cookie;
 use houdunwang\session\Session;
 
 class Base {
-	protected $items = [ ];
+	protected $items = [];
 
 	//启动组件
 	public function __construct() {
@@ -24,9 +25,8 @@ class Base {
 		if ( ! IS_CLI ) {
 			//post数据解析
 			if ( empty( $_POST ) ) {
-				parse_str( file_get_contents( 'php://input' ), $_POST );
+//				parse_str( file_get_contents( 'php://input' ), $_POST );
 			}
-
 			defined( 'NOW' ) or define( 'NOW', $_SERVER['REQUEST_TIME'] );
 			defined( 'MICROTIME' ) or define( 'MICROTIME', $_SERVER['REQUEST_TIME_FLOAT'] );
 			defined( 'IS_GET' ) or define( 'IS_GET', $_SERVER['REQUEST_METHOD'] == 'GET' );
@@ -48,6 +48,11 @@ class Base {
 		$this->items['GLOBALS'] = $GLOBALS;
 		$this->items['SESSION'] = Session::all();
 		$this->items['COOKIE']  = Cookie::all();
+		$input                  = file_get_contents( 'php://input' );
+		if ( ! $input = json_decode( $input, true ) ) {
+			$this->items['INPUT'] = parse_str( $input, $input );
+		}
+		$this->items['INPUT'] = $input;
 	}
 
 	/**
@@ -67,7 +72,7 @@ class Base {
 	 *
 	 * @return null
 	 */
-	public function query( $name, $value = null, $method = [ ] ) {
+	public function query( $name, $value = null, $method = [] ) {
 		$exp = explode( '.', $name );
 		if ( count( $exp ) == 1 ) {
 			array_unshift( $exp, 'request' );

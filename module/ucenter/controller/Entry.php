@@ -60,7 +60,7 @@ class Entry extends HdController {
 		}
 		$this->assignUsernamePlaceHolder();
 
-		return View::make( $this->template . '/register.html' );
+		return View::make( $this->template . '/entry/register.html' );
 	}
 
 	//登录
@@ -75,7 +75,7 @@ class Entry extends HdController {
 		}
 		$this->assignUsernamePlaceHolder();
 
-		return view( $this->template . '/login.html' );
+		return view( $this->template . '/entry/login.html' );
 	}
 
 	//验证码
