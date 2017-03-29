@@ -94,15 +94,16 @@ class Setting {
 			$this->db->save();
 			message( '配置保存成功', 'refresh', 'success' );
 		}
-		$sms = $this->db->where('siteid',siteid())->pluck('sms');
-		if(empty($sms)){
-			$sms ="{
+		$sms = $this->db->where( 'siteid', siteid() )->pluck( 'sms' );
+		if ( empty( $sms ) ) {
+			$sms = "{
                     //服务商
                     provider: 'aliyuncms',
                     aliyuncms: {accessKey: '11', accessSecret: '', sign: ''}
                 }";
 		}
-		return view()->with('sms',$sms);
+
+		return view()->with( 'sms', $sms );
 	}
 
 	//支付设置

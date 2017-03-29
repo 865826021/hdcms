@@ -58,10 +58,50 @@ class My extends Auth {
 		$siteName = v( 'site.info.name' );
 		$code     = Tool::rand( 4 );
 		Session::set( 'mailValid', $code );
-		$body   = "你绑定的邮箱使用的验证码是 " . $code . "<br/>感谢使用 {$siteName} 服务";
+		$body   = "绑定邮箱使用的验证码是 " . $code . "<br/>感谢使用 {$siteName} 服务";
 		$status = Mail::send( Request::input( 'email' ), '', $siteName, $body );
 		if ( $status ) {
 			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mail' ) ];
+		} else {
+			$res = [ 'valid' => 0, 'message' => '验证码发送失败，请稍候再试 ' ];
+		}
+		ajax( $res );
+	}
+
+	//绑定手机
+	public function mobile() {
+		if ( IS_POST ) {
+			if ( Request::input( 'code' ) != Session::get( 'mailValid' ) ) {
+				ajax( [ 'valid' => 0, 'message' => '验证码错误' ] );
+			}
+			$model    = Member::find( v( 'member.info.uid' ) );
+			$newEmail = Request::input( 'email' );
+			//如果更改了邮箱，检测邮箱是不是已经被别的用户使用
+			if ( $model['email'] != $newEmail ) {
+				if ( Member::where( 'email', $newEmail )->where( 'siteid', SITEID )->get() ) {
+					ajax( [ 'valid' => 0, 'message' => "{$newEmail} 邮箱已经被其他帐号使用" ] );
+				}
+			}
+			$model['email_valid'] = 1;
+			$model['email']       = $newEmail;
+			if ( $model->save() ) {
+				ajax( [ 'valid' => 1, 'message' => '邮箱绑定成功' ] );
+			}
+		}
+		View::with( 'user', v( 'member.info' ) );
+
+		return View::make( $this->template . '/my/mobile.html' );
+	}
+
+	//发送手机验证码
+	public function sendMobile() {
+		$siteName = v( 'site.info.name' );
+		$code     = Tool::rand( 4 );
+		Session::set( 'mobileValid', $code );
+		$body   = "绑定手机使用的验证码是 " . $code . "<br/>感谢使用 {$siteName} 服务";
+		$status = Mail::send( Request::input( 'email' ), '', $siteName, $body );
+		if ( $status ) {
+			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mobile' ) ];
 		} else {
 			$res = [ 'valid' => 0, 'message' => '验证码发送失败，请稍候再试 ' ];
 		}
