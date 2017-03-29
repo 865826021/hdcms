@@ -70,6 +70,8 @@ class Site extends Common {
 		c( 'wechat', array_merge( c( 'wechat' ), $config ) );
 		//设置邮箱配置
 		c( 'mail', v( 'site.setting.smtp' ) );
+		//短信配置
+		c( 'aliyunsms', v( 'site.setting.sms.aliyun' ) );
 		//会员中心默认风格
 		define( '__UCENTER_TEMPLATE__', v( 'site.info.ucenter_template' ) );
 
@@ -232,6 +234,7 @@ class Site extends Common {
 		$setting ['oauth_login']     = json_decode( $setting['oauth_login'], true );
 		$setting ['register_option'] = json_decode( $setting['register_option'], true );
 		$setting ['smtp']            = json_decode( $setting['smtp'], true );
+		$setting ['sms']             = json_decode( $setting['sms'], true );
 		$setting ['pay']             = json_decode( $setting['pay'], true );
 		$setting ['quickmenu']       = $setting['quickmenu'];
 		$data['setting']             = $setting;

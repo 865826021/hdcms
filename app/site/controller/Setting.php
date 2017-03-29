@@ -1,5 +1,6 @@
 <?php namespace app\site\controller;
 
+use houdunwang\aliyunsms\Sms;
 use houdunwang\request\Request;
 use system\model\SiteSetting;
 
@@ -90,17 +91,22 @@ class Setting {
 	//邮件通知设置
 	public function mobile() {
 		if ( IS_POST ) {
-			$this->db['sms'] = Request::post( 'sms' );
+			$this->db['sms'] = Request::post( 'data' );
 			$this->db->save();
+			\Site::updateCache();
 			message( '配置保存成功', 'refresh', 'success' );
 		}
 		$sms = $this->db->where( 'siteid', siteid() )->pluck( 'sms' );
 		if ( empty( $sms ) ) {
-			$sms = "{
-                    //服务商
-                    provider: 'aliyuncms',
-                    aliyuncms: {accessKey: '11', accessSecret: '', sign: ''}
-                }";
+			$sms = [
+				'provider' => 'aliyun',
+				'aliyun'   => [
+					'accessKey'    => '',
+					'accessSecret' => '',
+					'sign'         => ''
+				]
+			];
+			$sms = json_encode( $sms, JSON_UNESCAPED_UNICODE );
 		}
 
 		return view()->with( 'sms', $sms );
