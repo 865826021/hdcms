@@ -61,7 +61,7 @@ class Tag {
 		foreach(\$_result as \$field){
 			\$field['category']=\$_category->getByCid(\$field['cid']);
 			if(empty(\$field['linkurl'])){
-				\$field['url'] = Link::get(\$field['category']['html_content'],\$field);
+				\$field['url'] = Link::content(\$field);
 			}else{
 				\$field['url']=\$field['linkurl'];
 			}
@@ -96,7 +96,7 @@ str;
 		foreach(\$_result as \$field){
 			\$field['category']=\$category;
 			if(empty(\$field['linkurl'])){
-				\$field['url'] = Link::get(\$category['html_content'],\$field);
+				\$field['url'] = Link::content(\$field);
 			}else{
 				\$field['url']=\$field['linkurl'];
 			}
@@ -245,13 +245,13 @@ str;
                  \$categoryData = Db::table('web_category')->where('siteid',SITEID)->where('status',1)->get()?:[];
                  \$categoryData = \Arr::channelLevel(\$categoryData,0,'','cid','pid');
                  foreach(\$categoryData as \$d){
-                        \$d['url']=Link::get(\$d['html_category'],\$d);
+                        \$d['url']=Link::category(\$d);
                         echo "<dt><a href='{\$d['url']}'>{\$d['catname']}</a></dt>";
                         if(!empty(\$d['_data'])){
                             echo '<dd>';
                             foreach(\$d['_data'] as \$_m){
                                 if(empty(\$_m['linkurl'])){
-                                    \$_m['url']=Link::get(\$_m['html_category'],\$_m);
+                                    \$_m['url']=Link::category(\$_m);
                                 }else{
                                     \$_m['url']=\$_m['linkurl'];
                                 }
@@ -296,7 +296,7 @@ foreach(\$_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
         \$field['page']=1;
-        \$field['url']=Link::get(\$field['html_category'],\$field);
+        \$field['url']=Link::category(\$field);
     }else{
          \$field['url']=\$field['linkurl'];
     }
@@ -318,7 +318,7 @@ foreach(\$_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
         \$field['page']=1;
-        \$field['url']=Link::get(\$field['html_category'],\$field);
+        \$field['url']=Link::category(\$field);
     }else{
         \$field['url'] = \$field['linkurl'];
     }
@@ -348,7 +348,7 @@ foreach(\$_son_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
         \$field['page']=1;
-        \$field['url']=Link::get(\$field['html_category'],\$field);
+        \$field['url']=Link::category(\$field);
     }else{
         \$field['url'] = \$field['linkurl'];
     }
@@ -372,7 +372,7 @@ str;
   \$_categorys = array_reverse(Arr::parentChannel(\$_categorys,\$_cid)?:[]);
   foreach(\$_categorys as \$_cat){?>
 	  <li>
-	    <a href="{{Link::get(\$_cat['html_category'],\$_cat)}}">{{\$_cat['catname']}}</a>
+	    <a href="{{Link::category(\$_cat)}}">{{\$_cat['catname']}}</a>
 	    <?php if(isset(\$hdcms['category'])){echo '{$separator}';}?>
 	  </li>
   <?php }?>
@@ -412,9 +412,9 @@ str;
 	
 		\$db->whereIN('cid',\$cid)->where('mid',\$_category['mid']);
         //栏目链接用于分页
-        \$_category['url']=Link::get(\$d['html_category'],\$_category);
+        \$_category['url']=Link::category(\$_category);
         //分页地址设置
-        houdunwang\page\Page::url(Link::get(\$_category['html_category'],\$_category));
+        houdunwang\page\Page::url(Link::category(\$_category,null));
         \$_data = \$db->paginate($row);
         foreach(\$_data as \$field){
             \$field['category']=\$_category;
@@ -424,7 +424,7 @@ str;
             }
             //文章链接
             if(empty(\$field['linkurl'])){
-                \$field['url'] = Link::get(\$_category['html_content'],\$field);
+                \$field['url'] = Link::content(\$field);
             }else{
                 \$field['url']=\$field['linkurl'];
             }

@@ -27,3 +27,22 @@ Route::any( 'admin', function () {
 	Session::set( 'system.login', 'admin' );
 	action( 'system.entry.login' );
 } );
+
+/**
+ * 文章模块路由规则
+ */
+Route::alias( 'article{siteid}-{cid}-{page}.html',
+	'm=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}' )
+->where([
+	'siteid'=>'\d+',
+	'cid'=>'\d+',
+	'page'=>'\d+'
+]);
+Route::alias( 'article{siteid}-{aid}-{cid}-{mid}.html',
+	'm=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}&mid={mid}' )
+	->where([
+		'siteid'=>'\d+',
+		'aid'=>'\d+',
+		'cid'=>'\d+',
+		'mid'=>'\d+'
+	]);;
