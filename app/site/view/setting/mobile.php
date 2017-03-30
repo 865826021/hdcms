@@ -21,7 +21,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">accessKey</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="field.aliyun.accessKey">
+                        <input type="password" class="form-control" v-model="field.aliyun.accessKey">
                         <span class="help-block">
                            登录阿里云后台管理平台查看
                         </span>
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label">accessSecret</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="field.aliyun.accessSecret">
+                        <input type="password" class="form-control" v-model="field.aliyun.accessSecret">
                         <span class="help-block">
                             登录阿里云后台管理平台查看
                         </span>

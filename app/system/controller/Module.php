@@ -68,7 +68,7 @@ class Module {
 	public function prepared() {
 		$modules = Modules::lists( 'name' );
 		//本地模块
-		$locality = [ ];
+		$locality = [];
 		foreach ( Dir::tree( 'addons' ) as $d ) {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/package.json' ) ) {
 				$config = json_decode( file_get_contents( $d['path'] . '/package.json' ), true );
@@ -85,7 +85,7 @@ class Module {
 	//格式化package.json数据
 	protected function formatPackageJson( $data ) {
 		if ( empty( $data['web']['entry']['title'] ) || empty( $data['web']['entry']['do'] ) ) {
-			$data['web']['entry'] = [ ];
+			$data['web']['entry'] = [];
 		}
 		//桌面会员中心
 		foreach ( $data['web']['member'] as $k => $d ) {
@@ -127,6 +127,50 @@ class Module {
 		}
 
 		return $data;
+	}
+
+	//重新设计（重构旧模块)
+	public function resetDesign() {
+		if ( IS_POST ) {
+			//模块结构数据
+			$data = $this->formatPackageJson( json_decode( Request::post( 'data' ), true ) );
+			//字段基本检测
+			Validate::make( [
+				[ 'title', 'required', '模块名称不能为空' ],
+				[ 'industry', 'required', '请选择行业类型' ],
+				[ 'name', 'regexp:/^[a-z]+$/', '模块标识必须以英文小写字母构成' ],
+				[ 'version', 'regexp:/^[\d\.]+$/i', '请设置版本号, 版本号只能为数字或小数点' ],
+				[ 'resume', 'required', '模块简述不能为空' ],
+				[ 'detail', 'required', '请输入详细介绍' ],
+				[ 'author', 'required', '作者不能为空' ],
+				[ 'url', 'required', '请输入发布url' ],
+				[ 'compatible_version', 'required', '请选择兼容版本' ],
+				[ 'thumb', 'required', '模块缩略图不能为空' ],
+				[ 'preview', 'required', '模块封面图不能为空' ],
+			], $data );
+			//模块标识转小写
+			$data['name'] = strtolower( $data['name'] );
+			$dir          = "addons/" . $data['name'];
+			//系统关键字不允许定义为模块标识
+			if ( in_array( $data['name'], [
+				'user',
+				'system',
+				'houdunwang',
+				'houdunyun',
+				'hdphp',
+				'hd',
+				'hdcms',
+				'xj'
+			] ) ) {
+				message( '模块已经存在,请更改模块标识', '', 'error' );
+			}
+			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
+			message( '模块修改成功', 'prepared' );
+		}
+		$config = file_get_contents( "addons/{$_GET['module']}/package.json" );
+		View::with( 'config', $config );
+
+		return view();
 	}
 
 	//设计新模块
@@ -218,7 +262,7 @@ class Module {
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
 			//权限标识处理
-			$permissions = [ ];
+			$permissions = [];
 			foreach ( (array) preg_split( '/\n/', $config['permissions'] ) as $v ) {
 				$d = explode( ':', $v );
 				if ( count( $d ) == 2 ) {
@@ -253,7 +297,7 @@ class Module {
 			//执行模块安装程序
 			$class = 'addons\\' . $config['name'] . '\system\Setup';
 			if ( class_exists( $class ) && method_exists( $class, 'install' ) ) {
-				call_user_func_array( [ new $class, 'install' ], [ ] );
+				call_user_func_array( [ new $class, 'install' ], [] );
 			}
 			//添加模块动作表数据
 			if ( ! empty( $config['web']['entry'] ) ) {
@@ -306,7 +350,7 @@ class Module {
 				foreach ( $package as $p ) {
 					$p['modules'] = json_decode( $p['modules'], true );
 					if ( empty( $p['modules'] ) ) {
-						$p['modules'] = [ ];
+						$p['modules'] = [];
 					}
 					$p['modules'][] = $module;
 					$p['modules']   = json_encode( array_unique( $p['modules'] ), JSON_UNESCAPED_UNICODE );
