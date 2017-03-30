@@ -22,8 +22,6 @@ CREATE TABLE `hd_web_category` (
   `index_tpl` varchar(300) NOT NULL DEFAULT '' COMMENT '封面模板',
   `category_tpl` varchar(300) NOT NULL DEFAULT '' COMMENT '栏目页模板',
   `content_tpl` varchar(300) NOT NULL DEFAULT '' COMMENT '内容页模板',
-  `html_category` varchar(300) NOT NULL DEFAULT '' COMMENT '栏目表态规则',
-  `html_content` varchar(300) NOT NULL DEFAULT '' COMMENT '内容静态规则',
   PRIMARY KEY (`cid`),
   KEY `siteid` (`siteid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='文章分类';

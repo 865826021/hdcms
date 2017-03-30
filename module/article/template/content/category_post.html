@@ -9,7 +9,6 @@
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="active"><a href="#tab1" role="tab" data-toggle="tab">基本信息</a></li>
 			<li><a href="#tab2" role="tab" data-toggle="tab">模板设置</a></li>
-			<li><a href="#tab3" role="tab" data-toggle="tab">伪静态设置</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="active tab-pane fade in" id="tab1">
@@ -121,38 +120,6 @@
 									<button class="btn btn-default" type="button" ng-click="template('content_tpl')">选择模板</button>
 								  </span>
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tab-pane fade" id="tab3">
-				<div class="panel panel-default">
-					<div class="panel-body">
-						<div class="form-group">
-							<label class="col-sm-2 control-label">栏目静态规则</label>
-							<div class="col-sm-8">
-                                <select class="form-control" ng-model="field.html_category">
-                                    <option value="article{siteid}-{cid}-{page}.html"
-                                            ng-selected="'article{siteid}-{cid}-{page}.html'==field.html_category">article1-1-2.html(article{siteid}-{cid}-{page}.html)
-                                    </option>
-                                    <option value="article{siteid}_{cid}_{page}.html"
-                                            ng-selected="'article{siteid}_{cid}_{page}.html'==field.html_category">article1_1_2.html(article{siteid}_{cid}_{page}.html)
-                                    </option>
-                                </select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label">文章静态规则</label>
-							<div class="col-sm-8">
-                                <select class="form-control" ng-model="field.html_content">
-                                    <option value="article{siteid}-{aid}-{cid}-{mid}.html"
-                                            ng-selected="'article{siteid}-{aid}-{cid}-{mid}.html'==field.html_content">article1-1-1-2.html(article{siteid}-{aid}-{cid}-{mid}.html)
-                                    </option>
-                                    <option value="article{siteid}_{aid}-{cid}-{mid}.html}"
-                                            ng-selected="'article{siteid}_{aid}-{cid}-{mid}.html'==field.html_content">article1_1_1_2.html(article{siteid}_{aid}-{cid}-{mid}.html)
-                                    </option>
-                                </select>
 							</div>
 						</div>
 					</div>
