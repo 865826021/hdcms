@@ -9,7 +9,7 @@
                     </div>
                     <div class="panel-body" style="padding: 0px;">
                         <select class="form-control" onchange="selectCategory(this)" multiple="multiple" size="29"
-                                style="border: none;">
+                                style="border: none;font-family: 'Microsoft Yahei', '微软雅黑', Helvetica">
                             <foreach from="$category" value="$v">
                                 <if value="$v['ishomepage']">
                                     <option cid="{{$v['cid']}}" mid="{{$v['mid']}}">{{$v['catname']}}(封)</option>
