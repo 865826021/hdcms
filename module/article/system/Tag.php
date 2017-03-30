@@ -389,10 +389,12 @@ str;
 		$row       = isset( $attr['row'] ) ? $attr['row'] : 10;
 		$ishot     = isset( $attr['ishot'] ) ? 1 : 0;
 		$iscommend = isset( $attr['iscommend'] ) ? 1 : 0;
+		$sub_category = isset( $attr['sub_category'] ) ? 1 : 0;
 		$php       = <<<str
         <?php
+        \$cid = [Request::get('cid')];
         \$db = new module\article\model\WebContent();
-        \$db->where('cid',Request::get('cid'))->where('siteid',SITEID);
+        \$db->where('siteid',SITEID);
         //头条
         if($ishot){
             \$db->where('ishot',1);
@@ -400,9 +402,16 @@ str;
         if($iscommend){
             \$db->where('iscommend',1);
         }
-        //栏目数据
+        //当前栏目数据
         \$_category = Db::table('web_category')->where('cid',Request::get('cid'))->where('siteid',SITEID)->first();
-        //栏目链接
+        //包含子栏目
+		if($sub_category){
+			\$_sub_category = array_keys(Arr::channelList(Db::table('web_category')->get(),\$cid));
+			\$cid = array_merge(\$cid,\$_sub_category);
+		}
+	
+		\$db->whereIN('cid',\$cid)->where('mid',\$_category['mid']);
+        //栏目链接用于分页
         \$_category['url']=Link::get(\$d['html_category'],\$_category);
         //分页地址设置
         houdunwang\page\Page::url(Link::get(\$_category['html_category'],\$_category));

@@ -9,43 +9,72 @@
 </head>
 <body>
 <h1>{{v("site.info.name")}}</h1>
-<form action="" method="post">
-    <input type="text" class="uname" name="username" placeholder="{{$placeholder}}"/>
+<form action="" method="post" onsubmit="post(event)">
+    <input type="text" class="uname" required="required" name="username" placeholder="{{$placeholder}}"/>
     <input type="password" name="password" class="uname" placeholder="请输入不少于5位的密码"
            required="required"/>
     <input type="password" name="cpassword" class="uname" placeholder="请再次输入密码"
            required="required"/>
-    <div class="input-group" style="margin-top: 20px;">
-        <input type="text" class="form-control" placeholder="请输入验证码" name="code">
-        <span class="input-group-btn">
+    <if value="$validCode">
+        <div class="input-group" style="margin-top: 20px;">
+            <input type="text" class="form-control" placeholder="请输入验证码" name="valid_code" required="required">
+            <span class="input-group-btn">
         <button class="btn btn-default" type="button" id="sendValidCode">发送验证码</button>
       </span>
-    </div>
+        </div>
+    </if>
     <button class="btn btns">注册<i class="iconfont icon-you-copy"></i></button>
 </form>
 <p class="remind">已有账号？ <a href="{{url('entry.login',[],'ucenter')}}">点此登录</a></p>
 </body>
 </html>
+<if value="$validCode">
+    <script>
+        require(['util'], function (util) {
+            var option = {
+                //按钮
+                el: '#sendValidCode',
+                //后台链接
+                url: '{{site_url("tool.sendValidCode")}}',
+                //验证码等待发送时间
+                timeout: '{{$validTime}}',
+                //表单，手机号或邮箱的INPUT表单
+                input: '[name="username"]'
+            }
+            util.validCode(option);
+        })
+    </script>
+</if>
 <script>
-    require(['util'], function (util) {
-        var option = {
-            //按钮
-            el: '#sendValidCode',
-            //后台链接
-            url: '{{site_url("tool.sendValidCode")}}',
-            //验证码等待发送时间
-            timeout: '{{$validTime}}',
-            //表单，手机号或邮箱的INPUT表单
-            input: '[name="username"]'
-        }
-        util.validCode(option);
-
-        //发送表单
-    })
+    //发送表单
     function post(event) {
         event.preventDefault();
+        var msg = '';
+        var username = $.trim($("[name='username']").val());
+        if (username == '') {
+            msg = '注册帐号不能为空<br/>';
+        }
+        if (!/^\d{11}$/.test(username) && !/^.+@.+$/.test(username)) {
+            msg += '帐号格式错误<br/>';
+        }
+        if ($.trim($("[name='password']").val()) == '') {
+            msg += '密码不能为空<br/>';
+        }
+        if ($("[name='password']").val() != $("[name='cpassword']").val()) {
+            msg += '两次密码输入不一致<br/>';
+        }
+        if (msg.length > 0) {
+            util.message(msg, '', 'info');
+            return false;
+        }
         util.submit({
-            successUrl: 'refresh'
+            callback:function(response){
+                if(response.valid==1){
+                    util.message('注册成功，系统将跳转到登录页面',"{{url('entry.login')}}",'info');
+                }else{
+                    util.message(response.message,'','info');
+                }
+            }
         });
     }
 </script>

@@ -11,6 +11,7 @@
 namespace module\ucenter\controller;
 
 use houdunwang\request\Request;
+use houdunwang\session\Session;
 use houdunwang\wechat\WeChat;
 use module\HdController;
 
@@ -55,11 +56,22 @@ class Entry extends HdController {
 
 	//注册页面
 	public function register() {
+		//开启验证码验证
+		$validCode = v( 'site.setting.register_option.valid_code' );
 		if ( IS_POST ) {
+			if ( $validCode && ! \Msg::checkValidCode( Request::post( 'valid_code' ) ) ) {
+				ajax( [ 'valid' => 0, 'message' => '验证码错误' ] );
+			}
 			\Member::register( Request::post() );
-			$this->redirect();
+			ajax( [
+				'valid'   => 1,
+				'message' => '注册成功'
+			] );
 		}
 		$this->assignUsernamePlaceHolder();
+		View::with( 'validTime', \Msg::validCodeTime() );
+		//发送验证码验证
+		View::with( 'validCode', $validCode );
 
 		return View::make( $this->template . '/entry/register.html' );
 	}
@@ -79,7 +91,11 @@ class Entry extends HdController {
 	public function login() {
 		if ( IS_POST ) {
 			\Member::login( Request::post() );
-			$this->redirect();
+			ajax( [
+				'valid'   => 1,
+				'message' => '登录成功',
+				'url'     => $this->fromUrl
+			] );
 		}
 		//微信自动登录
 		if ( IS_WEIXIN && v( 'site.wechat.level' ) >= 3 && v( 'site.setting.register.focusreg' ) == 1 ) {

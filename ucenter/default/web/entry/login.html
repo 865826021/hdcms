@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>会员登录</title>
-    <link href="{{__ROOT__}}/node_modules/hdjs/css/bootstrap.min.css" rel="stylesheet">
+    <include file="resource/view/common.php"/>
     <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/fonts/iconfont.css"/>
     <link rel="stylesheet" type="text/css" href="{{template_url()}}/entry/css/login.css"/>
 </head>
 <body>
 <h1>{{v("site.info.name")}}</h1>
-<form action="" method="post" id="app">
+<form action="" method="post" onsubmit="post(event)">
     <if value="v('site.setting.username_login')">
         <input type="text" class="uname" name="username" placeholder="邮箱/手机号"/>
         <div class="pwd">
             <input type="password" class="uname" name="password" placeholder="密码"/>
             <!--<a href="">忘记密码？</a>-->
         </div>
-        <button class="btn">登录<i class="iconfont icon-you-copy"></i></button>
+        <button class="btn" type="submit">登录<i class="iconfont icon-you-copy"></i></button>
     </if>
     <div class="line"></div>
     <if value="v('site.setting.oauth_login.wechat')">
@@ -30,10 +30,16 @@
 </body>
 </html>
 <script>
-    function post(event){
+    function post(event) {
         event.preventDefault();
-        require(['util'],function(util){
-
-        })
+        util.submit({
+            callback: function (response) {
+                if (response.valid == 1) {
+                    location.href = response.url;
+                } else {
+                    util.message(response.message, '', 'info');
+                }
+            }
+        });
     }
 </script>

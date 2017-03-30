@@ -22,4 +22,9 @@ abstract class HdController {
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 	}
+
+	//验证码
+	public function code() {
+		Code::fontSize( 15 )->height( 30 )->make();
+	}
 }

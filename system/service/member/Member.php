@@ -33,7 +33,7 @@ class Member extends Common {
 			$user          = [];
 			$user['info']  = Db::table( 'member' )->where( 'siteid', siteid() )->find( $member_uid );
 			$user['group'] = Db::table( 'member_group' )->where( 'id', $user['info']['group_id'] )->first();
-			$user['auth'] = Db::table( 'member_auth' )->where( 'id', $user['info']['group_id'] )->first();
+			$user['auth']  = Db::table( 'member_auth' )->where( 'id', $user['info']['group_id'] )->first();
 			v( 'member', $user );
 		}
 	}
@@ -140,7 +140,7 @@ class Member extends Common {
 		Validate::make( [
 			[ 'password', 'required', '密码不能为空' ],
 			[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ]
-		] );
+		], $data );
 		$member       = new MemberModel();
 		$user         = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
 		$errorMessage = '';
