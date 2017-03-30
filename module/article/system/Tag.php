@@ -295,6 +295,7 @@ if(\$cid){
 foreach(\$_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
+        \$field['page']=1;
         \$field['url']=Link::get(\$field['html_category'],\$field);
     }else{
          \$field['url']=\$field['linkurl'];
@@ -316,6 +317,7 @@ str;
 foreach(\$_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
+        \$field['page']=1;
         \$field['url']=Link::get(\$field['html_category'],\$field);
     }else{
         \$field['url'] = \$field['linkurl'];
@@ -345,6 +347,7 @@ str;
 foreach(\$_son_category as \$field){
     //栏目链接
     if(empty(\$field['linkurl'])){
+        \$field['page']=1;
         \$field['url']=Link::get(\$field['html_category'],\$field);
     }else{
         \$field['url'] = \$field['linkurl'];

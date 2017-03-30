@@ -1,38 +1,37 @@
 <extend file='ucenter/__UCENTER_TEMPLATE__/web/master.html'/>
 <block name="content">
+
     <div class="alert alert-info">
         如果修改邮箱，登录将使用新邮箱登录。原有邮箱将废弃，请慎重设置。<br/>
         发送的验证码可能会在垃圾箱中，请注意查看。
     </div>
-    <div class="panel panel-default" id="app">
+    <div class="panel panel-default">
         <div class="panel-heading">
             <h4 class="panel-title">
                 绑定邮箱
-                <span class="label label-success" v-if="info.email_valid">邮箱已经绑定</span>
+                <if value="v('member.info.email_valid')">
+                    <span class="label label-success">邮箱已经绑定</span>
+                </if>
             </h4>
         </div>
         <div class="panel-body">
-            <form action="" method="post" v-cloak class="form-horizontal" @submit.prevent="submit">
+            <form action="" method="post" class="form-horizontal" onsubmit="post(event)">
                 <div class="form-group">
                     <label class="col-sm-2 control-label">邮箱</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="info.email">
+                        <input type="text" class="form-control" name="email" value="{{v('member.info.email')}}">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">验证</label>
                     <div class="col-sm-10">
-                        <div class="input-group" v-if="times==60">
-                            <input type="text" class="form-control" v-model="code" placeholder="请输入邮箱中的验证码">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="code"
+                                   placeholder="请输入邮箱中的验证码" required="required">
                             <span class="input-group-btn">
-                                <button class="btn btn-success" type="button" @click="sendMailValid">发送验证码</button>
-                            </span>
-                        </div>
-                        <div class="input-group" v-if="times<60">
-                            <input type="text" class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default" type="button"
-                                        disabled="disabled">@{{times}}秒后发送</button>
+                                <button class="btn btn-success" id="sendValidCode" type="button">
+                                    发送验证码
+                                </button>
                             </span>
                         </div>
                     </div>
@@ -47,58 +46,25 @@
     </div>
 </block>
 <script>
-    require(['vue', 'axios', 'util'], function (Vue, axios, util) {
-        var vm = new Vue({
-            el: '#app',
-            mounted: function () {
-                var times = localStorage.getItem('mailTimes');
-                this.times = times * 1 <= 0 ? 60 : times;
-                if (this.times < 60) {
-                    this.changeTimes();
-                }
-            },
-            data: {
-                times: 60,
-                info: JSON.parse('{{json_encode(v("member.info"))}}'),
-                code: ''
-            },
-            methods: {
-                submit: function () {
-                    if(this.code==''){
-                        util.message('请输入验证码','','warning');
-                        return ;
-                    }
-                    axios.post('{{__URL__}}', {email: this.info.email, code: this.code}).then(function (response) {
-                        if (response.data.valid == 1) {
-                            util.message(response.data.message, 'refresh', 'success');
-                        } else {
-                            util.message(response.data.message, '', 'warning');
-                        }
-                    });
-                },
-                //发送验证码
-                sendMailValid: function () {
-                    if(this.info.email==''){
-                        util.message('邮箱不能为空','','warning');
-                        return ;
-                    }
-                    //发送邮件
-                    axios.post('{{url("my.sendMail")}}', {email: this.info.email}).then(function (response) {
-                        util.message(response.data.message)
-                    });
-                    this.changeTimes();
-                },
-                changeTimes: function () {
-                    var timeId = setInterval(function () {
-                        --vm.times
-                        if (vm.times == 0) {
-                            vm.times = 60;
-                            clearInterval(timeId);
-                        }
-                        localStorage.setItem('mailTimes', vm.times);
-                    }, 1000);
-                }
-            }
-        })
+    require(['util'], function (util) {
+        var option = {
+            //按钮
+            el: '#sendValidCode',
+            //后台链接
+            url: '{{site_url("tool.sendValidCode")}}',
+            //验证码等待发送时间
+            timeout: '{{$validTime}}',
+            //表单，手机号或邮箱的INPUT表单
+            input: '[name="email"]'
+        }
+        util.validCode(option);
+
+        //发送表单
     })
+    function post(event) {
+        event.preventDefault();
+        util.submit({
+            successUrl: 'refresh'
+        });
+    }
 </script>

@@ -64,14 +64,15 @@ class Entry extends HdController {
 		return View::make( $this->template . '/entry/register.html' );
 	}
 
-	//注册时发送验证码
-	public function sendCode() {
-		$username = Request::input( 'username' );
-		//发送状态
-		$sendState = false;
-		if ( preg_match( '/^\d{11}$/', $username ) ) {
-			//手机注册时发送短信
+	//发送验证码系统会自动识别手机或邮箱
+	public function sendValidCode() {
+		$status = \Msg::sendValidCode( Request::input( 'username' ) );
+		if ( $status ) {
+			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'username' ) ];
+		} else {
+			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
 		}
+		ajax( $res );
 	}
 
 	//登录

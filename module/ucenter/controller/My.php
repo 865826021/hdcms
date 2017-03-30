@@ -31,11 +31,11 @@ class My extends Auth {
 	//绑定邮箱
 	public function mail() {
 		if ( IS_POST ) {
-			if ( Request::input( 'code' ) != Session::get( 'mailValid' ) ) {
+			if ( ! \Msg::checkValidCode( Request::post( 'code' ) ) ) {
 				ajax( [ 'valid' => 0, 'message' => '验证码错误' ] );
 			}
 			$model    = Member::find( v( 'member.info.uid' ) );
-			$newEmail = Request::input( 'email' );
+			$newEmail = Request::post( 'email' );
 			//如果更改了邮箱，检测邮箱是不是已经被别的用户使用
 			if ( $model['email'] != $newEmail ) {
 				if ( Member::where( 'email', $newEmail )->where( 'siteid', SITEID )->get() ) {
@@ -49,29 +49,19 @@ class My extends Auth {
 			}
 		}
 		View::with( 'user', v( 'member.info' ) );
+		View::with( 'validTime', \Msg::validCodeTime() );
 
 		return View::make( $this->template . '/my/mail.html' );
-	}
-
-	//发送验证邮件
-	public function sendMail() {
-		$status = \Msg::sendMailCode( Request::input( 'email' ) );
-		if ( $status ) {
-			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mail' ) ];
-		} else {
-			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
-		}
-		ajax( $res );
 	}
 
 	//绑定手机
 	public function mobile() {
 		if ( IS_POST ) {
-			if ( Request::input( 'code' ) != Session::get( 'mobileValid' ) ) {
+			if ( ! \Msg::checkValidCode( Request::post( 'code' ) ) ) {
 				ajax( [ 'valid' => 0, 'message' => '验证码错误' ] );
 			}
 			$model     = Member::find( v( 'member.info.uid' ) );
-			$newMobile = Request::input( 'mobile' );
+			$newMobile = Request::post( 'mobile' );
 			//如果更改了邮箱，检测邮箱是不是已经被别的用户使用
 			if ( $model['mobile'] != $newMobile ) {
 				if ( Member::where( 'mobile', $newMobile )->where( 'siteid', SITEID )->get() ) {
@@ -85,18 +75,7 @@ class My extends Auth {
 			}
 		}
 		View::with( 'user', v( 'member.info' ) );
-
+		View::with( 'validTime', \Msg::validCodeTime() );
 		return View::make( $this->template . '/my/mobile.html' );
-	}
-
-	//发送手机验证码
-	public function sendMobile() {
-		$status = \Msg::sendMobileCode( Request::input( 'mobile' ) );
-		if ( $status ) {
-			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::input( 'mobile' ) ];
-		} else {
-			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
-		}
-		ajax( $res );
 	}
 }

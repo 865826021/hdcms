@@ -15,15 +15,14 @@ class Link {
 	 *
 	 * @return mixed|string
 	 */
-	public function get( $router, $field = [ ] ) {
+	public function get( $router, $field = [] ) {
 		//静态规则
 		$url = __WEB__ . '/' . $router;
 		foreach ( $field as $k => $v ) {
 			$url = str_replace( '{' . $k . '}', $v, $url );
 		}
 
-		//替换{page}
-		return str_replace( '{page}', Request::get( 'page', 1 ), $url );
+		return $url;
 	}
 }
 
