@@ -42,6 +42,8 @@ class Module {
 
 	//将本地开发模块生成压缩包
 	public function createZip() {
+		//防止打包时报错
+		c( 'error.debug', false );
 		$name = Request::get( 'name' );
 		//更改当前目录
 		chdir( 'addons' );

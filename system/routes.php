@@ -13,6 +13,9 @@ Route::any( 'wxnotifyurl', 'site/pay/weChatAsyncNotify' );
 Route::any( 'update', 'system/cloud/localUpdate' );
 
 //后台管理员登录
+Route::alias( 'login', 'm=ucenter&action=controller/entry/login' );
+
+//后台管理员登录
 Route::any( 'hdcms', function () {
 	Session::set( 'system.login', 'hdcms' );
 	action( 'system.entry.login' );
@@ -33,16 +36,16 @@ Route::any( 'admin', function () {
  */
 Route::alias( 'article{siteid}-{cid}-{page}.html',
 	'm=article&action=controller/entry/category&siteid={siteid}&cid={cid}&page={page}' )
-->where([
-	'siteid'=>'\d+',
-	'cid'=>'\d+',
-	'page'=>'\d+'
-]);
+     ->where( [
+	     'siteid' => '\d+',
+	     'cid'    => '\d+',
+	     'page'   => '\d+'
+     ] );
 Route::alias( 'article{siteid}-{aid}-{cid}-{mid}.html',
 	'm=article&action=controller/entry/content&siteid={siteid}&cid={cid}&aid={aid}&mid={mid}' )
-	->where([
-		'siteid'=>'\d+',
-		'aid'=>'\d+',
-		'cid'=>'\d+',
-		'mid'=>'\d+'
-	]);;
+     ->where( [
+	     'siteid' => '\d+',
+	     'aid'    => '\d+',
+	     'cid'    => '\d+',
+	     'mid'    => '\d+'
+     ] );;

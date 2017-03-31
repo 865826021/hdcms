@@ -35,31 +35,33 @@ class Module {
 	 * 系统启动时执行的模块初始化
 	 */
 	public function moduleInitialize() {
+		$name = Request::get( 'm' );
+		if ( empty( $name ) ) {
+			return;
+		}
 		/**
 		 * 初始化模块数据
 		 * 加载模块数据到全局变量窗口中
 		 */
-		if ( $name = Request::get( 'm' ) ) {
-			$module = Db::table( 'modules' )->where( 'name', $name )->first();
-			if ( empty( $module ) ) {
-				message( '你访问的模块不存在或已经卸载,无法继续操作。', '', 'warning' );
-			}
-			v( 'module', $module );
+		$module = Db::table( 'modules' )->where( 'name', $name )->first();
+		if ( empty( $module ) ) {
+			message( '你访问的模块不存在或已经卸载,无法继续操作。', '', 'warning' );
+		}
+		v( 'module', $module );
 
-			/*
-		    * 加载扩展模块中间件
-		    */
-			$data = Middleware::where( 'module', v( 'module.name' ) )->get();
-			if ( $data ) {
-				foreach ( $data as $d ) {
-					\Middleware::add( $d['name'], $d['middleware'] );
-				}
+		/*
+		* 加载扩展模块中间件
+		*/
+		$data = Middleware::where( 'module', v( 'module.name' ) )->get();
+		if ( $data ) {
+			foreach ( $data as $d ) {
+				\Middleware::add( $d['name'], $d['middleware'] );
 			}
-			//模块初始执行程序
-			$class = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) . v( 'module.name' ) . '\system\Init';
-			if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
-				call_user_func_array( [ new $class, 'run' ], [] );
-			}
+		}
+		//模块初始执行程序
+		$class = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) . v( 'module.name' ) . '\system\Init';
+		if ( class_exists( $class ) && method_exists( $class, 'run' ) ) {
+			call_user_func_array( [ new $class, 'run' ], [] );
 		}
 		/**
 		 * 扩展模块单独使用变量访问
@@ -227,7 +229,7 @@ class Module {
 	 * @return mixed
 	 */
 	protected function formatModuleAccessData( &$modules, $name, $identifying, $cat_name, $title, $permission, $url, $ico ) {
-		url_del(['mark']);
+		url_del( [ 'mark' ] );
 		$data['name']        = "$name";
 		$data['title']       = $title;
 		$data['url']         = $url;

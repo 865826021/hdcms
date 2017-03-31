@@ -16,10 +16,12 @@ class Member extends Common {
 	 * @return bool
 	 */
 	public function isLogin( $return = false ) {
-		if ( Session::get( "member_uid" ) ) {
+		$memberId = Session::get( "member_uid" );
+		if ( $memberId ) {
 			$this->initMemberInfo();
-
-			return true;
+			if ( v( 'member.info' ) ) {
+				return true;
+			}
 		}
 		if ( $return ) {
 			return false;

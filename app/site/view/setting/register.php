@@ -6,7 +6,7 @@
     <form action="" method="post" class="form-horizontal" onsubmit="post(event)">
         <div class="alert alert-success">
             系统会根据移动端或桌面端响应不同页面，会员中心登录模板在 ucenter 目录中,二次开发人员可参考系统默认登录风格，开发出符合自己网站风格的登录/注册界面。
-             <br/><a href="{{url('entry.login',[],'ucenter')}}" target="_blank">查看登录界面会员登录</a>
+            <br/><a href="{{url('entry.login',[],'ucenter')}}" target="_blank">会员登录</a>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">
