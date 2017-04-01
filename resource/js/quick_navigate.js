@@ -3,16 +3,15 @@
  */
 require(['bootstrapContextmenu'], function ($) {
     //添加菜单
-    $('.currentMenu a[url]').contextmenu({
+    $('.left-menu  a').contextmenu({
         target: '#context-menu',
         before: function (e, context) {
-
         },
         onItem: function (context, e) {
             var obj = $(context.context);
             var data = {
                 module: obj.attr('module'),
-                url: obj.attr('url') + '&mark=' + obj.attr('mark'),
+                url: obj.attr('href'),
                 title: $.trim(obj.text())
             };
             $.post('?m=quicknavigate&action=controller/site/post', data, function (json) {

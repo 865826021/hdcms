@@ -101,7 +101,6 @@ class Menu {
 	 */
 	public function getQuickMenu() {
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
-
 		return $data ? json_decode( $data, true ) : [];
 	}
 

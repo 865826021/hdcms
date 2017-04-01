@@ -18,23 +18,31 @@ use module\HdController;
  * @package module\quickmenu\controller
  */
 class Site extends HdController {
+	public function __construct() {
+		parent::__construct();
+		auth();
+	}
+
 	/**
 	 * 添加快捷菜单
 	 */
 	public function post() {
-		auth();
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 		$data = $data ? json_decode( $data, true ) : [
-			'system' => [ ],
-			'module' => [ ]
+			'system' => [],
+			'module' => []
 		];
 		$post = Request::post();
-		if ( isset( $post['module'] ) ) {
-			//当前模块数据
-			$module = v( 'site.modules.' . $post['module'] );
+		//分析链接检测是否有模块数据
+		$urlInfo = parse_url($post['url']);
+		parse_str( $urlInfo['query'], $params );
+		$moduleName = isset( $params['m'] ) ? $params['m'] : '';
+		//当前模块数据
+		$module     = v( 'site.modules.' . $moduleName );
+		if ( $module ) {
 			//模块菜单,原来没有添加时初始模块菜单数据
 			if ( ! isset( $data['module'][ $module['name'] ] ) ) {
-				$data['module'][ $module['name'] ] = [ 'title' => $module['title'], 'action' => [ ] ];
+				$data['module'][ $module['name'] ] = [ 'title' => $module['title'], 'action' => [] ];
 			}
 			//检测链接是否已经存在,如果存在时不处理
 			foreach ( $data['module'][ $module['name'] ]['action'] as $a ) {
@@ -58,14 +66,14 @@ class Site extends HdController {
 				'url'   => preg_replace( '/\s/s', '', $post['url'] ),
 			] );
 		}
-		$id = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->pluck( 'id' );
+		$id = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'id' );
 		if ( $id ) {
 			$insertData['id'] = $id;
 		}
 		$insertData['siteid'] = siteid();
 		$insertData['uid']    = v( 'user.info.uid' );
 		$insertData['data']   = json_encode( $data, JSON_UNESCAPED_UNICODE );
-		Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->replace( $insertData );
+		Db::table( 'site_quickmenu' )->replace( $insertData );
 		message( '菜单添加成功', '', 'success' );
 	}
 
@@ -78,8 +86,8 @@ class Site extends HdController {
 			$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
 			$data = $data ? json_decode( $data, true ) : [
 				'status' => 0,
-				'system' => [ ],
-				'module' => [ ]
+				'system' => [],
+				'module' => []
 			];
 			$id   = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->pluck( 'id' );
 			if ( $id ) {

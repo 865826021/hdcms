@@ -95,7 +95,7 @@ class Entry {
 	 * @return mixed
 	 */
 	public function module() {
-		\User::authModule();
+		auth();
 
 		return view();
 	}

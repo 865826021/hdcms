@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
 namespace houdunwang\session\build;
 
 use houdunwang\config\Config;
@@ -29,14 +30,14 @@ class MysqlHandler implements AbSession {
 	public function read() {
 		$data = $this->link->where( 'session_id', $this->session_id )->where( 'atime', '>', time() - $this->expire )->pluck( 'data' );
 
-		return $data ? unserialize( $data ) : [ ];
+		return $data ? unserialize( $data ) : [];
 	}
 
 	//写入
 	public function write() {
 		$data = serialize( $this->items );
 		$sql  = "REPLACE INTO " . $this->table . "(session_id,data,atime) ";
-		$sql .= "VALUES('{$this->session_id}','$data'," . time() . ')';
+		$sql  .= "VALUES('{$this->session_id}','$data'," . time() . ')';
 
 		return $this->link->execute( $sql );
 	}
@@ -46,7 +47,9 @@ class MysqlHandler implements AbSession {
 	 * @return boolean
 	 */
 	public function gc() {
-		$sql = "DELETE FROM " . $this->table . " WHERE atime<" . ( time() - $this->expire ) . " AND session_id<>'" . $this->session_id . "'";
+		$sql = "DELETE FROM " . $this->table
+		       . " WHERE atime<" . ( time() - $this->expire )
+		       . " AND session_id<>'" . $this->session_id . "'";
 
 		return $this->link->execute( $sql );
 	}

@@ -241,7 +241,7 @@
     </ul>
 </div>
 <!--底部快捷菜单导航-->
-<?php $QUICKMENU = \Menu::getQuickMenu(); ?>
+<?php $QUICKMENU = \Menu::getQuickMenu();?>
 <if value="$QUICKMENU['status']">
     <div class="quick_navigate">
         <div class="btn-group">
