@@ -68,7 +68,6 @@ class Menu {
 				unset( $menus[ $k ] );
 			}
 		}
-
 		return $menus;
 	}
 
@@ -81,7 +80,6 @@ class Menu {
 		if ( $m = Request::get( 'm' ) ) {
 			$allModules = Module::getExtModuleByUserPermission();
 			$tmp        = $menu = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [];
-//			p($tmp['access']);
 			//移除没有权限的模块动作
 			foreach ( $tmp['access'] as $k => $lists ) {
 				foreach ( $lists as $n => $m ) {
@@ -91,7 +89,6 @@ class Menu {
 				}
 			}
 		}
-
 		return $menu;
 	}
 
