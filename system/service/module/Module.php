@@ -234,13 +234,13 @@ class Module {
 		$data['title']       = $title;
 		$data['url']         = $url;
 		$data['identifying'] = $identifying;
-		$data['status']      = 0;
+		$data['_status']     = 0;
 		$data['ico']         = $ico;
 		$data['_hash']       = substr( md5( $url ), 0, 6 );
 		if ( empty( $permission ) ) {
-			$data['status'] = 1;
+			$data['_status'] = 1;
 		} elseif ( isset( $permission[ $name ] ) && in_array( $identifying, $permission[ $name ] ) ) {
-			$data['status'] = 1;
+			$data['_status'] = 1;
 		}
 		$module                                    = v( 'site.modules.' . $name );
 		$modules[ $name ]['module']                = [

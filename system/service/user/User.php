@@ -259,7 +259,7 @@ class User extends Common {
 					$status = false;
 				}
 			}
-		} elseif ( $menuId = Request::get( 'menuid' ) ) {
+		} elseif ( $menuId = Request::get( 'mi' ) ) {
 			//没有为用户配置权限时验证通过
 			if ( empty( $userPermission ) ) {
 				$status = true;
@@ -512,13 +512,12 @@ class User extends Common {
 	public function getUserAtSiteAccess( $siteId = 0, $uid = 0 ) {
 		$siteId     = $siteId ?: SITEID;
 		$uid        = $uid ?: v( 'user.info.uid' );
-		$permission = Db::table( 'user_permission' )->where( 'siteid', $siteId )->where( 'uid', $uid )->lists( 'type,permission' ) ?: [];
+		$permission = Db::table( 'user_permission' )->where( 'siteid', $siteId )
+		                ->where( 'uid', $uid )->lists( 'type,permission' ) ?: [];
 		foreach ( $permission as $m => $p ) {
 			$permission[ $m ] = explode( '|', $p );
 		}
 
 		return $permission;
 	}
-
-
 }

@@ -26,7 +26,7 @@ class Menu {
 	 * 获取当前用户在站点后台可以使用的系统菜单
 	 * @return mixed
 	 */
-	public function all() {
+	public function getSystemMenu() {
 		/**
 		 * 系统管理
 		 * 1 移除系统菜单
@@ -36,14 +36,19 @@ class Menu {
 		$permission = Db::table( 'user_permission' )
 		                ->where( 'siteid', SITEID )
 		                ->where( 'uid', v( 'user.info.uid' ) )
-		                ->where( 'type', 'system' )
-		                ->pluck( 'permission' );
-		$menus      = Db::table( 'menu' )->orderBy( 'id', 'asc' )->get();
+		                ->lists( 'type,permission' );
+		//所有系统菜单
+		$menus = Db::table( 'menu' )->orderBy( 'id', 'asc' )->get();
+
+		//设置系统菜单权限时移除没有权限的菜单
 		if ( $permission ) {
-			$permission = explode( '|', $permission );
-			$tmp        = $menus;
+			$access = [];
+			if ( isset( $permission['system'] ) ) {
+				$access = explode( '|', $permission['system'] );
+			}
+			$tmp = $menus;
 			foreach ( $tmp as $k => $m ) {
-				if ( $m['permission'] != '' && ! in_array( $m['permission'], $permission ) ) {
+				if ( $m['permission'] != '' && ! in_array( $m['permission'], $access ) ) {
 					unset( $menus[ $k ] );
 				}
 			}
@@ -68,25 +73,43 @@ class Menu {
 	}
 
 	/**
+	 * 获取模块动作列表
+	 */
+	public function getModuleMenu() {
+		$menu = [];
+		//当前访问的模块数据
+		if ( $m = Request::get( 'm' ) ) {
+			$allModules = Module::getExtModuleByUserPermission();
+			$tmp        = $menu = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [];
+//			p($tmp['access']);
+			//移除没有权限的模块动作
+			foreach ( $tmp['access'] as $k => $lists ) {
+				foreach ( $lists as $n => $m ) {
+					if ( $m['_status'] == 0 ) {
+						unset( $menu['access'][$k][$n] );
+					}
+				}
+			}
+		}
+
+		return $menu;
+	}
+
+	/**
 	 * 分配菜单数据到模板
 	 * @return mixed
 	 */
 	public function get() {
 		static $menus = null;
 		if ( is_null( $menus ) ) {
-			//当前访问的模块数据
-			if ( $m = Request::get( 'm' ) ) {
-				$allModules = Module::getExtModuleByUserPermission();
-				$module     = isset( $allModules[ $m ] ) ? $allModules[ $m ] : [];
-			}
-//			p($module);
-			$moduleLists = Module::getModulesByIndustry( array_keys( Module::getBySiteUser() ) );
+			//模块列表
+			$moduleLists = \Module::getModulesByIndustry( array_keys( \Module::getBySiteUser() ) );
 			//当前模块的菜单数据
 			$menus = [
 				//系统菜单数据
-				'menus'       => $this->all(),
+				'menus'       => $this->getSystemMenu(),
 				//当前模块
-				'module'      => $module,
+				'module'      => $this->getModuleMenu(),
 				//用户在站点可以使用的模块列表
 				'moduleLists' => $moduleLists
 			];
@@ -101,6 +124,7 @@ class Menu {
 	 */
 	public function getQuickMenu() {
 		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
+
 		return $data ? json_decode( $data, true ) : [];
 	}
 
@@ -118,7 +142,7 @@ class Menu {
 		$permission = \User::getUserAtSiteAccess( $siteId, $uid );
 		$menus      = Db::table( 'menu' )->get();
 		foreach ( $menus as $k => $v ) {
-			$menus[ $k ]['status'] = 0;
+			$menus[ $k ]['_status'] = 0;
 			if ( empty( $permission ) ) {
 				$menus[ $k ]['_status'] = 1;
 			} elseif ( isset( $permission['system'] ) && in_array( $v['permission'], $permission['system'] ) ) {

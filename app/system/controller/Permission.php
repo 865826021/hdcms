@@ -39,7 +39,7 @@ class Permission {
 	 */
 	public function addOperator() {
 		if ( \User::isManage() ) {
-			foreach ( q( 'post.uid', [ ] ) as $uid ) {
+			foreach ( q( 'post.uid', [] ) as $uid ) {
 				if ( ! Db::table( "site_user" )->where( "uid", $uid )->where( "siteid", SITEID )->get() ) {
 					Db::table( 'site_user' )->insert( [
 						'siteid' => SITEID,
@@ -118,9 +118,6 @@ class Permission {
 		//模块权限
 		$moduleAccess = \Module::getExtModuleByUserPermission( $uid );
 		//模块权限
-		return view()->with( [
-			'menusAccess'  => $menusAccess,
-			'moduleAccess' => $moduleAccess
-		] );
+		return view()->with( compact( 'menusAccess', 'moduleAccess' ) );
 	}
 }

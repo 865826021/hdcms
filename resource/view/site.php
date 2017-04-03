@@ -153,21 +153,23 @@
                 </if>
                 <if value="Request::get('mark')=='package' && in_array(Request::get('mt'),['group','default'])">
                     <foreach from="$LINKS['module']['access']" key="$title" value="$t">
-                        <div class="panel-heading module_back module_action">
-                            <h4 class="panel-title">{{$title}}</h4>
-                            <a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
-                                <i class="fa fa-chevron-circle-down"></i>
-                            </a>
-                        </div>
-                        <ul class="list-group " aria-expanded="true">
-                            <foreach from="$t" value="$m">
-                                <li class="list-group-item" id="{{$m['_hash']}}">
-                                    <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}&mt={{Request::get('mt')}}">
-                                        <i class="{{$m['ico']}}"></i> {{$m['title']}}
-                                    </a>
-                                </li>
-                            </foreach>
-                        </ul>
+                        <if value="!empty($t)">
+                            <div class="panel-heading module_back module_action">
+                                <h4 class="panel-title">{{$title}}</h4>
+                                <a class="panel-collapse" data-toggle="collapse" aria-expanded="true">
+                                    <i class="fa fa-chevron-circle-down"></i>
+                                </a>
+                            </div>
+                            <ul class="list-group " aria-expanded="true">
+                                <foreach from="$t" value="$m">
+                                    <li class="list-group-item" id="{{$m['_hash']}}">
+                                        <a href="{{$m['url']}}&siteid={{SITEID}}&mi={{$m['_hash']}}&mt={{Request::get('mt')}}">
+                                            <i class="{{$m['ico']}}"></i> {{$m['title']}}
+                                        </a>
+                                    </li>
+                                </foreach>
+                            </ul>
+                        </if>
                     </foreach>
                 </if>
                 <!--模块列表-->
@@ -241,7 +243,7 @@
     </ul>
 </div>
 <!--底部快捷菜单导航-->
-<?php $QUICKMENU = \Menu::getQuickMenu();?>
+<?php $QUICKMENU = \Menu::getQuickMenu(); ?>
 <if value="$QUICKMENU['status']">
     <div class="quick_navigate">
         <div class="btn-group">
