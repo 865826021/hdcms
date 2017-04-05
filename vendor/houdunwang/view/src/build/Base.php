@@ -58,10 +58,14 @@ class Base {
 		return ob_get_clean();
 	}
 
+	public function __toString() {
+		return $this->toString();
+	}
+
 	/*
 	 * 显示模板
 	 */
-	public function __toString() {
+	public function toString() {
 		if ( $this->expire > 0 && $this->isCache( $this->file ) ) {
 			//缓存有效时返回缓存数据
 			return Cache::driver( 'file' )->dir( Config::get( 'view.cache_dir' ) )->get( $this->cacheName( $this->file ) );

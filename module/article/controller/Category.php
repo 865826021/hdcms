@@ -45,6 +45,9 @@ class Category extends HdController {
 		}
 		$category = WebCategory::getLevelCategory( $cid );
 		$model    = WebModel::getLists();
+		if ( empty( $model ) ) {
+			message( '请先添加模块后再进行操作', url( 'model.lists' ), 'info' );
+		}
 		if ( $cid ) {
 			$field = WebCategory::find( $cid )->toArray();
 		}

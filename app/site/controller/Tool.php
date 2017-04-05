@@ -24,9 +24,17 @@ class Tool {
 	public function sendValidCode() {
 		$status = \Msg::sendValidCode( Request::post( 'username' ) );
 		if ( $status ) {
-			$res = [ 'valid' => 1, 'message' => '验证码已经发送到 ' . Request::post( 'username' ) ];
+			$res = [
+				'valid'   => 1,
+				'timeout' => \Msg::validCodeTime(),
+				'message' => '验证码已经发送到 ' . Request::post( 'username' )
+			];
 		} else {
-			$res = [ 'valid' => 0, 'message' => \Msg::getError() ];
+			$res = [
+				'valid'   => 0,
+				'timeout' => \Msg::validCodeTime(),
+				'message' => \Msg::getError()
+			];
 		}
 		ajax( $res );
 	}

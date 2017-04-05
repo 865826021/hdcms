@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
 namespace app\site\controller;
 
 use houdunwang\request\Request;
@@ -37,10 +38,11 @@ class Entry {
 			if ( $module && ! empty( $module['do'] ) ) {
 				$class = ( $module['is_system'] ? 'module' : 'addons' ) . '\\' . $module['module'] . '\system\Navigate';
 				if ( class_exists( $class ) && method_exists( $class, $module['do'] ) ) {
-					return call_user_func_array( [ new $class, $module['do'] ], [ ] );
+					return call_user_func_array( [ new $class, $module['do'] ], [] );
 				}
 			}
 		}
+
 		return view();
 	}
 
@@ -56,7 +58,7 @@ class Entry {
 		$class      = ( v( 'module.is_system' ) ? "module\\" : "addons\\" ) .
 		              v( 'module.name' ) . "\\{$module}\\{$controller}";
 
-		return call_user_func_array( [ new $class(), $action ], [ ] );
+		return call_user_func_array( [ new $class(), $action ], [] );
 	}
 
 	/**
@@ -67,13 +69,13 @@ class Entry {
 		auth();
 		if ( ! $mark = Request::get( 'mark' ) ) {
 			//获取系统菜单
-			$menu = \Menu::all();
+			$menu = \Menu::getSystemMenu();
 			if ( empty( $menu ) ) {
 				message( '站点没有可访问的模块', 'back', 'error' );
 			}
 			$current = current( $menu );
 			$mark    = $current['mark'];
-			Request::set( 'get.mark',$mark );
+			Request::set( 'get.mark', $mark );
 		}
 
 		return view( VIEW_PATH . '/entry/home/' . $mark . '.php' );
@@ -96,6 +98,7 @@ class Entry {
 	 */
 	public function module() {
 		auth();
+
 		return view();
 	}
 }

@@ -74,6 +74,8 @@ class Cloud {
 			default:
 				//获取更新版本
 				$upgrade = \Cloud::getUpgradeVersion();
+				$notice  = \Curl::get( 'http://www.hdcms.com/?m=store&action=controller/cloud/notice' );
+				View::with( 'notice', json_decode( $notice, true ) );
 
 				return view()->with( [ 'upgrade' => $upgrade, 'current' => \system\model\Cloud::find( 1 ) ] );
 		}

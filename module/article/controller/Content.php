@@ -28,6 +28,9 @@ class Content extends HdController {
 		$mid = Request::get( 'mid' );
 		if ( empty( $mid ) ) {
 			$mid = Db::table( 'web_model' )->where( 'siteid', SITEID )->pluck( 'mid' );
+			if ( empty( $mid ) ) {
+				message( '请先添加模型后操作', url( 'model.lists' ), 'info' );
+			}
 			go( __URL__ . "&mid={$mid}" );
 		}
 	}

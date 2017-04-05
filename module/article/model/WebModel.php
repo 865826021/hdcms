@@ -43,6 +43,7 @@ CREATE TABLE `hd_{$table}` (
   `siteid` int(10) unsigned NOT NULL,
   `mid` int(11) DEFAULT NULL COMMENT '模型编号',
   `cid` int(10) unsigned NOT NULL COMMENT '栏目编号',
+  `uid` int(10) unsigned NOT NULL COMMENT '会员编号',
   `keyword` varchar(30) NOT NULL COMMENT '微信回复关键词',
   `iscommend` tinyint(1) unsigned NOT NULL COMMENT '推荐',
   `ishot` tinyint(1) unsigned NOT NULL COMMENT '头条',

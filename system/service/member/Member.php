@@ -26,7 +26,8 @@ class Member extends Common {
 		if ( $return ) {
 			return false;
 		}
-		message( '请登录后操作', url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' ), 'error' );
+		$url = url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' );
+		message( "抱歉，你没有登录无法进行操作。", $url, 'error' );
 	}
 
 	//初始用户信息
@@ -144,12 +145,15 @@ class Member extends Common {
 			[ 'code', 'captcha', '验证码输入错误', Validate::EXISTS_VALIDATE ]
 		], $data );
 		$member       = new MemberModel();
-		$user         = $member->where( 'email', $data['username'] )->orWhere( 'mobile', $data['username'] )->first();
+		$user         = $member->where( 'email', $data['username'] )
+		                       ->orWhere( 'mobile', $data['username'] )
+		                       ->where( 'siteid', siteid() )
+		                       ->first();
 		$errorMessage = '';
 		if ( empty( $user ) ) {
 			$errorMessage = '帐号不存在';
 		}
-		if ( md5( $data['password'] . $user['security'] ) != $user['password'] ) {
+		if ( empty( $errorMessage ) && md5( $data['password'] . $user['security'] ) != $user['password'] ) {
 			$errorMessage = '密码输入错误';
 		}
 		//错误处理

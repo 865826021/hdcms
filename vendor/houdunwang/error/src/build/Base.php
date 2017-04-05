@@ -29,15 +29,15 @@ class Base {
 
 	//自定义异常理
 	public function exception( $e ) {
-		Log::write( $e->getMessage(), 'EXCEPTION' );
 		//命令行错误
 		if ( PHP_SAPI == 'cli' ) {
 			die( PHP_EOL . "\033[;36m " . $e->getMessage() . "\x1B[0m\n" . PHP_EOL );;
 		} else {
-			if ( Config::get( 'error.debug' ) === true ) {
+			if ( Config::get( 'error.debug' ) == true ) {
 				require __DIR__ . '/../view/exception.php';
 			} else {
-				require $this->bug;
+				Log::write( $e->getMessage(), 'EXCEPTION' );
+//				require $this->bug;
 			}
 		}
 		exit;
@@ -68,11 +68,11 @@ class Base {
 				if ( PHP_SAPI == 'cli' ) {
 					die( PHP_EOL . "\033[;36m $msg \x1B[0m\n" . PHP_EOL );
 				}
-				Log::write( $msg, $this->errorType( $errno ) );
-				if ( c( 'error.debug' ) === true ) {
+				if ( c( 'error.debug' ) == true ) {
 					require __DIR__ . '/../view/debug.php';
 				} else {
-					require $this->bug;
+					Log::write( $msg, $this->errorType( $errno ) );
+//					require $this->bug;
 				}
 				exit;
 		}

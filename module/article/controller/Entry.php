@@ -68,8 +68,10 @@ class Entry extends HdController {
 		$category['url'] = str_replace( '{page}', Request::get( 'page', 1 ), $category['url'] );
 
 		$hdcms['category'] = $category;
+		$hdcms['user']     = Db::table( 'user' )->where( 'uid', $hdcms['uid'] )->first();
 		View::with( [ 'hdcms' => $hdcms ] );
 		$tpl = $hdcms['template'] ?: $category['content_tpl'];
+
 		return view( $this->template . '/' . $tpl );
 	}
 }

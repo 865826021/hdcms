@@ -12,6 +12,7 @@
             <li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
             <li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a></li>
             <li role="presentation"><a href="{{u('shop.upgradeLists')}}">模块更新</a></li>
+            <li role="presentation"><a href="{{u('shop.buy',['type'=>'module'])}}">已购模块</a></li>
         </ul>
         <h5 class="page-header">菜单列表</h5>
         <nav role="navigation" class="navbar navbar-default">

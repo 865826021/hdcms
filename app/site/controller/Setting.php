@@ -57,7 +57,7 @@ class Setting {
 			$this->db['register']        = Request::post( 'register' );
 			$this->db['username_login']  = Request::post( 'username_login' );
 			$this->db['oauth_login']     = json_encode( Request::post( 'oauth_login' ) ?: [] );
-			$this->db['wechat_login']    = Request::post( 'wechat_login' );
+			$this->db['wechat_login']    = Request::post( 'wechat_login',0 );
 			$this->db['register_option'] = json_encode( Request::post( 'register_option' ) ?: [] );
 			$this->db->save();
 			\Site::updateCache();

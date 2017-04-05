@@ -11,6 +11,7 @@
 		<li role="presentation"><a href="?s=system/module/design">设计新模块</a></li>
 		<li role="presentation"><a href="{{u('shop.lists',['type'=>'module'])}}">模块商城</a></li>
 		<li role="presentation" class="active"><a href="{{u('shop.upgrade')}}">模块更新</a></li>
+        <li role="presentation"><a href="{{u('shop.buy',['type'=>'module'])}}">已购模块</a></li>
 	</ul>
 	<div class="clearfix ng-cloak" ng-controller="ctrl" ng-cloak>
 		<div class="row" ng-if="field.valid==0">
@@ -30,22 +31,19 @@
 		<div class="row" ng-show="field.valid==1">
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps" ng-show="field.apps.length>0">
 				<div class="thumbnail">
-					<img ng-src="@{{'http://dev.hdcms.com/'+v.app_preview}}"
+					<img ng-src="@{{v.app_preview}}"
 					     style="height: 200px; width: 100%; display: block;">
 					<div class="caption">
 						<h3>@{{v.title}}</h3>
 						<p>@{{v.resume}}</p>
 						<p>
-							<a ng-if="v.message=='开始更新'" ng-click="upgrade(v)" class="btn btn-default"
-							   role="button">
+							<a ng-if="v.message=='开始更新'" ng-click="upgrade(v)" class="btn btn-default btn-block btn-sm">
 								@{{v.message}}
 							</a>
-							<a ng-if="v.valid==0" class="btn btn-danger"
-							   role="button">
+							<a ng-if="v.valid==0" class="btn btn-danger btn-block btn-sm">
 								@{{v.message}}
 							</a>
-							<a ng-if="v.message=='更新完毕'" class="btn btn-success"
-							   role="button">
+							<a ng-if="v.message=='更新完毕'" class="btn btn-success btn-block btn-sm">
 								@{{v.message}}
 							</a>
 						</p>

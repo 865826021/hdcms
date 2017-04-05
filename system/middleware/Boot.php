@@ -63,6 +63,7 @@ class Boot {
 		}
 		if ( $app = v( 'config.site.app' ) ) {
 			c( 'app', array_merge( c( 'app' ), $app ) );
+			c( 'error.debug', $app['debug'] );
 		}
 		if ( $http = v( 'config.site.http' ) ) {
 			c( 'http', array_merge( c( 'http' ), $http ) );

@@ -20,7 +20,7 @@ class Cloud {
 
 	public function __construct() {
 		$this->accounts = Db::table( 'cloud' )->first();
-		$this->url      = "http://store.hdcms.com?&secret={$this->accounts['secret']}&uid={$this->accounts['uid']}&m=store&action=controller";
+		$this->url      = "http://www.hdcms.com?secret={$this->accounts['secret']}&uid={$this->accounts['uid']}&m=store&action=controller";
 	}
 
 	//验证云帐号状态
@@ -38,7 +38,6 @@ class Cloud {
 	 * @return mixed
 	 */
 	public function connect( $data ) {
-
 		$res   = Curl::post( $this->url . '/cloud/connect', $data );
 		$res   = json_decode( $res, true );
 		$model = CloudModel::find( 1 );
@@ -47,7 +46,6 @@ class Cloud {
 			$model['uid']      = $res['uid'];
 			$model['username'] = $data['username'];
 			$model['secret']   = $data['secret'];
-			$model['webname']  = $data['webname'];
 			$model['status']   = 1;
 			$model->save();
 		} else {
@@ -160,17 +158,19 @@ class Cloud {
 	/**
 	 * 获取商城中的模块或模板列表
 	 *
-	 * @param $type 类型 module/template
-	 * @param $page 页数
+	 * @param string $type 类型 module/template
+	 * @param string $page 页数
+	 *
+	 * @param string $appType buy:已经购买
 	 *
 	 * @return mixed
 	 */
-	public function apps( $type, $page ) {
+	public function apps( $type, $page, $appType = '' ) {
 		$this->checkAccount();
 		if ( empty( $type ) || empty( $page ) ) {
 			message( '参数错误无法获取应用列表', '', 'warning' );
 		}
-		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&page={$page}" );
+		$content = \Curl::get( $this->url . "/cloud/apps&type={$type}&page={$page}&appType=" . $appType );
 		$apps    = json_decode( $content, true );
 		if ( $apps['valid'] == 1 ) {
 			//已经安装的所模块
@@ -215,8 +215,8 @@ class Cloud {
 		$this->checkAccount();
 		$module = Db::table( 'modules' )->where( 'name', $name )->first();
 		$res    = \Curl::post( $this->url . "/cloud/getModuleUpgrade", $module );
-		$app    = json_decode( $res, true );
-
+		$app    = json_decode( $res, true );echo 1111;
+		exit;
 		if ( $app['valid'] == 1 ) {
 			//下载压缩文件
 			$content = \Curl::get( $this->host . '/' . $app['zip']['file'] );

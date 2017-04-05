@@ -14,6 +14,8 @@ use Closure;
 use houdunwang\container\Container;
 use houdunwang\controller\Controller;
 use houdunwang\request\Request;
+use houdunwang\response\Response;
+use houdunwang\view\View;
 
 class Compile extends Setting {
 	//匹配到路由
@@ -92,7 +94,12 @@ class Compile extends Setting {
 					}
 				}
 			}
-			echo $reflectionFunction->invokeArgs( $args );
+			$result = $reflectionFunction->invokeArgs( $args );
+			if ( IS_AJAX || is_array( $result ) ) {
+				Response::ajax( $result );
+			} else {
+				echo is_object( $result ) ? View::toString() : $result;
+			}
 		} else {
 			//设置控制器与方法
 			Request::set( 'get.' . Config::get( 'http.url_var' ), $this->route[ $key ]['callback'] );

@@ -18,7 +18,18 @@ class Shop {
 	public function lists() {
 		if ( IS_POST ) {
 			//远程获取应用列表
-			$apps = \Cloud::apps( Request::get( 'type' ), Request::get( 'page' ) ) ?: [ ];
+			$apps = \Cloud::apps( Request::get( 'type' ), Request::get( 'page' ) ) ?: [];
+			ajax( $apps );
+		}
+
+		return view();
+	}
+
+	//已购应用
+	public function buy() {
+		if ( IS_POST ) {
+			//远程获取已经购买的应用列表
+			$apps = \Cloud::apps( Request::get( 'type' ), Request::get( 'page' ), 'buy' ) ?: [];
 			ajax( $apps );
 		}
 

@@ -62,14 +62,14 @@ class My extends Auth {
 			}
 			$model     = Member::find( v( 'member.info.uid' ) );
 			$newMobile = Request::post( 'mobile' );
-			//如果更改了邮箱，检测邮箱是不是已经被别的用户使用
+			//如果更改了手机，检测手机号是不是已经被别的用户使用
 			if ( $model['mobile'] != $newMobile ) {
 				if ( Member::where( 'mobile', $newMobile )->where( 'siteid', SITEID )->get() ) {
 					ajax( [ 'valid' => 0, 'message' => "{$newMobile} 手机号已经被其他帐号使用" ] );
 				}
 			}
-			$model['email_valid'] = 1;
-			$model['mobile']      = $newMobile;
+			$model['mobile_valid'] = 1;
+			$model['mobile']       = $newMobile;
 			if ( $model->save() ) {
 				ajax( [ 'valid' => 1, 'message' => '手机号绑定成功' ] );
 			}

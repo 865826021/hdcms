@@ -231,7 +231,7 @@
         $("form").submit(function(){
             $.post('{{__URL__}}',$(this).serialize(),function(json){
                 if(json.valid==1){
-                    util.message(json.message,'refresh','success');
+                    util.message(json.message,'back','success');
                 }else{
                     util.message(json.message,'','warning');
                 }

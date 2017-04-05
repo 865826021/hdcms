@@ -33,6 +33,7 @@ class WebContent extends Model {
 		[ 'createtime', 'time', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'click', 'intval', 'function', self::MUST_AUTO, self::MODEL_BOTH ],
 		[ 'thumb', '', 'string', self::EMPTY_AUTO, self::MODEL_INSERT ],
+		[ 'uid', 'getUid', 'method', self::MUST_AUTO, self::MODEL_BOTH ]
 	];
 
 	public function __construct( $mid = 0 ) {
@@ -43,6 +44,10 @@ class WebContent extends Model {
 		}
 		$this->table = $this->tableName();
 		parent::__construct();
+	}
+
+	public function getUid() {
+		return v( 'user.info.uid' );
 	}
 
 	/**

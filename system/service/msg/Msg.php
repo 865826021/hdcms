@@ -10,6 +10,8 @@ use houdunwang\session\Session;
 
 class Msg {
 	protected $error;
+	//验证码发送间隔时间
+	protected $timeout = 120;
 
 	/**
 	 * 获取上次发送的验证码时间
@@ -17,7 +19,7 @@ class Msg {
 	 * @return int
 	 */
 	public function validCodeTime() {
-		$time = Session::get( 'validCode.sendtime' ) + 60 - time();
+		$time = Session::get( 'validCode.sendtime' ) + $this->timeout - time();
 
 		return $time > 0 ? $time : 0;
 	}
@@ -48,7 +50,7 @@ class Msg {
 		}
 		//检测是否在60秒内发送的
 		$code = Session::get( 'validCode' );
-		if ( $code && ( $code['sendtime'] + 60 ) > time() ) {
+		if ( $code && ( $code['sendtime'] + $this->timeout ) > time() ) {
 			$this->error = '请' . $this->validCodeTime() . '秒后发送';
 
 			return false;

@@ -12,11 +12,13 @@
             <li role="presentation"><a href="{{u('module.design')}}">设计新模块</a></li>
 			<li role="presentation" class="active"><a href="javascript:;">模块商城</a></li>
             <li role="presentation"><a href="{{u('shop.upgradeLists')}}">模块更新</a></li>
+            <li role="presentation"><a href="{{u('shop.buy',['type'=>'module'])}}">已购模块</a></li>
 			<else/>
             <li role="presentation"><a href="{{u('template.installed')}}">已经安装模板</a></li>
             <li role="presentation"><a href="{{u('template.prepared')}}">安装模板</a></li>
             <li role="presentation"><a href="{{u('template.design')}}">设计新模板</a></li>
 			<li role="presentation" class="active"><a href="javascript:;">模板商城</a></li>
+            <li role="presentation"><a href="{{u('shop.buy',['type'=>'template'])}}">已购模板</a></li>
 		</if>
 	</ul>
 	<div class="clearfix ng-cloak" ng-controller="ctrl" ng-cloak>
@@ -35,27 +37,25 @@
 			</div>
 		</div>
 		<div class="row" ng-show="field.valid==1">
-            <div class="alert alert-info" style="margin-left: 20px;">
-                应用商店没有模板
-            </div>
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps">
 				<div class="thumbnail">
 					<img ng-src="@{{v.app_preview}}"
 					     style="height: 200px; width: 100%; display: block;">
 					<div class="caption">
-						<h3>
+						<h4>
 							@{{v.title}}
-						</h3>
+						</h4>
 						<small>
 							价格: <span ng-show="v.price>0" >@{{v.price}} 元</span>
 							<span ng-show="v.price<=0" class="label label-info">免费</span>
+                            <span ng-show="v.audit==0" class="label label-danger">测试版</span>
 						</small>
 						<p>@{{v.resume}}</p>
 						<p>
-							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary"
+							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary btn-sm btn-block"
 							   role="button">开始安装</a>
 						</p>
-						<p><span ng-if="v.is_install" class="btn btn-default">已经安装</span></p>
+						<p><span ng-if="v.is_install" class="btn btn-default btn-sm btn-block">已经安装</span></p>
 					</div>
 				</div>
 			</div>
@@ -79,29 +79,30 @@
 							$scope.message = json.message;
 						}
 						$scope.$apply();
-					}, 'json'
-					)
-					;
+					}, 'json');
 				}
 				$scope.get(1);
 				$('.pagination').delegate('li a', 'click', function () {
 					$scope.get($(this).text());
 					return false;
 				})
-
 				//安装模块
 				$scope.install = function (module) {
 					$.post("{{u('install',['type'=>$_GET['type']])}}&id="+module.id, function (json) {
 						if(json.valid==0){
-							util.message(json.message,"{{u('shop.lists',['type'=>$_GET['type']])}}",'warning',8);
+							util.message(json.message,'','warning',8);
 						}else{
 							util.message(json.message,json.url,'success',3);
 						}
 					}, 'json');
 				}
 			}])
-
 			angular.bootstrap(document.body, ['app']);
 		})
 	})
 </script>
+<style>
+    .thumbnail img{
+        border:solid 1px #ddd;
+    }
+</style>
