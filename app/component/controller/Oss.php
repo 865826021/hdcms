@@ -20,7 +20,8 @@ class Oss extends Common {
 		//阿里云  子用户: AccessKeySecret
 		$key = c( 'oss.accessKeySecret' );
 		//OSS外网域名: 在阿里云后台OSS bucket中查看
-		$host = c( 'oss.bucket_endpoint' );
+//		$host = c( 'oss.bucket_endpoint' );
+		$host = c( 'oss.endpoint' );
 		//oss中本次上传存放文件的目录
 		$dir = isset( $_GET['dir'] ) ? $_GET['dir'] : '';
 		function gmt_iso8601( $time ) {

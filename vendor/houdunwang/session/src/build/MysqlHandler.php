@@ -22,7 +22,7 @@ class MysqlHandler implements AbSession {
 
 	//初始
 	public function connect() {
-		$this->link  = ( new Db() )->table( Config::get( 'session.mysql.table' ) );
+		$this->link  = Db::table( Config::get( 'session.mysql.table' ) );
 		$this->table = $this->link->getTable();
 	}
 
@@ -30,16 +30,16 @@ class MysqlHandler implements AbSession {
 	public function read() {
 		$data = $this->link->where( 'session_id', $this->session_id )->where( 'atime', '>', time() - $this->expire )->pluck( 'data' );
 
-		return $data ? unserialize( $data ) : [];
+		return $data ? json_decode( $data ,true) : [];
 	}
 
 	//写入
 	public function write() {
-		$data = serialize( $this->items );
+		$data = json_encode( $this->items,JSON_UNESCAPED_UNICODE );
 		$sql  = "REPLACE INTO " . $this->table . "(session_id,data,atime) ";
 		$sql  .= "VALUES('{$this->session_id}','$data'," . time() . ')';
-
-		return $this->link->execute( $sql );
+		$this->link->execute( $sql );
+//		p(Db::getquerylog());
 	}
 
 	/**

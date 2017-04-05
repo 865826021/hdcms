@@ -51,7 +51,7 @@
             </div>
             <div class="media-left">
                 <a href="#">
-                    <img class="media-object" src="addons/{{$local['name']}}/{{$local['thumb']}}"
+                    <img class="media-object" src="addons/{{$local['name']}}/{{$local['preview']}}"
                          style="width: 50px;height: 50px;">
                 </a>
             </div>

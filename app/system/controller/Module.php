@@ -60,7 +60,11 @@ class Module {
 		$modules = Db::table( 'modules' )->orderBy( 'mid', 'desc' )->get();
 		foreach ( $modules as $k => $m ) {
 			//本地模块
-			$modules[ $k ]['thumb'] = ( $m['is_system'] == 1 ? 'module' : 'addons' ) . "/{$m['name']}/{$m['thumb']}";
+			if ( $m['is_system'] == 1 ) {
+				$modules[ $k ]['thumb'] = "module/{$m['name']}/{$m['thumb']}";
+			} else {
+				$modules[ $k ]['thumb'] = "addons/{$m['name']}/{$m['preview']}";
+			}
 		}
 
 		return view()->with( [ 'modules' => $modules ] );
@@ -75,7 +79,7 @@ class Module {
 			if ( $d['type'] == 'dir' && is_file( $d['path'] . '/package.json' ) ) {
 				$config = json_decode( file_get_contents( $d['path'] . '/package.json' ), true );
 				//去除已经安装的模块和远程模块
-				if ( ! in_array( $config['name'], $modules ) && ! is_file( $d['path'] . '/cloud.app' ) ) {
+				if ( ! in_array( $config['name'], $modules ) && ! is_file( $d['path'] . '/cloud.php' ) ) {
 					$locality[ $config['name'] ] = $config;
 				}
 			}
@@ -166,11 +170,19 @@ class Module {
 			] ) ) {
 				message( '模块已经存在,请更改模块标识', '', 'error' );
 			}
+			//模块预览图
+			$info    = pathinfo( $data['preview'] );
+			$preview = $dir . '/preview.' . $info['extension'];
+			copy( $data['preview'], $preview );
+			$data['preview'] = 'preview.' . $info['extension'];
+
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			message( '模块修改成功', 'prepared' );
 		}
-		$config = file_get_contents( "addons/{$_GET['module']}/package.json" );
-		View::with( 'config', $config );
+		$json              = file_get_contents( "addons/{$_GET['module']}/package.json" );
+		$config            = json_decode( $json, true );
+		$config['preview'] = 'addons/' . $config['name'] . '/' . $config['preview'];
+		View::with( 'config', json_encode( $config, JSON_UNESCAPED_UNICODE ) );
 
 		return view();
 	}
@@ -222,13 +234,9 @@ class Module {
 				}
 				file_put_contents( "{$dir}/{$d}/index.html", 'Not allowed to access' );
 			}
-			//模块图片处理
-			$info  = pathinfo( $data['thumb'] );
-			$thumb = $dir . '/thumb.' . $info['extension'];
-			copy( $data['thumb'], $thumb );
-			$data['thumb'] = 'thumb.' . $info['extension'];
-			$info          = pathinfo( $data['preview'] );
-			$preview       = $dir . '/preview.' . $info['extension'];
+			//模块预览图
+			$info    = pathinfo( $data['preview'] );
+			$preview = $dir . '/preview.' . $info['extension'];
 			copy( $data['preview'], $preview );
 			$data['preview'] = 'preview.' . $info['extension'];
 			//初始创建模块需要的脚本文件
@@ -294,7 +302,7 @@ class Module {
 			$model['router']      = $config['router'];
 			$model['domain']      = $config['domain'];
 			$model['permissions'] = $permissions;
-			$model['locality']    = ! is_file( $dir . '/cloud.hd' ) ? 1 : 0;
+			$model['locality']    = ! is_file( $dir . '/cloud.php' ) ? 1 : 0;
 			$model->save();
 			//执行模块安装程序
 			$class = 'addons\\' . $config['name'] . '\system\Setup';
@@ -360,9 +368,9 @@ class Module {
 				}
 			}
 			//远程模块更新模块数据与删除package.json
-			if ( is_file( $dir . '/cloud.app' ) ) {
+			if ( is_file( $dir . '/cloud.php' ) ) {
 				//设置云信息包括云模块编译时间
-				$config = include $dir . '/cloud.app';
+				$config = include $dir . '/cloud.php';
 				$data   = [ 'locality' => 0, 'build' => $config['zip']['build'] ];
 				Modules::where( 'name', $config['name'] )->update( $data );
 

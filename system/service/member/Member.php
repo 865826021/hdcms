@@ -1,5 +1,6 @@
 <?php namespace system\service\member;
 
+use houdunwang\session\Session;
 use houdunwang\validate\Validate;
 use system\model\MemberAuth;
 use system\service\Common;
@@ -19,6 +20,7 @@ class Member extends Common {
 		$memberId = Session::get( "member_uid" );
 		if ( $memberId ) {
 			$this->initMemberInfo();
+
 			if ( v( 'member.info' ) ) {
 				return true;
 			}
@@ -26,7 +28,7 @@ class Member extends Common {
 		if ( $return ) {
 			return false;
 		}
-		$url = url( 'entry/login', [ 'from' => __URL__ ], 'ucenter' );
+		$url = url( 'entry/login', [ 'from' => urlencode( __URL__ ) ], 'ucenter' );
 		message( "抱歉，你没有登录无法进行操作。", $url, 'error' );
 	}
 
@@ -164,7 +166,8 @@ class Member extends Common {
 				message( $errorMessage, '', 'error' );
 			}
 		}
-		\Session::set( 'member_uid', $user['uid'] );
+
+		Session::set( 'member_uid', $user['uid'] );
 
 		return true;
 	}

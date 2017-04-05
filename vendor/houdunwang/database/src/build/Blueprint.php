@@ -36,6 +36,26 @@ class Blueprint {
 		$this->table      = Config::get( 'database.prefix' ) . $table;
 	}
 
+	/**
+	 * 添加索引
+	 *
+	 * @param $field 字段
+	 */
+	public function index( $field ) {
+		$sql = "ALTER TABLE `{$this->table}` ADD INDEX {$field} ( `{$field}` )";
+		Db::execute( $sql );
+	}
+
+	/**
+	 * 添加唯一索引
+	 *
+	 * @param $field 字段
+	 */
+	public function unique( $field ) {
+		$sql = "ALTER TABLE `{$this->table}` ADD UNIQUE ( `{$field}` )";
+		Db::execute( $sql );
+	}
+
 	//新建表
 	public function create() {
 		$sql         = "CREATE TABLE " . $this->table . '(';

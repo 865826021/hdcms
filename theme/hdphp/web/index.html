@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HDCMS免费的微信/移动/桌面开发工具</title>
+    <include file="resource/view/common.php"/>
+    <include file="resource/view/hdjs.php"/>
+    <link rel="stylesheet" href="{{template_url()}}/css/index.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <nav class="navbar navbar-default " role="navigation">
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="http://www.kancloud.cn/houdunwang/hdphp3/215156" target="_blank">框架手册</a></li>
+                    <li><a href="http://www.kancloud.cn/houdunwang/hdjs/232841" target="_blank">前端组件</a></li>
+                    <li><a href="http://www.kancloud.cn/houdunwang/wechat/232825" target="_blank">微信组件</a></li>
+                    <li><a href="http://www.houdunwang.com" target="_blank">猎人训练</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <if value="memberIsLogin(true)">
+                        <li><a href="{{url('member.index',[],'ucenter')}}">会员中心</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{v('member.info.nickname')}} <b
+                                    class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{url('entry/out',['from'=>__URL__],'ucenter')}}">退出</a></li>
+                            </ul>
+                        </li>
+                        <else/>
+                        <li>
+                            <a href="{{url('entry/login',['from'=>__URL__],'ucenter')}}">登录</a>
+                        </li>
+                    </if>
+                </ul>
+            </div>
+        </nav>
+        <div class="col-sm-12 text-center body">
+            <h1>HDPHP 3.0</h1>
+            <p>可能是国内最好用的PHP开源框架</p>
+            <img src="http://www.hdcms.com/theme/hdphp/web/images/hdphp.jpg">
+            <div class="row" style="margin-top: 30px;">
+                <a href="https://github.com/houdunwang/hdphp/archive/master.zip" class="btn btn-success">下载框架</a>
+            </div>
+            <p class="qq">
+                交流QQ群:248767393(满) 517903509(开放)
+            </p>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            最新文章
+                            <a href="http://www.hdphp.com/article13-142-1.html" class="pull-right">更多</a>
+                        </h3>
+                    </div>
+                    <ul class="list-group">
+                        <tag action="article.lists" row="10" cid="145">
+                            <li class="list-group-item">
+                                <a href="{{$field['url']}}" target="_blank">{{$field['title']}}</a>
+                                <span class="pull-right text-muted"> {{date("Y年m月d日",$field['createtime'])}}</span>
+                            </li>
+                        </tag>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            更新日志
+                            <a href="http://www.hdphp.com/article13-143-1.html" class="pull-right">更多</a>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <tag action="article.lists" row="10" cid="143">
+                            <li class="list-group-item">
+                                <a href="{{$field['url']}}" target="_blank">{{$field['title']}}</a>
+                                <span class="pull-right text-muted"> {{date("Y年m月d日",$field['createtime'])}}</span>
+                            </li>
+                        </tag>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright text-center text-muted">
+            我们的使命：帮助中小企业快速实现互联网价值,增长企业效益!<br/>
+            Copyright © 2010-2016 hdcms.com All Rights Reserved 京ICP备京ICP备12048441号-7
+        </div>
+    </div>
+</div>
+<script>
+    require(['bootstrap']);
+</script>
+</body>
+</html>

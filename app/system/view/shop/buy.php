@@ -40,7 +40,7 @@
 			<div class="col-sm-4 col-md-2" ng-repeat="v in field.apps">
 				<div class="thumbnail">
 					<img ng-src="@{{v.app_preview}}"
-					     style="height: 200px; width: 100%; display: block;">
+					     style="">
 					<div class="caption">
 						<h4>
 							@{{v.title}}
@@ -50,7 +50,7 @@
 							<span ng-show="v.price<=0" class="label label-info">免费</span>
                             <span ng-show="v.audit==0" class="label label-danger">测试版</span>
 						</small>
-						<p>@{{v.resume}}</p>
+						<p class="resume">@{{v.resume}}</p>
 						<p>
 							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary btn-sm btn-block"
 							   role="button">开始安装</a>
@@ -105,5 +105,14 @@
 <style>
     .thumbnail img{
         border:solid 1px #ddd;
+        height: 200px; width: 100%; display: block;
+    }
+    .thumbnail .resume{
+        overflow:hidden;;/* 内容超出宽度时隐藏超出部分的内容 */
+        text-overflow:ellipsis;;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+        /*white-space:nowrap;!* 不换行 *!*/
+        height:40px;
+        font-size:14px;
+        margin-top: 6px;
     }
 </style>

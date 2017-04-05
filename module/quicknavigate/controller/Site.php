@@ -27,18 +27,19 @@ class Site extends HdController {
 	 * 添加快捷菜单
 	 */
 	public function post() {
-		$data = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
-		$data = $data ? json_decode( $data, true ) : [
+		$data           = Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )->where( 'uid', v( 'user.info.uid' ) )->pluck( 'data' );
+		$data           = $data ? json_decode( $data, true ) : [
 			'system' => [],
 			'module' => []
 		];
-		$post = Request::post();
+		$data['status'] = 1;
+		$post           = Request::post();
 		//分析链接检测是否有模块数据
-		$urlInfo = parse_url($post['url']);
+		$urlInfo = parse_url( $post['url'] );
 		parse_str( $urlInfo['query'], $params );
 		$moduleName = isset( $params['m'] ) ? $params['m'] : '';
 		//当前模块数据
-		$module     = v( 'site.modules.' . $moduleName );
+		$module = v( 'site.modules.' . $moduleName );
 		if ( $module ) {
 			//模块菜单,原来没有添加时初始模块菜单数据
 			if ( ! isset( $data['module'][ $module['name'] ] ) ) {

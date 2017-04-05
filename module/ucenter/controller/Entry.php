@@ -12,7 +12,6 @@ namespace module\ucenter\controller;
 
 use houdunwang\request\Request;
 use houdunwang\session\Session;
-use houdunwang\wechat\WeChat;
 use module\HdController;
 
 /**
@@ -30,10 +29,10 @@ class Entry extends HdController {
 		template_path( $this->template );
 		template_url( __ROOT__ . '/' . $this->template );
 		//来源页面
-		if ( $from = Request::get( 'from' ) ) {
+		if ( $from = Request::get( 'from', '', [ 'urldecode' ] ) ) {
 			Session::set( 'from', $from );
 		}
-		$this->fromUrl = Session::get( 'from', url( 'member.index', '', 'ucenter' ) );
+		$this->fromUrl = Session::get( 'from', __ROOT__ );
 	}
 
 	//分配帐号密码登录表单提示

@@ -105,27 +105,41 @@
 							<span class="help-block">登录阿里云访问控制查看 https://ram.console.aliyun.com</span>
 						</div>
 					</div>
+                    <div class="form-group" ng-if="field.upload.mold=='oss'">
+                        <label for="" class="col-sm-2 control-label">bucket</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-model="field.oss.bucket">
+                            <span class="help-block">Bucket块名称 https://oss.console.aliyun.com/index</span>
+                        </div>
+                    </div>
+<!--					<div class="form-group" ng-if="field.upload.mold=='oss'">-->
+<!--						<label for="" class="col-sm-2 control-label">bucket 外网域名</label>-->
+<!--						<div class="col-sm-5">-->
+<!--							<input type="text" class="form-control" ng-model="field.oss.bucket_endpoint">-->
+<!--							<span class="help-block">请登录阿里云后台查看 https://oss.console.aliyun.com/index?spm=5176.2020520101.1002.d10oss.8O7bNi# 主要用于js 结合 PHP生成sign发送使用</span>-->
+<!--						</div>-->
+<!--					</div>-->
 					<div class="form-group" ng-if="field.upload.mold=='oss'">
-						<label for="" class="col-sm-2 control-label">bucket 外网域名</label>
-						<div class="col-sm-5">
-							<input type="text" class="form-control" ng-model="field.oss.bucket_endpoint">
-							<span class="help-block">请登录阿里云后台查看 https://oss.console.aliyun.com/index?spm=5176.2020520101.1002.d10oss.8O7bNi# 主要用于js 结合 PHP生成sign发送使用</span>
-						</div>
-					</div>
-					<div class="form-group" ng-if="field.upload.mold=='oss'">
-						<label for="" class="col-sm-2 control-label">公共endpoint</label>
+						<label for="" class="col-sm-2 control-label">域名</label>
 						<div class="col-sm-5">
 							<input type="text" class="form-control" ng-model="field.oss.endpoint">
-							<span class="help-block">公共endpoint 请根据Region和Endpoint对照表: https://help.aliyun.com/document_detail/31837.html 选择, 主要用于PHP上传文件使用</span>
+							<span class="help-block">请登录阿里云后台查看,可以设置阿里云提供的公共域名，也可以使用自定义域名。<br/>
+                            如果使用自定义域名，需要将下面的 "使用自定义域名" 设置为 "是"</span>
 						</div>
 					</div>
-					<div class="form-group" ng-if="field.upload.mold=='oss'">
-						<label for="" class="col-sm-2 control-label">bucket</label>
-						<div class="col-sm-5">
-							<input type="text" class="form-control" ng-model="field.oss.bucket">
-							<span class="help-block">Bucket块名称 https://oss.console.aliyun.com/index</span>
-						</div>
-					</div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">自定义域名</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" value="1" ng-model="field.oss.custom_domain"> 是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="0" ng-model="field.oss.custom_domain"> 否
+                            </label>
+                            <span class="help-block">是否使用自定义域名，需要先在阿里云后台OSS业务处解析好域名</span>
+                        </div>
+                    </div>
+
 				</div>
 
 			</div>

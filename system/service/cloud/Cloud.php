@@ -215,8 +215,7 @@ class Cloud {
 		$this->checkAccount();
 		$module = Db::table( 'modules' )->where( 'name', $name )->first();
 		$res    = \Curl::post( $this->url . "/cloud/getModuleUpgrade", $module );
-		$app    = json_decode( $res, true );echo 1111;
-		exit;
+		$app    = json_decode( $res, true );
 		if ( $app['valid'] == 1 ) {
 			//下载压缩文件
 			$content = \Curl::get( $this->host . '/' . $app['zip']['file'] );
@@ -225,7 +224,7 @@ class Cloud {
 			file_put_contents( $file, $content );
 			Zip::PclZip( $file );//设置压缩文件名
 			Zip::extract( 'addons' );
-			file_put_contents( "addons/{$name}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
+			file_put_contents( "addons/{$name}/cloud.php", '<?php return ' . var_export( $app, true ) . ';?>' );
 			//删除下载压缩包
 			\Dir::delFile( $file );
 			//执行模块更新表语句
@@ -269,12 +268,12 @@ class Cloud {
 				if ( Modules::where( 'name', $app['name'] )->get() ) {
 					message( '应用已经安装,不允许重复安装!', '', 'error' );
 				}
-				if ( is_dir( "addons/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
+				if ( is_dir( "addons/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.php" ) ) {
 					message( '已经存在本地开发的同名模块', '', 'error' );
 				}
 				break;
 			case 'template':
-				if ( is_dir( "theme/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.app" ) ) {
+				if ( is_dir( "theme/{$app['name']}" ) && ! is_file( "addons/{$app['name']}/cloud.php" ) ) {
 					message( '同名模板已经存在', '', 'error' );
 				}
 				break;
@@ -297,7 +296,7 @@ class Cloud {
 						'valid'   => 0
 					] );
 				}
-				file_put_contents( "addons/{$app['name']}/cloud.app", '<?php return ' . var_export( $app, true ) . ';?>' );
+				file_put_contents( "addons/{$app['name']}/cloud.php", '<?php return ' . var_export( $app, true ) . ';?>' );
 				ajax( [
 					'message' => '模块下载完成,准备开始安装',
 					'config'  => $app,
@@ -312,7 +311,7 @@ class Cloud {
 				file_put_contents( $file, $content );
 				Zip::PclZip( $file );//设置压缩文件名
 				Zip::extract( 'theme' );
-				file_put_contents( "addons/{$app['name']}/cloud.app", '来自云应用' );
+				file_put_contents( "addons/{$app['name']}/cloud.php",'<?php return ' . var_export( $app, true ) . ';?>' );
 				//删除下载压缩包
 				\Dir::delFile( $file );
 				ajax( [

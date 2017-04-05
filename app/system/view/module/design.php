@@ -672,26 +672,26 @@
 					<span class="help-block">当前模块兼容的系统版本, 安装时会判断版本信息, 不兼容的版本将无法安装</span>
 				</div>
 			</div>
+<!--			<div class="form-group">-->
+<!--				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块缩略图</label>-->
+<!--				<div class="col-sm-10">-->
+<!--					<div class="input-group">-->
+<!--						<input type="text" class="form-control" readonly="" ng-model="field.thumb">-->
+<!--						<div class="input-group-btn">-->
+<!--							<button ng-click="uploadThumb()" class="btn btn-default" type="button">选择图片</button>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--					<div class="input-group" style="margin-top:5px;">-->
+<!--						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}"-->
+<!--						     class="img-responsive img-thumbnail img-thumb" width="150">-->
+<!--						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"-->
+<!--						    ng-click="field.thumb=''">×</em>-->
+<!--					</div>-->
+<!--					<span class="help-block">用 80*80 的图片来让你的模块更吸引眼球吧</span>-->
+<!--				</div>-->
+<!--			</div>-->
 			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">模块缩略图</label>
-				<div class="col-sm-10">
-					<div class="input-group">
-						<input type="text" class="form-control" readonly="" ng-model="field.thumb">
-						<div class="input-group-btn">
-							<button ng-click="uploadThumb()" class="btn btn-default" type="button">选择图片</button>
-						</div>
-					</div>
-					<div class="input-group" style="margin-top:5px;">
-						<img ng-src="@{{field.thumb?field.thumb:'resource/images/nopic.jpg'}}"
-						     class="img-responsive img-thumbnail img-thumb" width="150">
-						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
-						    ng-click="field.thumb=''">×</em>
-					</div>
-					<span class="help-block">用 80*80 的图片来让你的模块更吸引眼球吧</span>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">官网展示图</label>
+				<label class="col-xs-12 col-sm-2 col-md-2 col-lg-1 control-label star">预览图</label>
 				<div class="col-sm-10">
 					<div class="input-group">
 						<input type="text" class="form-control" readonly="" ng-model="field.preview">
@@ -705,7 +705,7 @@
 						<em class="close" style="position:absolute; top: 0px; right: -14px;" title="删除这张图片"
 						    ng-click="field.preview=''">×</em>
 					</div>
-					<span class="help-block">模块封面, 大小为 600*350, 更好的设计将会获得官方推荐位置</span>
+					<span class="help-block">模块预览图宽度最好不要超过600px, 更好的设计将会获得官方推荐位置</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -845,14 +845,12 @@
 						$scope.$apply();
 					})
 				}
-
 				$scope.uploadPreview = function () {
 					util.image(function (images) {
 						$scope.field.preview = images[0];
 						$scope.$apply();
 					})
 				}
-
 				//封面导航
 				$scope.addCover = function () {
 					$scope.field.cover.push({"title": "", "do": ""});
@@ -924,11 +922,11 @@
 					if ($scope.field.url == '') {
 						msg += '发布网址不能为空<br/>';
 					}
-					if ($scope.field.thumb == '') {
-						msg += '模块缩略图不能为空<br/>';
-					}
+//					if ($scope.field.thumb == '') {
+//						msg += '模块缩略图不能为空<br/>';
+//					}
 					if ($scope.field.preview == '') {
-						msg += '模块封面图不能为空<br/>';
+						msg += '预览图不能为空<br/>';
 					}
 					if (!/^[0-9\.]+$/.test($scope.field.version)) {
 						msg += '版本号只能为数字<br/>';

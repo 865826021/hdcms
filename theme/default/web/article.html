@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>内容页</title>
-		<extend file='resource/view/common'/>
+		<extend file='resource/view/web'/>
 		<link rel="stylesheet" type="text/css" href="{{template_url()}}/css/page.css"/>
 	</head>
 	<body>
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<!--导航条结束-->
-
+		
 		<!--搜索区域-->
 		<!--<div id="search">
 			<span>热门关键词：</span>
@@ -30,16 +30,16 @@
 			<a href="">客户案例</a>
 			<a href="">远兴鸿</a>
 			<a href="">新闻</a>
-
+			
 			<form action="" method="post">
 				<input type="text" placeholder="请输入搜索关键词" class="keyword"/>
 				<input type="submit" value="" class="sub" />
 			</form>
 		</div>-->
 		<!--搜索区域结束-->
-
+		
 		<img src="{{template_url()}}/images/20160722170646_18014.jpg" style="display: block;margin: 0 auto;"/>
-
+		
 		<!--大区域-->
 		<div class="main">
 			<!--左侧-->
@@ -53,7 +53,7 @@
 					»
 					<a href="">产品中心</a>
 				</p>-->
-
+				
 				<h1>{{$hdcms['title']}}</h1>
 				<p class="info">作者：{{$hdcms['author']}}&nbsp;&nbsp;&nbsp;&nbsp;点击量：{{$hdcms['click']}}</p>
 				<div class="content">
@@ -67,7 +67,7 @@
 			</div>
 			<!--左侧结束-->
 			
-
+			
 			<!--右侧-->
 			<div class="right">
 				<h3>全站资讯导航</h3>
@@ -84,10 +84,10 @@
 			<!--右侧结束-->
 		</div>
 		<!--大区域结束-->
-
+		
 		<!--底部-->
 			<include file='theme/default/web/footer.html'/>
 		<!--底部结束-->
-
+		
 	</body>
 </html>

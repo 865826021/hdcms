@@ -1,25 +1,7 @@
-同时生成安装与更新包
-```
-php hd cli:all
-```
+# 生成HDCMS更新包方法
 
-生成离线安装脚本 
-```
-php hd cli:install
-```
+## 生成差异文件(本地执行 废弃!)
+git diff v2.0.49 v2.0.50 --name-status > files.php
 
-生成安装包
-```
-php hd cli:full
-```
-
-生成更新包
-```
+## 创建压缩包
 php hd cli:upgrade
-```
-
-生成指定旧版本的更新包
-```
-php hd cli:upgrade v2.0.40
-```
-
