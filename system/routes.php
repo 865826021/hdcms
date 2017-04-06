@@ -14,9 +14,6 @@ Route::any( 'update', 'system/cloud/localUpdate' );
 
 //后台管理员登录
 Route::alias( 'login', 'm=ucenter&action=controller/entry/login' );
-Route::get('a',function(){
-	return 67;
-});
 //后台管理员登录
 Route::any( 'hdcms', function () {
 	Session::set( 'system.login', 'hdcms' );

@@ -32,7 +32,7 @@ class Entry extends HdController {
 		if ( $from = Request::get( 'from', '', [ 'urldecode' ] ) ) {
 			Session::set( 'from', $from );
 		}
-		$this->fromUrl = Session::get( 'from', __ROOT__ );
+		$this->fromUrl = Session::get( 'from', url('member.index',[],'ucenter') );
 	}
 
 	//分配帐号密码登录表单提示
