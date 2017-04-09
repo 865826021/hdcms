@@ -49,11 +49,11 @@ class Base {
 	 * @return string
 	 */
 	public function fetch( $file ) {
-		$this->file  = $this->template( $file );
-		$compileFile = $this->compile();
+		$this->file = $this->template( $file );
+		$this->compile();
 		ob_start();
 		extract( self::$vars );
-		include $compileFile;
+		include $this->compileFile;
 
 		return ob_get_clean();
 	}

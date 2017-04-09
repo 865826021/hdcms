@@ -56,12 +56,20 @@
                 </table>
             </div>
         </div>
-        <ul class="pagination">
-            {{$data->links()}}
-        </ul>
-        <button class="btn btn-primary col-lg-1" onclick="del()">删除</button>
+            <div class="col-sm-6">
+                <button class="btn btn-primary" onclick="del()"> 删除选中用户 </button>
+            </div>
+            <div class="col-sm-6">
+                {{$data->links()}}
+            </div>
     </form>
 </block>
+<style>
+    .pagination{
+        margin: 0px;
+        float: right;
+    }
+</style>
 <script>
     //修改会员积分/余额
     function trade(obj) {

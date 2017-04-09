@@ -104,7 +104,7 @@ class Base {
 			}
 			//执行控制器方法
 			$result = $reflectionMethod->invokeArgs( $controller, $args );
-			if ( IS_AJAX || is_array( $result ) ) {
+			if ( IS_AJAX && is_array( $result ) ) {
 				Response::ajax( $result );
 			} else {
 				echo is_object( $result ) ? View::toString() : $result;

@@ -280,6 +280,6 @@ class Member extends Common {
 	public function getSiteAllMemberGroup( $siteid = 0 ) {
 		$siteid = $siteid ?: siteid();
 
-		return Db::table( 'member_group' )->where( 'siteid', $siteid )->get();
+		return Db::table( 'member_group' )->where( 'siteid', $siteid )->orderBy('id','DESC')->get();
 	}
 }

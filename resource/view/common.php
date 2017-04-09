@@ -13,13 +13,13 @@
 		'ossSign': '{{u("component/oss/sign",["m"=>Request::get("m")])}}',
 	};
 	window.system = {
-		attachment: "{{__ROOT__}}/attachment",
-		root: "{{__ROOT__}}",
-		url: "{{__URL__}}",
-		siteid: "{{SITEID}}",
-		module: "{{v( 'module.name' )}}",
+		attachment: "<?php echo __ROOT__?>/attachment",
+		root: "<?php echo __ROOT__?>",
+		url: "<?php echo __URL__?>",
+		siteid: "<?php echo SITEID?>",
+		module: "<?php echo v( 'module.name' )?>",
 		//用于上传等组件使用标识当前是后台用户
-		user_type: '{{v("user")?"user":"member"}}'
+		user_type: '<?php echo v("user")?"user":"member"?>'
 	}
 </script>
 <script>

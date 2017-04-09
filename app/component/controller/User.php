@@ -15,7 +15,7 @@ class User {
 		if ( IS_POST ) {
 			//过滤不显示的用户
 			$filterUid = explode( ',', q( 'get.filterUid', '' ) );
-			$db        = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' );
+			$db        = Db::table( 'user' )->join( 'user_group', 'user.groupid', '=', 'user_group.id' )->limit(20);
 			//排除站长
 			if ( ! empty( $filterUid ) ) {
 				$db->whereNotIn( 'uid', $filterUid );

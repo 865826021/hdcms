@@ -17,7 +17,7 @@ class Member extends Common {
 		[ 'password', 'required', '密码不能为空', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'password', 'minlen:5', '密码长度不能小于5位', self::EXIST_VALIDATE, self::MODEL_BOTH ],
 		[ 'email', 'email', '邮箱格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
-		[ 'email', 'unique', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
+		[ 'email', 'checkMail', '邮箱已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'mobile', 'checkMobile', '手机号已经被使用', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'mobile', 'phone', '手机号格式错误', self::NOT_EMPTY_VALIDATE, self::MODEL_BOTH ],
 		[ 'uid', 'checkUid', '当前用户不属于站点', self::EXIST_VALIDATE, self::MODEL_BOTH ],
@@ -71,6 +71,23 @@ class Member extends Common {
 		}
 		if ( $this->actionType() == self::MODEL_UPDATE ) {
 			$has = Db::table( 'member' )->where( 'mobile', $value )->where( 'siteid', siteid() )
+			         ->where( 'uid', '<>', $this['uid'] )->get();
+			if ( empty( $has ) ) {
+				return true;
+			}
+		}
+	}
+
+	//邮箱检测
+	protected function checkMail( $field, $value, $params, $data ) {
+		if ( $this->actionType() == self::MODEL_INSERT ) {
+			$has = Db::table( 'member' )->where( 'email', $value )->where( 'siteid', siteid() )->get();
+			if ( empty( $has ) ) {
+				return true;
+			}
+		}
+		if ( $this->actionType() == self::MODEL_UPDATE ) {
+			$has = Db::table( 'member' )->where( 'email', $value )->where( 'siteid', siteid() )
 			         ->where( 'uid', '<>', $this['uid'] )->get();
 			if ( empty( $has ) ) {
 				return true;

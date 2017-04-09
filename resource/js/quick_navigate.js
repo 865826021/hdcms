@@ -3,7 +3,7 @@
  */
 require(['bootstrapContextmenu'], function ($) {
     //添加菜单
-    $('.left-menu  a').contextmenu({
+    $('a').contextmenu({
         target: '#context-menu',
         before: function (e, context) {
         },
@@ -38,7 +38,16 @@ require(['bootstrapContextmenu'], function ($) {
             }, 'JSON');
         }
     })
-
+    //删除底部所有快捷菜单
+    $('#delAllQuickMenu').click(function () {
+        if (confirm('确定删除所有快捷菜单吗?')) {
+            $.post('?m=quicknavigate&action=controller/site/delAll', {}, function (json) {
+                if (json['valid'] == 1) {
+                    util.message('菜单删除成功,系统将刷新页面。', window.system.url, 'success', 1);
+                }
+            }, 'JSON');
+        }
+    })
     //删除底部快捷菜单
     $(".close_quick_menu").click(function () {
         $.post('?m=quicknavigate&action=controller/site/status', {'quickmenu': 0}, function (json) {

@@ -54,12 +54,18 @@
                             <if value="$m['locality']==1">
                                 <div class="btn-group" role="group" aria-label="...">
                                     <a href="{{u('createZip',['name'=>$m['name']])}}" class="btn btn-default btn-sm">打包下载</a>
+                                    <a href="{{u('update',['module'=>$m['name']])}}" class="btn btn-default btn-sm">更新模块</a>
+                                    <a class="btn btn-default btn-sm"
+                                       href="{{u('resetDesign',array('module'=>$m['name']))}}">重新设计</a>
+                                    <a href="javascript:;" class="btn btn-sm btn-default"
+                                       onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
+                                </div>
+                                <else/>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <a href="javascript:;" class="btn btn-sm btn-default"
+                                       onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
                                 </div>
                             </if>
-                            <div class="btn-group" role="group" aria-label="...">
-                                <a href="javascript:;" class="btn btn-sm btn-default"
-                                   onclick="uninstall('{{$m['name']}}','{{$m['title']}}')">卸载</a>
-                            </div>
                         </if>
                     </div>
                 </div>

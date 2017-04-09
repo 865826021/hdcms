@@ -1,5 +1,6 @@
 <?php namespace app\site\controller;
 
+use houdunwang\request\Request;
 use system\model\Navigate as NavigateModel;
 use system\model\Page;
 
@@ -88,7 +89,8 @@ class Navigate {
 					'orderby'  => 0,
 					'status'   => 0,
 					'icontype' => 1,
-					'entry'    => q( 'get.entry' ),
+					'entry'    => Request::get( 'entry' ),
+					'original' => 1
 				];
 			}
 		}

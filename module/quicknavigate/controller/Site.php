@@ -131,7 +131,15 @@ class Site extends HdController {
 			}
 		}
 		$insertData['data'] = json_encode( $tmp, JSON_UNESCAPED_UNICODE );
-		Db::table( 'site_quickmenu' )->where( 'id', $menu['id'] )->update( $insertData );
+		Db::table( 'site_quickmenu' )->where( 'id', $menu['id'] )->where( 'siteid', siteid() )
+		  ->where( 'uid', v( 'user.info.uid' ))->update( $insertData );
+		message( '删除菜单成功', 'back', 'success' );
+	}
+
+	//删除所有菜单
+	public function delAll() {
+		Db::table( 'site_quickmenu' )->where( 'siteid', siteid() )
+		  ->where( 'uid', v( 'user.info.uid' ))->delete();
 		message( '删除菜单成功', 'back', 'success' );
 	}
 }

@@ -385,6 +385,19 @@ class User extends Common {
 	}
 
 	/**
+	 * 获取站点用户
+	 *
+	 * @param int $siteId 站点编号
+	 *
+	 * @return mixed
+	 */
+	public function getSiteUser( $siteId ) {
+		$siteId = $siteId ?: SITEID;
+
+		return Db::table( 'site_user' )->join('user','user.uid','=','site_user.uid')->where( 'siteid', $siteId )->get();
+	}
+
+	/**
 	 * 删除用户
 	 *
 	 * @param int $uid 会员编号

@@ -937,7 +937,7 @@
 					}
 					$.post('{{__URL__}}', {data: angular.toJson($scope.field)}, function (json) {
 						if (json.valid == 1) {
-							util.message(json.message, "{{u('prepared')}}", 'success');
+							util.message(json.message, "back", 'success');
 						} else {
 							util.message(json.message, '', 'warning');
 						}

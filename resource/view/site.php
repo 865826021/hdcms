@@ -225,8 +225,7 @@
     <br>
     Powered by hdcms v2.0 © 2014-2019 www.hdcms.com
 </div>
-<script src="{{__ROOT__}}/resource/js/menu.js"></script>
-<script src="{{__ROOT__}}/resource/js/quick_navigate.js"></script>
+
 <script>
     require(['bootstrap']);
 </script>
@@ -247,9 +246,9 @@
 <if value="$QUICKMENU['status']">
     <div class="quick_navigate">
         <div class="btn-group">
-		<span class="btn btn-success btn-sm">
-			快捷导航
-		</span>
+            <span class="btn btn-default btn-sm" id="delAllQuickMenu">
+                删除所有菜单
+            </span>
             <foreach from="$QUICKMENU['system']" value="$v">
                 <a class="btn btn-default btn-sm" href="{{$v['url']}}">
                     {{$v['title']}}
@@ -271,5 +270,7 @@
         <i class="fa fa-times-circle-o pull-right fa-2x close_quick_menu"></i>
     </div>
 </if>
+<script src="{{__ROOT__}}/resource/js/menu.js"></script>
+<script src="{{__ROOT__}}/resource/js/quick_navigate.js"></script>
 </body>
 </html>

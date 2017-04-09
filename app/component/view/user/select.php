@@ -42,7 +42,7 @@
                     </tr>';
             })
             $("tbody#getUsers").html(tr);
-        })
+        },'json')
     }
     loadUser();
     //选择或取消用户

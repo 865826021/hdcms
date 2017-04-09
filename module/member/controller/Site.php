@@ -7,6 +7,7 @@
  * |    WeChat: aihoudun
  * | Copyright (c) 2012-2019, www.houdunwang.com. All Rights Reserved.
  * '-------------------------------------------------------------------*/
+
 namespace module\member\controller;
 
 use houdunwang\request\Request;
@@ -32,6 +33,7 @@ class site extends HdController {
 		$data = Db::table( 'member' )
 		          ->join( 'member_group', 'member.group_id', '=', 'member_group.id' )
 		          ->where( 'member.siteid', SITEID )
+		          ->orderBy( 'uid', 'DESC' )
 		          ->paginate( 20, 8 );
 
 		return view( $this->template . '/member_lists.html' )->with( 'data', $data );

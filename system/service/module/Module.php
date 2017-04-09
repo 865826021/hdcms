@@ -1,6 +1,7 @@
 <?php namespace system\service\module;
 
 use system\model\Middleware;
+use system\model\ModuleDomain;
 use system\model\Modules;
 use system\model\ModulesBindings;
 use system\model\ModuleSetting;
@@ -17,10 +18,12 @@ use system\model\UserPermission;
 class Module {
 	//删除模块时的关联数据表
 	protected $relationTables = [
+		'module_domain',
 		'module_setting',
+		'modules_bindings',
 		'site_modules',
 		'ticket_module',
-		'modules_bindings',
+		'navigate'
 	];
 	protected $industry = [
 		'business'  => '主要业务',
@@ -444,6 +447,119 @@ class Module {
 	}
 
 	/**
+	 * 安装或更新模块时添加模块业务数据
+	 *
+	 * @param $module 模块标识
+	 *
+	 * @return bool
+	 */
+	public function initModuleData( $module ) {
+		$mod = Modules::where( 'name', $module )->first();
+		if ( $mod && $mod['is_system'] == 1 ) {
+			message( '系统模块不允许操作' );
+		}
+		$dir    = "addons/{$module}";
+		$config = json_decode( file_get_contents( "{$dir}/package.json" ), true );
+		//执行模块更新表语句
+		$class = 'addons\\' . $module . '\system\Setup';
+		call_user_func_array( [ new $class, 'upgrade' ], [] );
+		//权限标识处理
+		$permissions = [];
+		foreach ( (array) preg_split( '/\n/', $config['permissions'] ) as $v ) {
+			$d = explode( ':', $v );
+			if ( count( $d ) == 2 ) {
+				$permissions[] = [ 'title' => trim( $d[0] ), 'do' => trim( $d[1] ) ];
+			}
+		}
+		//添加到模块系统中
+		$model = new Modules();
+		$model->where( 'name', $module )->delete();
+		$model['name']        = $config['name'];
+		$model['version']     = $config['version'];
+		$model['industry']    = $config['industry'];
+		$model['title']       = $config['title'];
+		$model['url']         = $config['url'];
+		$model['resume']      = $config['resume'];
+		$model['detail']      = $config['detail'];
+		$model['author']      = $config['author'];
+		$model['rule']        = $config['rule'];
+		$model['thumb']       = $config['thumb'];
+		$model['preview']     = $config['preview'];
+		$model['tag']         = $config['tag'];
+		$model['is_system']   = 0;
+		$model['subscribes']  = $config['subscribes'];
+		$model['processors']  = $config['processors'];
+		$model['setting']     = $config['setting'];
+		$model['middleware']  = $config['middleware'];
+		$model['crontab']     = $config['crontab'];
+		$model['router']      = $config['router'];
+		$model['domain']      = $config['domain'];
+		$model['permissions'] = $permissions;
+		$model['locality']    = ! is_file( $dir . '/cloud.php' ) ? 1 : 0;
+		$model->save();
+		//添加模块动作表数据
+		ModulesBindings::where( 'module', $module )->delete();
+		if ( ! empty( $config['web']['entry'] ) ) {
+			$d           = $config['web']['entry'];
+			$d['module'] = $module;
+			$d['entry']  = 'web';
+			ModulesBindings::insert( $d );
+		}
+		if ( ! empty( $config['web']['member'] ) ) {
+			foreach ( $config['web']['member'] as $d ) {
+				$d['entry']  = 'member';
+				$d['module'] = $module;
+				ModulesBindings::insert( $d );
+			}
+		}
+		if ( ! empty( $config['mobile']['home'] ) ) {
+			foreach ( $config['mobile']['home'] as $d ) {
+				$d['entry']  = 'home';
+				$d['module'] = $module;
+				ModulesBindings::insert( $d );
+			}
+		}
+		if ( ! empty( $config['mobile']['member'] ) ) {
+			foreach ( $config['mobile']['member'] as $d ) {
+				$d['entry']  = 'profile';
+				$d['module'] = $module;
+				ModulesBindings::insert( $d );
+			}
+		}
+		if ( ! empty( $config['cover'] ) ) {
+			foreach ( $config['cover'] as $d ) {
+				$d['entry']  = 'cover';
+				$d['module'] = $module;
+				ModulesBindings::insert( $d );
+			}
+		}
+		if ( ! empty( $config['business'] ) ) {
+			foreach ( $config['business'] as $d ) {
+				if ( ! empty( $d['action'] ) ) {
+					$d['entry']  = 'business';
+					$d['module'] = $module;
+					$d['do']     = json_encode( $d['action'], JSON_UNESCAPED_UNICODE );
+					ModulesBindings::insert( $d );
+				}
+			}
+		}
+		//更新所有站点缓存
+		\Site::updateAllCache();
+
+		return true;
+	}
+
+	/**
+	 * 更新模块
+	 * 根据模块配置文件更新模块菜单
+	 *
+	 * @param string $module 模块标识
+	 */
+	public function update( $module ) {
+		$this->initModuleData( $module );
+	}
+
+	/**
 	 * 从系统中删除模块
 	 *
 	 * @param string $name 模块标识
@@ -463,17 +579,17 @@ class Module {
 
 		//更新套餐数据
 		\Package::removeModule( $name );
+		//删除模块关联表
 		foreach ( $this->relationTables as $t ) {
 			Db::table( $t )->where( 'module', $name )->delete();
 		}
 		//删除模块使用的微信规则与关键词数据
 		\Wx::removeRuleByModule( $name );
+		//删除模块
 		Modules::where( 'name', $name )->delete();
-
 		//更新所有站点缓存
 		\Site::updateAllCache();
 
 		return true;
 	}
-
 }

@@ -95,7 +95,7 @@ class Compile extends Setting {
 				}
 			}
 			$result = $reflectionFunction->invokeArgs( $args );
-			if ( IS_AJAX || is_array( $result ) ) {
+			if ( IS_AJAX && is_array( $result ) ) {
 				Response::ajax( $result );
 			} else {
 				echo is_object( $result ) ? View::toString() : $result;

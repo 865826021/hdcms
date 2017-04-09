@@ -50,12 +50,12 @@
 							<span ng-show="v.price<=0" class="label label-info">免费</span>
                             <span ng-show="v.audit==0" class="label label-danger">测试版</span>
 						</small>
-						<p>@{{v.resume}}</p>
+						<p class="resume">@{{v.resume}}</p>
 						<p>
 							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary btn-sm btn-block"
 							   role="button">开始安装</a>
 						</p>
-						<p><span ng-if="v.is_install" class="btn btn-default btn-sm btn-block">已经安装</span></p>
+						<p><span ng-if="v.is_install" class="disabled btn btn-default btn-sm btn-block">已经安装</span></p>
 					</div>
 				</div>
 			</div>
@@ -104,5 +104,14 @@
 <style>
     .thumbnail img{
         border:solid 1px #ddd;
+        height: 200px; width: 100%; display: block;
+    }
+    .thumbnail .resume{
+        overflow:hidden;;/* 内容超出宽度时隐藏超出部分的内容 */
+        text-overflow:ellipsis;;/* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*/
+        /*white-space:nowrap;!* 不换行 *!*/
+        height:40px;
+        font-size:14px;
+        margin-top: 6px;
     }
 </style>

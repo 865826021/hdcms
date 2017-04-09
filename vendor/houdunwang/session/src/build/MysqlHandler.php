@@ -28,18 +28,17 @@ class MysqlHandler implements AbSession {
 
 	//读取
 	public function read() {
-		$data = $this->link->where( 'session_id', $this->session_id )->where( 'atime', '>', time() - $this->expire )->pluck( 'data' );
+		$data = $this->link->where( 'session_id', $this->session_id )->pluck( 'data' );
 
-		return $data ? json_decode( $data ,true) : [];
+		return $data ? json_decode( $data, true ) : [];
 	}
 
 	//写入
 	public function write() {
-		$data = json_encode( $this->items,JSON_UNESCAPED_UNICODE );
+		$data = json_encode( $this->items, JSON_UNESCAPED_UNICODE );
 		$sql  = "REPLACE INTO " . $this->table . "(session_id,data,atime) ";
-		$sql  .= "VALUES('{$this->session_id}','$data'," . time() . ')';
+		$sql  .= "VALUES('{$this->session_id}','$data'," . (time()+1440) . ')';
 		$this->link->execute( $sql );
-//		p(Db::getquerylog());
 	}
 
 	/**
@@ -48,7 +47,7 @@ class MysqlHandler implements AbSession {
 	 */
 	public function gc() {
 		$sql = "DELETE FROM " . $this->table
-		       . " WHERE atime<" . ( time() - $this->expire )
+		       . " WHERE atime<" . ( time() - $this->expire + 1440 )
 		       . " AND session_id<>'" . $this->session_id . "'";
 
 		return $this->link->execute( $sql );

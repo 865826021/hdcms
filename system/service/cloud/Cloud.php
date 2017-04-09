@@ -227,14 +227,14 @@ class Cloud {
 			file_put_contents( "addons/{$name}/cloud.php", '<?php return ' . var_export( $app, true ) . ';?>' );
 			//删除下载压缩包
 			\Dir::delFile( $file );
-			//执行模块更新表语句
-			$class = 'addons\\' . $app['name'] . '\system\Setup';
-			call_user_func_array( [ new $class, 'upgrade' ], [] );
+			//初始化模块数据
+			\Module::initModuleData($name);
 			//更新数据表模块编译版本
 			$data = [ 'version' => $app['zip']['version'], 'build' => $app['zip']['build'] ];
 			Modules::where( 'name', $name )->update( $data );
 			//更新模块安装数量
 			\Curl::post( $this->url . "/cloud/updateModuleInstallNum", $app );
+
 			ajax( [
 				'message' => '模块更新完毕',
 				'config'  => $app,

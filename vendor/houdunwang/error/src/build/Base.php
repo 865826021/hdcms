@@ -53,12 +53,12 @@ class Base {
 			case E_DEPRECATED:
 				break;
 			case E_NOTICE:
-				if ( PHP_SAPI != 'cli' && c( 'error.debug' ) === true && c( 'error.show_notice' ) ) {
+				if ( PHP_SAPI != 'cli' && c( 'error.debug' ) == true && c( 'error.show_notice' ) ) {
 					require __DIR__ . '/../view/notice.php';
 				}
 				break;
 			case E_WARNING:
-				if ( PHP_SAPI != 'cli' && c( 'error.debug' ) === true ) {
+				if ( PHP_SAPI != 'cli' && c( 'error.debug' ) == true ) {
 					require __DIR__ . '/../view/debug.php';
 					exit;
 				}
@@ -149,7 +149,7 @@ class Base {
 	public function trace( $value = '[hdphp]', $label = '', $level = 'DEBUG', $record = false ) {
 		static $trace = [];
 
-		if ( '[hdphp]' === $value ) {
+		if ( '[hdphp]' == $value ) {
 			// 获取trace信息
 			return $trace;
 		} else {

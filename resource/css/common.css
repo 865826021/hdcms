@@ -1,3 +1,10 @@
+html,
+body,
+h1,
+h2,
+h3 {
+  font-family: Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif !important;
+}
 .star:before {
   color: #d20300;
   content: ' * ';
@@ -57,13 +64,6 @@ table > tfoot > tr > td {
 }
 .nav.nav-pills li a {
   font-size: 14px;
-}
-html,
-body,
-h1,
-h2,
-h3 {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', Tahoma, Arial, Helvetica, STHeiti;
 }
 .ng-cloak {
   display: none;

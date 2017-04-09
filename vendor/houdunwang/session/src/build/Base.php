@@ -15,8 +15,8 @@ trait Base {
 
 	public function bootstrap() {
 		$this->session_name = Config::get( 'session.name' );
+		$this->expire       = intval( Config::get( 'session.expire' ) );
 		$this->session_id   = $this->getSessionId();
-		$this->expire       = Config::get( 'session.expire' ) ?: 3600;
 		$this->connect();
 		$this->items = $this->read() ?: [];
 

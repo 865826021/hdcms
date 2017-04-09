@@ -24,6 +24,7 @@ use app\system\controller\part\Setup;
 use app\system\controller\part\Subscribe;
 use app\system\controller\part\Tag;
 use houdunwang\request\Request;
+use system\model\ModuleDomain;
 use system\model\Modules;
 use system\model\ModulesBindings;
 use system\model\Package;
@@ -135,8 +136,17 @@ class Module {
 		return $data;
 	}
 
+	//更新模块
+	public function update() {
+		$module = Request::get( 'module' );
+		//初始化模块数据
+		\Module::initModuleData( $module );
+		message( '模块更新成功', '', 'success' );
+	}
+
 	//重新设计（重构旧模块)
 	public function resetDesign() {
+		$module = Request::get( 'module' );
 		if ( IS_POST ) {
 			//模块结构数据
 			$data = $this->formatPackageJson( json_decode( Request::post( 'data' ), true ) );
@@ -151,7 +161,6 @@ class Module {
 				[ 'author', 'required', '作者不能为空' ],
 				[ 'url', 'required', '请输入发布url' ],
 				[ 'compatible_version', 'required', '请选择兼容版本' ],
-				[ 'thumb', 'required', '模块缩略图不能为空' ],
 				[ 'preview', 'required', '模块封面图不能为空' ],
 			], $data );
 			//模块标识转小写
@@ -175,11 +184,12 @@ class Module {
 			$preview = $dir . '/preview.' . $info['extension'];
 			copy( $data['preview'], $preview );
 			$data['preview'] = 'preview.' . $info['extension'];
-
 			file_put_contents( $dir . '/package.json', json_encode( $data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
-			message( '模块修改成功', 'prepared' );
+			//初始化模块数据
+			\Module::initModuleData( $module );
+			message( '模块更新成功', '', 'success' );
 		}
-		$json              = file_get_contents( "addons/{$_GET['module']}/package.json" );
+		$json              = file_get_contents( "addons/{$module}/package.json" );
 		$config            = json_decode( $json, true );
 		$config['preview'] = 'addons/' . $config['name'] . '/' . $config['preview'];
 		View::with( 'config', json_encode( $config, JSON_UNESCAPED_UNICODE ) );
@@ -203,7 +213,6 @@ class Module {
 				[ 'author', 'required', '作者不能为空' ],
 				[ 'url', 'required', '请输入发布url' ],
 				[ 'compatible_version', 'required', '请选择兼容版本' ],
-				[ 'thumb', 'required', '模块缩略图不能为空' ],
 				[ 'preview', 'required', '模块封面图不能为空' ],
 			], $data );
 
@@ -271,89 +280,14 @@ class Module {
 		//获取模块xml数据
 		$config = json_decode( file_get_contents( "$dir/package.json" ), true );
 		if ( IS_POST ) {
-			//权限标识处理
-			$permissions = [];
-			foreach ( (array) preg_split( '/\n/', $config['permissions'] ) as $v ) {
-				$d = explode( ':', $v );
-				if ( count( $d ) == 2 ) {
-					$permissions[] = [ 'title' => trim( $d[0] ), 'do' => trim( $d[1] ) ];
-				}
-			}
-			//添加到模块系统中
-			$model                = new Modules();
-			$model['name']        = $config['name'];
-			$model['version']     = $config['version'];
-			$model['industry']    = $config['industry'];
-			$model['title']       = $config['title'];
-			$model['url']         = $config['url'];
-			$model['resume']      = $config['resume'];
-			$model['detail']      = $config['detail'];
-			$model['author']      = $config['author'];
-			$model['rule']        = $config['rule'];
-			$model['thumb']       = $config['thumb'];
-			$model['preview']     = $config['preview'];
-			$model['tag']         = $config['tag'];
-			$model['is_system']   = 0;
-			$model['subscribes']  = $config['subscribes'];
-			$model['processors']  = $config['processors'];
-			$model['setting']     = $config['setting'];
-			$model['middleware']  = $config['middleware'];
-			$model['crontab']     = $config['crontab'];
-			$model['router']      = $config['router'];
-			$model['domain']      = $config['domain'];
-			$model['permissions'] = $permissions;
-			$model['locality']    = ! is_file( $dir . '/cloud.php' ) ? 1 : 0;
-			$model->save();
 			//执行模块安装程序
 			$class = 'addons\\' . $config['name'] . '\system\Setup';
 			if ( class_exists( $class ) && method_exists( $class, 'install' ) ) {
 				call_user_func_array( [ new $class, 'install' ], [] );
 			}
-			//添加模块动作表数据
-			if ( ! empty( $config['web']['entry'] ) ) {
-				$d           = $config['web']['entry'];
-				$d['module'] = $module;
-				$d['entry']  = 'web';
-				ModulesBindings::insert( $d );
-			}
-			if ( ! empty( $config['web']['member'] ) ) {
-				foreach ( $config['web']['member'] as $d ) {
-					$d['entry']  = 'member';
-					$d['module'] = $module;
-					ModulesBindings::insert( $d );
-				}
-			}
-			if ( ! empty( $config['mobile']['home'] ) ) {
-				foreach ( $config['mobile']['home'] as $d ) {
-					$d['entry']  = 'home';
-					$d['module'] = $module;
-					ModulesBindings::insert( $d );
-				}
-			}
-			if ( ! empty( $config['mobile']['member'] ) ) {
-				foreach ( $config['mobile']['member'] as $d ) {
-					$d['entry']  = 'profile';
-					$d['module'] = $module;
-					ModulesBindings::insert( $d );
-				}
-			}
-			if ( ! empty( $config['cover'] ) ) {
-				foreach ( $config['cover'] as $d ) {
-					$d['entry']  = 'cover';
-					$d['module'] = $module;
-					ModulesBindings::insert( $d );
-				}
-			}
-			if ( ! empty( $config['business'] ) ) {
-				foreach ( $config['business'] as $d ) {
-					if ( ! empty( $d['action'] ) ) {
-						$d['entry']  = 'business';
-						$d['module'] = $module;
-						$d['do']     = json_encode( $d['action'], JSON_UNESCAPED_UNICODE );
-						ModulesBindings::insert( $d );
-					}
-				}
-			}
+
+			//初始化模块数据
+			\Module::initModuleData( $module );
 			//在服务套餐中添加模块
 			if ( ! empty( $_POST['package'] ) ) {
 				$package = Db::table( 'package' )->whereIn( 'name', $_POST['package'] )->get();

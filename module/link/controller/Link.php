@@ -21,7 +21,6 @@ class Link extends HdController {
 	//加载系统链接
 	public function system() {
 		auth();
-
 		return view( $this->template . '/system.html' );
 	}
 }

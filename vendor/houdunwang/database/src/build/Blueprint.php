@@ -31,9 +31,13 @@ class Blueprint {
 	//添加或修改的字段
 	protected $field;
 
-	public function __construct( $table ) {
-		$this->noPreTable = $table;
-		$this->table      = Config::get( 'database.prefix' ) . $table;
+	//表注释
+	protected $tableComment = '';
+
+	public function __construct( $table, $comment = '' ) {
+		$this->noPreTable   = $table;
+		$this->table        = Config::get( 'database.prefix' ) . $table;
+		$this->tableComment = $comment;
 	}
 
 	/**
@@ -75,7 +79,7 @@ class Blueprint {
 			}
 			$instruction[] = $n['sql'];
 		}
-		$sql .= implode( ',', $instruction ) . ')CHARSET UTF8';
+		$sql .= implode( ',', $instruction ) . ") CHARSET UTF8  COMMENT='{$this->tableComment}'";
 		Db::execute( $sql );
 	}
 
@@ -136,11 +140,11 @@ class Blueprint {
 	public function timestamps() {
 		$this->instruction[] = [
 			'field' => 'created_at',
-			'sql'   => " created_at INT(10) "
+			'sql'   => " created_at datetime COMMENT '创建时间' "
 		];
 		$this->instruction[] = [
 			'field' => 'updated_at',
-			'sql'   => " updated_at INT(10) "
+			'sql'   => " updated_at datetime COMMENT '更新时间'"
 		];
 	}
 
@@ -164,6 +168,20 @@ class Blueprint {
 	public function integer( $field ) {
 		$this->field                = $field;
 		$this->instruction[]['sql'] = $field . " INT ";
+
+		return $this;
+	}
+
+	public function datetime( $field ) {
+		$this->field                = $field;
+		$this->instruction[]['sql'] = $field . " DATETIME ";
+
+		return $this;
+	}
+
+	public function date( $field ) {
+		$this->field                = $field;
+		$this->instruction[]['sql'] = $field . " DATE ";
 
 		return $this;
 	}

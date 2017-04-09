@@ -55,7 +55,7 @@
 							<a ng-if="!v.is_install" ng-click="install(v)" class="btn btn-primary btn-sm btn-block"
 							   role="button">开始安装</a>
 						</p>
-						<p><span ng-if="v.is_install" class="btn btn-default btn-sm btn-block">已经安装</span></p>
+						<p><span ng-if="v.is_install" class="disabled btn btn-default btn-sm btn-block">已经安装</span></p>
 					</div>
 				</div>
 			</div>
